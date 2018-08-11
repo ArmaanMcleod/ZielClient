@@ -1,4 +1,4 @@
-package com.example.bilalshehata.zielclient;
+package com.quartz.zielclient;
 
 import org.junit.Test;
 

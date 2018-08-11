@@ -1,4 +1,4 @@
-package com.example.bilalshehata.zielclient;
+package com.quartz.zielclient;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
