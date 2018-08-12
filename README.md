@@ -31,11 +31,11 @@ The code style we obey is the Google Java Style Guide. Failure to obey this will
 * [Gradle](https://gradle.org/) - Dependency Management
 
 
-=
+
 ## Authors
 
 * **Alex Vosnakis** 
-* **Armaan Mcleoud** 
+* **Armaan Mcleoud**  
 * **Wei How Ng** 
 * **Jennifer Fong** 
 * **Bilal Shehata** 
