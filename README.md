@@ -17,6 +17,7 @@ Please note that we use Android SDK Version 28.
 
 Running tests can be accomplished using the Android Studio test configuration - see [this link](https://developer.android.com/studio/test/) for details.
 
+Unit tests and UI tests should be completed for all major pieces of functionality.
 
 ## Coding Style
 
