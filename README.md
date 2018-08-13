@@ -20,7 +20,7 @@ Please note that we use Android SDK Version 28.
 ### Coding style
 
 
-The code style we obey is the Google Java Style Guide. Failure to obey this will result in a pull request being denied until the code is appropriately formatted (this is simple to do with Android Studio - navigate to Preferences/Editor/Code Style/Java, and then make the required changes). To reformat code in Android studio, use the appropriate keybinding (by default, Command+Alt+L on Mac, Ctrl+Alt+L on Windows, and Ctrl+Shift+Alt+L on Linux).
+The code style we obey is the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html). Failure to obey this will result in a pull request being denied until the code is appropriately formatted (this is simple to do with Android Studio - navigate to Preferences/Editor/Code Style/Java, and then make the required changes). To reformat code in Android studio, use the appropriate keybinding (by default, Command+Alt+L on Mac, Ctrl+Alt+L on Windows, and Ctrl+Shift+Alt+L on Linux).
 
 The complete list of coding practices is available[here](https://docs.google.com/document/d/1RXHFtnGiAb5NsvctyE-T2N9ISuCY1cBWbTEWLzMq3gI).
 
