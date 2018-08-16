@@ -13,6 +13,14 @@ Navigation software designed to facilitate a channel which allows assistance to 
 
 Please note that we use Android SDK Version 28.
 
+## Git workflow
+
+Our workflow to follow is [GitFlow](https://nvie.com/posts/a-successful-git-branching-model/). Each milestone (release candidate) will have its own `develop` branch, from which all work for that release will be branched off.
+
+When completing a pull request, should it be successful, the option "Squash commits and merge" **must be chosen**. If this is not done, all commits **will be rolled back on the `develop` branch**.
+
+Additionally, should the pull request be merged by anyone other than the assignee, the pull request **will be rolled back**, and the pull request re-opened with the original assignee.
+
 ## Testing
 
 Running tests can be accomplished using the Android Studio test configuration - see [this link](https://developer.android.com/studio/test/) for details.
