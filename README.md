@@ -17,6 +17,12 @@ Please note that we use Android SDK Version 28.
 
 Our workflow to follow is [GitFlow](https://nvie.com/posts/a-successful-git-branching-model/). Each milestone (release candidate) will have its own `develop` branch, from which all work for that release will be branched off.
 
+<p align='center'> <img src=https://c2.staticflickr.com/6/5293/5488984404_4f693eec32.jpg> </p>
+<p align='center' fontSize='5px'>  “git-flow” by Bo-Yi Wo at https://www.flickr.com/photos/appleboy/5488984404
+ under a Creative Commons Attribution 2.0. Full terms at http://creativecommons.org/licenses/by/2.0.
+</p> 
+
+
 When completing a pull request, should it be successful, the option "Squash commits and merge" **must be chosen**. If this is not done, all commits **will be rolled back on the `develop` branch**.
 
 Additionally, should the pull request be merged by anyone other than the assignee, the pull request **will be rolled back**, and the pull request re-opened with the original assignee.
