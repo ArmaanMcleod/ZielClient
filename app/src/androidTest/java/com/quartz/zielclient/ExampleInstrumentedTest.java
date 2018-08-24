@@ -1,4 +1,4 @@
-package com.example.bilalshehata.zielclient;
+package com.quartz.zielclient;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -16,11 +16,11 @@ import static org.junit.Assert.*;
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
-    @Test
-    public void useAppContext() {
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getTargetContext();
+  @Test
+  public void useAppContext() {
+    // Context of the app under test.
+    Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.bilalshehata.zielclient", appContext.getPackageName());
-    }
+    assertEquals("com.example.bilalshehata.zielclient", appContext.getPackageName());
+  }
 }
