@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ZielClient</string>
+    <string name="enter_number">Enter your phone number</string>
+    <string name="confirm">Confirm</string>
 </resources>

@@ -9,11 +9,7 @@ import android.widget.Button;
 
 import com.quartz.zielclient.R;
 
-import static android.Manifest.permission.READ_PHONE_STATE;
-
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
-  private static final int SUCCESS = 1;
-
   private Button button;
 
   @Override
@@ -32,9 +28,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
       return;
     }
 
-    requestPermissions(new String[]{READ_PHONE_STATE}, SUCCESS);
-    Intent intent = new Intent(this, VerifyPhoneNumberActivity.class);
+    Intent intent = new Intent(SignUpActivity.this, VerifyPhoneNumberActivity.class);
     startActivity(intent);
-    finish();
   }
 }
