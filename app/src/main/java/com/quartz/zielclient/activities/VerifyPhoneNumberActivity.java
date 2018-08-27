@@ -1,23 +1,28 @@
 package com.quartz.zielclient.activities;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.fragments.YesNoDialog;
 import com.quartz.zielclient.services.SystemService;
 
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.view.View.OnClickListener;
 
-public class VerifyPhoneNumberActivity extends AppCompatActivity implements OnClickListener, DialogInterface.OnClickListener {
+/**
+ * @author alexvosnakis
+ *
+ * Activity for inputting and confirming (by the user) of a phone number.
+ */
+public class VerifyPhoneNumberActivity extends AppCompatActivity implements OnClickListener {
 
   private TextView phoneNumberEntry;
 
@@ -41,9 +46,13 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity implements OnCl
       return;
     }
 
-    displayConfirmationPrompt();
+    Dialog yesNoDialog = buildConfirmationPrompt();
+    yesNoDialog.show();
   }
 
+  /**
+   * Populates the phone number text view if able to, otherwise sets it to an empty string.
+   */
   private void populatePhoneNumber() {
     phoneNumberEntry = findViewById(R.id.phoneEntry);
     phoneNumberEntry.setText(SystemService
@@ -52,33 +61,30 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity implements OnCl
     );
   }
 
-  private void displayConfirmationPrompt() {
-    DialogFragment dialog = new YesNoDialog();
-    Bundle args = new Bundle();
-    args.putString(YesNoDialog.ARG_TITLE, "Confirm your number");
-    args.putString(YesNoDialog.ARG_MESSAGE, String.format("Is %s your phone number?", phoneNumberEntry.getText()));
-    dialog.setArguments(args);
-    dialog.show(getSupportFragmentManager(), "tag");
+  /**
+   * @return A dialog that confirms the user's phone number.
+   */
+  private Dialog buildConfirmationPrompt() {
+    return new AlertDialog.Builder(this)
+        .setTitle("Confirm your number")
+        .setMessage(String.format("Is %s your phone number?", phoneNumberEntry.getText()))
+        .setPositiveButton(android.R.string.yes, yesCallback())
+        .setNegativeButton(android.R.string.no, ((dialog, which) -> dialog.dismiss()))
+        .create();
   }
 
-  @Override
-  public void onClick(DialogInterface dialog, int which) {
-    switch (which) {
-      case android.R.string.yes:
-        yesListener(dialog);
-        break;
-      case android.R.string.no:
-      default:
-        dialog.dismiss();
-        break;
-    }
-  }
-
-  private void yesListener(DialogInterface dialog) {
-    Intent intent = new Intent(VerifyPhoneNumberActivity.this, ConfirmationCodeActivity.class);
-    Bundle bundle = new Bundle();
-    bundle.putString("phoneNumber", phoneNumberEntry.getText().toString());
-    dialog.dismiss();
-    startActivity(intent, bundle);
+  /**
+   * Defines the set of actions for the dialog to take once the user has confirmed their phone
+   * number; it passes the phone number onto the next activity.
+   * @return A callback which executes these actions.
+   */
+  private DialogInterface.OnClickListener yesCallback() {
+    return (dialog, which) -> {
+      Intent intent = new Intent(VerifyPhoneNumberActivity.this, ConfirmationCodeActivity.class);
+      Bundle bundle = new Bundle();
+      bundle.putString("phoneNumber", phoneNumberEntry.getText().toString());
+      dialog.dismiss();
+      startActivity(intent, bundle);
+    };
   }
 }
