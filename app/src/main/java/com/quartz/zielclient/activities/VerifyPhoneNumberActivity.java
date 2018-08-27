@@ -81,10 +81,9 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity implements OnCl
   private DialogInterface.OnClickListener yesCallback() {
     return (dialog, which) -> {
       Intent intent = new Intent(VerifyPhoneNumberActivity.this, ConfirmationCodeActivity.class);
-      Bundle bundle = new Bundle();
-      bundle.putString("phoneNumber", phoneNumberEntry.getText().toString());
+      intent.putExtra("phoneNumber", phoneNumberEntry.getText().toString());
       dialog.dismiss();
-      startActivity(intent, bundle);
+      startActivity(intent);
     };
   }
 }
