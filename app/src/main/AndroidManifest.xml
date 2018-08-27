@@ -21,6 +21,8 @@
         </activity>
         <activity android:name="com.quartz.zielclient.activities.VerifyPhoneNumberActivity">
         </activity>
+        <activity android:name=".activities.ConfirmationCodeActivity">
+        </activity>
     </application>
 
 </manifest>
