@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ZielClient</string>
+    <string name="no_splash_screen_loaded">No Splash Screen Loaded</string>
+    <string name="title_activity_home_page">HomePageActivity</string>
 </resources>
