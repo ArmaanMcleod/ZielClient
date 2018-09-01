@@ -24,6 +24,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     };
 
     // Setting the timer on the splash screen.
-    handler.postDelayed(r, 3000);
+    handler.postDelayed(r, 1500);
   }
 }

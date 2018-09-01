@@ -1,10 +1,11 @@
-package com.quartz.zielclient.activities;
+package com.quartz.zielclient.activities.signup;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,22 +30,26 @@ public class ConfirmationCodeActivity extends AppCompatActivity implements View.
 
   private AuthorisationController authController;
 
-  private String phoneNumber;
   private String mVerificationId;
   private ForceResendingToken mResendingToken;
 
   private TextView verificationField;
 
   private final OnVerificationStateChangedCallbacks callbacks = new OnVerificationStateChangedCallbacks() {
+    private final ConfirmationCodeActivity outer = ConfirmationCodeActivity.this;
+
     @Override
     public void onVerificationCompleted(PhoneAuthCredential credential) {
       Log.d(TAG, "onVerificationCompleted:" + credential);
-      authController.signInWithPhoneAuthCredential(credential, ConfirmationCodeActivity.this);
+
+      authController.signInWithPhoneAuthCredential(credential, outer);
+      Toast toast = Toast.makeText(outer, R.string.sending_confirmation_code, Toast.LENGTH_SHORT);
+      toast.show();
     }
 
     @Override
     public void onVerificationFailed(FirebaseException e) {
-      Toast feedback = Toast.makeText(getApplicationContext(), "An error occurred.", Toast.LENGTH_SHORT);
+      Toast feedback = Toast.makeText(outer, "An error occurred.", Toast.LENGTH_SHORT);
       Log.d("code exception", "an error occured:", e);
       feedback.show();
     }
@@ -68,7 +73,13 @@ public class ConfirmationCodeActivity extends AppCompatActivity implements View.
     setContentView(R.layout.activity_confirmation_code);
     verificationField = findViewById(R.id.confirmationCodeEntry);
 
-    phoneNumber = getIntent().getStringExtra("phoneNumber");
+    Button confirmationButton = findViewById(R.id.confirmCodeButton);
+    Button resendCodeButton = findViewById(R.id.resendButton);
+
+    confirmationButton.setOnClickListener(this);
+    resendCodeButton.setOnClickListener(this);
+
+    String phoneNumber = getIntent().getStringExtra("phoneNumber");
     Log.d("Phone number", phoneNumber);
 
     authController = new AuthorisationController(phoneNumber, this);
@@ -81,18 +92,12 @@ public class ConfirmationCodeActivity extends AppCompatActivity implements View.
       case R.id.confirmCodeButton:
         verifyPhoneNumberWithCode();
         break;
-      case R.id.resend_button:
+      case R.id.resendButton:
         authController.resendConfirmationCode(callbacks, mResendingToken);
         break;
       default:
         break;
     }
-  }
-
-  private void verifyPhoneNumberWithCode() {
-    String code = verificationField.getText().toString();
-    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
-    authController.signInWithPhoneAuthCredential(credential, this);
   }
 
   @Override
@@ -110,5 +115,11 @@ public class ConfirmationCodeActivity extends AppCompatActivity implements View.
         verificationField.setError("Invalid code.");
       }
     }
+  }
+
+  private void verifyPhoneNumberWithCode() {
+    String code = verificationField.getText().toString();
+    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
+    authController.signInWithPhoneAuthCredential(credential, this);
   }
 }

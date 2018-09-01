@@ -21,9 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.SignUpActivity"></activity>
-        <activity android:name=".activities.VerifyPhoneNumberActivity"></activity>
-        <activity android:name=".activities.ConfirmationCodeActivity"></activity>
+        <activity android:name=".activities.signup.SignUpActivity"></activity>
+        <activity android:name=".activities.signup.VerifyPhoneNumberActivity"></activity>
+        <activity android:name=".activities.signup.ConfirmationCodeActivity"></activity>
         <activity android:name=".activities.MainActivity" />
         <activity
             android:name=".activities.HomePageActivity"
