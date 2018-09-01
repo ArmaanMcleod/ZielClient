@@ -18,7 +18,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     // Creating Handler to run screen activity.
     handler = new Handler();
     Runnable r = () -> {
-      Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+      Intent intent = new Intent(SplashScreenActivity.this, CarerHomepageActivity.class);
       startActivity(intent);
       finish();
     };
