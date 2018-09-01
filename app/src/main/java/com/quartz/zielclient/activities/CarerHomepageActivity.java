@@ -38,7 +38,7 @@ public class CarerHomepageActivity extends Activity {
     mItem = new ArrayList<String>();
 
   }
-  
+
   // Getter for screen width.
   public static int getScreenWidth() {
     return Resources.getSystem().getDisplayMetrics().widthPixels;
