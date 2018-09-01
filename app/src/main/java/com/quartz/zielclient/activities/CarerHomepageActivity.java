@@ -10,11 +10,14 @@ import android.support.v7.widget.RecyclerView;
 
 import com.quartz.zielclient.R;
 
+import java.util.ArrayList;
+
 public class CarerHomepageActivity extends Activity {
 
   private RecyclerView mRecyclerView;
   private RecyclerView.Adapter mAdapter;
   private RecyclerView.LayoutManager mLayoutManager;
+  private ArrayList<String> mItem;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +34,13 @@ public class CarerHomepageActivity extends Activity {
 
   }
 
+  public void initData() {
+    mItem = new ArrayList<String>();
+
+  }
+  
   // Getter for screen width.
   public static int getScreenWidth() {
     return Resources.getSystem().getDisplayMetrics().widthPixels;
   }
-
-
-
 }
