@@ -24,6 +24,7 @@
         <activity android:name=".activities.signup.SignUpActivity"></activity>
         <activity android:name=".activities.signup.VerifyPhoneNumberActivity"></activity>
         <activity android:name=".activities.signup.ConfirmationCodeActivity"></activity>
+        <activity android:name=".activities.signup.AccountCreationActivity"></activity>
         <activity android:name=".activities.MainActivity" />
         <activity
             android:name=".activities.HomePageActivity"
