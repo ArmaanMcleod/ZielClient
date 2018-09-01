@@ -59,50 +59,12 @@ public final class UserController {
   }
 
   /**
-   * Locates and returns a user from the database.
+   * Locates and performs an action with a user from the database.
    *
    * @param userId The UID of the user to look up.
-   * @return A User model.
-   * @throws UserNotFoundException If there was an error when finding the user, or if the user could
-   *                               not be found.
    */
-  public static User fetchUser(final String userId) throws UserNotFoundException {
+  public static void fetchUser(final String userId, ValueEventListener listener) {
     DatabaseReference ref = firebaseDatabase.getReference("users/" + userId);
-    UserRetriever retriever = new UserRetriever();
-    ref.addValueEventListener(retriever);
-    Optional<User> user = retriever.user;
-
-    if (user.isPresent()) {
-      return user.get();
-    } else {
-      throw new UserNotFoundException("User " + userId + " could not be found.");
-    }
+    ref.addValueEventListener(listener);
   }
-
-  /**
-   * Because the Firebase API fucking sucks we can't just return data, we have to do this just to
-   * read the data somewhere else. Fuck my life
-   *
-   * Actually we can't because it's asynchronous. Why would I ever want synchronous code I guess.
-   */
-  private static final class UserRetriever implements ValueEventListener {
-    private Optional<User> user;
-
-    @Override
-    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-      GenericTypeIndicator<Map<String, Object>> t = new GenericTypeIndicator<Map<String, Object>>() {
-      };
-      Map<String, Object> rawUserData = dataSnapshot.getValue(t);
-      if (rawUserData == null) {
-        user = Optional.empty();
-      } else {
-        user = Optional.of(new User(rawUserData));
-      }
-    }
-
-    @Override
-    public void onCancelled(@NonNull DatabaseError databaseError) {
-      user = Optional.empty();
-    }
-  }
-}
+ }
