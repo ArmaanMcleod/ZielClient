@@ -4,4 +4,5 @@
     <string name="confirm">Confirm</string>
     <string name="no_splash_screen_loaded">No Splash Screen Loaded</string>
     <string name="title_activity_home_page">HomePageActivity</string>
+    <string name="resend_code">Resend</string>
 </resources>

@@ -5,12 +5,22 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.services.SystemService;
 
@@ -19,7 +29,7 @@ import static android.view.View.OnClickListener;
 
 /**
  * @author alexvosnakis
- *
+ * <p>
  * Activity for inputting and confirming (by the user) of a phone number.
  */
 public class VerifyPhoneNumberActivity extends AppCompatActivity implements OnClickListener {
@@ -69,13 +79,14 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity implements OnCl
         .setTitle("Confirm your number")
         .setMessage(String.format("Is %s your phone number?", phoneNumberEntry.getText()))
         .setPositiveButton(android.R.string.yes, yesCallback())
-        .setNegativeButton(android.R.string.no, ((dialog, which) -> dialog.dismiss()))
+        .setNegativeButton(android.R.string.no, (dialog, which) -> dialog.dismiss())
         .create();
   }
 
   /**
    * Defines the set of actions for the dialog to take once the user has confirmed their phone
    * number; it passes the phone number onto the next activity.
+   *
    * @return A callback which executes these actions.
    */
   private DialogInterface.OnClickListener yesCallback() {
