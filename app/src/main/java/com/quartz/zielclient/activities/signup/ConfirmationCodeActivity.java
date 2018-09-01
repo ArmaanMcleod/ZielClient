@@ -1,5 +1,6 @@
 package com.quartz.zielclient.activities.signup;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +23,6 @@ import com.quartz.zielclient.controllers.AuthorisationController;
 
 import static com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks;
 import static com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken;
-
 
 public class ConfirmationCodeActivity extends AppCompatActivity implements View.OnClickListener, OnCompleteListener<AuthResult> {
 
@@ -50,7 +50,7 @@ public class ConfirmationCodeActivity extends AppCompatActivity implements View.
     @Override
     public void onVerificationFailed(FirebaseException e) {
       Toast feedback = Toast.makeText(outer, "An error occurred.", Toast.LENGTH_SHORT);
-      Log.d("code exception", "an error occured:", e);
+      Log.d("code exception", "an error occurred:", e);
       feedback.show();
     }
 
@@ -106,8 +106,11 @@ public class ConfirmationCodeActivity extends AppCompatActivity implements View.
       // Sign in success, update UI with the signed-in user's information
       Log.d(TAG, "signInWithCredential:success");
       FirebaseUser user = task.getResult().getUser();
-      Toast toast = Toast.makeText(this, "user signed in:" + user.getPhoneNumber(), Toast.LENGTH_SHORT);
+      Toast toast = Toast.makeText(this, "user signed in: " + user.getPhoneNumber(), Toast.LENGTH_SHORT);
       toast.show();
+      Intent intent = new Intent(this, AccountCreationActivity.class);
+      startActivity(intent);
+      finish();
     } else {
       // Sign in failed, display a message and update the UI
       Log.w(TAG, "signInWithCredential:failure", task.getException());

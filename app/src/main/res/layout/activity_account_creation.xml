@@ -13,6 +13,7 @@
         android:layout_height="0dp"
         android:layout_marginBottom="17dp"
         android:layout_marginTop="16dp"
+        android:checkedButton="@id/assistedChoice"
         app:layout_constraintBottom_toTopOf="@+id/firstNameEntry"
         app:layout_constraintEnd_toEndOf="@+id/firstNameEntry"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +62,7 @@
         android:layout_marginStart="16dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="@string/firstNameEntry"
+        android:hint="@string/firstNameEntry"
         app:layout_constraintBottom_toTopOf="@+id/lastNameEntry"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/carerOrAssistedGroup" />
@@ -74,7 +75,7 @@
         android:layout_marginStart="16dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="@string/lastNameEntry"
+        android:hint="@string/lastNameEntry"
         app:layout_constraintBottom_toTopOf="@+id/completeAccountCreation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/firstNameEntry" />

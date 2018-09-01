@@ -12,4 +12,5 @@
     <string name="chooseRole">Please select the profile that fits you.</string>
     <string name="assisted_desc">I am looking for assistance.</string>
     <string name="carer_desc">I am looking to help.</string>
+    <string name="userId">userId</string>
 </resources>

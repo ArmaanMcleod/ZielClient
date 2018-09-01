@@ -6,28 +6,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.HomePageActivity;
 import com.quartz.zielclient.activities.SplashScreenActivity;
+import com.quartz.zielclient.controllers.UserController;
+import com.quartz.zielclient.exceptions.AuthorisationException;
 
 import static android.view.View.OnClickListener;
-import static android.widget.RadioGroup.OnCheckedChangeListener;
 
-public class AccountCreationActivity extends AppCompatActivity implements OnClickListener, OnCheckedChangeListener {
-
-  private RadioGroup carerOrAssistedGroup;
+public class AccountCreationActivity extends AppCompatActivity implements OnClickListener {
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_account_creation);
 
     Button accountCreationButton = findViewById(R.id.completeAccountCreation);
     accountCreationButton.setOnClickListener(this);
-
-    // Initialise radio buttons group
-    carerOrAssistedGroup = findViewById(R.id.carerOrAssistedGroup);
-    carerOrAssistedGroup.setOnCheckedChangeListener(this);
   }
 
   @Override
@@ -37,26 +36,29 @@ public class AccountCreationActivity extends AppCompatActivity implements OnClic
       return;
     }
 
-//    try {
-//      FirebaseUser firebaseUser = UserController.retrieveFirebaseUser();
-//      UserController.createUser(firebaseUser);
-//
-//    } catch (AuthorisationException e) {
-//      handleLoginFailure();
-//    }
+    RadioGroup buttonGroup = findViewById(R.id.carerOrAssistedGroup);
+    TextView firstNameView = findViewById(R.id.firstNameEntry);
+    TextView lastNameView = findViewById(R.id.lastNameEntry);
 
+    final String firstName = firstNameView.getText().toString();
+    final String lastName = lastNameView.getText().toString();
+    final boolean isAssisted = buttonGroup.getCheckedRadioButtonId() == R.id.assistedChoice;
+
+    try {
+      FirebaseUser firebaseUser = UserController.retrieveFirebaseUser();
+      UserController.createUser(firebaseUser, firstName, lastName, isAssisted);
+      completeAccountCreation(firebaseUser);
+    } catch (AuthorisationException e) {
+      handleLoginFailure();
+    }
   }
 
-  @Override
-  public void onCheckedChanged(RadioGroup group, int checkedId) {
-    switch (checkedId) {
-      case R.id.assistedChoice:
-        break;
-      case R.id.carerChoice:
-        break;
-      default:
-        break;
-    }
+  private void completeAccountCreation(FirebaseUser firebaseUser) {
+    String uid = firebaseUser.getUid();
+    Intent intent = new Intent(this, HomePageActivity.class);
+    intent.putExtra("UID", uid);
+    startActivity(intent);
+    finish();
   }
 
   private void handleLoginFailure() {
