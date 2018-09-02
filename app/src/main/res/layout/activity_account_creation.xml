@@ -11,13 +11,12 @@
         android:id="@+id/carerOrAssistedGroup"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="17dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="35dp"
         android:checkedButton="@id/assistedChoice"
-        app:layout_constraintBottom_toTopOf="@+id/firstNameEntry"
-        app:layout_constraintEnd_toEndOf="@+id/firstNameEntry"
+        app:layout_constraintBottom_toTopOf="@+id/completeAccountCreation"
+        app:layout_constraintEnd_toEndOf="@+id/lastNameEntry"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/lastNameEntry">
 
         <RadioButton
             android:id="@+id/assistedChoice"
@@ -48,35 +47,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="47dp"
         android:inputType="none"
         android:text="@string/chooseRole"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/carerOrAssistedGroup" />
 
     <EditText
         android:id="@+id/firstNameEntry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="33dp"
         android:layout_marginStart="16dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="@string/firstNameEntry"
+        android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/lastNameEntry"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/carerOrAssistedGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <EditText
         android:id="@+id/lastNameEntry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="79dp"
+        android:layout_marginBottom="19dp"
         android:layout_marginStart="16dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="@string/lastNameEntry"
-        app:layout_constraintBottom_toTopOf="@+id/completeAccountCreation"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/carerOrAssistedGroup"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/firstNameEntry" />
 
@@ -84,10 +83,23 @@
         android:id="@+id/completeAccountCreation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="92dp"
+        android:layout_marginBottom="57dp"
         android:text="@string/confirm"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lastNameEntry" />
+        app:layout_constraintTop_toBottomOf="@+id/carerOrAssistedGroup" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:text="Please enter your name."
+        android:inputType="none"
+        app:layout_constraintBottom_toTopOf="@+id/firstNameEntry"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>
