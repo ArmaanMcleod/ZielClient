@@ -11,7 +11,7 @@ Navigation software designed to facilitate a channel which allows assistance to 
 * Navigate [here](https://console.firebase.google.com/u/2/project/zielbase/settings/general/android:com.quartz.zielclient), download the `google-services.json` file, and place it under the `app` folder
 * Follow the instructions in [this link](https://developer.android.com/studio/run/) to set up your emulator.
 
-Please note that we use Android SDK Version 28, and targeting Java 8. See [this link](https://developer.android.com/studio/write/java8-support) to see how to configure Android Studio to use Java 8.
+Please note that we use Android SDK Version 28.
 
 ## Git workflow
 
