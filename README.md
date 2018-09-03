@@ -11,7 +11,26 @@ Navigation software designed to facilitate a channel which allows assistance to 
 * Navigate [here](https://console.firebase.google.com/u/2/project/zielbase/settings/general/android:com.quartz.zielclient), download the `google-services.json` file, and place it under the `app` folder
 * Follow the instructions in [this link](https://developer.android.com/studio/run/) to set up your emulator.
 
-Please note that we use Android SDK Version 28.
+Please note that we use Android SDK Version 28, and targeting Java 8. See [this link](https://developer.android.com/studio/write/java8-support) to see how to configure Android Studio to use Java 8.
+
+## Setting up Google API keys
+
+* Follow steps at [Get API Key](https://developers.google.com/maps/documentation/android-sdk/signup).
+* Once you have an API key created, Enable the following from Library:
+  * Maps SDK API
+  * Places API 
+  * Places SDK for Android 
+  * Directions API
+* Create a file called `secrets.xml` in `ZielClient/app/src/main/res/values` with the the following code:
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="google_maps_api_key">YOUR_API_KEY_HERE</string>
+</resources>
+```
+* Replace `YOUR_API_KEY_HERE` with your actual API key.
+* You **must** call it `secrets.xml` since its ignored in `.gitignore`.
+* Using an untracked local file to store the API key prevents it being exposed in remotely.
 
 ## Git workflow
 
