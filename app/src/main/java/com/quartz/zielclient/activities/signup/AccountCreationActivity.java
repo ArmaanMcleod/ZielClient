@@ -11,10 +11,11 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.activities.HomePageActivity;
 import com.quartz.zielclient.activities.SplashScreenActivity;
+import com.quartz.zielclient.activities.common.LaunchPadActivity;
 import com.quartz.zielclient.controllers.UserController;
 import com.quartz.zielclient.exceptions.AuthorisationException;
+import com.quartz.zielclient.models.User;
 
 import static android.view.View.OnClickListener;
 
@@ -46,17 +47,16 @@ public class AccountCreationActivity extends AppCompatActivity implements OnClic
 
     try {
       FirebaseUser firebaseUser = UserController.retrieveFirebaseUser();
-      UserController.createUser(firebaseUser, firstName, lastName, isAssisted);
-      completeAccountCreation(firebaseUser);
+      User user = UserController.createUser(firebaseUser, firstName, lastName, isAssisted);
+      completeAccountCreation(user);
     } catch (AuthorisationException e) {
       handleLoginFailure();
     }
   }
 
-  private void completeAccountCreation(FirebaseUser firebaseUser) {
-    String uid = firebaseUser.getUid();
-    Intent intent = new Intent(this, HomePageActivity.class);
-    intent.putExtra("UID", uid);
+  private void completeAccountCreation(User user) {
+    Intent intent = new Intent(this, LaunchPadActivity.class);
+    intent.putExtra("user", user.toBundle());
     startActivity(intent);
     finish();
   }

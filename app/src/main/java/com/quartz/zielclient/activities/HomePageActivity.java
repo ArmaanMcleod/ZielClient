@@ -1,7 +1,7 @@
 package com.quartz.zielclient.activities;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
 
 import com.quartz.zielclient.R;
 

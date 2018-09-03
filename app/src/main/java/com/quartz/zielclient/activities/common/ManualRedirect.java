@@ -7,11 +7,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
-import com.quartz.zielclient.activities.assisted.AssistedSession;
-
-import com.quartz.zielclient.activities.carer.CarerSession;
-
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.assisted.AssistedSession;
+import com.quartz.zielclient.activities.carer.CarerSession;
 
 /**
  * Temporary Activity to explore and integrate session creation into the application

@@ -85,8 +85,4 @@ public class AssistedSession extends AppCompatActivity implements ChannelListene
   public String getCarerId() {
     return myCarerId;
   }
-
-
 }
-
-

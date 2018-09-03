@@ -1,6 +1,5 @@
 package com.quartz.zielclient.channel;
 
-
 import android.support.annotation.NonNull;
 
 import com.google.firebase.database.DataSnapshot;
