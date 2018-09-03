@@ -18,11 +18,14 @@ import java.util.Map;
 
 /**
  * This class is responsible for extracting information from JSON responses into paths.
- * @author Armaan Mcleod
+ *
+ * @author Armaan McLeod
+ * @version 1.0- 1
+ * 01/09/2018
  */
 public class ParserTask extends AsyncTask<String, Integer, List<List<Map<String, String>>>> {
 
-  private static final String TAG = "ParserTask";
+  private final String TAG = this.getClass().getSimpleName();
 
   private GoogleMap googleMap;
 

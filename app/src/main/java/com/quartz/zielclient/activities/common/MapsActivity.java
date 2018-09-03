@@ -69,14 +69,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
-  private static final String TAG = "MapsActivity";
+  private final String TAG = this.getClass().getSimpleName();
 
   private GoogleMap mGoogleMap;
+
   private LocationRequest mLocationRequest;
   private FusedLocationProviderClient mFusedLocationClient;
 
   private LatLng source;
   private LatLng destination;
+
+  public LatLng getDestination() {
+    return destination;
+  }
+
+  public void setDestination(LatLng destination) {
+    this.destination = destination;
+  }
+
+  public LatLng getSource() {
+    return source;
+  }
+
+  public void setSource(LatLng source) {
+    this.source = source;
+  }
 
   private LocationCallback mLocationCallback = new LocationCallback() {
 
@@ -100,12 +117,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             + location.getLongitude());
 
         // Update and draw source location
-        source = new LatLng(location.getLatitude(), location.getLongitude());
+        setSource(new LatLng(location.getLatitude(), location.getLongitude()));
         drawMarker(source, BitmapDescriptorFactory.HUE_MAGENTA, "Current Location");
       }
     }
   };
 
+  /**
+   * Draws marker on the Google map.
+   * @param location This is the location on the map.
+   * @param colour This is the colour of the marker.
+   * @param message This is the message to pass to the marker.
+   */
   private void drawMarker(LatLng location, float colour, String message) {
     MarkerOptions markerOptions = new MarkerOptions();
 
@@ -148,7 +171,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mGoogleMap.clear();
 
         Log.d(TAG, "Place selected: " + place.getLatLng());
-        destination = place.getLatLng();
+        setDestination(place.getLatLng());
 
         // Compute path to destination
         String directionsURL = getDirectionsUrl();

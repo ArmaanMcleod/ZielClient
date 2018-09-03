@@ -16,11 +16,14 @@ import java.net.URL;
 
 /**
  * This class is responsible for fetching the path JSON data from the API endpoint.
- * @author Armaan Mcleod
+ *
+ * @author Armaan McLeod
+ * @version 1.0- 1
+ * 01/09/2018
  */
 public class FetchUrl extends AsyncTask<String, Void, String> {
 
-  private static final String TAG = "FetchUrl";
+  private final String TAG = this.getClass().getSimpleName();
 
   private GoogleMap googleMap;
 
