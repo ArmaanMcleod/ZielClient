@@ -1,11 +1,13 @@
 package com.quartz.zielclient.models;
 
+import android.os.Bundle;
+
 import java.util.Map;
 
 /**
  * Model representing a user.
  */
-public class User {
+public class User implements Model {
   private String firstName;
   private String lastName;
   private String phoneNumber;
@@ -39,6 +41,16 @@ public class User {
 
   public boolean isAssisted() {
     return isAssisted;
+  }
+
+  @Override
+  public Bundle toBundle() {
+    Bundle bundle = new Bundle();
+    bundle.putString("firstName", firstName);
+    bundle.putString("lastName", lastName);
+    bundle.putString("phoneNumber", phoneNumber);
+    bundle.putBoolean("isAssisted", isAssisted);
+    return bundle;
   }
 
   @Override
