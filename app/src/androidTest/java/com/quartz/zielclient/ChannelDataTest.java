@@ -1,8 +1,8 @@
-package com.quartz.zielclient.utilities;
+package com.quartz.zielclient;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
-import com.quartz.zielclient.channel.Channel;
+import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
 
 import org.junit.Before;
@@ -14,9 +14,10 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ChannelTest {
+public class ChannelDataTest {
   @Mock
   ChannelListener channelListener;
+
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
@@ -30,8 +31,8 @@ public class ChannelTest {
   public void testOnDataChange() {
     DataSnapshot testSnapShot = Mockito.mock(DataSnapshot.class);
     DatabaseReference databaseReference = Mockito.mock(DatabaseReference.class);
-    Channel channel = new Channel(databaseReference,channelListener);
-    channel.onDataChange(testSnapShot);
+    ChannelData channelData = new ChannelData(databaseReference, channelListener);
+    channelData.onDataChange(testSnapShot);
     Mockito.verify(channelListener).dataChanged();
   }
 }

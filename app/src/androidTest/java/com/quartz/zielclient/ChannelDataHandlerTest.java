@@ -1,9 +1,9 @@
-package com.quartz.zielclient.utilities;
+package com.quartz.zielclient;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
-import com.quartz.zielclient.channel.Channel;
-import com.quartz.zielclient.channel.ChannelHandler;
+import com.quartz.zielclient.channel.ChannelData;
+import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelListener;
 
 import org.junit.Before;
@@ -16,12 +16,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ChannelHandlerTest {
+public class ChannelDataHandlerTest {
 
 
   @Before
-  public void setUp(){
-    ChannelHandler.staticInit();
+  public void setUp() {
+    ChannelController.staticInit();
   }
 
 
@@ -31,13 +31,13 @@ public class ChannelHandlerTest {
   @Test
   public void testCreateChannel() {
     FirebaseApp firebaseApp = Mockito.mock(FirebaseApp.class);
-    ChannelListener channelListener =  Mockito.mock(ChannelListener.class);
+    ChannelListener channelListener = Mockito.mock(ChannelListener.class);
     Mockito.when(channelListener.getAssistedId()).thenReturn("testAssistedId");
     Mockito.when(channelListener.getCarerId()).thenReturn("testCarerId");
-    Channel testChannel = ChannelHandler.createChannel(channelListener);
-    Mockito.verify(channelListener,VerificationModeFactory.atLeastOnce()).getAssistedId();
+    ChannelData testChannelData = ChannelController.createChannel(channelListener);
+    Mockito.verify(channelListener, VerificationModeFactory.atLeastOnce()).getAssistedId();
     Mockito.verify(channelListener, VerificationModeFactory.atLeastOnce()).getCarerId();
-    assertNotNull(testChannel);
+    assertNotNull(testChannelData);
   }
 
   /**
@@ -47,10 +47,10 @@ public class ChannelHandlerTest {
   public void retrieveChannel() {
     DatabaseReference testChannelsReference = Mockito.mock(DatabaseReference.class);
     DatabaseReference testChannelReference = Mockito.mock(DatabaseReference.class);
-    ChannelListener channelListener =  Mockito.mock(ChannelListener.class);
+    ChannelListener channelListener = Mockito.mock(ChannelListener.class);
     String testChannelID = "123456789";
     Mockito.when(testChannelsReference.child(testChannelID)).thenReturn(testChannelReference);
-    Channel channel = ChannelHandler.retrieveChannel(testChannelID,channelListener);
-    assertNotNull(channel);
+    ChannelData channelData = ChannelController.retrieveChannel(testChannelID, channelListener);
+    assertNotNull(channelData);
   }
 }

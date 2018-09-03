@@ -11,19 +11,13 @@ import java.util.UUID;
  *
  * @author Bilal Shehata
  */
-public final class ChannelHandler {
+public final class ChannelController {
 
-  private ChannelHandler() {
+  private ChannelController() {
   }
 
-  private static FirebaseDatabase firebaseDatabase;
-  private static DatabaseReference channelsReference;
-  private static DatabaseReference usersReference;
-
-  // Initialize reference into the firebase DB.
-  static {
-    staticInit();
-  }
+  private static DatabaseReference channelsReference = FirebaseDatabase.getInstance().getReference("channels");
+  private static DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("users");
 
   /**
    * create and initialise a channel
@@ -31,25 +25,24 @@ public final class ChannelHandler {
    * @param channelListener Callback that listens on the channel's database entry.
    * @return A new channel.
    */
-  public static Channel createChannel(ChannelListener channelListener) {
+  public static ChannelData createChannel(ChannelListener channelListener) {
     final String channelKey = UUID.randomUUID().toString();
-    Channel channel = new Channel(channelsReference.child(channelKey), channelListener);
+    ChannelData channelData = new ChannelData(channelsReference.child(channelKey), channelListener);
     // add the id of the assisted to the session
-    channel.setAssisted(channelListener.getAssistedId());
+    channelData.setAssisted(channelListener.getAssistedId());
     // add the id of the carer to the session
-    channel.setCarer(channelListener.getCarerId());
+    channelData.setCarer(channelListener.getCarerId());
     // the assisted created the session therefore they must currently be active
-    channel.setAssistedStatus(true);
+    channelData.setAssistedStatus(true);
     // the carer is inactive since they still need to accept the session
-    channel.setCarerStatus(false);
+    channelData.setCarerStatus(false);
     // the Ping feature will begin as inactive indicating a wave has not occured.
-    channel.setPing(false);
+    channelData.setPing(false);
     // update and notify the user
     usersReference.child(channelListener.getCarerId()).child("currentSession").setValue(channelKey);
     usersReference.child(channelListener.getCarerId()).child("status").setValue("notified");
-    return channel;
+    return channelData;
   }
-
 
   /**
    * Use this if you dont want to create a channel but you want to retrieve an already created channel
@@ -58,15 +51,7 @@ public final class ChannelHandler {
    * @param channelListener Callback that listens on the channel's database entry.
    * @return The existing channel
    */
-  public static Channel retrieveChannel(String channelID, ChannelListener channelListener) {
-    return new Channel(channelsReference.child(channelID), channelListener);
-  }
-
-  public static void staticInit() {
-    firebaseDatabase = FirebaseDatabase.getInstance();
-    // location of sessions in database
-    channelsReference = firebaseDatabase.getReference("channels/");
-    // location of users in the database
-    usersReference = firebaseDatabase.getReference("users/");
+  public static ChannelData retrieveChannel(String channelID, ChannelListener channelListener) {
+    return new ChannelData(channelsReference.child(channelID), channelListener);
   }
 }

@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.channel.Channel;
-import com.quartz.zielclient.channel.ChannelHandler;
+import com.quartz.zielclient.channel.ChannelData;
+import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelListener;
 
 
@@ -28,13 +28,13 @@ public class AssistedSession extends AppCompatActivity implements ChannelListene
   //temporary variables to store a users role -> this will be replaced by values from the user roles in the database
   private String myId = "assisted1";
   //store reference to the database where the session exists
-  private Channel channel;
-  private DatabaseReference channelListener;
+  private ChannelData channelData;
   //button allows the assisted to wave to carer (send a toast)
   private Button waveButton;
   private String myCarerId = "carer1";
 
-  protected void onCreate(Bundle savedInstanceState) {
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // set the content view to the assisted_session
     setContentView(R.layout.activity_assisted_session);
@@ -45,35 +45,33 @@ public class AssistedSession extends AppCompatActivity implements ChannelListene
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
     status = findViewById(R.id.channelStatus);
-    channel = ChannelHandler.createChannel(this);
+    channelData = ChannelController.createChannel(this);
   }
 
   @Override
   public void dataChanged() {
     // sometimes the listener can misfire so avoid crash by checking an object was collected.
-    if (channel.getCarerStatus()) {
+    if (channelData.getCarerStatus()) {
       //the Carer set their status to true they are active
       status.setText("Session is active");
       waveButton.setVisibility(View.VISIBLE);
       waveButton.setOnClickListener(this);
-    }
-    if (!channel.getCarerStatus()) {
+    } else {
       // the Carer has set or has not unset their status and therefore they are inactive.
       status.setText("Session is Inactive");
     }
-
   }
 
   @Override
   public void onBackPressed() {
     // assisted has exited the session so set status to false (inactive)
-    channel.setAssistedStatus(false);
+    channelData.setAssistedStatus(false);
     super.onBackPressed();
   }
 
   @Override
   public void onClick(View view) {
-    channel.setPing(true);
+    channelData.setPing(true);
   }
 
   @Override

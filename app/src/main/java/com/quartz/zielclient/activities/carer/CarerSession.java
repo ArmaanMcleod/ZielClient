@@ -15,8 +15,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.channel.Channel;
-import com.quartz.zielclient.channel.ChannelHandler;
+import com.quartz.zielclient.channel.ChannelData;
+import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelListener;
 import com.quartz.zielclient.notifications.NotificationHandler;
 
@@ -29,6 +29,9 @@ import static android.view.View.VISIBLE;
  * @author Bilal Shehata
  */
 public class CarerSession extends AppCompatActivity implements ValueEventListener, View.OnClickListener, ChannelListener {
+
+  private static final String CURRENT_CHANNEL = "current_channel";
+
   private TextView status;
   private FirebaseDatabase firebaseDatabase;
   private DatabaseReference channelReference;
@@ -37,7 +40,7 @@ public class CarerSession extends AppCompatActivity implements ValueEventListene
   private NotificationHandler notificationHandler;
   // temporary id value for the carer until authorization is complete
   private String id = "carer1";
-  private Channel channel;
+  private ChannelData channelData;
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -69,13 +72,12 @@ public class CarerSession extends AppCompatActivity implements ValueEventListene
 
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
     // Get the session which has been allocated to the carer from an assisted
-    String channelID = dataSnapshot.child(getResources().getString(R.string.current_channel)).getValue(String.class);
+    String channelId = dataSnapshot.child(CURRENT_CHANNEL).getValue(String.class);
     // get a reference to the session that was created by the assisted
-    channelReference = firebaseDatabase.getReference(getString(R.string.channelsReferenceLocation) + channelID);
+    channelReference = firebaseDatabase.getReference(getString(R.string.channelsReferenceLocation) + channelId);
     // incase of misfire ensure that Id returned a string value
-    if (channelID != null && !channelID.equals(getResources().getString(R.string.waiting))) {
+    if (channelId != null && !channelId.equals(getResources().getString(R.string.waiting))) {
       // Send a toast to the user notifying them of the request
       Toast.makeText(getApplicationContext(),
           "request has been made", Toast.LENGTH_LONG).show();
@@ -84,7 +86,7 @@ public class CarerSession extends AppCompatActivity implements ValueEventListene
       // allow the accept button to appear now that there is a session to accept
       acceptButton.setVisibility(VISIBLE);
       // begin listening to the session
-      channel = ChannelHandler.retrieveChannel(channelID, this);
+      channelData = ChannelController.retrieveChannel(channelId, this);
     }
   }
 
@@ -103,30 +105,28 @@ public class CarerSession extends AppCompatActivity implements ValueEventListene
     DatabaseReference notifcationRef = firebaseDatabase.getReference("users/" + id);
     notifcationRef.child(getResources().getString(R.string.current_channel)).setValue(getResources().getString(R.string.waiting));
     notifcationRef.addValueEventListener(this);
-
   }
 
   /**
-   * notification that the data has changed on the channel
+   * notification that the data has changed on the channelData
    */
   @Override
   public void dataChanged() {
-    // check values on channel and modify state accordingly
-    if (channel.getAssistedStatus()) {
-      status.setText("Channel is active ");
+    // check values on channelData and modify state accordingly
+    if (channelData.getAssistedStatus()) {
+      status.setText("ChannelData is active ");
     }
-    if (!channel.getAssistedStatus()) {
-      status.setText("Channel is inactive");
+    if (!channelData.getAssistedStatus()) {
+      status.setText("ChannelData is inactive");
     }
-    if (channel.getPing()) {
-      channel.setPing(false);
+    if (channelData.getPing()) {
+      channelData.setPing(false);
       Toast.makeText(
           getApplicationContext(),
           "Assisted has waved",
           Toast.LENGTH_LONG
       ).show();
     }
-
   }
 
   @Override

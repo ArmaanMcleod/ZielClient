@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.Map;
  *
  * @author Bilal Shehata
  */
-public class Channel implements ValueEventListener {
+public class ChannelData implements ValueEventListener {
   // contains current channel values in database
   private Map<String, Object> channelValues;
   // reference to the database
@@ -28,7 +29,7 @@ public class Channel implements ValueEventListener {
    * @param channelReference - location in database where channel exists
    * @param channelListener  - the object that wants to listen to the channel
    */
-  public Channel(DatabaseReference channelReference, ChannelListener channelListener) {
+  public ChannelData(DatabaseReference channelReference, ChannelListener channelListener) {
     this.channelReference = channelReference;
     this.channelListener = channelListener;
     channelReference.addValueEventListener(this);
@@ -97,7 +98,8 @@ public class Channel implements ValueEventListener {
    */
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-    channelValues = (Map<String, Object>) dataSnapshot.getValue();
+    GenericTypeIndicator<Map<String, Object>> t = new GenericTypeIndicator<Map<String, Object>>() {};
+    channelValues = dataSnapshot.getValue(t);
     channelListener.dataChanged();
   }
 

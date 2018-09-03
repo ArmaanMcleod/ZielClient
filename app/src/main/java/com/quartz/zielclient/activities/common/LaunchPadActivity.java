@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
+import com.quartz.zielclient.models.User;
 
 
 /**
@@ -19,6 +20,8 @@ import com.quartz.zielclient.activities.signup.SignUpActivity;
  * @author Bilal Shehata
  */
 public class LaunchPadActivity extends AppCompatActivity implements View.OnClickListener {
+
+  private User user;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,8 @@ public class LaunchPadActivity extends AppCompatActivity implements View.OnClick
     navigation.setOnClickListener(this);
     textChat.setOnClickListener(this);
     sessionMaker.setOnClickListener(this);
+
+    user = new User(getIntent().getBundleExtra("user"));
   }
 
   @Override
@@ -44,14 +49,13 @@ public class LaunchPadActivity extends AppCompatActivity implements View.OnClick
         // do your code
         break;
       case R.id.signUpButton:
-        startActivity(new Intent(LaunchPadActivity.this, SignUpActivity.class ));
+        startActivity(new Intent(LaunchPadActivity.this, SignUpActivity.class));
         break;
       case R.id.textChatButton:
         // do your code
         break;
       case R.id.navigationButton:
         startActivity(new Intent(LaunchPadActivity.this, MapsActivity.class));
-
         break;
       case R.id.sessionMakerButton:
         startActivity(new Intent(LaunchPadActivity.this, ManualRedirect.class));

@@ -26,6 +26,7 @@ public final class UserController {
 
   /**
    * Attempts to return the currently logged in Firebase user.
+   *
    * @return The Firebase user.
    * @throws AuthorisationException If the FirebaseUser could not be found.
    */
@@ -71,4 +72,4 @@ public final class UserController {
   private static String userIdPath(String userId) {
     return USER_DATABASE_PATH + "/" + userId;
   }
- }
+}
