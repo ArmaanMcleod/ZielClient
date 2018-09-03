@@ -1,4 +1,4 @@
-package com.quartz.zielclient.utilities.map;
+package com.quartz.zielclient.map;
 
 import com.google.android.gms.maps.model.LatLng;
 

@@ -1,4 +1,4 @@
-package com.quartz.zielclient.utilities.map;
+package com.quartz.zielclient.map;
 
 import android.graphics.Color;
 import android.os.AsyncTask;

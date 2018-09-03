@@ -1,4 +1,4 @@
-package com.quartz.zielclient.utilities.carer;
+package com.quartz.zielclient.notifications;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;

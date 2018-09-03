@@ -1,4 +1,4 @@
-package com.quartz.zielclient.utilities.map;
+package com.quartz.zielclient.map;
 
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;

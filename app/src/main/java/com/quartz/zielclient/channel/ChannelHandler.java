@@ -1,4 +1,4 @@
-package com.quartz.zielclient.utilities.channel;
+package com.quartz.zielclient.channel;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

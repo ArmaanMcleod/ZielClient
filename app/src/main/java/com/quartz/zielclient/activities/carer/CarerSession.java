@@ -15,10 +15,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.utilities.channel.Channel;
-import com.quartz.zielclient.utilities.channel.ChannelHandler;
-import com.quartz.zielclient.utilities.channel.ChannelListener;
-import com.quartz.zielclient.utilities.carer.NotificationHandler;
+import com.quartz.zielclient.channel.Channel;
+import com.quartz.zielclient.channel.ChannelHandler;
+import com.quartz.zielclient.channel.ChannelListener;
+import com.quartz.zielclient.notifications.NotificationHandler;
 
 import static android.view.View.VISIBLE;
 

@@ -1,4 +1,4 @@
-package com.quartz.zielclient.utilities.channel;
+package com.quartz.zielclient.channel;
 
 /**
  * interface for objects that wish to listen to a channel

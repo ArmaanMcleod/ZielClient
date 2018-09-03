@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.utilities.channel.Channel;
-import com.quartz.zielclient.utilities.channel.ChannelHandler;
-import com.quartz.zielclient.utilities.channel.ChannelListener;
+import com.quartz.zielclient.channel.Channel;
+import com.quartz.zielclient.channel.ChannelHandler;
+import com.quartz.zielclient.channel.ChannelListener;
 
 
 /**

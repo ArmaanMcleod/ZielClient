@@ -2,8 +2,8 @@ package com.quartz.zielclient.utilities;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
-import com.quartz.zielclient.utilities.channel.Channel;
-import com.quartz.zielclient.utilities.channel.ChannelListener;
+import com.quartz.zielclient.channel.Channel;
+import com.quartz.zielclient.channel.ChannelListener;
 
 import org.junit.Before;
 import org.junit.Test;
