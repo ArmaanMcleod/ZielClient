@@ -5,18 +5,26 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.common.LaunchPadActivity;
+import com.quartz.zielclient.activities.signup.SignUpActivity;
+import com.quartz.zielclient.user.UserController;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_splash_screen);
+    Intent intent = new Intent();
+    if (UserController.isSignedIn()) {
+      intent.setClass(this, LaunchPadActivity.class);
+    } else {
+      intent.setClass(this, SignUpActivity.class);
+    }
+
     Handler handler = new Handler();
     Runnable r = () -> {
-      Intent intent = new Intent(SplashScreenActivity.this, LaunchPadActivity.class);
       startActivity(intent);
       finish();
     };

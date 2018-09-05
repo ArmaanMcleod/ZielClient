@@ -1,4 +1,4 @@
-package com.quartz.zielclient.controllers;
+package com.quartz.zielclient.user;
 
 import android.support.annotation.NonNull;
 
@@ -8,7 +8,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.exceptions.AuthorisationException;
-import com.quartz.zielclient.models.User;
+import com.quartz.zielclient.user.User;
 
 public final class UserController {
 
@@ -38,8 +38,13 @@ public final class UserController {
     return firebaseUser;
   }
 
+  public static boolean isSignedIn() {
+    return firebaseAuth.getCurrentUser() != null;
+  }
+
   /**
-   * Creates a user in the database. To keep it synced with the authentication database,
+   * Creates a user in the database. To keep it synced with the authentication database, the key for
+   * each user matches the UID given to each FirebaseUser.
    *
    * @param firebaseUser A reference to the Firebase authenticated user.
    * @param firstName    The user's first name.
@@ -67,6 +72,11 @@ public final class UserController {
   public static void fetchUser(final String userId, ValueEventListener listener) {
     DatabaseReference ref = firebaseDatabase.getReference(userIdPath(userId));
     ref.addValueEventListener(listener);
+  }
+
+  public static void fetchThisUser(ValueEventListener listener) throws AuthorisationException {
+    FirebaseUser firebaseUser = retrieveFirebaseUser();
+    fetchUser(firebaseUser.getUid(), listener);
   }
 
   private static String userIdPath(String userId) {

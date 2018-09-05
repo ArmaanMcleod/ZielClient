@@ -1,6 +1,10 @@
-package com.quartz.zielclient.models;
+package com.quartz.zielclient.user;
 
 import android.os.Bundle;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.quartz.zielclient.models.Model;
 
 import java.util.Map;
 
@@ -9,10 +13,10 @@ import java.util.Map;
  */
 public class User implements Model {
 
-  private static final String FIRST_NAME_KEY = "firstName";
-  private static final String LAST_NAME_KEY = "lastName";
-  private static final String PHONE_NUMBER_KEY = "phoneNumber";
-  private static final String IS_ASSISTED_KEY = "isAssisted";
+  static final String FIRST_NAME_KEY = "firstName";
+  static final String LAST_NAME_KEY = "lastName";
+  static final String PHONE_NUMBER_KEY = "phoneNumber";
+  static final String IS_ASSISTED_KEY = "isAssisted";
 
   private String firstName;
   private String lastName;
@@ -24,20 +28,6 @@ public class User implements Model {
     this.lastName = lastName;
     this.phoneNumber = phoneNumber;
     this.isAssisted = isAssisted;
-  }
-
-  public User(Map<String, Object> rawUserData) {
-    this.firstName = (String) rawUserData.get(FIRST_NAME_KEY);
-    this.lastName = (String) rawUserData.get(LAST_NAME_KEY);
-    this.phoneNumber = (String) rawUserData.get(PHONE_NUMBER_KEY);
-    this.isAssisted = (Boolean) rawUserData.get(IS_ASSISTED_KEY);
-  }
-
-  public User(Bundle bundle) {
-    this.firstName = bundle.getString(FIRST_NAME_KEY);
-    this.lastName = bundle.getString(LAST_NAME_KEY);
-    this.phoneNumber = bundle.getString(PHONE_NUMBER_KEY);
-    this.isAssisted = bundle.getBoolean(IS_ASSISTED_KEY);
   }
 
   public String getFirstName() {

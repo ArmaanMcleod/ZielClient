@@ -13,9 +13,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.SplashScreenActivity;
 import com.quartz.zielclient.activities.common.LaunchPadActivity;
-import com.quartz.zielclient.controllers.UserController;
+import com.quartz.zielclient.user.UserController;
 import com.quartz.zielclient.exceptions.AuthorisationException;
-import com.quartz.zielclient.models.User;
+import com.quartz.zielclient.user.User;
 
 import static android.view.View.OnClickListener;
 

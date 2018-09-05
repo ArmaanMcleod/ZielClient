@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.firebase.database.DatabaseReference;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelController;
@@ -36,6 +35,13 @@ public class AssistedSession extends AppCompatActivity implements ChannelListene
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+//    try {
+//      UserController.fetchThisUser(this);
+//    } catch (AuthorisationException e) {
+//      startActivity(new Intent(this, SignUpActivity.class));
+//    }
+//
     // set the content view to the assisted_session
     setContentView(R.layout.activity_assisted_session);
     // allocate the graphical button to a functional button
@@ -83,4 +89,5 @@ public class AssistedSession extends AppCompatActivity implements ChannelListene
   public String getCarerId() {
     return myCarerId;
   }
+
 }

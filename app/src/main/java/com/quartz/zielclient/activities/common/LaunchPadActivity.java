@@ -8,7 +8,6 @@ import android.widget.Button;
 
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
-import com.quartz.zielclient.models.User;
 
 
 /**
@@ -21,7 +20,6 @@ import com.quartz.zielclient.models.User;
  */
 public class LaunchPadActivity extends AppCompatActivity implements View.OnClickListener {
 
-  private User user;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +36,6 @@ public class LaunchPadActivity extends AppCompatActivity implements View.OnClick
     navigation.setOnClickListener(this);
     textChat.setOnClickListener(this);
     sessionMaker.setOnClickListener(this);
-
-    user = new User(getIntent().getBundleExtra("user"));
   }
 
   @Override
