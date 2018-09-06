@@ -116,23 +116,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
       // All previous locations
       List<Location> locationList = locationResult.getLocations();
-
-
       // If one location exists
       if (!locationList.isEmpty()) {
 
         // The last location in the list is the newest
         Location location = locationList.get(locationList.size() - 1);
-
-
         Log.i(TAG, "Location: " +
             location.getLatitude() + " "
             + location.getLongitude());
-        Log.d("UPDATEOCCURED","COORDINATES SHOULD CHANGE");
+
         channel.setAssistedLocation(String.valueOf(location.getLatitude()),String.valueOf(location.getLongitude()));
         // Update and draw source location
         setSource(new LatLng(location.getLatitude(),location.getLongitude()));
         drawMarker(source, BitmapDescriptorFactory.HUE_MAGENTA, "Current Location");
+      }else{
+        setSource(new LatLng(0,0));
       }
     }
   };

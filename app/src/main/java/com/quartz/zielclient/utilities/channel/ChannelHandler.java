@@ -63,7 +63,9 @@ public final class ChannelHandler {
    * @return The existing channel
    */
   public static Channel retrieveChannel(String channelID, ChannelListener channelListener) {
-    return new Channel(channelsReference.child(channelID), channelListener);
+    Channel channel = new Channel(channelsReference.child(channelID), channelListener);
+    channel.setDirectionsURL("none");
+    return channel;
   }
 
   public static void staticInit() {

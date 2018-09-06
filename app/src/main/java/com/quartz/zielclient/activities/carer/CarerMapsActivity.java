@@ -28,6 +28,7 @@ public class CarerMapsActivity extends AppCompatActivity implements OnMapReadyCa
   // This prevents the default usage of  0,0
   private double MELBOURNEUNILAT = -37.7964;
   private double MELBOURNEUNILONG = 144.9612;
+  private String currentDestinationURL = "none";
   // default to melbourne uni
   // list of Assisted movements
   final Double[] latitu = {MELBOURNEUNILAT};
@@ -97,8 +98,13 @@ public class CarerMapsActivity extends AppCompatActivity implements OnMapReadyCa
     updateMapCoords();
     // if the assisted has entered a route then generate that same route
     if((channel.getDirectionsURL() != null) && !channel.getDirectionsURL().equals("none")){
+      // if the route is already the current route then dont update
+      if(!channel.getDirectionsURL().equals(currentDestinationURL)){
+        // update the route
       FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
       fetchUrl.execute(channel.getDirectionsURL());
+      currentDestinationURL = channel.getDirectionsURL();
+      }
     }
   }
 
