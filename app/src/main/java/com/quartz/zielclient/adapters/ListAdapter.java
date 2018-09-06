@@ -42,14 +42,19 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
   // Binding the data to the ViewHolders
   @Override
   public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    ListItem listItem = listItems.get(i);
 
+    // Fetching the Names and Descriptions
+    viewHolder.textViewName.setText(listItem.getName());
+    viewHolder.textViewDesc.setText(listItem.getDescription());
   }
 
+  // Returns size of list
   @Override
   public int getItemCount() {
-    return 0;
+    return listItems.size();
   }
-  
+
   /**
    * ViewHolder class made for this ListAdapter
    */
