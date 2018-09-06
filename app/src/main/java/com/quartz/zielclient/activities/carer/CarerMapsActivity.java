@@ -17,15 +17,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.utilities.channel.Channel;
+import com.quartz.zielclient.utilities.channel.ChannelHandler;
+import com.quartz.zielclient.utilities.channel.ChannelListener;
+import com.quartz.zielclient.utilities.map.FetchUrl;
 
-public class CarerMapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class CarerMapsActivity extends AppCompatActivity implements OnMapReadyCallback, ChannelListener {
 
-  private GoogleMap mMap;
+  private GoogleMap mGoogleMap;
 
-  final Double[] latitu = {7.02343187};
-  final Double[] longitu = {79.89658312};
+
+  final Double[] latitu = {-37.7964};
+  final Double[] longitu = {144.9612};
   MarkerOptions mop = new MarkerOptions();
   Marker assistedMarker;
+  // test channel
+  Channel channel  = ChannelHandler.retrieveChannel("90a2c51d-4d9a-4d15-af8e-9639ff472231",this);
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -50,35 +57,12 @@ public class CarerMapsActivity extends AppCompatActivity implements OnMapReadyCa
    */
   @Override
   public void onMapReady(GoogleMap googleMap) {
-    mMap = googleMap;
+    mGoogleMap = googleMap;
     mop.position(new LatLng(0,0));
     mop.title("Assisted Location");
 
-    assistedMarker  = mMap.addMarker(mop);
+    assistedMarker  = mGoogleMap.addMarker(mop);
     updateMapCoords();
-
-
-   DatabaseReference myRef = FirebaseDatabase.getInstance()
-            .getReference().child("channels").child("90a2c51d-4d9a-4d15-af8e-9639ff472231").child("assistedLocation");
-    myRef.addValueEventListener(new ValueEventListener() {
-      @Override
-      public void onDataChange(DataSnapshot
-                                       dataSnapshot) {
-        Log.d("UPDATEHAPPENED","DATA SNAPSHOT UPDATED");
-        latitu[0] = Double.valueOf(String.valueOf(dataSnapshot.child("xCoord").getValue()));
-        Log.d("UPDATEHAPPENED",Double.valueOf(String.valueOf(dataSnapshot.child("xCoord").getValue())).toString());
-        Log.d("UPDATEHAPPENED",latitu[0].toString());
-        longitu[0] = Double.valueOf(String.valueOf(dataSnapshot.child("yCoord").getValue()));
-        updateMapCoords();
-
-
-      }
-
-      @Override
-      public void onCancelled(DatabaseError databaseError) {
-
-      }
-    });
 
 
   }
@@ -88,14 +72,36 @@ public class CarerMapsActivity extends AppCompatActivity implements OnMapReadyCa
 
 
     assistedMarker.setPosition(assistedLocation);
-    mMap
+    mGoogleMap
             .moveCamera(CameraUpdateFactory
                     .newLatLng(assistedLocation));
-    mMap
+    mGoogleMap
             .animateCamera(CameraUpdateFactory
                     .newLatLngZoom(assistedLocation, 13f));
 
 
+  }
+
+  @Override
+  public void dataChanged() {
+    latitu[0] = channel.getAssistedLocation().latitude;
+    longitu[0] = channel.getAssistedLocation().longitude;
+    updateMapCoords();
+    if((channel.getDirectionsURL() != null) && !channel.getDirectionsURL().equals("none")){
+      FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
+      fetchUrl.execute(channel.getDirectionsURL());
+    }
+
+  }
+
+  @Override
+  public String getAssistedId() {
+    return "Assisted1";
+  }
+
+  @Override
+  public String getCarerId() {
+    return "carer1";
   }
 }
 

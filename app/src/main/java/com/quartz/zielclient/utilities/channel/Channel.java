@@ -39,6 +39,10 @@ public class Channel implements ValueEventListener {
     channelReference.addValueEventListener(this);
   }
 
+  public String getDirectionsURL() {return channelValues.get("directionsURL").toString();}
+
+  public void setDirectionsURL(String directionsURL) { channelReference.child("directionsURL").setValue(directionsURL);}
+
   public String getAssisted() {
     return channelValues.get("assisted").toString();
   }
@@ -71,6 +75,7 @@ public class Channel implements ValueEventListener {
     channelReference.child("carerStatus").setValue(carerStatus);
   }
 
+
   public Boolean getPing() {
     return channelValues.get("Ping").equals(true);
   }
@@ -95,16 +100,21 @@ public class Channel implements ValueEventListener {
     this.channelListener = channelListener;
   }
 
-  public void setAssistedLocation(double xCoord, double yCoord){
+  public void setAssistedLocation(String xCoord, String yCoord){
     this.channelReference.child("assistedLocation").child("xCoord").setValue(xCoord);
     this.channelReference.child("assistedLocation").child("yCoord").setValue(yCoord);
   }
+
+  /**
+   * method returns a LatLng Object since this is more practical for the google maps API.
+   * @return
+   */
   public LatLng getAssistedLocation(){
     if(this.channelValues!=null){
-    Map<String,Long> assistedLocationCordinates = (Map<String, Long>) this.channelValues.get("assistedLocation");
+    Map<String,String> assistedLocationCordinates = (Map<String,String >) this.channelValues.get("assistedLocation");
 
-    double xCoord = Double.valueOf(assistedLocationCordinates.get("xCoord"));
-    double yCoord = Double.valueOf(assistedLocationCordinates.get("yCoord"));
+    double xCoord = Double.parseDouble(assistedLocationCordinates.get("xCoord"));
+    double yCoord = Double.parseDouble(assistedLocationCordinates.get("yCoord"));
     return new LatLng(xCoord,yCoord);
 
     }

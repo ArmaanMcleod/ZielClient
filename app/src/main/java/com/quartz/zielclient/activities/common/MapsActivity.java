@@ -28,6 +28,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.utilities.channel.Channel;
 import com.quartz.zielclient.utilities.channel.ChannelHandler;
@@ -68,7 +70,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   // Custom permissions request code
   private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
-  private static final int DEFAULT_ZOOM = 11;
+  private static final int DEFAULT_ZOOM = 13;
 
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
@@ -98,7 +100,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     this.source = source;
   }
 
-  private  Channel channel = ChannelHandler.createChannel(this);
+
+  // temporary for testing
+  Channel channel  = ChannelHandler.retrieveChannel("90a2c51d-4d9a-4d15-af8e-9639ff472231",this);
+
+
   private LocationCallback mLocationCallback = new LocationCallback() {
 
     /**
@@ -118,10 +124,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // The last location in the list is the newest
         Location location = locationList.get(locationList.size() - 1);
 
+
         Log.i(TAG, "Location: " +
             location.getLatitude() + " "
             + location.getLongitude());
-
+        Log.d("UPDATEOCCURED","COORDINATES SHOULD CHANGE");
+        channel.setAssistedLocation(String.valueOf(location.getLatitude()),String.valueOf(location.getLongitude()));
         // Update and draw source location
         setSource(new LatLng(location.getLatitude(),location.getLongitude()));
         drawMarker(source, BitmapDescriptorFactory.HUE_MAGENTA, "Current Location");
@@ -181,6 +189,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setDestination(place.getLatLng());
         // Compute path to destination
         String directionsURL = getDirectionsUrl();
+        channel.setDirectionsURL(directionsURL);
         FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
         fetchUrl.execute(directionsURL);
 
@@ -237,8 +246,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Setup location request and intervals between requests
     mLocationRequest = new LocationRequest();
-    mLocationRequest.setInterval(120000); // two minute interval
-    mLocationRequest.setFastestInterval(120000);
+    mLocationRequest.setInterval(10000); // 10 second interval
+    mLocationRequest.setFastestInterval(10000);
     mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
     // Check permissions
@@ -339,8 +348,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private String getDirectionsUrl() {
 
     // Source and destination formats
-    String strSource = "origin=" + source.latitude + "," + source.longitude;
-    String strDestination = "destination=" + destination.latitude + "," + destination.longitude;
+    String strSource = "origin=" + getSource().latitude + "," + getSource().longitude;
+    String strDestination = "destination=" +getDestination().latitude + "," + getDestination().longitude;
 
     // Sensor initialisation
     String sensor = "sensor=false";
