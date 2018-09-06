@@ -36,7 +36,7 @@ public class CarerMapsActivity extends AppCompatActivity implements OnMapReadyCa
   // initialize assisted location marker
   MarkerOptions assistedMarkerOptions = new MarkerOptions();
   Marker assistedMarker;
-  // test channel to be replaced with the current channel that was handled by a previous activity.
+  // debug channel to be replaced with the current channel that was handled by a previous activity.
   Channel channel  = ChannelHandler.retrieveChannel("90a2c51d-4d9a-4d15-af8e-9639ff472231",this);
 
   /**
