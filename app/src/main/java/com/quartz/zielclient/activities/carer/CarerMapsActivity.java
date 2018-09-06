@@ -75,13 +75,17 @@ public class CarerMapsActivity extends AppCompatActivity implements OnMapReadyCa
    */
   public void updateMapCoords(){
     LatLng assistedLocation = new LatLng(latitu[0], longitu[0]);
-    assistedMarker.setPosition(assistedLocation);
-    mGoogleMap
-            .moveCamera(CameraUpdateFactory
-                    .newLatLng(assistedLocation));
-    mGoogleMap
-            .animateCamera(CameraUpdateFactory
-                    .newLatLngZoom(assistedLocation, 13f));
+    // Safety check
+    // Asynchronous map may lead to erorr this ensures that the database call does update if map is not ready
+    if(assistedMarker!=null) {
+      assistedMarker.setPosition(assistedLocation);
+      mGoogleMap
+              .moveCamera(CameraUpdateFactory
+                      .newLatLng(assistedLocation));
+      mGoogleMap
+              .animateCamera(CameraUpdateFactory
+                      .newLatLngZoom(assistedLocation, 13f));
+    }
   }
 
   /**
