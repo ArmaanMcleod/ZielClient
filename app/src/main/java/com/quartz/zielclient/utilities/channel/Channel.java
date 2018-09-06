@@ -1,8 +1,12 @@
 package com.quartz.zielclient.utilities.channel;
 
 
+import android.location.LocationProvider;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
+import com.google.android.gms.maps.LocationSource;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -91,6 +95,23 @@ public class Channel implements ValueEventListener {
     this.channelListener = channelListener;
   }
 
+  public void setAssistedLocation(double xCoord, double yCoord){
+    this.channelReference.child("assistedLocation").child("xCoord").setValue(xCoord);
+    this.channelReference.child("assistedLocation").child("yCoord").setValue(yCoord);
+  }
+  public LatLng getAssistedLocation(){
+    if(this.channelValues!=null){
+    Map<String,Long> assistedLocationCordinates = (Map<String, Long>) this.channelValues.get("assistedLocation");
+
+    double xCoord = Double.valueOf(assistedLocationCordinates.get("xCoord"));
+    double yCoord = Double.valueOf(assistedLocationCordinates.get("yCoord"));
+    return new LatLng(xCoord,yCoord);
+
+    }
+    return new LatLng(0,0);
+
+  }
+
   /**
    * recieve update from database and update the listener that some data has changed
    *
@@ -99,6 +120,7 @@ public class Channel implements ValueEventListener {
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
     channelValues = (Map<String, Object>) dataSnapshot.getValue();
+    Log.d("MAPVALUES",channelValues.toString());
     channelListener.dataChanged();
   }
 

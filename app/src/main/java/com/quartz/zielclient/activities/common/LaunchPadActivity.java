@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.carer.CarerMapsActivity;
+import com.quartz.zielclient.activities.carer.CarerSession;
 
 
 /**
@@ -28,7 +30,9 @@ public class LaunchPadActivity extends AppCompatActivity implements View.OnClick
     Button navigation = findViewById(R.id.navigationButton);
     Button textChat = findViewById(R.id.textChatButton);
     Button sessionMaker = findViewById(R.id.sessionMakerButton);
+    Button tracking = findViewById(R.id.trackingButton);
 
+    tracking.setOnClickListener(this);
     signIn.setOnClickListener(this);
     signUp.setOnClickListener(this);
     navigation.setOnClickListener(this);
@@ -50,10 +54,12 @@ public class LaunchPadActivity extends AppCompatActivity implements View.OnClick
         break;
       case R.id.navigationButton:
         startActivity(new Intent(LaunchPadActivity.this, MapsActivity.class));
-
         break;
       case R.id.sessionMakerButton:
         startActivity(new Intent(LaunchPadActivity.this, ManualRedirect.class));
+        break;
+      case R.id.trackingButton:
+        startActivity(new Intent(LaunchPadActivity.this, CarerMapsActivity.class));
         break;
       default:
         break;

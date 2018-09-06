@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.quartz.zielclient">
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -20,7 +21,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.common.LaunchPadActivity" />
-
         <activity
             android:name=".activities.carer.CarerSession"
             android:label="@string/title_activity_carer_session"
@@ -40,7 +40,7 @@
            You need a different API key for each encryption key, including the release key that is used to
            sign the APK for publishing.
            You can define the keys for the debug and release targets in src/debug/ and src/release/.
-      -->
+        -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -49,6 +49,13 @@
             android:name=".activities.common.MapsActivity"
             android:label="@string/title_activity_maps" />
 
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
+        <activity
+            android:name=".activities.carer.CarerMapsActivity"
+            android:label="@string/title_activity_carer_maps"></activity>
     </application>
+
 </manifest>

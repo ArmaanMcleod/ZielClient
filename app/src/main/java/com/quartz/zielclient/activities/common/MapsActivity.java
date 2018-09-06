@@ -29,6 +29,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.utilities.channel.Channel;
+import com.quartz.zielclient.utilities.channel.ChannelHandler;
+import com.quartz.zielclient.utilities.channel.ChannelListener;
 import com.quartz.zielclient.utilities.map.DirectionsJSONParser;
 import com.quartz.zielclient.utilities.map.FetchUrl;
 import com.quartz.zielclient.utilities.map.ParserTask;
@@ -60,7 +63,7 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
  * @version 1.0- 1
  * 28/08/2018
  */
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,ChannelListener {
 
   // Custom permissions request code
   private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
@@ -95,6 +98,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     this.source = source;
   }
 
+  private  Channel channel = ChannelHandler.createChannel(this);
   private LocationCallback mLocationCallback = new LocationCallback() {
 
     /**
@@ -107,17 +111,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       // All previous locations
       List<Location> locationList = locationResult.getLocations();
 
+
       // If one location exists
       if (!locationList.isEmpty()) {
 
         // The last location in the list is the newest
         Location location = locationList.get(locationList.size() - 1);
+
         Log.i(TAG, "Location: " +
             location.getLatitude() + " "
             + location.getLongitude());
 
         // Update and draw source location
-        setSource(new LatLng(location.getLatitude(), location.getLongitude()));
+        setSource(new LatLng(location.getLatitude(),location.getLongitude()));
         drawMarker(source, BitmapDescriptorFactory.HUE_MAGENTA, "Current Location");
       }
     }
@@ -170,9 +176,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Clear all previous points on map
         mGoogleMap.clear();
 
+
         Log.d(TAG, "Place selected: " + place.getLatLng());
         setDestination(place.getLatLng());
-
         // Compute path to destination
         String directionsURL = getDirectionsUrl();
         FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
@@ -345,5 +351,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     // Building the url to the web service
     return API_URL + parameters;
 
+  }
+
+  @Override
+  public void dataChanged() {
+
+  }
+
+  @Override
+  public String getAssistedId() {
+    return "Assisted1";
+  }
+
+  @Override
+  public String getCarerId() {
+    return "carer1";
   }
 }
