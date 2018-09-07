@@ -129,8 +129,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Update and draw source location
         setSource(new LatLng(location.getLatitude(),location.getLongitude()));
         drawMarker(source, BitmapDescriptorFactory.HUE_MAGENTA, "Current Location");
-      }else{
-        setSource(new LatLng(0,0));
       }
     }
   };
