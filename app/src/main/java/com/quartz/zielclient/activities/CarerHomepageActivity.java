@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.adapters.ListAdapter;
 import com.quartz.zielclient.models.ListItem;
 
 import java.util.ArrayList;
@@ -36,6 +37,20 @@ public class CarerHomepageActivity extends Activity {
     // Use a linear layout manager
     mLayoutManager = new LinearLayoutManager(this);
     mRecyclerView.setLayoutManager(mLayoutManager);
+
+    listItems = new ArrayList<>();
+
+    // Fake Data temporarily used
+    for(int i=0; i<10; i++) {
+      ListItem listItem = new ListItem(
+          "John" + (i+1),
+          "needs to go to the hospital"
+      );
+      listItems.add(listItem);
+    }
+
+    mAdapter = new ListAdapter(listItems, this);
+    mRecyclerView.setAdapter(mAdapter);
 
   }
 
