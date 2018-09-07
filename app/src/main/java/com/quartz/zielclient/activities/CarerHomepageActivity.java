@@ -9,8 +9,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.models.ListItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CarerHomepageActivity extends Activity {
 
@@ -18,12 +20,15 @@ public class CarerHomepageActivity extends Activity {
   private RecyclerView.Adapter mAdapter;
   private RecyclerView.LayoutManager mLayoutManager;
   private ArrayList<String> mItem;
+  private List<ListItem> listItems;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_carer_homepage);
-    mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+
+    // Initialising RecyclerView
+    mRecyclerView = findViewById(R.id.my_recycler_view);
 
     // Each entry has fixed size.
     mRecyclerView.setHasFixedSize(true);
