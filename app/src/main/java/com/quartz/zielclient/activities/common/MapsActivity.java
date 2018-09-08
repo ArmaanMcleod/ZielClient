@@ -1,5 +1,7 @@
 package com.quartz.zielclient.activities.common;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
@@ -7,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -23,19 +24,15 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
-import com.google.android.gms.maps.StreetViewPanorama;
-import com.google.android.gms.maps.StreetViewPanoramaFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
-import com.google.android.gms.maps.model.StreetViewPanoramaOrientation;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.utilities.map.FetchUrl;
 
 import java.util.List;
+import java.util.Objects;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -151,16 +148,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Create street view button
     Button streetViewButton = findViewById(R.id.street_view);
-    streetViewButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-
+    streetViewButton.setOnClickListener(v -> {
+      LatLng destinationLocation = getDestination();
+      if (destinationLocation != null) {
+        Intent intent = new Intent(MapsActivity.this, StreetViewActivity.class);
+        intent.putExtra("destination", destinationLocation);
+        startActivity(intent);
       }
     });
 
     // Create autocomplete bar
     PlaceAutocompleteFragment placeAutoComplete = (PlaceAutocompleteFragment)
         getFragmentManager().findFragmentById(R.id.place_autocomplete);
+    Objects.requireNonNull(placeAutoComplete.getView()).setBackgroundColor(Color.WHITE);
 
     // Listen for new places queried in search bar
     placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {

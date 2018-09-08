@@ -54,7 +54,7 @@
             android:required="false" />
 
         <activity android:name=".activities.common.TextChatActivity" />
-        <activity android:name=".StreetViewActivity"></activity>
+        <activity android:name=".activities.common.StreetViewActivity"></activity>
     </application>
 
 </manifest>

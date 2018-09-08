@@ -8,21 +8,22 @@
     android:weightSum="1">
 
     <fragment
-        android:id="@+id/place_autocomplete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment" />
-
-    <fragment
         android:id="@+id/map"
         class="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+
+    <fragment
+        android:id="@+id/place_autocomplete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment" />
+
     <Button
-        android:id="@+id/streetviewpanorama"
+        android:id="@+id/street_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="@string/street_view"/>
+        android:text="@string/street_view" />
 </RelativeLayout>

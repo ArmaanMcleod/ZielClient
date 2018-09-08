@@ -4,16 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StreetViewActivity">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary" />
+    tools:context=".activities.common.StreetViewActivity">
 
     <fragment
-        android:id="@+id/g_map_street"
+        android:id="@+id/streetview_panorama"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:name="com.google.android.gms.maps.StreetViewPanoramaFragment" />
