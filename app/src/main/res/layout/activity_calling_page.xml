@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageButton
+        android:id="@+id/Contact_Image"
+        android:layout_width="194dp"
+        android:layout_height="186dp"
+        android:layout_marginBottom="57dp"
+        android:layout_marginTop="61dp"
+        app:layout_constraintBottom_toBottomOf="@+id/User_Name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/ic_launcher_round" />
+
+    <TextView
+        android:id="@+id/User_Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Contact Name"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/Contact_Image"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/Call_length"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0:47"
+        android:textSize="30dp"
+        app:layout_constraintEnd_toEndOf="@+id/User_Name"
+        app:layout_constraintStart_toStartOf="@+id/User_Name"
+        app:layout_constraintTop_toBottomOf="@+id/User_Name" />
+
+    <ImageButton
+        android:id="@+id/hang_up_button"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/hang_up_label"
+        app:layout_constraintEnd_toEndOf="@+id/hang_up_label"
+        app:layout_constraintStart_toStartOf="@+id/hang_up_label"
+        app:layout_constraintTop_toTopOf="@+id/speaker_lavel"
+        app:srcCompat="@mipmap/ic_launcher_foreground_hang_up" />
+
+    <TextView
+        android:id="@+id/hang_up_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="95dp"
+        android:text="Hang Up"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/speaker_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/speaker_lavel" />
+
+    <ImageButton
+        android:id="@+id/speaker_lavel"
+        android:layout_width="75dp"
+        android:layout_height="79dp"
+        android:layout_marginBottom="27dp"
+        android:layout_marginTop="39dp"
+        app:layout_constraintBottom_toBottomOf="@+id/speaker_label"
+        app:layout_constraintEnd_toEndOf="@+id/speaker_label"
+        app:layout_constraintTop_toBottomOf="@+id/Call_length"
+        app:srcCompat="@mipmap/ic_launcher_foreground_speaker" />
+
+    <TextView
+        android:id="@+id/speaker_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="77dp"
+        android:layout_marginStart="44dp"
+        android:text="Speaker"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/hang_up_label" />
+
+
+</android.support.constraint.ConstraintLayout>
