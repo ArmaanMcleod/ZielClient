@@ -27,6 +27,10 @@ public class ParserTask extends AsyncTask<String, Integer, List<List<Map<String,
 
   private final String TAG = this.getClass().getSimpleName();
 
+  private static int POLYLINE_WIDTH = 16;
+
+  private static final String POLYLINE_COLOR = "#2196F3";
+
   private GoogleMap googleMap;
 
   public ParserTask(GoogleMap googleMap) {
@@ -91,8 +95,8 @@ public class ParserTask extends AsyncTask<String, Integer, List<List<Map<String,
 
       // Add points and colour line
       lineOptions.addAll(points);
-      lineOptions.width(10);
-      lineOptions.color(Color.RED);
+      lineOptions.width(POLYLINE_WIDTH);
+      lineOptions.color(Color.parseColor(POLYLINE_COLOR)).geodesic(true).zIndex(8);
 
       Log.d(TAG, "lineOptions decoded");
     }
