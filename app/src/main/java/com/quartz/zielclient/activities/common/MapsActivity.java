@@ -150,10 +150,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     Button streetViewButton = findViewById(R.id.street_view);
     streetViewButton.setOnClickListener(v -> {
       LatLng destinationLocation = getDestination();
+
+      // Show street view if destination exists
       if (destinationLocation != null) {
         Intent intent = new Intent(MapsActivity.this, StreetViewActivity.class);
         intent.putExtra("destination", destinationLocation);
         startActivity(intent);
+      } else {
+        Toast.makeText(this,
+            "Street view needs a destination location entered",
+            Toast.LENGTH_LONG).show();
       }
     });
 

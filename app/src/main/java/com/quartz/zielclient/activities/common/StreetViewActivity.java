@@ -21,8 +21,6 @@ import com.quartz.zielclient.R;
 public class StreetViewActivity extends AppCompatActivity implements
     OnStreetViewPanoramaReadyCallback {
 
-  private StreetViewPanorama streetView;
-
   private LatLng destination;
 
   /**
@@ -60,8 +58,6 @@ public class StreetViewActivity extends AppCompatActivity implements
    */
   @Override
   public void onStreetViewPanoramaReady(StreetViewPanorama streetViewPanorama) {
-    streetView = streetViewPanorama;
-
     streetViewPanorama.setPosition(destination);
     streetViewPanorama.setStreetNamesEnabled(true);
     streetViewPanorama.setPanningGesturesEnabled(true);
