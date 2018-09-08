@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout_editor_absoluteY="25dp">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+    <fragment
+        android:id="@+id/videoCalling"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="160dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="0dp"
+        android:scaleType="fitXY"
+        android:src="@mipmap/ic_launcher_foreground_swap_camera"
+        app:backgroundTint="@android:color/transparent"
+        app:borderWidth="0dp"
+        app:fabSize="normal"
+        app:useCompatPadding="true"
+        tools:layout_editor_absoluteX="36dp"
+        tools:layout_editor_absoluteY="421dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="0dp"
+        android:scaleType="fitXY"
+        android:src="@mipmap/ic_launcher_foreground_hang_up"
+        app:backgroundTint="@android:color/transparent"
+        app:borderWidth="0dp"
+        app:fabSize="normal"
+        app:useCompatPadding="true"
+        tools:layout_editor_absoluteX="152dp"
+        tools:layout_editor_absoluteY="421dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="0dp"
+        android:scaleType="fitXY"
+        android:src="@mipmap/ic_launcher_foreground_speaker"
+        app:backgroundTint="@android:color/transparent"
+        app:borderWidth="0dp"
+        app:fabSize="normal"
+        app:useCompatPadding="true"
+        tools:layout_editor_absoluteX="266dp"
+        tools:layout_editor_absoluteY="421dp" />
+
+
+</android.support.constraint.ConstraintLayout>
