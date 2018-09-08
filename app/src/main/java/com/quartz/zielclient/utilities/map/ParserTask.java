@@ -29,6 +29,7 @@ public class ParserTask extends AsyncTask<String, Integer, List<List<Map<String,
 
   private static int POLYLINE_WIDTH = 16;
 
+  // Light blue color
   private static final String POLYLINE_COLOR = "#2196F3";
 
   private GoogleMap googleMap;
