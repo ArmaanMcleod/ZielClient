@@ -39,7 +39,9 @@ public class StreetViewActivity extends AppCompatActivity implements
 
     // Get bundle of arguments passed to this activity
     Bundle bundle = getIntent().getExtras();
-    destination = bundle.getParcelable("destination");
+    if (bundle != null) {
+      destination = bundle.getParcelable("destination");
+    }
 
     // Create street view fragment
     StreetViewPanoramaFragment streetViewPanoramaFragment =
