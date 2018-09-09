@@ -9,6 +9,7 @@ public class HomePageActivity extends Activity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    setTheme(R.style.HomeTheme);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home_page);
   }
