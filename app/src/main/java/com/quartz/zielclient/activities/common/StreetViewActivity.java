@@ -2,6 +2,7 @@ package com.quartz.zielclient.activities.common;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
 import com.google.android.gms.maps.StreetViewPanorama;
@@ -42,6 +43,10 @@ public class StreetViewActivity extends AppCompatActivity implements
     if (bundle != null) {
       destination = bundle.getParcelable("destination");
     }
+
+    // Create toolbar
+    Toolbar tb = findViewById(R.id.toolbar);
+    tb.setSubtitle("Street View");
 
     // Create street view fragment
     StreetViewPanoramaFragment streetViewPanoramaFragment =
