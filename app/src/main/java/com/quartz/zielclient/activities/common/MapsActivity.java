@@ -2,6 +2,8 @@ package com.quartz.zielclient.activities.common;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
@@ -31,7 +33,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.utilities.map.FetchUrl;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -127,15 +131,41 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Update marker options
     markerOptions.position(location);
-    markerOptions.title(message);
+    markerOptions.title(getAddress(location));
     markerOptions.icon(BitmapDescriptorFactory.defaultMarker(colour));
 
     // Add marker to the map
-    mGoogleMap.addMarker(markerOptions);
+    mGoogleMap.addMarker(markerOptions).showInfoWindow();
 
     // Zoom in on map location
     mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM));
   }
+
+  /**
+   * Gets the address of a location.
+   * @param location This is the location.
+   * @return String This is the address in String format.
+   */
+  private String getAddress(LatLng location) {
+    String address = "";
+
+    // Create address geocoder
+    Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+    try {
+
+      // Only retrieve the rop result
+      List<Address> addresses = geocoder.getFromLocation(location.latitude,
+          location.longitude,
+          1);
+
+      address = addresses.get(0).getAddressLine(0);
+    } catch(IOException e) {
+      Log.d(TAG, "getAddress: Cannot fetch address");
+    }
+
+    return address;
+  }
+
 
   /**
    * Creates map along with its attributes.
