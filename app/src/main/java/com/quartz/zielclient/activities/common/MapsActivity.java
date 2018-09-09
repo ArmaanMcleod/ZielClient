@@ -144,7 +144,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_maps2);
+    setContentView(R.layout.activity_maps);
 
     // Create street view button
     Button streetViewButton = findViewById(R.id.street_view);
