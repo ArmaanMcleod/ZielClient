@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.HomePageActivity;
 
 
 /**
@@ -28,11 +29,13 @@ public class LaunchPadActivity extends AppCompatActivity implements View.OnClick
     Button navigation = findViewById(R.id.navigationButton);
     Button textChat = findViewById(R.id.textChatButton);
     Button sessionMaker = findViewById(R.id.sessionMakerButton);
+    Button assistedHome = findViewById(R.id.assistedHome);
     signIn.setOnClickListener(this);
     signUp.setOnClickListener(this);
     navigation.setOnClickListener(this);
     textChat.setOnClickListener(this);
     sessionMaker.setOnClickListener(this);
+    assistedHome.setOnClickListener(this);
   }
 
   @Override
@@ -52,6 +55,9 @@ public class LaunchPadActivity extends AppCompatActivity implements View.OnClick
         break;
       case R.id.sessionMakerButton:
         startActivity(new Intent(LaunchPadActivity.this, ManualRedirect.class));
+        break;
+      case R.id.assistedHome:
+        startActivity(new Intent(LaunchPadActivity.this, HomePageActivity.class));
         break;
       default:
         break;

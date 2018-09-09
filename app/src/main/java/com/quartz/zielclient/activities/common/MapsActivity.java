@@ -350,6 +350,5 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Building the url to the web service
     return API_URL + parameters;
-
   }
 }
