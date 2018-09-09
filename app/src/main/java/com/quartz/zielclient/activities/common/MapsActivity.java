@@ -149,7 +149,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private String getAddress(LatLng location) {
     String address = "";
 
-    // Create address geocoder
+    // Create address geo coder
     Geocoder geocoder = new Geocoder(this, Locale.getDefault());
     try {
 

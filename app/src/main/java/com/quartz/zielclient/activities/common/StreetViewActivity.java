@@ -10,6 +10,7 @@ import com.google.android.gms.maps.StreetViewPanoramaFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
 import com.google.android.gms.maps.model.StreetViewPanoramaOrientation;
+import com.google.android.gms.maps.model.StreetViewSource;
 import com.quartz.zielclient.R;
 
 /**
@@ -23,6 +24,8 @@ public class StreetViewActivity extends AppCompatActivity implements
     OnStreetViewPanoramaReadyCallback {
 
   private LatLng destination;
+
+  private static final int DURATION = 2000;
 
   /**
    * Creates a street view of a map location.
@@ -46,7 +49,7 @@ public class StreetViewActivity extends AppCompatActivity implements
 
     // Create toolbar
     Toolbar tb = findViewById(R.id.toolbar);
-    tb.setSubtitle("Street View");
+    tb.setSubtitle("Google Maps Street View");
 
     // Create street view fragment
     StreetViewPanoramaFragment streetViewPanoramaFragment =
@@ -65,16 +68,21 @@ public class StreetViewActivity extends AppCompatActivity implements
    */
   @Override
   public void onStreetViewPanoramaReady(StreetViewPanorama streetViewPanorama) {
-    streetViewPanorama.setPosition(destination);
+
+    // Set camera properties
+    streetViewPanorama.setPosition(destination, 20, StreetViewSource.OUTDOOR);
     streetViewPanorama.setStreetNamesEnabled(true);
     streetViewPanorama.setPanningGesturesEnabled(true);
     streetViewPanorama.setZoomGesturesEnabled(true);
+    streetViewPanorama.setUserNavigationEnabled(true);
 
-    // Animate street view on screen
-    streetViewPanorama.animateTo(
-        new StreetViewPanoramaCamera.Builder().
-            orientation( new StreetViewPanoramaOrientation(20, 20))
+    // Create camera
+    StreetViewPanoramaCamera camera = new StreetViewPanoramaCamera.Builder()
+            .orientation(new StreetViewPanoramaOrientation(20, 20))
             .zoom(streetViewPanorama.getPanoramaCamera().zoom)
-            .build(), 2000);
+            .build();
+
+    // Animate camera to view
+    streetViewPanorama.animateTo(camera, DURATION);
   }
 }
