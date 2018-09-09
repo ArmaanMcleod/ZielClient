@@ -17,7 +17,7 @@
     <fragment
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/streetview_panorama"
+        android:id="@+id/street_view_panorama"
         android:name="com.google.android.gms.maps.StreetViewPanoramaFragment"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

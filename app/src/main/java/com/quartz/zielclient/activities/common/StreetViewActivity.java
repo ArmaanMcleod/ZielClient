@@ -51,7 +51,7 @@ public class StreetViewActivity extends AppCompatActivity implements
     // Create street view fragment
     StreetViewPanoramaFragment streetViewPanoramaFragment =
         (StreetViewPanoramaFragment) getFragmentManager()
-            .findFragmentById(R.id.streetview_panorama);
+            .findFragmentById(R.id.street_view_panorama);
     streetViewPanoramaFragment.getStreetViewPanoramaAsync(this);
   }
 

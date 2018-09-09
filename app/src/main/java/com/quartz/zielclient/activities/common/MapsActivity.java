@@ -37,6 +37,11 @@ import java.util.Objects;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_MAGENTA;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
+
+import static com.google.android.gms.location.LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
+
 /**
  * This class is responsible for handling all map activities.
  *
@@ -106,7 +111,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Update and draw source location
         setSource(new LatLng(location.getLatitude(), location.getLongitude()));
-        drawMarker(source, BitmapDescriptorFactory.HUE_MAGENTA, "Current Location");
+        drawMarker(source, HUE_MAGENTA, "Current Location");
       }
     }
   };
@@ -185,8 +190,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         fetchUrl.execute(directionsURL);
 
         // Redraw both source and destination markers to screen
-        drawMarker(source, BitmapDescriptorFactory.HUE_MAGENTA, "Current Location");
-        drawMarker(destination, BitmapDescriptorFactory.HUE_RED, "Destination Location");
+        drawMarker(getSource(), HUE_MAGENTA, "Current Location");
+        drawMarker(getDestination(), HUE_RED,"Destination Location");
       }
 
       @Override
@@ -239,7 +244,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     mLocationRequest = new LocationRequest();
     mLocationRequest.setInterval(120000); // two minute interval
     mLocationRequest.setFastestInterval(120000);
-    mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+    mLocationRequest.setPriority(PRIORITY_BALANCED_POWER_ACCURACY);
 
     // Check permissions
     if (checkSelfPermission(ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
@@ -339,8 +344,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private String getDirectionsUrl() {
 
     // Source and destination formats
-    String strSource = "origin=" + source.latitude + "," + source.longitude;
-    String strDestination = "destination=" + destination.latitude + "," + destination.longitude;
+    String strSource = "origin=" + getSource().latitude + "," + getSource().longitude;
+    String strDestination = "destination=" +
+        getDestination().latitude + "," +
+        getDestination().longitude;
 
     // Sensor initialisation
     String sensor = "sensor=false";
