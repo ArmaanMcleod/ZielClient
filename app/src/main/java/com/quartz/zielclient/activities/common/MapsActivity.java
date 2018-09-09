@@ -66,7 +66,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
-  private final String TAG = this.getClass().getSimpleName();
+  private final String activity = this.getClass().getSimpleName();
 
   private GoogleMap mGoogleMap;
 
@@ -109,13 +109,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // The last location in the list is the newest
         Location location = locationList.get(locationList.size() - 1);
-        Log.i(TAG, "Location: " +
+        Log.i(activity, "Location: " +
             location.getLatitude() + " "
             + location.getLongitude());
 
         // Update and draw source location
         setSource(new LatLng(location.getLatitude(), location.getLongitude()));
-        drawMarker(source, HUE_MAGENTA, "Current Location");
+        drawMarker(source, HUE_MAGENTA);
       }
     }
   };
@@ -124,9 +124,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * Draws marker on the Google map.
    * @param location This is the location on the map.
    * @param colour This is the colour of the marker.
-   * @param message This is the message to pass to the marker.
    */
-  private void drawMarker(LatLng location, float colour, String message) {
+  private void drawMarker(LatLng location, float colour) {
     MarkerOptions markerOptions = new MarkerOptions();
 
     // Update marker options
@@ -160,7 +159,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
       address = addresses.get(0).getAddressLine(0);
     } catch(IOException e) {
-      Log.d(TAG, "getAddress: Cannot fetch address");
+      Log.d(activity, "getAddress: Cannot fetch address");
     }
 
     return address;
@@ -193,7 +192,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         startActivity(intent);
       } else {
         Toast.makeText(this,
-            "Street view needs a destination location entered",
+            "Street view needs a destination location",
             Toast.LENGTH_LONG).show();
       }
     });
@@ -211,7 +210,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Clear all previous points on map
         mGoogleMap.clear();
 
-        Log.d(TAG, "Place selected: " + place.getLatLng());
+        Log.d(activity, "Place selected: " + place.getLatLng());
         setDestination(place.getLatLng());
 
         // Compute path to destination
@@ -220,13 +219,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         fetchUrl.execute(directionsURL);
 
         // Redraw both source and destination markers to screen
-        drawMarker(getSource(), HUE_MAGENTA, "Current Location");
-        drawMarker(getDestination(), HUE_RED,"Destination Location");
+        drawMarker(getSource(), HUE_MAGENTA);
+        drawMarker(getDestination(), HUE_RED);
       }
 
       @Override
       public void onError(Status status) {
-        Log.d(TAG, "An error occurred: " + status);
+        Log.d(activity, "An error occurred: " + status);
       }
     });
 

@@ -25,16 +25,16 @@ import java.util.Map;
  */
 public class ParserTask extends AsyncTask<String, Integer, List<List<Map<String, String>>>> {
 
-  private final String TAG = this.getClass().getSimpleName();
+  private final String activity = this.getClass().getSimpleName();
 
-  private static int POLYLINE_WIDTH = 16;
+  private static final int POLYLINE_WIDTH = 16;
 
   // Light blue color
   private static final String POLYLINE_COLOR = "#2196F3";
 
   private GoogleMap googleMap;
 
-  public ParserTask(GoogleMap googleMap) {
+  ParserTask(GoogleMap googleMap) {
     this.googleMap = googleMap;
   }
 
@@ -54,17 +54,17 @@ public class ParserTask extends AsyncTask<String, Integer, List<List<Map<String,
     // If possible, extract routes from JSON object
     try {
       JSONObject jObject = new JSONObject(jsonData[0]);
-      Log.d(TAG, jsonData[0]);
+      Log.d(activity, jsonData[0]);
 
       DirectionsJSONParser parser = new DirectionsJSONParser();
-      Log.d(TAG, parser.toString());
+      Log.d(activity, parser.toString());
 
       routes = parser.parse(jObject);
-      Log.d(TAG, "Executing routes");
-      Log.d(TAG, routes.toString());
+      Log.d(activity, "Executing routes");
+      Log.d(activity, routes.toString());
 
     } catch (Exception e) {
-      Log.d(TAG, e.toString());
+      Log.d(activity, e.toString());
     }
 
     return routes;
@@ -99,14 +99,14 @@ public class ParserTask extends AsyncTask<String, Integer, List<List<Map<String,
       lineOptions.width(POLYLINE_WIDTH);
       lineOptions.color(Color.parseColor(POLYLINE_COLOR)).geodesic(true).zIndex(8);
 
-      Log.d(TAG, "lineOptions decoded");
+      Log.d(activity, "lineOptions decoded");
     }
 
     // Ensure polylines available to draw on screen
     if (lineOptions != null) {
       googleMap.addPolyline(lineOptions);
     } else {
-      Log.d(TAG, "No polylines drawn");
+      Log.d(activity, "No polylines drawn");
     }
   }
 }
