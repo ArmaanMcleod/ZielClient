@@ -11,8 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
@@ -57,7 +55,8 @@ import static com.google.android.gms.location.LocationRequest.PRIORITY_BALANCED_
  * @version 1.0- 1
  * 28/08/2018
  */
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements
+    OnMapReadyCallback {
 
   // Custom permissions request code
   private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
@@ -181,23 +180,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
 
-    // Create street view button
-    Button streetViewButton = findViewById(R.id.street_view);
-    streetViewButton.setOnClickListener(v -> {
-      LatLng destinationLocation = getDestination();
-
-      // Show street view if destination exists
-      if (destinationLocation != null) {
-        Intent intent = new Intent(MapsActivity.this, StreetViewActivity.class);
-        intent.putExtra("destination", destinationLocation);
-        startActivity(intent);
-      } else {
-        Toast.makeText(this,
-            "Street view needs a destination location",
-            Toast.LENGTH_LONG).show();
-      }
-    });
-
     // Create autocomplete bar
     PlaceAutocompleteFragment placeAutoComplete = (PlaceAutocompleteFragment)
         getFragmentManager().findFragmentById(R.id.place_autocomplete);
@@ -218,8 +200,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         String directionsURL = getDirectionsUrl();
         FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
         fetchUrl.execute(directionsURL);
-
-        streetViewButton.setVisibility(View.VISIBLE);
 
         // Redraw both source and destination markers to screen
         drawMarker(getSource(), HUE_MAGENTA);
@@ -270,6 +250,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Initialise Google map
     mGoogleMap = googleMap;
+
+    // Set listener for markers
+    mGoogleMap.setOnMarkerClickListener(marker -> {
+      Intent intent = new Intent(MapsActivity.this, StreetViewActivity.class);
+      intent.putExtra("destination", marker.getPosition());
+      startActivity(intent);
+      return true;
+    });
 
     // Setup location request and intervals between requests
     mLocationRequest = new LocationRequest();
