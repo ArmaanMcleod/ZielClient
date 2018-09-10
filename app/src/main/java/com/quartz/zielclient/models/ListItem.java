@@ -7,6 +7,7 @@ public class ListItem {
 
   private String name;
   private String description;
+  private String channelID;
 
   // Constructor
   public ListItem(String name, String description) {

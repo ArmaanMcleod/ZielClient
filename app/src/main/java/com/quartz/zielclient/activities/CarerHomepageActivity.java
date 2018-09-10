@@ -1,32 +1,45 @@
 package com.quartz.zielclient.activities;
 
+import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.adapters.ListAdapter;
 import com.quartz.zielclient.models.ListItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class CarerHomepageActivity extends Activity {
+public class CarerHomepageActivity extends Activity implements ValueEventListener {
 
   private RecyclerView mRecyclerView;
   private RecyclerView.Adapter mAdapter;
   private RecyclerView.LayoutManager mLayoutManager;
   private ArrayList<String> mItem;
   private List<ListItem> listItems;
-
+  private DatabaseReference requestsReference;
+  private String userID = "LglIRTsQqGUmpU16CuYJIxtS0S62";//getUserId
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_carer_homepage);
+
+    // Getting requestsReference from FireBase
+    requestsReference = FirebaseDatabase.getInstance().getReference("channelRequests/"+userID);
+    requestsReference.addValueEventListener(this);
 
     // Initialising RecyclerView
     mRecyclerView = findViewById(R.id.my_recycler_view);
@@ -54,13 +67,32 @@ public class CarerHomepageActivity extends Activity {
 
   }
 
-  public void initData() {
-    mItem = new ArrayList<String>();
+  /**
+   * Fetches the data as JSON files to
+   * @param channelRequestsData
+   */
+  private void initData(Map<String, Object> channelRequestsData) {
+
 
   }
 
-  // Getter for screen width.
-  public static int getScreenWidth() {
-    return Resources.getSystem().getDisplayMetrics().widthPixels;
+  /**
+   * Loading screen to make sure data is load before the view is displayed.
+   */
+  private void loadRecyclerView () {
+    
+  }
+
+  @Override
+  public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+    // Getting the channel data and calling the rendering method on it
+    Map<String,Object> channelRequestsData = (Map<String, Object>) dataSnapshot;
+    initData(channelRequestsData);
+  }
+
+  //TODO
+  @Override
+  public void onCancelled(@NonNull DatabaseError databaseError) {
+
   }
 }
