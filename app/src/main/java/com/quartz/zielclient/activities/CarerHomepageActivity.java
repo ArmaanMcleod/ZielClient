@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.icu.util.ChineseCalendar;
 import android.os.Bundle;
 import android.app.Activity;
 import android.support.annotation.NonNull;
@@ -19,7 +20,9 @@ import com.quartz.zielclient.R;
 import com.quartz.zielclient.adapters.ListAdapter;
 import com.quartz.zielclient.models.ListItem;
 
+import java.time.chrono.JapaneseEra;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,14 +76,11 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
    */
   private void initData(Map<String, Object> channelRequestsData) {
 
+    // Getting an ArrayList of all requests for this carer
+    ArrayList<HashMap<String,String>> channelRequests = new ArrayList<>();
+    channelRequestsData.forEach((channelRequestId,channelRequestValues) ->
+        channelRequests.add((HashMap<String, String>) channelRequestValues));
 
-  }
-
-  /**
-   * Loading screen to make sure data is load before the view is displayed.
-   */
-  private void loadRecyclerView () {
-    
   }
 
   @Override
