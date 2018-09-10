@@ -59,15 +59,15 @@ public final class UserController {
    * @param firebaseUser A reference to the Firebase authenticated user.
    * @param firstName    The user's first name.
    * @param lastName     The user's last name.
-   * @param isAssisted   Whether this user is an assisted.
+   * @param assisted     Whether this user is an assisted.
    */
   public static User createUser(@NonNull FirebaseUser firebaseUser,
                                 String firstName,
                                 String lastName,
-                                boolean isAssisted) {
+                                boolean assisted) {
     String userId = firebaseUser.getUid();
     String phoneNumber = firebaseUser.getPhoneNumber();
-    User user = new User(firstName, lastName, phoneNumber, isAssisted);
+    User user = new User(firstName, lastName, phoneNumber, assisted);
 
     DatabaseReference ref = firebaseDatabase.getReference(USER_DATABASE_PATH);
     ref.child(userId).setValue(user);

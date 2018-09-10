@@ -1,5 +1,7 @@
 package com.quartz.zielclient.channel;
 
+import android.util.Log;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -26,6 +28,7 @@ public final class ChannelController {
    * @return A new channel.
    */
   public static ChannelData createChannel(ChannelListener channelListener) {
+    Log.i("ChannelController", "Creating new channel");
     final String channelKey = UUID.randomUUID().toString();
     ChannelData channelData = new ChannelData(channelsReference.child(channelKey), channelListener);
     // add the id of the assisted to the session

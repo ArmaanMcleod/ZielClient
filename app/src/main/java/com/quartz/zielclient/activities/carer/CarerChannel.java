@@ -45,6 +45,7 @@ public class CarerChannel extends AppCompatActivity implements ValueEventListene
   private Button acceptButton;
   // initialise Notification manager will allow push-notifcations on the device
 
+  private String channelId;
   private String id;
   private ChannelData channelData;
 
@@ -60,6 +61,7 @@ public class CarerChannel extends AppCompatActivity implements ValueEventListene
       finish();
     }
 
+    channelId = getIntent().getStringExtra("channelId");
     // set the content for the layout
     // bind graphical buttons to functional buttons
     acceptButton = findViewById(R.id.acceptButton);
@@ -82,8 +84,6 @@ public class CarerChannel extends AppCompatActivity implements ValueEventListene
 
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-    // Get the session which has been allocated to the carer from an assisted
-    String channelId = dataSnapshot.child(CURRENT_CHANNEL).getValue(String.class);
     // get a reference to the session that was created by the assisted
     channelReference = firebaseDatabase.getReference(getString(R.string.channelsReferenceLocation) + channelId);
     // incase of misfire ensure that Id returned a string value

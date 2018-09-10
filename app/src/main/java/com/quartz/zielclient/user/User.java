@@ -2,11 +2,7 @@ package com.quartz.zielclient.user;
 
 import android.os.Bundle;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.quartz.zielclient.models.Model;
-
-import java.util.Map;
 
 /**
  * Model representing a user.
@@ -21,13 +17,13 @@ public class User implements Model {
   private String firstName;
   private String lastName;
   private String phoneNumber;
-  private boolean isAssisted;
+  private boolean assisted;
 
-  User(String firstName, String lastName, String phoneNumber, boolean isAssisted) {
+  User(String firstName, String lastName, String phoneNumber, boolean assisted) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.phoneNumber = phoneNumber;
-    this.isAssisted = isAssisted;
+    this.assisted = assisted;
   }
 
   public String getFirstName() {
@@ -43,7 +39,7 @@ public class User implements Model {
   }
 
   public boolean isAssisted() {
-    return isAssisted;
+    return assisted;
   }
 
   @Override
@@ -52,7 +48,7 @@ public class User implements Model {
     bundle.putString(FIRST_NAME_KEY, firstName);
     bundle.putString(LAST_NAME_KEY, lastName);
     bundle.putString(PHONE_NUMBER_KEY, phoneNumber);
-    bundle.putBoolean(IS_ASSISTED_KEY, isAssisted);
+    bundle.putBoolean(IS_ASSISTED_KEY, assisted);
     return bundle;
   }
 
@@ -62,7 +58,7 @@ public class User implements Model {
         "firstName='" + firstName + '\'' +
         ", lastName='" + lastName + '\'' +
         ", phoneNumber='" + phoneNumber + '\'' +
-        ", isAssisted=" + isAssisted +
+        ", assisted=" + assisted +
         '}';
   }
 }
