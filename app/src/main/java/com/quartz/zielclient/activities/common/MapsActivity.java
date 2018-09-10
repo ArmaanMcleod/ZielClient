@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -217,6 +218,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         String directionsURL = getDirectionsUrl();
         FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
         fetchUrl.execute(directionsURL);
+
+        streetViewButton.setVisibility(View.VISIBLE);
 
         // Redraw both source and destination markers to screen
         drawMarker(getSource(), HUE_MAGENTA);
