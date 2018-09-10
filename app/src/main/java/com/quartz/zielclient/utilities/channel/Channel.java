@@ -7,11 +7,16 @@ import android.util.Log;
 
 import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.model.LatLng;
+import android.support.annotation.NonNull;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import com.quartz.zielclient.utilities.Message;
+
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -122,8 +127,30 @@ public class Channel implements ValueEventListener {
 
   }
 
+
+  public void setMessages(Map<String,String> messages){
+    channelReference.child("messages").setValue(messages);
+
+  }
+
+  public void sendMessage(Message message){
+    Map<String,String> messageObject = new HashMap<>();;
+    messageObject.put("messageType",message.getType().toString());
+    messageObject.put("messageValue",message.getMessageValue());
+    channelReference.child("messages").push().setValue(messageObject);
+  }
+  public Map<String,String> getMessages(){
+    if( channelValues.get("messages")!=null){
+      return (Map<String, String>) channelValues.get("messages");
+    }
+    Map<String,String> messageObject = new HashMap<>();;
+    messageObject.put("messageType","TEXT");
+    messageObject.put("messageValue","this chatroom has no messages");
+    return messageObject;
+
+  }
   /**
-   * recieve update from database and update the listener that some data has changed
+   *  recieve update from database and update the listener that some data has changed
    *
    * @param dataSnapshot
    */

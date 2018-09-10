@@ -15,4 +15,6 @@
     <string name="current_session">currentSession</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_carer_maps">Map</string>
+    <string name="where_to">Where To?</string>
+    <string name="direct_me_there">Direct Me There!</string>
 </resources>

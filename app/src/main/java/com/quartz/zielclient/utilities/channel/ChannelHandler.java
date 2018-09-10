@@ -3,6 +3,8 @@ package com.quartz.zielclient.utilities.channel;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -48,6 +50,10 @@ public final class ChannelHandler {
     channel.setCarerStatus(false);
     // the Ping feature will begin as inactive indicating a wave has not occured.
     channel.setPing(false);
+    // set initialization message
+    Map<String,String> initialMessage  = new HashMap<>();
+    initialMessage.put("TEXT","welcome to the chat");
+    channel.setMessages(initialMessage);
     // update and notify the user
     usersReference.child(channelListener.getCarerId()).child("currentSession").setValue(channelKey);
     usersReference.child(channelListener.getCarerId()).child("status").setValue("notified");
@@ -65,6 +71,10 @@ public final class ChannelHandler {
   public static Channel retrieveChannel(String channelID, ChannelListener channelListener) {
     Channel channel = new Channel(channelsReference.child(channelID), channelListener);
     channel.setDirectionsURL("none");
+    // set initialization message
+    Map<String,String> initialMessage  = new HashMap<>();
+    initialMessage.put("TEXT","welcome to the chat");
+    channel.setMessages(initialMessage);
     return channel;
   }
 

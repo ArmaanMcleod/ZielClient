@@ -34,6 +34,7 @@ import com.quartz.zielclient.R;
 import com.quartz.zielclient.utilities.channel.Channel;
 import com.quartz.zielclient.utilities.channel.ChannelHandler;
 import com.quartz.zielclient.utilities.channel.ChannelListener;
+import com.quartz.zielclient.R;
 import com.quartz.zielclient.utilities.map.DirectionsJSONParser;
 import com.quartz.zielclient.utilities.map.FetchUrl;
 import com.quartz.zielclient.utilities.map.ParserTask;
@@ -116,6 +117,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
       // All previous locations
       List<Location> locationList = locationResult.getLocations();
+
       // If one location exists
       if (!locationList.isEmpty()) {
 
@@ -127,6 +129,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         channel.setAssistedLocation(String.valueOf(location.getLatitude()),String.valueOf(location.getLongitude()));
         // Update and draw source location
+
         setSource(new LatLng(location.getLatitude(),location.getLongitude()));
         drawMarker(source, BitmapDescriptorFactory.HUE_MAGENTA, "Current Location");
       }
@@ -186,6 +189,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Compute path to destination
         String directionsURL = getDirectionsUrl();
         channel.setDirectionsURL(directionsURL);
+        Log.d(TAG, "Place selected: " + place.getLatLng());
+        setDestination(place.getLatLng());
+
+        // Compute path to destination
+        String directionsURL = getDirectionsUrl();
         FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
         fetchUrl.execute(directionsURL);
 
@@ -345,8 +353,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private String getDirectionsUrl() {
 
     // Source and destination formats
-    String strSource = "origin=" + getSource().latitude + "," + getSource().longitude;
-    String strDestination = "destination=" +getDestination().latitude + "," + getDestination().longitude;
+    String strSource = "origin=" + source.latitude + "," + source.longitude;
+    String strDestination = "destination=" + destination.latitude + "," + destination.longitude;
 
     // Sensor initialisation
     String sensor = "sensor=false";
