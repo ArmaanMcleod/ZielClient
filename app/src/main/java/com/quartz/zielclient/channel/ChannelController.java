@@ -19,7 +19,6 @@ public final class ChannelController {
   }
 
   private static DatabaseReference channelsReference = FirebaseDatabase.getInstance().getReference("channels");
-  private static DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("users");
 
   /**
    * create and initialise a channel
@@ -42,8 +41,8 @@ public final class ChannelController {
     // the Ping feature will begin as inactive indicating a wave has not occured.
     channelData.setPing(false);
     // update and notify the user
-    usersReference.child(channelListener.getCarerId()).child("currentSession").setValue(channelKey);
-    usersReference.child(channelListener.getCarerId()).child("status").setValue("notified");
+//    usersReference.child(channelListener.getCarerId()).child("currentSession").setValue(channelKey);
+//    usersReference.child(channelListener.getCarerId()).child("status").setValue("notified");
     return channelData;
   }
 

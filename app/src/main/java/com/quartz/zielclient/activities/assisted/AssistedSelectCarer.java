@@ -60,6 +60,7 @@ public class AssistedSelectCarer extends AppCompatActivity implements View.OnCli
       String thisUserId = UserController.retrieveFirebaseUser().getUid();
       Optional<User> maybeCarer = UserFactory.getUser(dataSnapshot);
       maybeCarer.ifPresent(carer -> {
+        Log.i(TAG, "Creating channel");
         Intent intent = new Intent(AssistedSelectCarer.this, AssistedChannel.class);
         intent.putExtra("assisted", thisUserId);
         intent.putExtra("carer", carerId);
