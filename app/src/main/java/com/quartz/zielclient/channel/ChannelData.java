@@ -32,6 +32,12 @@ public class ChannelData implements ValueEventListener {
   public ChannelData(DatabaseReference channelReference, ChannelListener channelListener) {
     this.channelReference = channelReference;
     this.channelListener = channelListener;
+
+    setAssisted(channelListener.getAssistedId());
+    setCarer(channelListener.getCarerId());
+    setAssistedStatus(true);
+    setCarerStatus(false);
+    setPing(false);
     channelReference.addValueEventListener(this);
   }
 
@@ -43,11 +49,11 @@ public class ChannelData implements ValueEventListener {
     channelReference.child("assisted").setValue(assisted);
   }
 
-  public Boolean getAssistedStatus() {
+  public boolean getAssistedStatus() {
     return channelValues.get("assistedStatus").equals(true);
   }
 
-  public void setAssistedStatus(Boolean assistedStatus) {
+  public void setAssistedStatus(boolean assistedStatus) {
     channelReference.child("assistedStatus").setValue(assistedStatus);
   }
 
@@ -59,36 +65,20 @@ public class ChannelData implements ValueEventListener {
     this.channelReference.child(carer).setValue(carer);
   }
 
-  public Boolean getCarerStatus() {
+  public boolean getCarerStatus() {
     return channelValues.get("carerStatus").equals(true);
   }
 
-  public void setCarerStatus(Boolean carerStatus) {
+  public void setCarerStatus(boolean carerStatus) {
     channelReference.child("carerStatus").setValue(carerStatus);
   }
 
-  public Boolean getPing() {
+  public boolean getPing() {
     return channelValues.get("Ping").equals(true);
   }
 
   public void setPing(Boolean ping) {
     channelReference.child("Ping").setValue(ping);
-  }
-
-  public DatabaseReference getChannelReference() {
-    return channelReference;
-  }
-
-  public void setChannelReference(DatabaseReference channelReference) {
-    this.channelReference = channelReference;
-  }
-
-  public ChannelListener getChannelListener() {
-    return channelListener;
-  }
-
-  public void setChannelListener(ChannelListener channelListener) {
-    this.channelListener = channelListener;
   }
 
   /**

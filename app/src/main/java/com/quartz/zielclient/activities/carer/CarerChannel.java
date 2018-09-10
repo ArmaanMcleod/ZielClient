@@ -33,13 +33,9 @@ import static android.view.View.VISIBLE;
  *
  * @author Bilal Shehata
  */
-public class CarerChannel extends AppCompatActivity implements ValueEventListener, View.OnClickListener, ChannelListener {
+public class CarerChannel extends AppCompatActivity implements View.OnClickListener, ChannelListener {
 
   private static final String TAG = CarerChannel.class.getSimpleName();
-  private static final String CURRENT_CHANNEL = "current_channel";
-  private static FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-
-  private DatabaseReference channelReference;
 
   private TextView status;
   private Button acceptButton;
@@ -62,50 +58,34 @@ public class CarerChannel extends AppCompatActivity implements ValueEventListene
     }
 
     channelId = getIntent().getStringExtra("channelId");
-    // set the content for the layout
-    // bind graphical buttons to functional buttons
+
     acceptButton = findViewById(R.id.acceptButton);
-    // do not make the accept button visible unless an assisted has requested assistance
-    acceptButton.setVisibility(View.INVISIBLE);
+    acceptButton.setOnClickListener(this);
+
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
+
     status = findViewById(R.id.channelStatus);
-    acceptButton.setOnClickListener(this);
+
+    Toast.makeText(getApplicationContext(),
+        "request has been made", Toast.LENGTH_LONG).show();
+
+    // begin listening to the session
+    channelData = ChannelController.retrieveChannel(channelId, this);
   }
 
   @Override
   public void onBackPressed() {
-    if (channelReference != null) {
-      channelReference.child("carerStatus").setValue(false);
+    if (channelData != null) {
+      channelData.setCarerStatus(false);
     }
     super.onBackPressed();
   }
 
 
   @Override
-  public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-    // get a reference to the session that was created by the assisted
-    channelReference = firebaseDatabase.getReference(getString(R.string.channelsReferenceLocation) + channelId);
-    // incase of misfire ensure that Id returned a string value
-    if (channelId != null && !channelId.equals(getResources().getString(R.string.waiting))) {
-      // Send a toast to the user notifying them of the request
-      Toast.makeText(getApplicationContext(),
-          "request has been made", Toast.LENGTH_LONG).show();
-      // allow the accept button to appear now that there is a session to accept
-      acceptButton.setVisibility(VISIBLE);
-      // begin listening to the session
-      channelData = ChannelController.retrieveChannel(channelId, this);
-    }
-  }
-
-  @Override
-  public void onCancelled(@NonNull DatabaseError databaseError) {
-    //todo
-  }
-
-  @Override
   public void onClick(View view) {
-    channelReference.child("carerStatus").setValue(true);
+    channelData.setCarerStatus(true);
   }
 
   /**
@@ -113,13 +93,14 @@ public class CarerChannel extends AppCompatActivity implements ValueEventListene
    */
   @Override
   public void dataChanged() {
+    Log.i(TAG, "Channel data has changed.");
     // check values on channelData and modify state accordingly
     if (channelData.getAssistedStatus()) {
       status.setText("ChannelData is active ");
-    }
-    if (!channelData.getAssistedStatus()) {
+    } else {
       status.setText("ChannelData is inactive");
     }
+
     if (channelData.getPing()) {
       channelData.setPing(false);
       Toast.makeText(
