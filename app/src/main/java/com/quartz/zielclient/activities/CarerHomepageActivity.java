@@ -43,7 +43,7 @@ public class CarerHomepageActivity extends Activity {
     // Fake Data temporarily used
     for(int i=0; i<10; i++) {
       ListItem listItem = new ListItem(
-          "John" + (i+1),
+          "Wei How",
           "needs to go to the hospital"
       );
       listItems.add(listItem);
