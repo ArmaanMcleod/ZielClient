@@ -55,9 +55,10 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
     mLayoutManager = new LinearLayoutManager(this);
     mRecyclerView.setLayoutManager(mLayoutManager);
 
-    listItems = new ArrayList<>();
+    //listItems = new ArrayList<>();
 
     // Fake Data temporarily used
+    /*
     for(int i=0; i<10; i++) {
       ListItem listItem = new ListItem(
           "Wei How",
@@ -65,10 +66,7 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
       );
       listItems.add(listItem);
     }
-
-    mAdapter = new ListAdapter(listItems, this);
-    mRecyclerView.setAdapter(mAdapter);
-
+    */
   }
 
   /**
@@ -83,6 +81,23 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
         channelRequests.add((HashMap<String, String>) channelRequestValues));
 
     // Adding the data to the list
+    System.out.println(channelRequests.toString());
+    // ArrayList to hold the RecyclerView Items temporarily
+    listItems = new ArrayList<>();
+
+    // TODO Add the actual description, which would be the destination
+    // Adding each user name and description to the listItem object and then appending them in
+    channelRequests.forEach(channel -> {
+      ListItem listItem = new ListItem(
+          channel.get("name"),
+          channel.get("channel-id")
+      );
+      listItems.add(listItem);
+    });
+
+    // Using the Adapter to convert the data into the recycler view
+    mAdapter = new ListAdapter(listItems, this);
+    mRecyclerView.setAdapter(mAdapter);
   }
 
   @Override

@@ -31,4 +31,12 @@ public class ListItem {
   public void setDescription(String description) {
     this.description = description;
   }
+
+  public String getChannelID() {
+    return channelID;
+  }
+
+  public void setChannelID(String channelID) {
+    this.channelID = channelID;
+  }
 }
