@@ -35,6 +35,7 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
   private List<ListItem> listItems;
   private DatabaseReference requestsReference;
   private String userID = "LglIRTsQqGUmpU16CuYJIxtS0S62";//getUserId
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -81,12 +82,13 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
     channelRequestsData.forEach((channelRequestId,channelRequestValues) ->
         channelRequests.add((HashMap<String, String>) channelRequestValues));
 
+    // Adding the data to the list
   }
 
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
     // Getting the channel data and calling the rendering method on it
-    Map<String,Object> channelRequestsData = (Map<String, Object>) dataSnapshot;
+    Map<String,Object> channelRequestsData = (Map<String, Object>) dataSnapshot.getValue();
     initData(channelRequestsData);
   }
 
