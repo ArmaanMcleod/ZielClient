@@ -20,30 +20,25 @@ import com.quartz.zielclient.channel.ChannelListener;
  *
  * @author Bilal Shehata
  */
-public class AssistedSession extends AppCompatActivity implements ChannelListener, View.OnClickListener {
-  // common objects within the activity
-  //display the users status
+public class AssistedChannel extends AppCompatActivity implements ChannelListener, View.OnClickListener {
+
   private TextView status;
-  //temporary variables to store a users role -> this will be replaced by values from the user roles in the database
-  private String myId = "assisted1";
+  private Button waveButton;
+
   //store reference to the database where the session exists
   private ChannelData channelData;
-  //button allows the assisted to wave to carer (send a toast)
-  private Button waveButton;
-  private String myCarerId = "carer1";
+
+  private String assistedId;
+  private String carerId;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-//    try {
-//      UserController.fetchThisUser(this);
-//    } catch (AuthorisationException e) {
-//      startActivity(new Intent(this, SignUpActivity.class));
-//    }
-//
-    // set the content view to the assisted_session
     setContentView(R.layout.activity_assisted_session);
+
+    assistedId = getIntent().getStringExtra("assisted");
+    carerId = getIntent().getStringExtra("carer");
+
     // allocate the graphical button to a functional button
     waveButton = findViewById(R.id.waveButton);
     // button should not be visible until a session is established.
@@ -82,12 +77,11 @@ public class AssistedSession extends AppCompatActivity implements ChannelListene
 
   @Override
   public String getAssistedId() {
-    return myId;
+    return assistedId;
   }
 
   @Override
   public String getCarerId() {
-    return myCarerId;
+    return carerId;
   }
-
 }

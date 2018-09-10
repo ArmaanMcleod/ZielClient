@@ -1,9 +1,11 @@
 package com.quartz.zielclient.activities.carer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,10 +17,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.signup.SignUpActivity;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelListener;
+import com.quartz.zielclient.exceptions.AuthorisationException;
 import com.quartz.zielclient.notifications.NotificationHandler;
+import com.quartz.zielclient.user.UserController;
 
 import static android.view.View.VISIBLE;
 
@@ -28,29 +33,34 @@ import static android.view.View.VISIBLE;
  *
  * @author Bilal Shehata
  */
-public class CarerSession extends AppCompatActivity implements ValueEventListener, View.OnClickListener, ChannelListener {
+public class CarerChannel extends AppCompatActivity implements ValueEventListener, View.OnClickListener, ChannelListener {
 
+  private static final String TAG = CarerChannel.class.getSimpleName();
   private static final String CURRENT_CHANNEL = "current_channel";
+  private static FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+
+  private DatabaseReference channelReference;
 
   private TextView status;
-  private FirebaseDatabase firebaseDatabase;
-  private DatabaseReference channelReference;
   private Button acceptButton;
   // initialise Notification manager will allow push-notifcations on the device
-  private NotificationHandler notificationHandler;
-  // temporary id value for the carer until authorization is complete
-  private String id = "carer1";
+
+  private String id;
   private ChannelData channelData;
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    // create a notification handler to provide notifications to the carer
-    notificationHandler = new NotificationHandler(getApplicationContext());
-    notificationHandler.createNotificationChannel();
-    // set listener to watch database incase someone needs assistance
-    watchNotificationChange();
-    // set the content for the layout
     setContentView(R.layout.acitivty_carer_session);
+
+    try {
+      id = UserController.retrieveFirebaseUser().getUid();
+    } catch (AuthorisationException e) {
+      Log.w(TAG, "User not signed in.");
+      startActivity(new Intent(this, SignUpActivity.class));
+      finish();
+    }
+
+    // set the content for the layout
     // bind graphical buttons to functional buttons
     acceptButton = findViewById(R.id.acceptButton);
     // do not make the accept button visible unless an assisted has requested assistance
@@ -81,8 +91,6 @@ public class CarerSession extends AppCompatActivity implements ValueEventListene
       // Send a toast to the user notifying them of the request
       Toast.makeText(getApplicationContext(),
           "request has been made", Toast.LENGTH_LONG).show();
-      // create the notfication for the user
-      notificationHandler.notifyUserToOpenApp();
       // allow the accept button to appear now that there is a session to accept
       acceptButton.setVisibility(VISIBLE);
       // begin listening to the session
@@ -98,13 +106,6 @@ public class CarerSession extends AppCompatActivity implements ValueEventListene
   @Override
   public void onClick(View view) {
     channelReference.child("carerStatus").setValue(true);
-  }
-
-  private void watchNotificationChange() {
-    firebaseDatabase = FirebaseDatabase.getInstance();
-    DatabaseReference notifcationRef = firebaseDatabase.getReference("users/" + id);
-    notifcationRef.child(getResources().getString(R.string.current_channel)).setValue(getResources().getString(R.string.waiting));
-    notifcationRef.addValueEventListener(this);
   }
 
   /**

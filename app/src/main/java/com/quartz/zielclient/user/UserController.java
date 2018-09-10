@@ -10,6 +10,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.exceptions.AuthorisationException;
 import com.quartz.zielclient.user.User;
 
+import java.util.Optional;
+
 public final class UserController {
 
   /**
@@ -36,6 +38,14 @@ public final class UserController {
       throw new AuthorisationException("Failed to find user.");
     }
     return firebaseUser;
+  }
+
+  public static Optional<String> retrieveUid() {
+    if (isSignedIn()) {
+      return Optional.of(firebaseAuth.getCurrentUser().getUid());
+    } else {
+      return Optional.empty();
+    }
   }
 
   public static boolean isSignedIn() {

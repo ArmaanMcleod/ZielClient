@@ -4,13 +4,17 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.signup.SignUpActivity;
+import com.quartz.zielclient.exceptions.AuthorisationException;
 import com.quartz.zielclient.user.UserController;
 import com.quartz.zielclient.user.User;
 import com.quartz.zielclient.user.UserFactory;
@@ -19,8 +23,9 @@ import java.util.Optional;
 
 public class AssistedSelectCarer extends AppCompatActivity implements View.OnClickListener, ValueEventListener {
 
+  private static final String TAG = AssistedSelectCarer.class.getSimpleName();
+
   private TextView carerEntry;
-  private User thisUser;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +33,8 @@ public class AssistedSelectCarer extends AppCompatActivity implements View.OnCli
     setContentView(R.layout.activity_assisted_select_carer);
 
     carerEntry = findViewById(R.id.carerEntry);
-    thisUser = UserFactory.getUser(getIntent().getBundleExtra("user"));
+    Button button = findViewById(R.id.confirmCarerButton);
+    button.setOnClickListener(this);
   }
 
   @Override
@@ -37,6 +43,7 @@ public class AssistedSelectCarer extends AppCompatActivity implements View.OnCli
       return;
     }
 
+    Log.d(TAG, "Confirming carer");
     final String carerId = carerEntry.getText().toString();
     UserController.fetchUser(carerId, this);
   }
@@ -48,14 +55,24 @@ public class AssistedSelectCarer extends AppCompatActivity implements View.OnCli
       return;
     }
 
-    Optional<User> maybeCarer = UserFactory.getUser(dataSnapshot);
-    maybeCarer.ifPresent(carer -> {
-      Intent intent = new Intent(AssistedSelectCarer.this, AssistedSession.class);
-      intent.putExtra("assisted", thisUser.toBundle());
-      intent.putExtra("carer", carer.toBundle());
+    final String carerId = carerEntry.getText().toString();
+    try {
+      String thisUserId = UserController.retrieveFirebaseUser().getUid();
+      Optional<User> maybeCarer = UserFactory.getUser(dataSnapshot);
+      maybeCarer.ifPresent(carer -> {
+        Intent intent = new Intent(AssistedSelectCarer.this, AssistedChannel.class);
+        intent.putExtra("assisted", thisUserId);
+        intent.putExtra("carer", carerId);
+        startActivity(intent);
+        finish();
+      });
+    } catch (AuthorisationException e) {
+      // In case of authorisation error go back to sign in
+      Log.i(TAG, "Invalid login");
+      Intent intent = new Intent(AssistedSelectCarer.this, SignUpActivity.class);
       startActivity(intent);
       finish();
-    });
+    }
 
     carerEntry.setError("Invalid user");
   }

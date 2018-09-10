@@ -16,14 +16,14 @@ public class User implements Model {
   static final String FIRST_NAME_KEY = "firstName";
   static final String LAST_NAME_KEY = "lastName";
   static final String PHONE_NUMBER_KEY = "phoneNumber";
-  static final String IS_ASSISTED_KEY = "isAssisted";
+  static final String IS_ASSISTED_KEY = "assisted";
 
   private String firstName;
   private String lastName;
   private String phoneNumber;
   private boolean isAssisted;
 
-  public User(String firstName, String lastName, String phoneNumber, boolean isAssisted) {
+  User(String firstName, String lastName, String phoneNumber, boolean isAssisted) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.phoneNumber = phoneNumber;
