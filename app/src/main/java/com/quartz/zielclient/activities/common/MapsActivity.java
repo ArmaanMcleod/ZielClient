@@ -192,6 +192,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Redraw both source and destination markers to screen
         drawMarker(source, BitmapDescriptorFactory.HUE_MAGENTA, "Current Location");
         drawMarker(destination, BitmapDescriptorFactory.HUE_RED, "Destination Location");
+
       }
 
       @Override
@@ -242,8 +243,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Setup location request and intervals between requests
     mLocationRequest = new LocationRequest();
-    mLocationRequest.setInterval(10000); // 10 second interval
-    mLocationRequest.setFastestInterval(10000);
+    mLocationRequest.setInterval(1000); // 10 second interval
+    mLocationRequest.setFastestInterval(1000);
     mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
     // Check permissions
