@@ -40,12 +40,12 @@ public class ParserTask extends AsyncTask<String, Integer, List<List<Map<String,
 
   /**
    * This does the parsing in a background thread.
-   *
+   * <p>
    * Documentation : https://developer.android.com/reference/android/os/
    * AsyncTask.html#doInBackground(Params...)
    *
    * @param jsonData This is the JSON data to parse.
-   * @return List<List<Map<String, String>>> The routes extracted from JSON data.
+   * @return List<List   <   Map   <   String   ,       String>>> The routes extracted from JSON data.
    */
   @Override
   protected List<List<Map<String, String>>> doInBackground(@NonNull String... jsonData) {
@@ -72,7 +72,7 @@ public class ParserTask extends AsyncTask<String, Integer, List<List<Map<String,
 
   /**
    * Decodes line options into a visible path on the map.
-   *
+   * <p>
    * Documentation : https://developer.android.com/reference/android/os/
    * AsyncTask.html#onPostExecute(Result)
    *

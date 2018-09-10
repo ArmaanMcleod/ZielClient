@@ -29,7 +29,6 @@ public class StreetViewActivity extends AppCompatActivity implements
 
   /**
    * Creates a street view of a map location.
-   *
    * <p>
    * Documentation : https://developer.android.com/reference/android/app/
    * Activity.html#onCreate(android.os.Bundle)
@@ -60,7 +59,7 @@ public class StreetViewActivity extends AppCompatActivity implements
 
   /**
    * Called when the Street View panorama is ready to be used.
-   *
+   * <p>
    * Documentation : https://developers.google.com/android/reference/com/google/android/gms/maps/
    * OnStreetViewPanoramaReadyCallback
    *
@@ -78,9 +77,9 @@ public class StreetViewActivity extends AppCompatActivity implements
 
     // Create camera
     StreetViewPanoramaCamera camera = new StreetViewPanoramaCamera.Builder()
-            .orientation(new StreetViewPanoramaOrientation(20, 20))
-            .zoom(streetViewPanorama.getPanoramaCamera().zoom)
-            .build();
+        .orientation(new StreetViewPanoramaOrientation(20, 20))
+        .zoom(streetViewPanorama.getPanoramaCamera().zoom)
+        .build();
 
     // Animate camera to view
     streetViewPanorama.animateTo(camera, DURATION);

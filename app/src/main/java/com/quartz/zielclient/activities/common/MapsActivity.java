@@ -48,7 +48,6 @@ import static com.google.android.gms.location.LocationRequest.PRIORITY_BALANCED_
 
 /**
  * This class is responsible for handling all map activities.
- *
  * <p>
  * Courtesy : https://stackoverflow.com/questions/44992014/
  * how-to-get-current-location-in-googlemap-using-fusedlocationproviderclient/44993694#44993694
@@ -122,8 +121,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * Draws marker on the Google map.
+   *
    * @param location This is the location on the map.
-   * @param colour This is the colour of the marker.
+   * @param colour   This is the colour of the marker.
    */
   private void drawMarker(LatLng location, float colour) {
     MarkerOptions markerOptions = new MarkerOptions();
@@ -142,6 +142,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * Gets the address of a location.
+   *
    * @param location This is the location.
    * @return String This is the address in String format.
    */
@@ -158,7 +159,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           1);
 
       address = addresses.get(0).getAddressLine(0);
-    } catch(IOException e) {
+    } catch (IOException e) {
       Log.d(activity, "getAddress: Cannot fetch address");
     }
 
@@ -168,7 +169,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * Creates map along with its attributes.
-   *
    * <p>
    * Documentation : https://developer.android.com/reference/android/app/
    * Activity.html#onCreate(android.os.Bundle)
@@ -243,7 +243,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * This is called when user received an event call.
-   *
    * <p>
    * Documentation : https://developers.google.com/android/reference/com/google/android/gms/maps/
    * OnMapReadyCallback.html#onMapReady(com.google.android.gms.maps.GoogleMap)
@@ -321,7 +320,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * This is a callback for requesting and checking the result of a permission.
-   *
    * <p>
    * Documentation : https://developer.android.com/reference/android/support/v4/app/
    * ActivityCompat.OnRequestPermissionsResultCallback#onRequestPermissionsResult
@@ -341,6 +339,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * This is responsible for requesting a location permission from the user.
+   *
    * @param grantResults This is results for granted or un-granted permissions.
    */
   private void handleLocationPermission(@NonNull int[] grantResults) {
@@ -368,6 +367,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * Builds URL from Directions API web service.
+   *
    * @return String This is the new url pointing to the API endpoint.
    */
   private String getDirectionsUrl() {

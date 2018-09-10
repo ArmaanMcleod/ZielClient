@@ -34,7 +34,7 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
 
   /**
    * This downloads the specified URL in a background thread.
-   *
+   * <p>
    * Documentation : https://developer.android.com/reference/android/os/
    * AsyncTask.html#doInBackground(Params...)
    *
@@ -59,7 +59,7 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
   /**
    * This is responsible for running the parser task on the
    * download URL from doInBackground(Params...)
-   *
+   * <p>
    * Documentation : https://developer.android.com/reference/android/os/
    * AsyncTask.html#onPostExecute(Result)
    *
@@ -75,6 +75,7 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
 
   /**
    * This is responsible for downloading the JSON data from an API endpoint with HTTP requests.
+   *
    * @param strUrl The url to download data from.
    * @return String This is the JSON data in String format.
    * @throws IOException This is the IO exception that triggers when reading the file fails.
