@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.quartz.zielclient">
-
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -21,8 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity android:name=".activities.MainActivity" />
+
+
         <activity
             android:name=".activities.HomePageActivity"
             android:label="@string/title_activity_home_page">
@@ -33,6 +32,12 @@
             android:name=".activities.carer.CarerSession"
             android:label="@string/title_activity_carer_session"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".activities.CarerHomepageActivity"
+            android:label="@string/title_activity_carer_homepage">
+        </activity>
+
         <activity
             android:name=".activities.assisted.AssistedSession"
             android:label="@string/title_activity_assisted_session"
