@@ -45,7 +45,7 @@ public class ParserTask extends AsyncTask<String, Integer, List<List<Map<String,
    * AsyncTask.html#doInBackground(Params...)
    *
    * @param jsonData This is the JSON data to parse.
-   * @return List<List   <   Map   <   String   ,       String>>> The routes extracted from JSON data.
+   * @return The routes extracted from JSON data.
    */
   @Override
   protected List<List<Map<String, String>>> doInBackground(@NonNull String... jsonData) {

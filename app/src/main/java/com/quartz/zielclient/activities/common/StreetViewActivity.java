@@ -20,8 +20,7 @@ import com.quartz.zielclient.R;
  * @version 1.0- 1
  * 9/09/2018
  */
-public class StreetViewActivity extends AppCompatActivity implements
-    OnStreetViewPanoramaReadyCallback {
+public class StreetViewActivity extends AppCompatActivity implements OnStreetViewPanoramaReadyCallback {
 
   private LatLng destination;
 

@@ -27,7 +27,7 @@ public class DirectionsJSONParser {
    * This receives a JSONObject and returns a list of routes.
    *
    * @param jObject The JSON object to parse.
-   * @return List<List   <   Map   <   String   ,       String>>> This is the list of routes.
+   * @return This is the list of routes.
    */
   public List<List<Map<String, String>>> parse(JSONObject jObject) {
     List<List<Map<String, String>>> routes = new ArrayList<>();
