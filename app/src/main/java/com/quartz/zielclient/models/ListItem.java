@@ -1,7 +1,9 @@
 package com.quartz.zielclient.models;
 
 /**
- * ListItem class for representing server data in any RecyclerView in the front-end
+ * ListItem class for representing server data in any RecyclerView in the front-end.
+ *
+ * @author wei how ng
  */
 public class ListItem {
 

@@ -15,8 +15,10 @@ import java.util.List;
 
 /**
  * Adapter class for adapting data to integrate them into the ListViews
+ *
+ * @author wei how ng
  */
-public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
+public class ListAdapter extends RecyclerView.Adapter<ListAdapter.TextViewHolder> {
 
   private List<ListItem> listItems;
   private Context context;
@@ -27,26 +29,26 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     this.context = context;
   }
 
-  // Create ViewGroup whenever ViewHolder gets instantiated
+  // Create ViewGroup whenever TextViewHolder gets instantiated
   @NonNull
   @Override
-  public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+  public TextViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     // Get context of the view from respective XML
     View view = LayoutInflater.from(parent.getContext())
         .inflate(R.layout.assisted_list_item, parent, false);
 
     // Return view
-    return new ViewHolder(view);
+    return new TextViewHolder(view);
   }
 
   // Binding the data to the ViewHolders
   @Override
-  public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+  public void onBindViewHolder(@NonNull TextViewHolder textViewHolder, int i) {
     ListItem listItem = listItems.get(i);
 
     // Fetching the Names and Descriptions
-    viewHolder.textViewName.setText(listItem.getName());
-    viewHolder.textViewDesc.setText(listItem.getDescription());
+    textViewHolder.textViewName.setText(listItem.getName());
+    textViewHolder.textViewDesc.setText(listItem.getDescription());
   }
 
   // Returns size of list
@@ -56,19 +58,19 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
   }
 
   /**
-   * ViewHolder class made for this ListAdapter
+   * TextViewHolder class made for this ListAdapter
    */
-  public class ViewHolder extends RecyclerView.ViewHolder {
+  class TextViewHolder extends RecyclerView.ViewHolder {
 
     // Defining TextViews of the Assisted List Objects
     private TextView textViewName;
     private TextView textViewDesc;
 
-    public ViewHolder(@NonNull View itemView) {
+    TextViewHolder(@NonNull View itemView) {
       super(itemView);
 
-      textViewName = (TextView) itemView.findViewById(R.id.assistedListItemName);
-      textViewDesc = (TextView) itemView.findViewById(R.id.assistedListItemDesc);
+      textViewName = itemView.findViewById(R.id.assistedListItemName);
+      textViewDesc = itemView.findViewById(R.id.assistedListItemDesc);
     }
   }
 }
