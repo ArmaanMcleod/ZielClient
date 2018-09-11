@@ -13,8 +13,6 @@ Navigation software designed to facilitate a channel which allows assistance to 
 
 Please note that we use Android SDK Version 28, and targeting Java 8. See [this link](https://developer.android.com/studio/write/java8-support) to see how to configure Android Studio to use Java 8.
 
-<<<<<<< HEAD
-=======
 ## Setting up Google API keys
 
 * Follow steps at [Get API Key](https://developers.google.com/maps/documentation/android-sdk/signup).
@@ -34,7 +32,6 @@ Please note that we use Android SDK Version 28, and targeting Java 8. See [this 
 * You **must** call it `secrets.xml` since its ignored in `.gitignore`.
 * Using an untracked local file to store the API key prevents it being exposed in remotely.
 
->>>>>>> develop
 ## Git workflow
 
 Our workflow to follow is [GitFlow](https://nvie.com/posts/a-successful-git-branching-model/). Each milestone (release candidate) will have its own `develop` branch, from which all work for that release will be branched off.
