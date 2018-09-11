@@ -23,7 +23,7 @@ import java.net.URL;
  */
 public class FetchUrl extends AsyncTask<String, Void, String> {
 
-  private final String TAG = this.getClass().getSimpleName();
+  private final String activity = this.getClass().getSimpleName();
 
   private GoogleMap googleMap;
 
@@ -34,7 +34,7 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
 
   /**
    * This downloads the specified URL in a background thread.
-   *
+   * <p>
    * Documentation : https://developer.android.com/reference/android/os/
    * AsyncTask.html#doInBackground(Params...)
    *
@@ -48,9 +48,9 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
     // Attempt to download the URL
     try {
       data = downloadUrl(url[0]);
-      Log.d(TAG, data);
+      Log.d(activity, data);
     } catch (Exception e) {
-      Log.d(TAG, e.toString());
+      Log.d(activity, e.toString());
     }
 
     return data;
@@ -59,7 +59,7 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
   /**
    * This is responsible for running the parser task on the
    * download URL from doInBackground(Params...)
-   *
+   * <p>
    * Documentation : https://developer.android.com/reference/android/os/
    * AsyncTask.html#onPostExecute(Result)
    *
@@ -75,6 +75,7 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
 
   /**
    * This is responsible for downloading the JSON data from an API endpoint with HTTP requests.
+   *
    * @param strUrl The url to download data from.
    * @return String This is the JSON data in String format.
    * @throws IOException This is the IO exception that triggers when reading the file fails.
@@ -103,11 +104,11 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
         }
 
         data = sb.toString();
-        Log.d(TAG, data);
+        Log.d(activity, data);
       }
 
     } catch (MalformedURLException e) {
-      Log.d(TAG, e.toString());
+      Log.d(activity, e.toString());
 
     } finally {
       if (iStream != null) {

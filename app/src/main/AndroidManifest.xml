@@ -21,7 +21,6 @@
             </intent-filter>
         </activity>
 
-
         <activity
             android:name=".activities.HomePageActivity"
             android:label="@string/title_activity_home_page">
@@ -70,7 +69,8 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name=".activities.common.TextChatActivity"></activity>
+        <activity android:name=".activities.common.TextChatActivity" />
+        <activity android:name=".activities.common.StreetViewActivity" />
     </application>
 
 </manifest>

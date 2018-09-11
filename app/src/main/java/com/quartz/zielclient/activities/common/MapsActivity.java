@@ -1,8 +1,10 @@
 package com.quartz.zielclient.activities.common;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -27,31 +29,24 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.utilities.map.DirectionsJSONParser;
 import com.quartz.zielclient.utilities.map.FetchUrl;
-import com.quartz.zielclient.utilities.map.ParserTask;
 
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
+import java.util.Objects;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_MAGENTA;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
+
+import static com.google.android.gms.location.LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
+
 /**
  * This class is responsible for handling all map activities.
- *
  * <p>
  * Courtesy : https://stackoverflow.com/questions/44992014/
  * how-to-get-current-location-in-googlemap-using-fusedlocationproviderclient/44993694#44993694
@@ -69,7 +64,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
-  private final String TAG = this.getClass().getSimpleName();
+  private final String activity = this.getClass().getSimpleName();
 
   private GoogleMap mGoogleMap;
 
@@ -112,41 +107,73 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // The last location in the list is the newest
         Location location = locationList.get(locationList.size() - 1);
-        Log.i(TAG, "Location: " +
+        Log.i(activity, "Location: " +
             location.getLatitude() + " "
             + location.getLongitude());
 
         // Update and draw source location
         setSource(new LatLng(location.getLatitude(), location.getLongitude()));
-        drawMarker(source, BitmapDescriptorFactory.HUE_MAGENTA, "Current Location");
+        drawMarker(source, HUE_MAGENTA);
       }
     }
   };
 
   /**
    * Draws marker on the Google map.
+   *
    * @param location This is the location on the map.
-   * @param colour This is the colour of the marker.
-   * @param message This is the message to pass to the marker.
+   * @param colour   This is the colour of the marker.
    */
-  private void drawMarker(LatLng location, float colour, String message) {
+  private void drawMarker(LatLng location, float colour) {
+    Log.d(activity, "Drawing marker at location: " + location.toString());
     MarkerOptions markerOptions = new MarkerOptions();
 
     // Update marker options
     markerOptions.position(location);
-    markerOptions.title(message);
+
+    // Create address title of marker
+    String locationAddress = getAddress(location);
+    Log.d(activity, "Marker address: " + locationAddress);
+    markerOptions.title(getAddress(location));
+
     markerOptions.icon(BitmapDescriptorFactory.defaultMarker(colour));
 
     // Add marker to the map
-    mGoogleMap.addMarker(markerOptions);
+    mGoogleMap.addMarker(markerOptions).showInfoWindow();
 
     // Zoom in on map location
     mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM));
   }
 
   /**
-   * Creates map along with its attributes.
+   * Gets the address of a location.
    *
+   * @param location This is the location.
+   * @return String This is the address in String format.
+   */
+  private String getAddress(LatLng location) {
+    String address = "";
+
+    // Create address geo coder
+    Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+    try {
+
+      // Only retrieve the rop result
+      List<Address> addresses = geocoder.getFromLocation(location.latitude,
+          location.longitude,
+          1);
+
+      address = addresses.get(0).getAddressLine(0);
+    } catch (IOException e) {
+      Log.d(activity, "getAddress: Cannot fetch address");
+    }
+
+    return address;
+  }
+
+
+  /**
+   * Creates map along with its attributes.
    * <p>
    * Documentation : https://developer.android.com/reference/android/app/
    * Activity.html#onCreate(android.os.Bundle)
@@ -156,11 +183,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_maps2);
+    setContentView(R.layout.activity_maps);
 
     // Create autocomplete bar
     PlaceAutocompleteFragment placeAutoComplete = (PlaceAutocompleteFragment)
         getFragmentManager().findFragmentById(R.id.place_autocomplete);
+    Objects.requireNonNull(placeAutoComplete.getView()).setBackgroundColor(Color.WHITE);
 
     // Listen for new places queried in search bar
     placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -170,7 +198,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Clear all previous points on map
         mGoogleMap.clear();
 
-        Log.d(TAG, "Place selected: " + place.getLatLng());
+        Log.d(activity, "Place selected: " + place.getLatLng());
         setDestination(place.getLatLng());
 
         // Compute path to destination
@@ -179,13 +207,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         fetchUrl.execute(directionsURL);
 
         // Redraw both source and destination markers to screen
-        drawMarker(source, BitmapDescriptorFactory.HUE_MAGENTA, "Current Location");
-        drawMarker(destination, BitmapDescriptorFactory.HUE_RED, "Destination Location");
+        drawMarker(getSource(), HUE_MAGENTA);
+        drawMarker(getDestination(), HUE_RED);
       }
 
       @Override
       public void onError(Status status) {
-        Log.d(TAG, "An error occurred: " + status);
+        Log.d(activity, "An error occurred: " + status);
       }
     });
 
@@ -203,7 +231,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * This is called when user received an event call.
-   *
    * <p>
    * Documentation : https://developers.google.com/android/reference/com/google/android/gms/maps/
    * OnMapReadyCallback.html#onMapReady(com.google.android.gms.maps.GoogleMap)
@@ -229,11 +256,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     // Initialise Google map
     mGoogleMap = googleMap;
 
+    // Set listener for markers
+    mGoogleMap.setOnMarkerClickListener(marker -> {
+      Intent intent = new Intent(MapsActivity.this, StreetViewActivity.class);
+      intent.putExtra("destination", marker.getPosition());
+      startActivity(intent);
+      return true;
+    });
+
     // Setup location request and intervals between requests
     mLocationRequest = new LocationRequest();
     mLocationRequest.setInterval(120000); // two minute interval
     mLocationRequest.setFastestInterval(120000);
-    mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+    mLocationRequest.setPriority(PRIORITY_BALANCED_POWER_ACCURACY);
 
     // Check permissions
     if (checkSelfPermission(ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
@@ -281,7 +316,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * This is a callback for requesting and checking the result of a permission.
-   *
    * <p>
    * Documentation : https://developer.android.com/reference/android/support/v4/app/
    * ActivityCompat.OnRequestPermissionsResultCallback#onRequestPermissionsResult
@@ -301,6 +335,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * This is responsible for requesting a location permission from the user.
+   *
    * @param grantResults This is results for granted or un-granted permissions.
    */
   private void handleLocationPermission(@NonNull int[] grantResults) {
@@ -328,13 +363,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * Builds URL from Directions API web service.
+   *
    * @return String This is the new url pointing to the API endpoint.
    */
   private String getDirectionsUrl() {
 
     // Source and destination formats
-    String strSource = "origin=" + source.latitude + "," + source.longitude;
-    String strDestination = "destination=" + destination.latitude + "," + destination.longitude;
+    String strSource = "origin=" + getSource().latitude + "," + getSource().longitude;
+    String strDestination = "destination=" +
+        getDestination().latitude + "," +
+        getDestination().longitude;
 
     // Sensor initialisation
     String sensor = "sensor=false";
@@ -342,7 +380,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     // Building the parameters to the web service
     String parameters = strSource + "&" + strDestination + "&" + sensor;
 
+    // Add parameters to api url
+    String apiRequest = API_URL + parameters;
+
+    Log.d(activity, "Directions request sent to " + apiRequest);
+
     // Building the url to the web service
-    return API_URL + parameters;
+    return apiRequest;
   }
 }
