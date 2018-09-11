@@ -3,15 +3,15 @@ package com.quartz.zielclient.activities.common;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
 import com.google.android.gms.maps.StreetViewPanorama;
 import com.google.android.gms.maps.StreetViewPanoramaFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
-import com.google.android.gms.maps.model.StreetViewPanoramaOrientation;
-import com.google.android.gms.maps.model.StreetViewSource;
 import com.quartz.zielclient.R;
+
 
 /**
  * This class is responsible for showing a street view of a location
@@ -26,6 +26,8 @@ public class StreetViewActivity extends AppCompatActivity implements
   private LatLng destination;
 
   private static final int DURATION = 2000;
+
+  private final String activity = this.getClass().getSimpleName();
 
   /**
    * Creates a street view of a map location.
@@ -67,21 +69,24 @@ public class StreetViewActivity extends AppCompatActivity implements
    */
   @Override
   public void onStreetViewPanoramaReady(StreetViewPanorama streetViewPanorama) {
+    Log.d(activity, "Street view enabled for location: " + destination.toString());
 
     // Set camera properties
-    streetViewPanorama.setPosition(destination, 20, StreetViewSource.OUTDOOR);
+    streetViewPanorama.setPosition(destination);
     streetViewPanorama.setStreetNamesEnabled(true);
     streetViewPanorama.setPanningGesturesEnabled(true);
     streetViewPanorama.setZoomGesturesEnabled(true);
     streetViewPanorama.setUserNavigationEnabled(true);
 
     // Create camera
-    StreetViewPanoramaCamera camera = new StreetViewPanoramaCamera.Builder()
-        .orientation(new StreetViewPanoramaOrientation(20, 20))
-        .zoom(streetViewPanorama.getPanoramaCamera().zoom)
-        .build();
+    StreetViewPanoramaCamera camera =
+        new StreetViewPanoramaCamera.Builder()
+            .zoom(streetViewPanorama.getPanoramaCamera().zoom)
+            .tilt(streetViewPanorama.getPanoramaCamera().tilt)
+            .bearing(streetViewPanorama.getPanoramaCamera().bearing - 60)
+            .build();
 
-    // Animate camera to view
+    // Move camera to location
     streetViewPanorama.animateTo(camera, DURATION);
   }
 }

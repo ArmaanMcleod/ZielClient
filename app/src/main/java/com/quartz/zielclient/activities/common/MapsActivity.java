@@ -126,11 +126,17 @@ public class MapsActivity extends AppCompatActivity implements
    * @param colour   This is the colour of the marker.
    */
   private void drawMarker(LatLng location, float colour) {
+    Log.d(activity, "Drawing marker at location: " + location.toString());
     MarkerOptions markerOptions = new MarkerOptions();
 
     // Update marker options
     markerOptions.position(location);
+
+    // Create address title of marker
+    String locationAddress = getAddress(location);
+    Log.d(activity, "Marker address: " + locationAddress);
     markerOptions.title(getAddress(location));
+
     markerOptions.icon(BitmapDescriptorFactory.defaultMarker(colour));
 
     // Add marker to the map
@@ -375,7 +381,12 @@ public class MapsActivity extends AppCompatActivity implements
     // Building the parameters to the web service
     String parameters = strSource + "&" + strDestination + "&" + sensor;
 
+    // Add parameters to api url
+    String apiRequest = API_URL + parameters;
+
+    Log.d(activity, "Directions request sent to " + apiRequest);
+
     // Building the url to the web service
-    return API_URL + parameters;
+    return apiRequest;
   }
 }

@@ -21,8 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity android:name=".activities.MainActivity" />
+
         <activity
             android:name=".activities.HomePageActivity"
             android:label="@string/title_activity_home_page">
@@ -66,7 +65,7 @@
             android:required="false" />
 
         <activity android:name=".activities.common.TextChatActivity" />
-        <activity android:name=".activities.common.StreetViewActivity"></activity>
+        <activity android:name=".activities.common.StreetViewActivity" />
     </application>
 
 </manifest>
