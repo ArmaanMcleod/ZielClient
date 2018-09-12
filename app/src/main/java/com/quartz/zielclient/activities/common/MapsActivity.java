@@ -28,13 +28,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.utilities.channel.Channel;
 import com.quartz.zielclient.utilities.channel.ChannelHandler;
 import com.quartz.zielclient.utilities.channel.ChannelListener;
-import com.quartz.zielclient.R;
 import com.quartz.zielclient.utilities.map.DirectionsJSONParser;
 import com.quartz.zielclient.utilities.map.FetchUrl;
 import com.quartz.zielclient.utilities.map.ParserTask;
@@ -66,12 +63,12 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
  * @version 1.0- 1
  * 28/08/2018
  */
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,ChannelListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ChannelListener {
 
   // Custom permissions request code
   private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
-  private static final int DEFAULT_ZOOM = 13;
+  private static final int DEFAULT_ZOOM = 11;
 
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
@@ -101,11 +98,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     this.source = source;
   }
 
-
-  // temporary for testing
-  Channel channel  = ChannelHandler.retrieveChannel("90a2c51d-4d9a-4d15-af8e-9639ff472231",this);
-
-
   private LocationCallback mLocationCallback = new LocationCallback() {
 
     /**
@@ -124,17 +116,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // The last location in the list is the newest
         Location location = locationList.get(locationList.size() - 1);
         Log.i(TAG, "Location: " +
-            location.getLatitude() + " "
-            + location.getLongitude());
+                location.getLatitude() + " "
+                + location.getLongitude());
 
-        channel.setAssistedLocation(String.valueOf(location.getLatitude()),String.valueOf(location.getLongitude()));
         // Update and draw source location
-
-        setSource(new LatLng(location.getLatitude(),location.getLongitude()));
+        setSource(new LatLng(location.getLatitude(), location.getLongitude()));
+        channel.setAssistedLocation(String.valueOf(location.getLatitude()),String.valueOf((location.getLongitude())));
         drawMarker(source, BitmapDescriptorFactory.HUE_MAGENTA, "Current Location");
       }
     }
   };
+
+  Channel channel  = ChannelHandler.retrieveChannel("90a2c51d-4d9a-4d15-af8e-9639ff472231",this);
 
   /**
    * Draws marker on the Google map.
@@ -173,7 +166,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Create autocomplete bar
     PlaceAutocompleteFragment placeAutoComplete = (PlaceAutocompleteFragment)
-        getFragmentManager().findFragmentById(R.id.place_autocomplete);
+            getFragmentManager().findFragmentById(R.id.place_autocomplete);
 
     // Listen for new places queried in search bar
     placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -183,12 +176,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Clear all previous points on map
         mGoogleMap.clear();
 
-
-        Log.d(TAG, "Place selected: " + place.getLatLng());
-        setDestination(place.getLatLng());
-        // Compute path to destination
-        String directionsURL = getDirectionsUrl();
-        channel.setDirectionsURL(directionsURL);
         Log.d(TAG, "Place selected: " + place.getLatLng());
         setDestination(place.getLatLng());
 
@@ -196,11 +183,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         String directionsURL = getDirectionsUrl();
         FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
         fetchUrl.execute(directionsURL);
-
+        channel.setDirectionsURL(directionsURL);
         // Redraw both source and destination markers to screen
         drawMarker(source, BitmapDescriptorFactory.HUE_MAGENTA, "Current Location");
         drawMarker(destination, BitmapDescriptorFactory.HUE_RED, "Destination Location");
-
       }
 
       @Override
@@ -214,7 +200,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Place map in application
     SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager()
-        .findFragmentById(R.id.map);
+            .findFragmentById(R.id.map);
 
     if (mapFrag != null) {
       mapFrag.getMapAsync(this);
@@ -251,8 +237,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Setup location request and intervals between requests
     mLocationRequest = new LocationRequest();
-    mLocationRequest.setInterval(1000); // 10 second interval
-    mLocationRequest.setFastestInterval(1000);
+    mLocationRequest.setInterval(120000); // two minute interval
+    mLocationRequest.setFastestInterval(120000);
     mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
     // Check permissions
@@ -278,23 +264,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // This thread waiting for the user's response! After the user
         // Sees the explanation, try again to request the permission.
         new AlertDialog.Builder(this)
-            .setTitle("Location Permission Needed")
-            .setMessage(
-                "This app needs the Location permission, " +
-                    "please accept to use location functionality")
+                .setTitle("Location Permission Needed")
+                .setMessage(
+                        "This app needs the Location permission, " +
+                                "please accept to use location functionality")
 
-            .setPositiveButton("OK",
-                //Prompt the user once explanation has been shown
-                (dialogInterface, i) ->
-                    requestPermissions(new String[]{ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION))
-            .create()
-            .show();
+                .setPositiveButton("OK",
+                        //Prompt the user once explanation has been shown
+                        (dialogInterface, i) ->
+                                requestPermissions(new String[]{ACCESS_FINE_LOCATION},
+                                        MY_PERMISSIONS_REQUEST_LOCATION))
+                .create()
+                .show();
 
       } else {
         // No explanation needed, we can request the permission.
         requestPermissions(new String[]{ACCESS_FINE_LOCATION},
-            MY_PERMISSIONS_REQUEST_LOCATION);
+                MY_PERMISSIONS_REQUEST_LOCATION);
       }
     }
   }
@@ -340,8 +326,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     // Permission was granted so we can enable user location
     if (checkSelfPermission(ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
       mFusedLocationClient.requestLocationUpdates(mLocationRequest,
-          mLocationCallback,
-          Looper.myLooper());
+              mLocationCallback,
+              Looper.myLooper());
       mGoogleMap.setMyLocationEnabled(true);
     }
   }
@@ -364,7 +350,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Building the url to the web service
     return API_URL + parameters;
-
   }
 
   @Override
@@ -374,11 +359,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   @Override
   public String getAssistedId() {
-    return "Assisted1";
+    return null;
   }
 
   @Override
   public String getCarerId() {
-    return "carer1";
+    return null;
   }
 }
