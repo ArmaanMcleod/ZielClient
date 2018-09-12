@@ -16,7 +16,7 @@ public final class MessageFactory {
    * @param text The message's text.
    * @return The
    */
-  public static Message makeTextMessage(String text) {
-    return new Message(Message.MessageType.TEXT, text);
+  public static Message makeTextMessage(String text, String userName) {
+    return new Message(Message.MessageType.TEXT, text, userName);
   }
 }

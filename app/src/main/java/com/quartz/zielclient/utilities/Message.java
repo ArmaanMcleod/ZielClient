@@ -1,9 +1,11 @@
 package com.quartz.zielclient.utilities;
 
+import java.util.Date;
+
 /**
  * Message class acts as a wrapper around messages.
  *
- * @author Bilal Shehata
+ * @author Wei How Ng
  */
 public class Message {
 
@@ -12,12 +14,17 @@ public class Message {
 
   private MessageType type;
   private String messageValue;
+  private String userName;
+  private long messageTime;
 
-  Message(MessageType type, String messageValue) {
+  Message(MessageType type, String messageValue, String userName) {
     this.type = type;
     this.messageValue = messageValue;
+    this.userName = userName;
+    this.messageTime = new Date().getTime();
   }
 
+  // Getters and setters
   public String getMessageValue() {
     return messageValue;
   }
@@ -34,4 +41,11 @@ public class Message {
     this.type = type;
   }
 
+  public long getMessageTime() {
+    return messageTime;
+  }
+
+  public void setMessageTime(long messageTime) {
+    this.messageTime = messageTime;
+  }
 }

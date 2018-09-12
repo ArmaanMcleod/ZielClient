@@ -60,12 +60,12 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
 
   /**
    * Send message located in the input view
-   *
+   * TODO: Add the sender/ receiver's username into this instead of the hardcoded string
    * @param view
    */
   @Override
   public void onClick(View view) {
-    Message messageToSend = MessageFactory.makeTextMessage(chatInput.getText().toString());
+    Message messageToSend = MessageFactory.makeTextMessage(chatInput.getText().toString(), "Name");
     channel.sendMessage(messageToSend);
 
   }
