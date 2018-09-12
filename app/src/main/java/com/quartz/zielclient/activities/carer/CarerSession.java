@@ -36,7 +36,7 @@ public class CarerSession extends AppCompatActivity implements ValueEventListene
   // initialise Notification manager will allow push-notifcations on the device
   private NotificationHandler notificationHandler;
   // temporary id value for the carer until authorization is complete
-  private String id = "carer1";
+  private final String id = "carer1";
   private Channel channel;
 
   protected void onCreate(Bundle savedInstanceState) {

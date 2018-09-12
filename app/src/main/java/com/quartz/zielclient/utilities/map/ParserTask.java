@@ -32,7 +32,7 @@ public class ParserTask extends AsyncTask<String, Integer, List<List<Map<String,
   // Light blue color
   private static final String POLYLINE_COLOR = "#2196F3";
 
-  private GoogleMap googleMap;
+  private final GoogleMap googleMap;
 
   ParserTask(GoogleMap googleMap) {
     this.googleMap = googleMap;

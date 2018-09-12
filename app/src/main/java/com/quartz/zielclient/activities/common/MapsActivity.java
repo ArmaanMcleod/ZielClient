@@ -87,7 +87,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     this.source = source;
   }
 
-  private LocationCallback mLocationCallback = new LocationCallback() {
+  private final LocationCallback mLocationCallback = new LocationCallback() {
 
     /**
      * Moves camera to last known location of user.
@@ -118,7 +118,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
   };
 
-  Channel channel  = ChannelHandler.retrieveChannel("90a2c51d-4d9a-4d15-af8e-9639ff472231",
+  final Channel channel  = ChannelHandler.retrieveChannel("90a2c51d-4d9a-4d15-af8e-9639ff472231",
           this);
 
   /**
@@ -188,6 +188,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     setContentView(R.layout.activity_maps);
 
     // Create autocomplete bar
+
     PlaceAutocompleteFragment placeAutoComplete = (PlaceAutocompleteFragment)
         getFragmentManager().findFragmentById(R.id.place_autocomplete);
     Objects.requireNonNull(placeAutoComplete.getView()).setBackgroundColor(Color.WHITE);

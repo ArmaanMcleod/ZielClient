@@ -24,7 +24,7 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
   private static final String DEBUG_ID = "90a2c51d-4d9a-4d15-af8e-9639ff472231";
 
   // temporary for debugging will become a dynamic channel
-  private Channel channel = ChannelHandler.retrieveChannel(DEBUG_ID, this);
+  private final Channel channel = ChannelHandler.retrieveChannel(DEBUG_ID, this);
   private TextView chatOutput;
   private TextInputEditText chatInput;
   private Button sendButton;
