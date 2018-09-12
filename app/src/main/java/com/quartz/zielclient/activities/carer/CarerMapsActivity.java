@@ -21,23 +21,29 @@ import com.quartz.zielclient.utilities.map.FetchUrl;
  * Map accordigly THis allows a carer to have upto date locative information from the assisted
  * @author Bilal Shehata
  */
-public class CarerMapsActivity extends AppCompatActivity implements OnMapReadyCallback, ChannelListener {
+public class CarerMapsActivity extends AppCompatActivity implements
+    OnMapReadyCallback, ChannelListener {
 
   private GoogleMap mGoogleMap;
   // These constants are displayed until map syncronizes (only momentarily)
   // This prevents the default usage of  0,0
-  private double MELBOURNEUNILAT = -37.7964;
-  private double MELBOURNEUNILONG = 144.9612;
+  private static final double MELBOURNEUNILAT = -37.7964;
+  private static final double MELBOURNEUNILONG = 144.9612;
   private String currentDestinationURL = "none";
+
+  private static final String channelID = "90a2c51d-4d9a-4d15-af8e-9639ff472231";
+
   // default to melbourne uni
   // list of Assisted movements
-  final Double[] latitu = {MELBOURNEUNILAT};
-  final Double[] longitu = {MELBOURNEUNILONG};
+  private Double[] latitude = {MELBOURNEUNILAT};
+  private Double[] longitude = {MELBOURNEUNILONG};
+
   // initialize assisted location marker
   MarkerOptions assistedMarkerOptions = new MarkerOptions();
   Marker assistedMarker;
+
   // debug channel to be replaced with the current channel that was handled by a previous activity.
-  Channel channel  = ChannelHandler.retrieveChannel("90a2c51d-4d9a-4d15-af8e-9639ff472231",this);
+  Channel channel  = ChannelHandler.retrieveChannel(channelID,this);
 
   /**
    * Initizialise the activity
@@ -51,7 +57,9 @@ public class CarerMapsActivity extends AppCompatActivity implements OnMapReadyCa
     // Obtain the SupportMapFragment and get notified when the map is ready to be used.
     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
             .findFragmentById(R.id.map);
-    mapFragment.getMapAsync(this);
+    if (mapFragment != null) {
+      mapFragment.getMapAsync(this);
+    }
 
   }
   /**
@@ -74,9 +82,10 @@ public class CarerMapsActivity extends AppCompatActivity implements OnMapReadyCa
    *  Update the Coordinates based on the latest Assisted's location
    */
   public void updateMapCoords(){
-    LatLng assistedLocation = new LatLng(latitu[0], longitu[0]);
+    LatLng assistedLocation = new LatLng(latitude[0], longitude[0]);
     // Safety check
-    // Asynchronous map may lead to erorr this ensures that the database call does update if map is not ready
+    // Asynchronous map may lead to error this ensures that the database call
+    // does update if map is not ready
     if(assistedMarker!=null) {
       assistedMarker.setPosition(assistedLocation);
       mGoogleMap
@@ -95,19 +104,20 @@ public class CarerMapsActivity extends AppCompatActivity implements OnMapReadyCa
   @Override
   public void dataChanged() {
     // update latitude
-    latitu[0] = channel.getAssistedLocation().latitude;
-    // update longtidute
-    longitu[0] = channel.getAssistedLocation().longitude;
+    latitude[0] = channel.getAssistedLocation().latitude;
+    // update longitude
+    longitude[0] = channel.getAssistedLocation().longitude;
     // update on map marker
     updateMapCoords();
     // if the assisted has entered a route then generate that same route
-    if((channel.getDirectionsURL() != null) && !channel.getDirectionsURL().equals("none")){
-      // if the route is already the current route then dont update
-      if(!channel.getDirectionsURL().equals(currentDestinationURL)){
+    if ((channel.getDirectionsURL() != null) && !channel.getDirectionsURL().equals("none")){
+      // if the route is already the current route then don't update
+
+      if (!channel.getDirectionsURL().equals(currentDestinationURL)) {
         // update the route
-      FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
-      fetchUrl.execute(channel.getDirectionsURL());
-      currentDestinationURL = channel.getDirectionsURL();
+        FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
+        fetchUrl.execute(channel.getDirectionsURL());
+        currentDestinationURL = channel.getDirectionsURL();
       }
     }
   }

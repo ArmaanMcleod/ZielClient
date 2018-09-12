@@ -42,7 +42,8 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
     setContentView(R.layout.activity_carer_homepage);
 
     // Getting requestsReference from FireBase
-    requestsReference = FirebaseDatabase.getInstance().getReference("channelRequests/" + userID);
+    requestsReference = FirebaseDatabase.getInstance()
+        .getReference("channelRequests/" + userID);
     requestsReference.addValueEventListener(this);
 
     // Initialising RecyclerView

@@ -71,6 +71,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private LatLng source;
   private LatLng destination;
 
+  private static final String channelID = "90a2c51d-4d9a-4d15-af8e-9639ff472231";
+
   public LatLng getDestination() {
     return destination;
   }
@@ -118,8 +120,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
   };
 
-  Channel channel  = ChannelHandler.retrieveChannel("90a2c51d-4d9a-4d15-af8e-9639ff472231",
-          this);
+  Channel channel  = ChannelHandler.retrieveChannel(channelID, this);
 
   /**
    * Draws marker on the Google map.

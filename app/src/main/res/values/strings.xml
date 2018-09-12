@@ -19,4 +19,7 @@
     <string name="street_view">Street View</string>
     <string name="where_to">Where To?</string>
     <string name="direct_me_there">Direct Me There!</string>
+    <string name="channel_active">Channel is active</string>
+    <string name="channel_inactive">Channel is inactive</string>
+    <string name="carer_status">carerStatus</string>
 </resources>

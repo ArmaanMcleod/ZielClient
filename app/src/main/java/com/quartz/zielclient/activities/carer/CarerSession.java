@@ -28,7 +28,9 @@ import static android.view.View.VISIBLE;
  *
  * @author Bilal Shehata
  */
-public class CarerSession extends AppCompatActivity implements ValueEventListener, View.OnClickListener, ChannelListener {
+public class CarerSession extends AppCompatActivity implements
+    ValueEventListener, View.OnClickListener, ChannelListener {
+
   private TextView status;
   private FirebaseDatabase firebaseDatabase;
   private DatabaseReference channelReference;
@@ -72,8 +74,10 @@ public class CarerSession extends AppCompatActivity implements ValueEventListene
 
     // Get the session which has been allocated to the carer from an assisted
     String channelID = dataSnapshot.child(getResources().getString(R.string.current_channel)).getValue(String.class);
+
     // get a reference to the session that was created by the assisted
     channelReference = firebaseDatabase.getReference(getString(R.string.channelsReferenceLocation) + channelID);
+
     // incase of misfire ensure that Id returned a string value
     if (channelID != null && !channelID.equals(getResources().getString(R.string.waiting))) {
       // Send a toast to the user notifying them of the request
@@ -90,20 +94,23 @@ public class CarerSession extends AppCompatActivity implements ValueEventListene
 
   @Override
   public void onCancelled(@NonNull DatabaseError databaseError) {
-    //todo
+    //TODO
   }
 
   @Override
   public void onClick(View view) {
-    channelReference.child("carerStatus").setValue(true);
+    channelReference.child(getString(R.string.carer_status)).setValue(true);
   }
 
   private void watchNotificationChange() {
     firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference notifcationRef = firebaseDatabase.getReference("users/" + id);
-    notifcationRef.child(getResources().getString(R.string.current_channel)).setValue(getResources().getString(R.string.waiting));
-    notifcationRef.addValueEventListener(this);
 
+    notifcationRef.child(getResources()
+        .getString(R.string.current_channel))
+        .setValue(getResources().getString(R.string.waiting));
+
+    notifcationRef.addValueEventListener(this);
   }
 
   /**
@@ -113,10 +120,10 @@ public class CarerSession extends AppCompatActivity implements ValueEventListene
   public void dataChanged() {
     // check values on channel and modify state accordingly
     if (channel.getAssistedStatus()) {
-      status.setText("Channel is active ");
+      status.setText(R.string.channel_active);
     }
     if (!channel.getAssistedStatus()) {
-      status.setText("Channel is inactive");
+      status.setText(R.string.channel_inactive);
     }
     if (channel.getPing()) {
       channel.setPing(false);
