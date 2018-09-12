@@ -9,10 +9,10 @@ public interface ChannelListener {
   /**
    * object needs to recieve updatea when values in the channel have been updated
    */
-  public void dataChanged();
+  void dataChanged();
 
-  public String getAssistedId();
+  String getAssistedId();
 
-  public String getCarerId();
+  String getCarerId();
 
 }

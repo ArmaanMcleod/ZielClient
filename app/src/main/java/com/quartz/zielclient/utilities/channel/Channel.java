@@ -1,20 +1,15 @@
 package com.quartz.zielclient.utilities.channel;
 
 
-import android.location.LocationProvider;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.model.LatLng;
-import android.support.annotation.NonNull;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
-
 import com.quartz.zielclient.utilities.Message;
 
 import java.util.HashMap;
@@ -117,7 +112,8 @@ public class Channel implements ValueEventListener {
    */
   public LatLng getAssistedLocation(){
     if(this.channelValues!=null){
-    Map<String,String> assistedLocationCordinates = (Map<String,String >) this.channelValues.get("assistedLocation");
+      @SuppressWarnings("unchecked")
+    Map<String,String> assistedLocationCordinates = ((Map<String, String>) this.channelValues.get("assistedLocation"));
 
     double xCoord = Double.parseDouble(assistedLocationCordinates.get("xCoord"));
     double yCoord = Double.parseDouble(assistedLocationCordinates.get("yCoord"));
@@ -166,8 +162,6 @@ public class Channel implements ValueEventListener {
    */
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-    channelValues = (Map<String, Object>) Objects.requireNonNull(dataSnapshot).getValue();
-    Log.d("MAPVALUES",channelValues.toString());
     GenericTypeIndicator<Map<String, Object>> t = new GenericTypeIndicator<Map<String, Object>>() {};
     channelValues = dataSnapshot.getValue(t);
     channelListener.dataChanged();
