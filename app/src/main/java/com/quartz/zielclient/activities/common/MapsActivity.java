@@ -1,10 +1,6 @@
 package com.quartz.zielclient.activities.common;
-
-import android.content.Intent;
 import android.content.Intent;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -15,7 +11,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -36,24 +31,16 @@ import com.quartz.zielclient.R;
 import com.quartz.zielclient.utilities.channel.Channel;
 import com.quartz.zielclient.utilities.channel.ChannelHandler;
 import com.quartz.zielclient.utilities.channel.ChannelListener;
-import com.quartz.zielclient.utilities.map.DirectionsJSONParser;
 import com.quartz.zielclient.utilities.map.FetchUrl;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.google.android.gms.location.LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_MAGENTA;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
-
-import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_MAGENTA;
-import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
-
-import static com.google.android.gms.location.LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
 
 /**
  * This class is responsible for handling all map activities.
@@ -117,7 +104,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // The last location in the list is the newest
         Location location = locationList.get(locationList.size() - 1);
-        Log.i(TAG, "Location: " +
+        Log.i(activity, "Location: " +
                 location.getLatitude() + " "
                 + location.getLongitude());
 

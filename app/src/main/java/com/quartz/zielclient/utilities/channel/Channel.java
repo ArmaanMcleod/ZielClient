@@ -19,6 +19,7 @@ import com.quartz.zielclient.utilities.Message;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * This Object abstracts away the communication with the database Channels
@@ -165,7 +166,7 @@ public class Channel implements ValueEventListener {
    */
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-    channelValues = (Map<String, Object>) dataSnapshot.getValue();
+    channelValues = (Map<String, Object>) Objects.requireNonNull(dataSnapshot).getValue();
     Log.d("MAPVALUES",channelValues.toString());
     GenericTypeIndicator<Map<String, Object>> t = new GenericTypeIndicator<Map<String, Object>>() {};
     channelValues = dataSnapshot.getValue(t);
