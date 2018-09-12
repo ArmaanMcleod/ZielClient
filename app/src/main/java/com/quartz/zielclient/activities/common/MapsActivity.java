@@ -110,14 +110,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Update and draw source location
         setSource(new LatLng(location.getLatitude(), location.getLongitude()));
-        channel.setAssistedLocation(String.valueOf(location.getLatitude()),String.valueOf((location.getLongitude())));
+        channel.setAssistedLocation(String.valueOf(location.getLatitude()),
+                String.valueOf((location.getLongitude())));
         drawMarker(source, HUE_MAGENTA);
 
       }
     }
   };
 
-  Channel channel  = ChannelHandler.retrieveChannel("90a2c51d-4d9a-4d15-af8e-9639ff472231",this);
+  Channel channel  = ChannelHandler.retrieveChannel("90a2c51d-4d9a-4d15-af8e-9639ff472231",
+          this);
 
   /**
    * Draws marker on the Google map.
@@ -391,7 +393,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   @Override
   public void dataChanged() {
-
+   // notify user about new messages
   }
 
   @Override
