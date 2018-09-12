@@ -1,16 +1,15 @@
 package com.quartz.zielclient.activities.common;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.CarerHomepageActivity;
-import com.quartz.zielclient.activities.carer.CarerMapsActivity;
-import com.quartz.zielclient.activities.carer.CarerSession;
 import com.quartz.zielclient.activities.HomePageActivity;
+import com.quartz.zielclient.activities.carer.CarerMapsActivity;
 
 
 /**

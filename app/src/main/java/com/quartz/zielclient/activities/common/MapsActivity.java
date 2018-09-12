@@ -73,6 +73,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   private static final String channelID = "90a2c51d-4d9a-4d15-af8e-9639ff472231";
 
+  private Channel channel  = ChannelHandler.retrieveChannel(channelID, this);
+
   public LatLng getDestination() {
     return destination;
   }
@@ -89,7 +91,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     this.source = source;
   }
 
-  private LocationCallback mLocationCallback = new LocationCallback() {
+  private final LocationCallback mLocationCallback = new LocationCallback() {
 
     /**
      * Moves camera to last known location of user.
@@ -119,8 +121,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       }
     }
   };
-
-  Channel channel  = ChannelHandler.retrieveChannel(channelID, this);
 
   /**
    * Draws marker on the Google map.
@@ -189,6 +189,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     setContentView(R.layout.activity_maps);
 
     // Create autocomplete bar
+
     PlaceAutocompleteFragment placeAutoComplete = (PlaceAutocompleteFragment)
         getFragmentManager().findFragmentById(R.id.place_autocomplete);
     Objects.requireNonNull(placeAutoComplete.getView()).setBackgroundColor(Color.WHITE);

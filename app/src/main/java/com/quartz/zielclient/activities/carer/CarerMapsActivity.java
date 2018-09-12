@@ -27,8 +27,10 @@ public class CarerMapsActivity extends AppCompatActivity implements
   private GoogleMap mGoogleMap;
   // These constants are displayed until map syncronizes (only momentarily)
   // This prevents the default usage of  0,0
-  private static final double MELBOURNEUNILAT = -37.7964;
-  private static final double MELBOURNEUNILONG = 144.9612;
+
+  private final double MELBOURNEUNILAT = -37.7964;
+  private final double MELBOURNEUNILONG = 144.9612;
+
   private String currentDestinationURL = "none";
 
   private static final String channelID = "90a2c51d-4d9a-4d15-af8e-9639ff472231";
@@ -39,7 +41,7 @@ public class CarerMapsActivity extends AppCompatActivity implements
   private Double[] longitude = {MELBOURNEUNILONG};
 
   // initialize assisted location marker
-  MarkerOptions assistedMarkerOptions = new MarkerOptions();
+  final MarkerOptions assistedMarkerOptions = new MarkerOptions();
   Marker assistedMarker;
 
   // debug channel to be replaced with the current channel that was handled by a previous activity.
