@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.CarerHomepageActivity;
 import com.quartz.zielclient.activities.carer.CarerMapsActivity;
 import com.quartz.zielclient.activities.carer.CarerSession;
 import com.quartz.zielclient.activities.HomePageActivity;
@@ -34,12 +35,14 @@ public class LaunchPadActivity extends AppCompatActivity implements View.OnClick
     Button tracking = findViewById(R.id.trackingButton);
     Button assistedHome = findViewById(R.id.assistedHome);
     tracking.setOnClickListener(this);
+    Button carerHome = findViewById(R.id.carerHome);
     signIn.setOnClickListener(this);
     signUp.setOnClickListener(this);
     navigation.setOnClickListener(this);
     textChat.setOnClickListener(this);
     sessionMaker.setOnClickListener(this);
     assistedHome.setOnClickListener(this);
+    carerHome.setOnClickListener(this);
   }
 
   @Override
@@ -66,6 +69,9 @@ public class LaunchPadActivity extends AppCompatActivity implements View.OnClick
         break;
       case R.id.assistedHome:
         startActivity(new Intent(LaunchPadActivity.this, HomePageActivity.class));
+        break;
+      case R.id.carerHome:
+        startActivity(new Intent(LaunchPadActivity.this, CarerHomepageActivity.class));
         break;
       default:
         break;

@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import com.quartz.zielclient.utilities.Message;
@@ -32,7 +33,6 @@ public class Channel implements ValueEventListener {
   private DatabaseReference channelReference;
   // the object that wants to listen to this channel
   private ChannelListener channelListener;
-
 
   /**
    * @param channelReference - location in database where channel exists
@@ -130,34 +130,45 @@ public class Channel implements ValueEventListener {
 
   public void setMessages(Map<String,String> messages){
     channelReference.child("messages").setValue(messages);
-
   }
 
-  public void sendMessage(Message message){
-    Map<String,String> messageObject = new HashMap<>();;
-    messageObject.put("messageType",message.getType().toString());
-    messageObject.put("messageValue",message.getMessageValue());
+  public void sendMessage(Message message) {
+    Map<String, String> messageObject = new HashMap<>();
+
+    messageObject.put("messageType", message.getType().toString());
+    messageObject.put("messageValue", message.getMessageValue());
     channelReference.child("messages").push().setValue(messageObject);
   }
-  public Map<String,String> getMessages(){
-    if( channelValues.get("messages")!=null){
+
+  /**
+   * Retrieve all the messages from this channel.
+   *
+   * Downcasting is required to serialise the JSON representaiton of the messages to a Java Map.
+   * @return A map of the messages.
+   */
+  @SuppressWarnings("unchecked")
+  public Map<String, String> getMessages() {
+    if (channelValues.get("messages") != null) {
       return (Map<String, String>) channelValues.get("messages");
     }
-    Map<String,String> messageObject = new HashMap<>();;
-    messageObject.put("messageType","TEXT");
-    messageObject.put("messageValue","this chatroom has no messages");
-    return messageObject;
 
+    Map<String, String> messageObject = new HashMap<>();
+    messageObject.put("messageType", "TEXT");
+    messageObject.put("messageValue", "this chatroom has no messages");
+    return messageObject;
   }
+
   /**
-   *  recieve update from database and update the listener that some data has changed
+   * recieve update from database and update the listener that some data has changed
    *
-   * @param dataSnapshot
+   * @param dataSnapshot The datasnaphot to update the client based on.
    */
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
     channelValues = (Map<String, Object>) dataSnapshot.getValue();
     Log.d("MAPVALUES",channelValues.toString());
+    GenericTypeIndicator<Map<String, Object>> t = new GenericTypeIndicator<Map<String, Object>>() {};
+    channelValues = dataSnapshot.getValue(t);
     channelListener.dataChanged();
   }
 

@@ -21,6 +21,7 @@ public class ExampleInstrumentedTest {
     // Context of the app under test.
     Context appContext = InstrumentationRegistry.getTargetContext();
 
+    // Check package name is correct
     assertEquals("com.quartz.zielclient", appContext.getPackageName());
   }
 }

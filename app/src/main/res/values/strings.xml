@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">ZielClient</string>
+    <string name="no_splash_screen_loaded">No Splash Screen Loaded</string>
+    <string name="title_activity_home_page">HomePageActivity</string>
+    <string name="title_activity_carer_homepage">CarerHomepageActivity</string>
     <string name="title_activity_session">SessionActivity</string>
     <string name="title_activity_carer_session">CarerSession</string>
     <string name="title_activity_assisted_session">AssistedSession</string>
     <string name="title_activity_manual_redirect">ManualRedirect</string>
-    <string name="no_splash_screen_loaded">No Splash Screen Loaded</string>
-    <string name="title_activity_home_page">HomePageActivity</string>
     <string name="current_channel">currentSession</string>
     <string name="notificationChannelName">helpChannel</string>
     <string name="notificationChannelDescription">Assisted requires assistance</string>
@@ -15,6 +16,7 @@
     <string name="current_session">currentSession</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_carer_maps">Map</string>
+    <string name="street_view">Street View</string>
     <string name="where_to">Where To?</string>
     <string name="direct_me_there">Direct Me There!</string>
 </resources>
