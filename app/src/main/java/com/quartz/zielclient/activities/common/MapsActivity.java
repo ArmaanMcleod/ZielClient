@@ -1,5 +1,4 @@
 package com.quartz.zielclient.activities.common;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Address;
@@ -12,7 +11,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -30,20 +28,19 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.utilities.channel.Channel;
+import com.quartz.zielclient.utilities.channel.ChannelHandler;
+import com.quartz.zielclient.utilities.channel.ChannelListener;
 import com.quartz.zielclient.utilities.map.FetchUrl;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-
+import static com.google.android.gms.location.LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_MAGENTA;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
-
-import static com.google.android.gms.location.LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
 
 /**
  * This class is responsible for handling all map activities.
@@ -55,7 +52,7 @@ import static com.google.android.gms.location.LocationRequest.PRIORITY_BALANCED_
  * @version 1.0- 1
  * 28/08/2018
  */
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ChannelListener {
 
   // Custom permissions request code
   private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
@@ -108,15 +105,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // The last location in the list is the newest
         Location location = locationList.get(locationList.size() - 1);
         Log.i(activity, "Location: " +
-            location.getLatitude() + " "
-            + location.getLongitude());
+                location.getLatitude() + " "
+                + location.getLongitude());
 
         // Update and draw source location
         setSource(new LatLng(location.getLatitude(), location.getLongitude()));
+        channel.setAssistedLocation(String.valueOf(location.getLatitude()),
+                String.valueOf((location.getLongitude())));
         drawMarker(source, HUE_MAGENTA);
+
       }
     }
   };
+
+  Channel channel  = ChannelHandler.retrieveChannel("90a2c51d-4d9a-4d15-af8e-9639ff472231",
+          this);
 
   /**
    * Draws marker on the Google map.
@@ -125,7 +128,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * @param colour   This is the colour of the marker.
    */
   private void drawMarker(LatLng location, float colour) {
-    Log.d(activity, "Drawing marker at location: " + location.toString());
     MarkerOptions markerOptions = new MarkerOptions();
 
     // Update marker options
@@ -205,7 +207,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         String directionsURL = getDirectionsUrl();
         FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
         fetchUrl.execute(directionsURL);
-
+        channel.setDirectionsURL(directionsURL);
         // Redraw both source and destination markers to screen
         drawMarker(getSource(), HUE_MAGENTA);
         drawMarker(getDestination(), HUE_RED);
@@ -222,7 +224,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Place map in application
     SupportMapFragment mapFrag = (SupportMapFragment) getSupportFragmentManager()
-        .findFragmentById(R.id.map);
+            .findFragmentById(R.id.map);
 
     if (mapFrag != null) {
       mapFrag.getMapAsync(this);
@@ -266,8 +268,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Setup location request and intervals between requests
     mLocationRequest = new LocationRequest();
-    mLocationRequest.setInterval(120000); // two minute interval
-    mLocationRequest.setFastestInterval(120000);
+    mLocationRequest.setInterval(1000); // two minute interval
+    mLocationRequest.setFastestInterval(1000);
     mLocationRequest.setPriority(PRIORITY_BALANCED_POWER_ACCURACY);
 
     // Check permissions
@@ -293,23 +295,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // This thread waiting for the user's response! After the user
         // Sees the explanation, try again to request the permission.
         new AlertDialog.Builder(this)
-            .setTitle("Location Permission Needed")
-            .setMessage(
-                "This app needs the Location permission, " +
-                    "please accept to use location functionality")
+                .setTitle("Location Permission Needed")
+                .setMessage(
+                        "This app needs the Location permission, " +
+                                "please accept to use location functionality")
 
-            .setPositiveButton("OK",
-                //Prompt the user once explanation has been shown
-                (dialogInterface, i) ->
-                    requestPermissions(new String[]{ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION))
-            .create()
-            .show();
+                .setPositiveButton("OK",
+                        //Prompt the user once explanation has been shown
+                        (dialogInterface, i) ->
+                                requestPermissions(new String[]{ACCESS_FINE_LOCATION},
+                                        MY_PERMISSIONS_REQUEST_LOCATION))
+                .create()
+                .show();
 
       } else {
         // No explanation needed, we can request the permission.
         requestPermissions(new String[]{ACCESS_FINE_LOCATION},
-            MY_PERMISSIONS_REQUEST_LOCATION);
+                MY_PERMISSIONS_REQUEST_LOCATION);
       }
     }
   }
@@ -355,8 +357,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     // Permission was granted so we can enable user location
     if (checkSelfPermission(ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
       mFusedLocationClient.requestLocationUpdates(mLocationRequest,
-          mLocationCallback,
-          Looper.myLooper());
+              mLocationCallback,
+              Looper.myLooper());
       mGoogleMap.setMyLocationEnabled(true);
     }
   }
@@ -387,5 +389,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Building the url to the web service
     return apiRequest;
+  }
+
+  @Override
+  public void dataChanged() {
+   // notify user about new messages
+  }
+
+  @Override
+  public String getAssistedId() {
+    return null;
+  }
+
+  @Override
+  public String getCarerId() {
+    return null;
   }
 }

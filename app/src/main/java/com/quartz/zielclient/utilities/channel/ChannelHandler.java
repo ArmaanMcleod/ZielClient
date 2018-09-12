@@ -36,6 +36,10 @@ public final class ChannelHandler {
   public static Channel createChannel(ChannelListener channelListener) {
     final String channelKey = UUID.randomUUID().toString();
     Channel channel = new Channel(channelsReference.child(channelKey), channelListener);
+    // initialize coordinates in database defualt to null-island
+    channel.setAssistedLocation("0","0");
+    // add route to the channel which is initialy non existant
+    channel.setDirectionsURL("none");
     // add the id of the assisted to the session
     channel.setAssisted(channelListener.getAssistedId());
     // add the id of the carer to the session
@@ -66,6 +70,7 @@ public final class ChannelHandler {
    */
   public static Channel retrieveChannel(String channelID, ChannelListener channelListener) {
     Channel channel = new Channel(channelsReference.child(channelID), channelListener);
+    channel.setDirectionsURL("none");
     // set initialization message
     Map<String,String> initialMessage  = new HashMap<>();
     initialMessage.put("TEXT","welcome to the chat");

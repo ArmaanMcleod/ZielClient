@@ -1,6 +1,12 @@
 package com.quartz.zielclient.utilities.channel;
 
 
+import android.location.LocationProvider;
+import android.support.annotation.NonNull;
+import android.util.Log;
+
+import com.google.android.gms.maps.LocationSource;
+import com.google.android.gms.maps.model.LatLng;
 import android.support.annotation.NonNull;
 
 import com.google.firebase.database.DataSnapshot;
@@ -8,10 +14,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+
 import com.quartz.zielclient.utilities.Message;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * This Object abstracts away the communication with the database Channels
@@ -20,7 +28,6 @@ import java.util.Map;
  * @author Bilal Shehata
  */
 public class Channel implements ValueEventListener {
-
   // contains current channel values in database
   private Map<String, Object> channelValues;
   // reference to the database
@@ -37,6 +44,10 @@ public class Channel implements ValueEventListener {
     this.channelListener = channelListener;
     channelReference.addValueEventListener(this);
   }
+
+  public String getDirectionsURL() {return channelValues.get("directionsURL").toString();}
+
+  public void setDirectionsURL(String directionsURL) { channelReference.child("directionsURL").setValue(directionsURL);}
 
   public String getAssisted() {
     return channelValues.get("assisted").toString();
@@ -70,6 +81,7 @@ public class Channel implements ValueEventListener {
     channelReference.child("carerStatus").setValue(carerStatus);
   }
 
+
   public Boolean getPing() {
     return channelValues.get("Ping").equals(true);
   }
@@ -94,7 +106,30 @@ public class Channel implements ValueEventListener {
     this.channelListener = channelListener;
   }
 
-  public void setMessages(Map<String, String> messages) {
+  public void setAssistedLocation(String xCoord, String yCoord){
+    this.channelReference.child("assistedLocation").child("xCoord").setValue(xCoord);
+    this.channelReference.child("assistedLocation").child("yCoord").setValue(yCoord);
+  }
+
+  /**
+   * method returns a LatLng Object since this is more practical for the google maps API.
+   * @return
+   */
+  public LatLng getAssistedLocation(){
+    if(this.channelValues!=null){
+    Map<String,String> assistedLocationCordinates = (Map<String,String >) this.channelValues.get("assistedLocation");
+
+    double xCoord = Double.parseDouble(assistedLocationCordinates.get("xCoord"));
+    double yCoord = Double.parseDouble(assistedLocationCordinates.get("yCoord"));
+    return new LatLng(xCoord,yCoord);
+
+    }
+    return new LatLng(0,0);
+
+  }
+
+
+  public void setMessages(Map<String,String> messages){
     channelReference.child("messages").setValue(messages);
   }
 
@@ -131,6 +166,8 @@ public class Channel implements ValueEventListener {
    */
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+    channelValues = (Map<String, Object>) Objects.requireNonNull(dataSnapshot).getValue();
+    Log.d("MAPVALUES",channelValues.toString());
     GenericTypeIndicator<Map<String, Object>> t = new GenericTypeIndicator<Map<String, Object>>() {};
     channelValues = dataSnapshot.getValue(t);
     channelListener.dataChanged();
