@@ -8,11 +8,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.utilities.Message;
-import com.quartz.zielclient.utilities.MessageFactory;
-import com.quartz.zielclient.utilities.channel.Channel;
-import com.quartz.zielclient.utilities.channel.ChannelHandler;
-import com.quartz.zielclient.utilities.channel.ChannelListener;
+import com.quartz.zielclient.channel.ChannelController;
+import com.quartz.zielclient.channel.ChannelData;
+import com.quartz.zielclient.channel.ChannelListener;
+import com.quartz.zielclient.messages.Message;
+import com.quartz.zielclient.messages.MessageFactory;
 
 import java.util.Objects;
 
@@ -26,7 +26,7 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
   private static final String DEBUG_ID = "90a2c51d-4d9a-4d15-af8e-9639ff472231";
 
   // temporary for debugging will become a dynamic channel
-  private final Channel channel = ChannelHandler.retrieveChannel(DEBUG_ID, this);
+  private final ChannelData channel = ChannelController.retrieveChannel(DEBUG_ID, this);
   private TextView chatOutput;
   private TextInputEditText chatInput;
 

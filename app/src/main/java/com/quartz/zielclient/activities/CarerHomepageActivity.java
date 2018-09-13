@@ -1,6 +1,7 @@
 package com.quartz.zielclient.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,11 +14,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.signup.SignUpActivity;
 import com.quartz.zielclient.adapters.ListAdapter;
 import com.quartz.zielclient.models.ListItem;
+import com.quartz.zielclient.user.UserController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -32,12 +36,20 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
   private RecyclerView.LayoutManager mLayoutManager;
   private List<ListItem> listItems;
   private DatabaseReference requestsReference;
-  private String userID = "LglIRTsQqGUmpU16CuYJIxtS0S62";//getUserId
+  private String userID;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_carer_homepage);
+
+    Optional<String> maybeId = UserController.retrieveUid();
+    if (maybeId.isPresent()) {
+      userID = maybeId.get();
+    } else {
+      startActivity(new Intent(this, SignUpActivity.class));
+      finish();
+    }
 
     // Getting requestsReference from FireBase
     requestsReference = FirebaseDatabase.getInstance()
@@ -56,6 +68,7 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
   }
 
   // TODO Add the actual description, which would be the destination
+
   /**
    * Fetches the data as JSON files to
    *
@@ -78,7 +91,8 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
     // Getting the channel data and calling the rendering method on it
     // Nasty generic types needed unfortunately
     GenericTypeIndicator<Map<String, Map<String, String>>> t =
-        new GenericTypeIndicator<Map<String, Map<String, String>>>() {};
+        new GenericTypeIndicator<Map<String, Map<String, String>>>() {
+        };
     Map<String, Map<String, String>> channelRequestsData = dataSnapshot.getValue(t);
     if (channelRequestsData != null) {
       initData(channelRequestsData);
