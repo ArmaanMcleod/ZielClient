@@ -39,7 +39,8 @@ public class CarerSelectAssisted extends AppCompatActivity implements View.OnCli
     String channelId = channelIdEntry.getText().toString();
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference ref = firebaseDatabase.getReference("channels/" + channelId);
-    ref.addValueEventListener(this);
+
+    ref.addListenerForSingleValueEvent(this);
   }
 
   @Override
@@ -53,6 +54,7 @@ public class CarerSelectAssisted extends AppCompatActivity implements View.OnCli
     Intent intent = new Intent(this, CarerChannel.class);
     intent.putExtra("channelId", channelId);
     startActivity(intent);
+    finish();
   }
 
   @Override

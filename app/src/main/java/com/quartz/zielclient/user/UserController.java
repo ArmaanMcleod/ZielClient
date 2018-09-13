@@ -81,7 +81,7 @@ public final class UserController {
    */
   public static void fetchUser(final String userId, ValueEventListener listener) {
     DatabaseReference ref = firebaseDatabase.getReference(userIdPath(userId));
-    ref.addValueEventListener(listener);
+    ref.addListenerForSingleValueEvent(listener);
   }
 
   public static void fetchThisUser(ValueEventListener listener) throws AuthorisationException {

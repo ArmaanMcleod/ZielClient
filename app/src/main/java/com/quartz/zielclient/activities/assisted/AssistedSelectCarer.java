@@ -81,5 +81,6 @@ public class AssistedSelectCarer extends AppCompatActivity implements View.OnCli
   @Override
   public void onCancelled(@NonNull DatabaseError databaseError) {
     carerEntry.setError("Unknown error");
+    Log.e(TAG, "Database error", databaseError.toException());
   }
 }
