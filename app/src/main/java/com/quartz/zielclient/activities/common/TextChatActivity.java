@@ -14,6 +14,8 @@ import com.quartz.zielclient.utilities.channel.Channel;
 import com.quartz.zielclient.utilities.channel.ChannelHandler;
 import com.quartz.zielclient.utilities.channel.ChannelListener;
 
+import java.util.Objects;
+
 /**
  * Chat activity allows users to communicate with eachother through messaging
  * This activity is currently unstyled.
@@ -24,10 +26,9 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
   private static final String DEBUG_ID = "90a2c51d-4d9a-4d15-af8e-9639ff472231";
 
   // temporary for debugging will become a dynamic channel
-  private Channel channel = ChannelHandler.retrieveChannel(DEBUG_ID, this);
+  private final Channel channel = ChannelHandler.retrieveChannel(DEBUG_ID, this);
   private TextView chatOutput;
   private TextInputEditText chatInput;
-  private Button sendButton;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
     // initialize graphical elements
     chatOutput = findViewById(R.id.chatOutput);
     chatInput = findViewById(R.id.chatInput);
-    sendButton = findViewById(R.id.sendButton);
+    Button sendButton = findViewById(R.id.sendButton);
     sendButton.setOnClickListener(this);
   }
 
@@ -67,6 +68,5 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
   public void onClick(View view) {
     Message messageToSend = MessageFactory.makeTextMessage(chatInput.getText().toString(), "Name");
     channel.sendMessage(messageToSend);
-
   }
 }

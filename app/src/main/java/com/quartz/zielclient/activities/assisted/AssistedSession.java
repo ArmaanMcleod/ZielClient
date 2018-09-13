@@ -26,13 +26,13 @@ public class AssistedSession extends AppCompatActivity implements ChannelListene
   //display the users status
   private TextView status;
   //temporary variables to store a users role -> this will be replaced by values from the user roles in the database
-  private String myId = "assisted1";
+  private final String myId = "assisted1";
   //store reference to the database where the session exists
   private Channel channel;
   private DatabaseReference channelListener;
   //button allows the assisted to wave to carer (send a toast)
   private Button waveButton;
-  private String myCarerId = "carer1";
+  private final String myCarerId = "carer1";
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

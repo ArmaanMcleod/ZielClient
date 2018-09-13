@@ -1,7 +1,7 @@
 package com.quartz.zielclient.activities;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,8 +16,6 @@ import com.quartz.zielclient.R;
 import com.quartz.zielclient.adapters.ListAdapter;
 import com.quartz.zielclient.models.ListItem;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -42,7 +40,8 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
     setContentView(R.layout.activity_carer_homepage);
 
     // Getting requestsReference from FireBase
-    requestsReference = FirebaseDatabase.getInstance().getReference("channelRequests/" + userID);
+    requestsReference = FirebaseDatabase.getInstance()
+        .getReference("channelRequests/" + userID);
     requestsReference.addValueEventListener(this);
 
     // Initialising RecyclerView

@@ -25,7 +25,7 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
 
   private final String activity = this.getClass().getSimpleName();
 
-  private GoogleMap googleMap;
+  private final GoogleMap googleMap;
 
   public FetchUrl(GoogleMap googleMap) {
     super();
