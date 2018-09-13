@@ -10,6 +10,7 @@ import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.CarerHomepageActivity;
 import com.quartz.zielclient.activities.HomePageActivity;
 import com.quartz.zielclient.activities.carer.CarerMapsActivity;
+import com.quartz.zielclient.activities.signup.SignUpActivity;
 
 
 /**
@@ -51,7 +52,7 @@ public class LaunchPadActivity extends AppCompatActivity implements View.OnClick
         // do your code
         break;
       case R.id.signUpButton:
-        // do your code
+        startActivity(new Intent(LaunchPadActivity.this, SignUpActivity.class));
         break;
       case R.id.textChatButton:
         // do your code
@@ -76,4 +77,11 @@ public class LaunchPadActivity extends AppCompatActivity implements View.OnClick
         break;
     }
   }
+
+  //  private void watchNotificationChange() {
+  //    firebaseDatabase = FirebaseDatabase.getInstance();
+  //    DatabaseReference notifcationRef = firebaseDatabase.getReference("users/" + id);
+  //    notifcationRef.child(getResources().getString(R.string.current_channel)).setValue(getResources().getString(R.string.waiting));
+  //    notifcationRef.addValueEventListener(this);
+  //  }
 }
