@@ -188,6 +188,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
 
+
+
     // Create autocomplete bar
 
     PlaceAutocompleteFragment placeAutoComplete = (PlaceAutocompleteFragment)
