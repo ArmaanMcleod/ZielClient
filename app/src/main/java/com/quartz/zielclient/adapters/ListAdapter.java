@@ -41,7 +41,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.TextViewHolder
     return new TextViewHolder(view);
   }
 
-  // Binding the data to the ViewHolders
+  // statusing the data to the ViewHolders
   @Override
   public void onBindViewHolder(@NonNull TextViewHolder textViewHolder, int i) {
     ListItem listItem = listItems.get(i);
