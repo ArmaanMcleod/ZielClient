@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
  * This class is responsible for parsing JSON and extracting the directions of the paths.
- *
+ * <p>
  * Courtesy : https://github.com/gripsack/android/blob/master/app/src/main/java/com/github/
  * gripsack/android/data/model/DirectionsJSONParser.java
  *
@@ -25,11 +25,12 @@ public class DirectionsJSONParser {
 
   /**
    * This receives a JSONObject and returns a list of routes.
+   *
    * @param jObject The JSON object to parse.
-   * @return List<List<Map<String, String>>> This is the list of routes.
+   * @return This is the list of routes.
    */
-  public List<List<Map<String,String>>> parse(JSONObject jObject){
-    List<List<Map<String, String>>> routes = new ArrayList<>() ;
+  public List<List<Map<String, String>>> parse(JSONObject jObject) {
+    List<List<Map<String, String>>> routes = new ArrayList<>();
 
     try {
 
@@ -37,17 +38,17 @@ public class DirectionsJSONParser {
       JSONArray jRoutes = jObject.getJSONArray("routes");
 
       // Traverse all routes and extract legs from route
-      for (int i = 0; i < jRoutes.length(); i++){
-        JSONArray jLegs = ((JSONObject)jRoutes.get(i)).getJSONArray("legs");
+      for (int i = 0; i < jRoutes.length(); i++) {
+        JSONArray jLegs = ((JSONObject) jRoutes.get(i)).getJSONArray("legs");
         List<Map<String, String>> path = new ArrayList<>();
 
         // Traverse all legs and extract steps from i-th route
-        for (int j = 0; j < jLegs.length(); j++){
-          JSONArray jSteps = ((JSONObject)jLegs.get(j)).getJSONArray("steps");
+        for (int j = 0; j < jLegs.length(); j++) {
+          JSONArray jSteps = ((JSONObject) jLegs.get(j)).getJSONArray("steps");
 
           // Traverse all steps and extract polylines from j-th leg
-          for (int k = 0; k < jSteps.length(); k++){
-            String polyline = (String)((JSONObject)((JSONObject)jSteps
+          for (int k = 0; k < jSteps.length(); k++) {
+            String polyline = (String) ((JSONObject) ((JSONObject) jSteps
                 .get(k))
                 .get("polyline"))
                 .get("points");
@@ -56,10 +57,10 @@ public class DirectionsJSONParser {
             List<LatLng> polyPoints = decodePoly(polyline);
 
             // Traverse points from k-th step and add latitudes and longitudes to path
-            for (int l = 0;l < polyPoints.size(); l++){
+            for (int l = 0; l < polyPoints.size(); l++) {
               Map<String, String> hm = new HashMap<>();
-              hm.put("lat", Double.toString((polyPoints.get(l)).latitude) );
-              hm.put("lng", Double.toString((polyPoints.get(l)).longitude) );
+              hm.put("lat", Double.toString((polyPoints.get(l)).latitude));
+              hm.put("lng", Double.toString((polyPoints.get(l)).longitude));
               path.add(hm);
             }
           }
@@ -77,7 +78,7 @@ public class DirectionsJSONParser {
 
   /**
    * This is responsible for decoding poly points
-   *
+   * <p>
    * Courtesy : http://jeffreysambells.com/2010/05/27/
    * decoding-polylines-from-google-maps-direction-api-with-java
    *

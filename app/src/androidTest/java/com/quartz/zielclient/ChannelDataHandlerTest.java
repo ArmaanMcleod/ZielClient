@@ -18,19 +18,11 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(MockitoJUnitRunner.class)
 public class ChannelDataHandlerTest {
 
-
-  @Before
-  public void setUp() {
-    ChannelController.staticInit();
-  }
-
-
   /**
    * Test that when a channel is requested it is created.
    */
   @Test
   public void testCreateChannel() {
-    FirebaseApp firebaseApp = Mockito.mock(FirebaseApp.class);
     ChannelListener channelListener = Mockito.mock(ChannelListener.class);
     Mockito.when(channelListener.getAssistedId()).thenReturn("testAssistedId");
     Mockito.when(channelListener.getCarerId()).thenReturn("testCarerId");

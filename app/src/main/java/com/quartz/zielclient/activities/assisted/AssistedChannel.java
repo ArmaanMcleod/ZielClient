@@ -8,8 +8,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelController;
+import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
 
 
@@ -25,7 +25,6 @@ public class AssistedChannel extends AppCompatActivity implements ChannelListene
   private TextView status;
   private Button waveButton;
 
-  //store reference to the database where the session exists
   private ChannelData channelData;
 
   private String assistedId;

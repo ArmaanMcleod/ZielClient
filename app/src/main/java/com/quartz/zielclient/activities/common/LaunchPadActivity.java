@@ -2,21 +2,15 @@ package com.quartz.zielclient.activities.common;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.CarerHomepageActivity;
+import com.quartz.zielclient.activities.HomePageActivity;
+import com.quartz.zielclient.activities.carer.CarerMapsActivity;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
-import com.quartz.zielclient.user.User;
-import com.quartz.zielclient.user.UserController;
-import com.quartz.zielclient.user.UserFactory;
-
-import java.util.Optional;
 
 
 /**
@@ -29,7 +23,6 @@ import java.util.Optional;
  */
 public class LaunchPadActivity extends AppCompatActivity implements View.OnClickListener {
 
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -39,12 +32,17 @@ public class LaunchPadActivity extends AppCompatActivity implements View.OnClick
     Button navigation = findViewById(R.id.navigationButton);
     Button textChat = findViewById(R.id.textChatButton);
     Button sessionMaker = findViewById(R.id.sessionMakerButton);
-
+    Button tracking = findViewById(R.id.trackingButton);
+    Button assistedHome = findViewById(R.id.assistedHome);
+    tracking.setOnClickListener(this);
+    Button carerHome = findViewById(R.id.carerHome);
     signIn.setOnClickListener(this);
     signUp.setOnClickListener(this);
     navigation.setOnClickListener(this);
     textChat.setOnClickListener(this);
     sessionMaker.setOnClickListener(this);
+    assistedHome.setOnClickListener(this);
+    carerHome.setOnClickListener(this);
   }
 
   @Override
@@ -58,12 +56,22 @@ public class LaunchPadActivity extends AppCompatActivity implements View.OnClick
         break;
       case R.id.textChatButton:
         // do your code
+        startActivity(new Intent(LaunchPadActivity.this,TextChatActivity.class));
         break;
       case R.id.navigationButton:
         startActivity(new Intent(LaunchPadActivity.this, MapsActivity.class));
         break;
       case R.id.sessionMakerButton:
         startActivity(new Intent(LaunchPadActivity.this, ManualRedirect.class));
+        break;
+      case R.id.trackingButton:
+        startActivity(new Intent(LaunchPadActivity.this, CarerMapsActivity.class));
+        break;
+      case R.id.assistedHome:
+        startActivity(new Intent(LaunchPadActivity.this, HomePageActivity.class));
+        break;
+      case R.id.carerHome:
+        startActivity(new Intent(LaunchPadActivity.this, CarerHomepageActivity.class));
         break;
       default:
         break;

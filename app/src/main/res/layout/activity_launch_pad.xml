@@ -57,4 +57,39 @@
         android:text="Create Session"
         app:layout_constraintBaseline_toBaselineOf="@+id/textChatButton"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/assistedHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="128dp"
+        android:layout_marginStart="127dp"
+        android:layout_marginTop="116dp"
+        android:text="AssistedHome"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textChatButton" />
+
+    <Button
+        android:id="@+id/trackingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="31dp"
+        android:layout_marginTop="30dp"
+        android:text="Tracking"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textChatButton" />
+
+    <Button
+        android:id="@+id/carerHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="149dp"
+        android:layout_marginStart="147dp"
+        android:layout_marginTop="17dp"
+        android:text="CarerHome"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/assistedHome" />
 </android.support.constraint.ConstraintLayout>

@@ -18,7 +18,7 @@ import static android.view.View.VISIBLE;
  */
 public class NotificationHandler {
 
-  private Context context;
+  private final Context context;
   private NotificationManager notificationManager;
 
   public NotificationHandler(Context context) {
