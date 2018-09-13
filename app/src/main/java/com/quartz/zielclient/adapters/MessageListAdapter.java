@@ -48,6 +48,19 @@ public class MessageListAdapter extends RecyclerView.Adapter{
     return messageList.size();
   }
 
+  // Helper Method to verify if the message is a sent or received one
+  // TODO Actually check if the message is being sent or received by the user
+  public Boolean isReceived(int position) {
+    Message message = messageList.get(position);
+
+    if (true) {
+      return true;
+    } else {
+      return false;
+    }
+
+  }
+
 
   /**
    * Holder class for the received messages
