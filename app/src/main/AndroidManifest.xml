@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.quartz.zielclient">
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -20,15 +21,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".activities.signup.SignUpActivity" />
+        <activity android:name=".activities.signup.VerifyPhoneNumberActivity" />
+        <activity android:name=".activities.signup.ConfirmationCodeActivity" />
+        <activity android:name=".activities.signup.AccountCreationActivity" />
         <activity
             android:name=".activities.HomePageActivity"
-            android:label="@string/title_activity_home_page">
-        </activity>
-
+            android:label="@string/title_activity_home_page" />
         <activity android:name=".activities.common.LaunchPadActivity" />
         <activity
-            android:name=".activities.carer.CarerSession"
+            android:name=".activities.carer.CarerChannel"
             android:label="@string/title_activity_carer_session"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -38,7 +40,7 @@
         </activity>
 
         <activity
-            android:name=".activities.assisted.AssistedSession"
+            android:name=".activities.assisted.AssistedChannel"
             android:label="@string/title_activity_assisted_session"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -56,7 +58,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
         <!--
            The API key for Google Maps-based APIs is defined as a string resource.
            (See the file "res/values/google_maps_api.xml").
@@ -72,7 +73,6 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
         <activity
             android:name=".activities.common.MapsActivity"
             android:label="@string/title_activity_maps" />
@@ -81,6 +81,8 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
+        <activity android:name=".activities.assisted.AssistedSelectCarer" />
+        <activity android:name=".activities.carer.CarerSelectAssisted"></activity>
         <activity android:name=".activities.common.TextChatActivity"
             android:label="@string/title_activity_maps" />
 
@@ -93,5 +95,4 @@
             android:label="@string/title_activity_carer_maps" />
         <activity android:name=".activities.common.StreetViewActivity" />
     </application>
-
 </manifest>

@@ -1,5 +1,16 @@
 <resources>
     <string name="app_name">ZielClient</string>
+    <string name="enter_number">Enter your phone number</string>
+    <string name="confirm">Confirm</string>
+    <string name="resend_code">Resend</string>
+    <string name="sending_confirmation_code">Sending confirmation code.</string>
+    <string name="failed_creation">Failed to create account.</string>
+    <string name="firstNameEntry">First name</string>
+    <string name="lastNameEntry">Last name</string>
+    <string name="chooseRole">Please select the profile that fits you.</string>
+    <string name="assisted_desc">I am looking for assistance.</string>
+    <string name="carer_desc">I am looking to help.</string>
+    <string name="userId">userId</string>
     <string name="no_splash_screen_loaded">No Splash Screen Loaded</string>
     <string name="title_activity_home_page">HomePageActivity</string>
     <string name="title_activity_carer_homepage">CarerHomepageActivity</string>
