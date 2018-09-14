@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.utilities.Message;
+import com.quartz.zielclient.messages.Message;
 
 import java.util.Date;
 import java.util.List;
