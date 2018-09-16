@@ -19,6 +19,7 @@ import com.quartz.zielclient.adapters.ListAdapter;
 import com.quartz.zielclient.models.ListItem;
 import com.quartz.zielclient.user.UserController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -49,6 +50,7 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
     } else {
       startActivity(new Intent(this, SignUpActivity.class));
       finish();
+      return;
     }
 
     // Getting requestsReference from FireBase

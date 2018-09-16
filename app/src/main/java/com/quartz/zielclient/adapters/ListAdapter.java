@@ -1,6 +1,7 @@
 package com.quartz.zielclient.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.carer.CarerChannel;
 import com.quartz.zielclient.models.ListItem;
 
 import java.util.List;
@@ -49,6 +51,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.TextViewHolder
     // Fetching the Names and Descriptions
     textViewHolder.textViewName.setText(listItem.getName());
     textViewHolder.textViewDesc.setText(listItem.getDescription());
+
+    textViewHolder.setChannelId(listItem.getChannelID());
   }
 
   // Returns size of list
@@ -60,17 +64,29 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.TextViewHolder
   /**
    * TextViewHolder class made for this ListAdapter
    */
-  class TextViewHolder extends RecyclerView.ViewHolder {
+  class TextViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     // Defining TextViews of the Assisted List Objects
     private TextView textViewName;
     private TextView textViewDesc;
+
+    private String channelId;
 
     TextViewHolder(@NonNull View itemView) {
       super(itemView);
 
       textViewName = itemView.findViewById(R.id.assistedListItemName);
       textViewDesc = itemView.findViewById(R.id.assistedListItemDesc);
+    }
+
+    @Override
+    public void onClick(View v) {
+      Intent intent = new Intent(context, CarerChannel.class);
+      intent.putExtra("channelKey", channelId);
+    }
+
+    void setChannelId(String channelId) {
+      this.channelId = channelId;
     }
   }
 }
