@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,11 +15,17 @@ import com.quartz.zielclient.messages.Message;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Adapter Class used for adapting the Message objects into the Chat View.
  */
 public class MessageListAdapter extends RecyclerView.Adapter{
+
+  // Constant for the flags used in the overridden method onCreateViewHolder
+  private static final int VIEW_TYPE_MESSAGE_SENT = 1;
+  private static final int VIEW_TYPE_MESSAGE_RECEIVED = 0;
+
   private Context mContext;
   private List<Message> messageList;
 
@@ -28,9 +35,32 @@ public class MessageListAdapter extends RecyclerView.Adapter{
     this.messageList = messageList;
   }
 
+  /**
+   * Overridden method to inflate the right message to the respective view.
+   * @param viewGroup Parent
+   * @param viewType The type of message loaded
+   * @return ViewHolder for the respective message type
+   */
   @NonNull
   @Override
-  public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+  public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    View view;
+
+    // If message is the one sent by the user
+    if (viewType == VIEW_TYPE_MESSAGE_SENT) {
+      view = LayoutInflater.from(viewGroup.getContext()).inflate
+          (R.layout.message_sent, viewGroup, false);
+
+      return new SentMessageHolder(view);
+    } else if (viewType == VIEW_TYPE_MESSAGE_RECEIVED) {
+      // If message is the one received by the user
+      view = LayoutInflater.from(viewGroup.getContext()).inflate
+          (R.layout.message_received,viewGroup,false);
+
+      return new ReceivedMessageHolder(view);
+    }
+
+    // TODO Make this not null or use an exception
     return null;
   }
 
