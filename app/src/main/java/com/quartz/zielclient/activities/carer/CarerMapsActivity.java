@@ -3,6 +3,7 @@ package com.quartz.zielclient.activities.carer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -29,7 +30,7 @@ import com.quartz.zielclient.map.FetchUrl;
 public class CarerMapsActivity extends AppCompatActivity
         implements OnMapReadyCallback, ChannelListener, View.OnClickListener {
 
-  private static String channelID = "90a2c51d-4d9a-4d15-af8e-9639ff472231";
+  private static String channelID;
   // These constants are displayed until map syncronizes (only momentarily)
   // This prevents the default usage of  0,0
   private final double MELBOURNEUNILAT = -37.7964;
@@ -59,9 +60,8 @@ public class CarerMapsActivity extends AppCompatActivity
     setContentView(R.layout.activity_carer_maps);
     toTextChat = findViewById(R.id.toTextChat);
     toTextChat.setOnClickListener(this);
-    String channelKey = getIntent().getStringExtra("channelKey");
-    channelID = channelKey;
-    channel = ChannelController.retrieveChannel(channelKey, this);
+    String channelId = getIntent().getStringExtra("channelKey");
+    channel = ChannelController.retrieveChannel(channelId, this);
 
     // Obtain the SupportMapFragment and get notified when the map is ready to be used.
     SupportMapFragment mapFragment =
@@ -108,11 +108,13 @@ public class CarerMapsActivity extends AppCompatActivity
     longitude[0] = channel.getAssistedLocation().longitude;
     updateMapCoords();
 
+
     // if the assisted has entered a route then generate that same route
     if ((channel.getDirectionsURL() != null) && !channel.getDirectionsURL().equals("none")) {
       // if the route is already the current route then don't update
       if (!channel.getDirectionsURL().equals(currentDestinationURL)) {
         // update the route
+        Log.d("DIRECTIONS", channel.getDirectionsURL());
         FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
         fetchUrl.execute(channel.getDirectionsURL());
         currentDestinationURL = channel.getDirectionsURL();
