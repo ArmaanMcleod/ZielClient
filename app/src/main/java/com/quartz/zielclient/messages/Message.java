@@ -48,4 +48,12 @@ public class Message {
   public void setMessageTime(long messageTime) {
     this.messageTime = messageTime;
   }
+
+  public String getUserName() {
+    return userName;
+  }
+
+  public void setUserName(String userName) {
+    this.userName = userName;
+  }
 }

@@ -10,12 +10,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.messages.Message;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+
 
 /**
  * Adapter Class used for adapting the Message objects into the Chat View.
@@ -53,6 +54,7 @@ public class MessageListAdapter extends RecyclerView.Adapter{
 
       return new SentMessageHolder(view);
     } else if (viewType == VIEW_TYPE_MESSAGE_RECEIVED) {
+
       // If message is the one received by the user
       view = LayoutInflater.from(viewGroup.getContext()).inflate
           (R.layout.message_received,viewGroup,false);
@@ -69,26 +71,43 @@ public class MessageListAdapter extends RecyclerView.Adapter{
   public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
     Message message = messageList.get(i);
 
-    // Fetching the details of each message
+    if (viewHolder.getItemViewType() == VIEW_TYPE_MESSAGE_SENT) {
 
+      // Bind sent message
+      ((SentMessageHolder) viewHolder).bind(message);
+    } else if (viewHolder.getItemViewType() == VIEW_TYPE_MESSAGE_RECEIVED) {
+
+      // Bind received message
+      ((ReceivedMessageHolder) viewHolder).bind(message);
+    }
   }
 
+  /**
+   * Getting count of current number of messagess
+   * @return Size of messageList as an int
+   */
   @Override
   public int getItemCount() {
     return messageList.size();
   }
 
-  // Helper Method to verify if the message is a sent or received one
-  // TODO Actually check if the message is being sent or received by the user
-  public Boolean isReceived(int position) {
+  /**
+   * Check if the message is one that is being sent by the current user.
+   * @param position The position of the message being sent currently
+   * @return The type of message being sent in int
+   */
+  @Override
+  public int getItemViewType (int position) {
     Message message = messageList.get(position);
 
-    if (true) {
-      return true;
+    // Checking current message's sender's ID against current user's ID
+    if (message.getUserName().equals(FirebaseAuth.getInstance().getUid())) {
+      // If current user is the sender of message
+      return VIEW_TYPE_MESSAGE_SENT;
     } else {
-      return false;
+      // Another user sent the message
+      return VIEW_TYPE_MESSAGE_RECEIVED;
     }
-
   }
 
 
