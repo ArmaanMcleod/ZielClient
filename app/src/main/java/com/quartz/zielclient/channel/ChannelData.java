@@ -27,18 +27,26 @@ public class ChannelData implements ValueEventListener {
   private DatabaseReference channelReference;
   // the object that wants to listen to this channel
   private ChannelListener channelListener;
+  // the ID of the channel;
+  private String channelKey;
 
   /**
    * @param channelReference - location in database where channel exists
    * @param channelListener  - the object that wants to listen to the channel
+   * @param channelKey
    */
-  public ChannelData(DatabaseReference channelReference, ChannelListener channelListener) {
+  public ChannelData(DatabaseReference channelReference, ChannelListener channelListener, String channelKey) {
     this.channelReference = channelReference;
     this.channelListener = channelListener;
+    this.channelKey = channelKey;
     Map<String, String> initialMessage = new HashMap<>();
     initialMessage.put("TEXT", "welcome to the chat");
-
+    setChannelKey(channelKey);
     setDirectionsURL("none");
+    Location initialLocation = new Location("");
+    initialLocation.setLongitude(0);
+    initialLocation.setLongitude(0);
+    setAssistedLocation(initialLocation);
     setAssisted(channelListener.getAssistedId());
     setCarer(channelListener.getCarerId());
     setAssistedStatus(true);
@@ -49,7 +57,7 @@ public class ChannelData implements ValueEventListener {
   }
 
 
-  public void setAssistedLocation(final Location location) {
+  public void setAssistedLocation(Location location) {
     final String xCoord = String.valueOf(location.getLatitude());
     final String yCoord = String.valueOf(location.getLongitude());
 
@@ -171,5 +179,13 @@ public class ChannelData implements ValueEventListener {
 
   public void setPing(Boolean ping) {
     channelReference.child("Ping").setValue(ping);
+  }
+
+  public void setChannelKey(String channelKey) {
+    this.channelKey = channelKey;
+  }
+
+  public String getChannelKey() {
+    return channelKey;
   }
 }

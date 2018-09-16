@@ -1,13 +1,10 @@
 package com.quartz.zielclient.channel;
 
 import android.util.Log;
-import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -35,7 +32,7 @@ public final class ChannelController {
   public static ChannelData createChannel(ChannelListener channelListener) {
     final String channelKey = UUID.randomUUID().toString();
     Log.i("ChannelController", String.format("Creating new channel %s", channelKey));
-    return new ChannelData(channelsReference.child(channelKey), channelListener);
+    return new ChannelData(channelsReference.child(channelKey), channelListener, channelKey);
   }
 
   /**
@@ -47,6 +44,6 @@ public final class ChannelController {
    */
   public static ChannelData retrieveChannel(String channelId, ChannelListener channelListener) {
     Log.i(TAG, String.format("Retrieving channel %s", channelId));
-    return new ChannelData(channelsReference.child(channelId), channelListener);
+    return new ChannelData(channelsReference.child(channelId), channelListener, channelId);
   }
 }

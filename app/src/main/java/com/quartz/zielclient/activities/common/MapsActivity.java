@@ -75,9 +75,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private LatLng source;
   private LatLng destination;
 
-  private static final String channelID = "90a2c51d-4d9a-4d15-af8e-9639ff472231";
 
-  private ChannelData channel = ChannelController.retrieveChannel(channelID, this);
+  private static String channelID = "90a2c51d-4d9a-4d15-af8e-9639ff472231";
+
+  private ChannelData channel;
 
   private final LocationCallback mLocationCallback = new LocationCallback() {
 
@@ -121,6 +122,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
+    channelID = this.getIntent().getStringExtra("channelKey");
+    channel = ChannelController.retrieveChannel(channelID, this);
 
     // Create autocomplete bar
     PlaceAutocompleteFragment placeAutoComplete = (PlaceAutocompleteFragment)
@@ -398,6 +401,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     // notify user about new messages
   }
 
+  public static void setChannelID(String channelID) {
+    MapsActivity.channelID = channelID;
+  }
   @Override
   public String getAssistedId() {
     return null;
