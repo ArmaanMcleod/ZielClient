@@ -3,11 +3,13 @@ package com.quartz.zielclient.activities.common;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.adapters.MessageListAdapter;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
@@ -29,6 +31,10 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
   private final ChannelData channel = ChannelController.retrieveChannel(DEBUG_ID, this);
   private TextView chatOutput;
   private TextInputEditText chatInput;
+
+  // Recycler Views and Adapter for the text chat
+  private RecyclerView mMessageRecycler;
+  private MessageListAdapter mMessageListAdapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
