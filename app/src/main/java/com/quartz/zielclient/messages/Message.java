@@ -1,5 +1,7 @@
 package com.quartz.zielclient.messages;
 
+import android.support.annotation.NonNull;
+
 import java.util.Date;
 
 /**
@@ -7,7 +9,7 @@ import java.util.Date;
  *
  * @author Wei How Ng
  */
-public class Message {
+public class Message implements Comparable<Message> {
 
 
   public enum MessageType {TEXT, IMAGE, VIDEO}
@@ -22,6 +24,18 @@ public class Message {
     this.messageValue = messageValue;
     this.userName = userName;
     this.messageTime = new Date().getTime();
+  }
+
+  public Message(MessageType type, String messageValue, String userName, long messageTime) {
+    this.type = type;
+    this.messageValue = messageValue;
+    this.userName = userName;
+    this.messageTime = messageTime;
+  }
+
+  @Override
+  public int compareTo(@NonNull Message o) {
+    return (int) (this.messageTime - o.messageTime);
   }
 
   // Getters and setters
