@@ -1,8 +1,8 @@
 package com.quartz.zielclient.activities.common;
 
+import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -22,17 +22,17 @@ import java.util.Objects;
  */
 public class TextChatActivity extends AppCompatActivity implements ChannelListener, View.OnClickListener {
 
-  // TODO handle channels.
-  private static final String DEBUG_ID = "90a2c51d-4d9a-4d15-af8e-9639ff472231";
 
   // temporary for debugging will become a dynamic channel
-  private final ChannelData channel = ChannelController.retrieveChannel(DEBUG_ID, this);
+  private ChannelData channel;
   private TextView chatOutput;
   private TextInputEditText chatInput;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    String channelKey = getIntent().getStringExtra("channelKey");
+    channel = ChannelController.retrieveChannel(channelKey, this);
     setContentView(R.layout.activity_text_chat);
     // initialize graphical elements
     chatOutput = findViewById(R.id.chatOutput);

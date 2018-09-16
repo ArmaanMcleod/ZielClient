@@ -63,6 +63,7 @@ public class AssistedChannel extends AppCompatActivity implements ChannelListene
       waveButton.setVisibility(View.VISIBLE);
       mapsActivityButton.setVisibility(View.VISIBLE);
       waveButton.setOnClickListener(this);
+      mapsActivityButton.setOnClickListener(this);
     } else {
       // the Carer has set or has not unset their status and therefore they are inactive.
       status.setText("Session is Inactive");

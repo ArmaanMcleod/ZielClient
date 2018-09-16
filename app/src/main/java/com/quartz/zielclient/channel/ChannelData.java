@@ -39,20 +39,6 @@ public class ChannelData implements ValueEventListener {
     this.channelReference = channelReference;
     this.channelListener = channelListener;
     this.channelKey = channelKey;
-    Map<String, String> initialMessage = new HashMap<>();
-    initialMessage.put("TEXT", "welcome to the chat");
-    setChannelKey(channelKey);
-    setDirectionsURL("none");
-    Location initialLocation = new Location("");
-    initialLocation.setLongitude(0);
-    initialLocation.setLongitude(0);
-    setAssistedLocation(initialLocation);
-    setAssisted(channelListener.getAssistedId());
-    setCarer(channelListener.getCarerId());
-    setAssistedStatus(true);
-    setCarerStatus(false);
-    setMessages(initialMessage);
-    setPing(false);
     channelReference.addValueEventListener(this);
   }
 
