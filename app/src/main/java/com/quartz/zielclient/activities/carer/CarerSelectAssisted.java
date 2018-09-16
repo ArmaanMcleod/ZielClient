@@ -15,7 +15,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
 
-public class CarerSelectAssisted extends AppCompatActivity implements View.OnClickListener, ValueEventListener {
+public class CarerSelectAssisted extends AppCompatActivity
+        implements View.OnClickListener, ValueEventListener {
 
   private TextView channelIdEntry;
 

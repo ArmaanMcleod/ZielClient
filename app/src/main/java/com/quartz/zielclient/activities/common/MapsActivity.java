@@ -426,6 +426,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         intentToTextChat.putExtra("channelKey", channelID);
         startActivity(intentToTextChat);
         break;
+      default:
+        break;
     }
   }
 }
