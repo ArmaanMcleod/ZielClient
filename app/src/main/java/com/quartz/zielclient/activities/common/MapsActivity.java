@@ -11,6 +11,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
@@ -56,7 +58,7 @@ import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
  * @version 1.0- 1
  * 28/08/2018
  */
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ChannelListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ChannelListener, View.OnClickListener {
 
   // Custom permissions request code
   private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
@@ -74,10 +76,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   private LatLng source;
   private LatLng destination;
+  private Button toTextChatButton;
 
-  private static final String channelID = "90a2c51d-4d9a-4d15-af8e-9639ff472231";
+  private static String channelID = "90a2c51d-4d9a-4d15-af8e-9639ff472231";
 
-  private ChannelData channel = ChannelController.retrieveChannel(channelID, this);
+  private ChannelData channel;
 
   private final LocationCallback mLocationCallback = new LocationCallback() {
 
@@ -121,6 +124,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
+    channelID = this.getIntent().getStringExtra("channelKey");
+    channel = ChannelController.retrieveChannel(channelID, this);
+    toTextChatButton = findViewById(R.id.toTextChat);
+    toTextChatButton.setOnClickListener(this);
 
     // Create autocomplete bar
     PlaceAutocompleteFragment placeAutoComplete = (PlaceAutocompleteFragment)
@@ -398,6 +405,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     // notify user about new messages
   }
 
+  public static void setChannelID(String channelID) {
+    MapsActivity.channelID = channelID;
+  }
   @Override
   public String getAssistedId() {
     return null;
@@ -406,5 +416,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   @Override
   public String getCarerId() {
     return null;
+  }
+
+  @Override
+  public void onClick(View view) {
+    switch (view.getId()) {
+      case R.id.toTextChat:
+        Intent intentToTextChat = new Intent(MapsActivity.this, TextChatActivity.class);
+        intentToTextChat.putExtra("channelKey", channelID);
+        startActivity(intentToTextChat);
+        break;
+      default:
+        break;
+    }
   }
 }

@@ -1,7 +1,7 @@
 package com.quartz.zielclient.channel;
 
+import android.location.Location;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -34,8 +34,23 @@ public final class ChannelController {
    */
   public static ChannelData createChannel(ChannelListener channelListener) {
     final String channelKey = UUID.randomUUID().toString();
+    ChannelData channelData = new ChannelData(channelsReference.child(channelKey), channelListener, channelKey);
+    Location initialLocation = new Location("");
+    initialLocation.setLongitude(0);
+    initialLocation.setLongitude(0);
+    channelData.setAssistedLocation(initialLocation);
+    channelData.setAssisted(channelListener.getAssistedId());
+    channelData.setCarer(channelListener.getCarerId());
+    channelData.setAssistedStatus(true);
+    channelData.setCarerStatus(false);
+    Map<String, String> initialMessage = new HashMap<>();
+    initialMessage.put("TEXT", "welcome to the chat");
+    channelData.setChannelKey(channelKey);
+    channelData.setDirectionsURL("none");
+    channelData.setMessages(initialMessage);
+    channelData.setPing(false);
     Log.i("ChannelController", String.format("Creating new channel %s", channelKey));
-    return new ChannelData(channelsReference.child(channelKey), channelListener);
+    return channelData;
   }
 
   /**
@@ -47,6 +62,8 @@ public final class ChannelController {
    */
   public static ChannelData retrieveChannel(String channelId, ChannelListener channelListener) {
     Log.i(TAG, String.format("Retrieving channel %s", channelId));
-    return new ChannelData(channelsReference.child(channelId), channelListener);
+
+
+    return new ChannelData(channelsReference.child(channelId), channelListener, channelId);
   }
 }

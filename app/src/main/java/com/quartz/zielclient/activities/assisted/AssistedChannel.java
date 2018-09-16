@@ -1,5 +1,6 @@
 package com.quartz.zielclient.activities.assisted;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -8,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.common.MapsActivity;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
@@ -24,6 +26,7 @@ public class AssistedChannel extends AppCompatActivity implements ChannelListene
 
   private TextView status;
   private Button waveButton;
+  private Button mapsActivityButton;
 
   private ChannelData channelData;
 
@@ -40,7 +43,10 @@ public class AssistedChannel extends AppCompatActivity implements ChannelListene
 
     // allocate the graphical button to a functional button
     waveButton = findViewById(R.id.waveButton);
+    mapsActivityButton = findViewById(R.id.toMapsActivity);
+
     // button should not be visible until a session is established.
+    mapsActivityButton.setVisibility(View.INVISIBLE);
     waveButton.setVisibility(View.INVISIBLE);
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
@@ -52,10 +58,12 @@ public class AssistedChannel extends AppCompatActivity implements ChannelListene
   public void dataChanged() {
     // sometimes the listener can misfire so avoid crash by checking an object was collected.
     if (channelData.getCarerStatus()) {
-      //the Carer set their status to true they are active
+      // the Carer set their status to true they are active
       status.setText("Session is active");
       waveButton.setVisibility(View.VISIBLE);
+      mapsActivityButton.setVisibility(View.VISIBLE);
       waveButton.setOnClickListener(this);
+      mapsActivityButton.setOnClickListener(this);
     } else {
       // the Carer has set or has not unset their status and therefore they are inactive.
       status.setText("Session is Inactive");
@@ -71,7 +79,18 @@ public class AssistedChannel extends AppCompatActivity implements ChannelListene
 
   @Override
   public void onClick(View view) {
-    channelData.setPing(true);
+    switch (view.getId()) {
+      case R.id.waveButton:
+        channelData.setPing(true);
+        break;
+      case R.id.toMapsActivity:
+        Intent intentToMaps = new Intent(AssistedChannel.this, MapsActivity.class);
+        intentToMaps.putExtra("channelKey", channelData.getChannelKey());
+        startActivity(intentToMaps);
+        break;
+
+    }
+
   }
 
   @Override
