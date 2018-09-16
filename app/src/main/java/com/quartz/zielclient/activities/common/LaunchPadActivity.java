@@ -28,13 +28,11 @@ public class LaunchPadActivity extends AppCompatActivity implements View.OnClick
     setContentView(R.layout.activity_launch_pad);
     Button signIn = findViewById(R.id.signInButton);
     Button signUp = findViewById(R.id.signUpButton);
-    Button textChat = findViewById(R.id.textChatButton);
     Button sessionMaker = findViewById(R.id.sessionMakerButton);
     Button assistedHome = findViewById(R.id.assistedHome);
     Button carerHome = findViewById(R.id.carerHome);
     signIn.setOnClickListener(this);
     signUp.setOnClickListener(this);
-    textChat.setOnClickListener(this);
     sessionMaker.setOnClickListener(this);
     assistedHome.setOnClickListener(this);
     carerHome.setOnClickListener(this);
@@ -48,10 +46,6 @@ public class LaunchPadActivity extends AppCompatActivity implements View.OnClick
         break;
       case R.id.signUpButton:
         startActivity(new Intent(LaunchPadActivity.this, SignUpActivity.class));
-        break;
-      case R.id.textChatButton:
-        // do your code
-        startActivity(new Intent(LaunchPadActivity.this,TextChatActivity.class));
         break;
       case R.id.sessionMakerButton:
         startActivity(new Intent(LaunchPadActivity.this, ManualRedirect.class));
