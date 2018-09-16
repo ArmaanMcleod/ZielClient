@@ -30,7 +30,8 @@ import com.quartz.zielclient.map.FetchUrl;
 public class CarerMapsActivity extends AppCompatActivity
         implements OnMapReadyCallback, ChannelListener, View.OnClickListener {
 
-  private static String channelID;
+  private String channelId;
+
   // These constants are displayed until map syncronizes (only momentarily)
   // This prevents the default usage of  0,0
   private final double MELBOURNEUNILAT = -37.7964;
@@ -60,7 +61,7 @@ public class CarerMapsActivity extends AppCompatActivity
     setContentView(R.layout.activity_carer_maps);
     toTextChat = findViewById(R.id.toTextChat);
     toTextChat.setOnClickListener(this);
-    String channelId = getIntent().getStringExtra("channelKey");
+    channelId = getIntent().getStringExtra("channelKey");
     channel = ChannelController.retrieveChannel(channelId, this);
 
     // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -139,7 +140,7 @@ public class CarerMapsActivity extends AppCompatActivity
     switch (view.getId()) {
       case R.id.toTextChat:
         Intent intentToTextChat = new Intent(CarerMapsActivity.this, TextChatActivity.class);
-        intentToTextChat.putExtra("channelKey", channelID);
+        intentToTextChat.putExtra("channelKey", channelId);
         startActivity(intentToTextChat);
         break;
       default:
