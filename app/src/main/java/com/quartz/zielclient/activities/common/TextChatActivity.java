@@ -1,8 +1,10 @@
 package com.quartz.zielclient.activities.common;
 
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +18,7 @@ import com.quartz.zielclient.channel.ChannelListener;
 import com.quartz.zielclient.messages.Message;
 import com.quartz.zielclient.messages.MessageFactory;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -35,11 +38,18 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
   // Recycler Views and Adapter for the text chat
   private RecyclerView mMessageRecycler;
   private MessageListAdapter mMessageListAdapter;
+  private List<Message> messageList;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_text_chat);
+
+    // Chat using RecyclerView
+    mMessageRecycler = findViewById(R.id.message_recyclerview);
+    mMessageListAdapter = new MessageListAdapter(this, messageList);
+    mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
+
     // initialize graphical elements
     chatOutput = findViewById(R.id.chatOutput);
     chatInput = findViewById(R.id.chatInput);
