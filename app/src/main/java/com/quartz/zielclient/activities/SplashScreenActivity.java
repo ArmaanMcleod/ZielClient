@@ -60,7 +60,7 @@ public class SplashScreenActivity extends AppCompatActivity implements ValueEven
   private void redirect(User user) {
     if (user.isAssisted()) {
       // TODO implement assisted home page
-      startActivity(new Intent(this, HomePageActivity.class));
+      startActivity(new Intent(this, LaunchPadActivity.class));
     } else {
       startActivity(new Intent(this, CarerHomepageActivity.class));
     }

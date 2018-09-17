@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.quartz.zielclient.R;
@@ -52,7 +53,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.TextViewHolder
     textViewHolder.textViewName.setText(listItem.getName());
     textViewHolder.textViewDesc.setText(listItem.getDescription());
 
-    textViewHolder.setChannelId(listItem.getChannelID());
+    textViewHolder.setChannelId(listItem.getChannelId());
   }
 
   // Returns size of list
@@ -77,12 +78,16 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.TextViewHolder
 
       textViewName = itemView.findViewById(R.id.assistedListItemName);
       textViewDesc = itemView.findViewById(R.id.assistedListItemDesc);
+
+      Button connectButton = itemView.findViewById(R.id.connectToChannel);
+      connectButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
       Intent intent = new Intent(context, CarerChannel.class);
-      intent.putExtra("channelKey", channelId);
+      intent.putExtra(context.getResources().getString(R.string.channel_key), channelId);
+      context.startActivity(intent);
     }
 
     void setChannelId(String channelId) {

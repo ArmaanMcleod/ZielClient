@@ -70,7 +70,6 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
   }
 
   // TODO Add the actual description, which would be the destination
-
   /**
    * Fetches the data as JSON files to
    *
@@ -80,7 +79,7 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
     // Adding each user name and description to the listItem object and then appending them in
     listItems = channelRequestsData.values()
         .stream()
-        .map(channel -> new ListItem(channel.get("name"), channel.get("channel-id")))
+        .map(channel -> new ListItem(channel.get("name"), "", channel.get("channel-id")))
         .collect(Collectors.toList());
 
     // Using the Adapter to convert the data into the recycler view
