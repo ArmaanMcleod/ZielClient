@@ -121,7 +121,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
-    channelId = this.getIntent().getStringExtra(getResources().getString(R.string.channel_key));
+    channelId = getIntent().getStringExtra(getResources().getString(R.string.channel_key));
     channel = ChannelController.retrieveChannel(channelId, this);
     Button toTextChatButton = findViewById(R.id.toTextChat);
     toTextChatButton.setOnClickListener(this);

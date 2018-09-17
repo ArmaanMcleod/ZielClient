@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
+import com.quartz.zielclient.channel.RequestController;
 import com.quartz.zielclient.exceptions.AuthorisationException;
 import com.quartz.zielclient.user.UserController;
 import com.quartz.zielclient.user.User;
@@ -43,8 +44,8 @@ public class AssistedSelectCarer extends AppCompatActivity implements View.OnCli
       return;
     }
 
-    Log.d(TAG, "Confirming carer");
-    final String carerId = carerEntry.getText().toString();
+    Log.i(TAG, "Confirming carer");
+    String carerId = carerEntry.getText().toString();
     UserController.fetchUser(carerId, this);
   }
 
@@ -59,23 +60,25 @@ public class AssistedSelectCarer extends AppCompatActivity implements View.OnCli
     try {
       String thisUserId = UserController.retrieveFirebaseUser().getUid();
       Optional<User> maybeCarer = UserFactory.getUser(dataSnapshot);
-      maybeCarer.ifPresent(carer -> {
+      if (maybeCarer.isPresent()) {
         Log.i(TAG, "Creating channel");
-        Intent intent = new Intent(AssistedSelectCarer.this, AssistedChannel.class);
+
+        Intent intent = new Intent(this, AssistedChannel.class);
         intent.putExtra("assisted", thisUserId);
         intent.putExtra("carer", carerId);
+
         startActivity(intent);
         finish();
-      });
+      } else {
+        carerEntry.setError("Invalid user");
+      }
     } catch (AuthorisationException e) {
       // In case of authorisation error go back to sign in
-      Log.i(TAG, "Invalid login");
+      Log.e(TAG, "Invalid login");
       Intent intent = new Intent(AssistedSelectCarer.this, SignUpActivity.class);
       startActivity(intent);
       finish();
     }
-
-    carerEntry.setError("Invalid user");
   }
 
   @Override
