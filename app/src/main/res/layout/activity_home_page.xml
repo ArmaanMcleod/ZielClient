@@ -19,7 +19,7 @@
     <fragment
         android:id="@+id/editText"
         android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-        android:layout_width="153dp"
+        android:layout_width="215dp"
         android:layout_height="40dp"
         android:layout_marginBottom="10dp"
         android:layout_marginEnd="138dp"
