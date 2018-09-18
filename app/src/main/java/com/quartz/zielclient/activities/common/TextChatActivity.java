@@ -50,11 +50,17 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
     mMessageListAdapter = new MessageListAdapter(this, messageList);
     mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
 
+    // Initialise the graphical elements
+    Button sendMessage = findViewById(R.id.button_chatbox_send);
+    sendMessage.setOnClickListener(this);
+
+    /*
     // initialize graphical elements
     chatOutput = findViewById(R.id.chatOutput);
     chatInput = findViewById(R.id.chatInput);
     Button sendButton = findViewById(R.id.sendButton);
     sendButton.setOnClickListener(this);
+    */
   }
 
   @Override
