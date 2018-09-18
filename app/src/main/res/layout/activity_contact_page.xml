@@ -26,7 +26,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:layout_weight="0.8">
+        android:layout_weight="0.8"
+        android:background="@drawable/splash_orange">
 
         <ImageButton
             android:id="@+id/Message"
@@ -34,7 +35,8 @@
             android:layout_height="match_parent"
             android:layout_weight="0.33"
             android:scaleType="fitCenter"
-            app:srcCompat="@android:drawable/stat_notify_chat" />
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_phone_message" />
 
         <ImageButton
             android:id="@+id/Call"
@@ -42,7 +44,8 @@
             android:layout_height="match_parent"
             android:layout_weight="0.33"
             android:scaleType="fitCenter"
-            app:srcCompat="@android:drawable/sym_action_call" />
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_phone_call" />
 
         <ImageButton
             android:id="@+id/VideoCall"
@@ -50,7 +53,8 @@
             android:layout_height="match_parent"
             android:layout_weight="0.33"
             android:scaleType="fitCenter"
-            app:srcCompat="@android:drawable/presence_video_online" />
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_phone_video" />
     </LinearLayout>
 
 

@@ -4,30 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:layout_editor_absoluteY="25dp">
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/linearLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:weightSum="1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    tools:context=".activities.common.MapsActivity"
+    android:orientation="vertical"
+    android:weightSum="1">>
 
     <fragment
-        android:id="@+id/videoCalling"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/place_autocomplete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+        />
 
+    <fragment
+        android:id="@+id/map"
+        class="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButton2"
@@ -36,8 +28,8 @@
         android:layout_marginBottom="30dp"
         android:padding="0dp"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_switch_camera"
-        app:backgroundTint="#09aefa"
+        app:srcCompat="@drawable/ic_phone_message"
+        app:backgroundTint="#faa004"
         app:borderWidth="0dp"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -52,8 +44,8 @@
         android:layout_height="wrap_content"
         android:padding="0dp"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_phone_hangup"
-        app:backgroundTint="#fa091d"
+        app:srcCompat="@drawable/ic_phone_call"
+        app:backgroundTint="#FFFAA004"
         app:borderWidth="0dp"
         app:fabSize="normal"
         app:layout_constraintEnd_toStartOf="@+id/floatingActionButton3"
@@ -67,14 +59,15 @@
         android:layout_height="wrap_content"
         android:padding="0dp"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_phone_speaker"
-        app:backgroundTint="#4eb415"
+        app:srcCompat="@drawable/ic_phone_video"
+        app:backgroundTint="#FFFAA004"
         app:borderWidth="0dp"
         app:fabSize="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/floatingActionButton"
         app:layout_constraintTop_toTopOf="@+id/floatingActionButton"
         app:useCompatPadding="true" />
+
 
 
 </android.support.constraint.ConstraintLayout>
