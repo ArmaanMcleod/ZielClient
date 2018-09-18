@@ -6,20 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".activities.HomePageActivity">
 
-    <TextView
-        android:id="@+id/tempUserView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="180dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <fragment
         android:id="@+id/editText"
         android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-        android:layout_width="215dp"
+        android:layout_width="300dp"
         android:layout_height="40dp"
         android:layout_marginBottom="10dp"
         android:layout_marginEnd="138dp"
@@ -37,6 +27,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="spread_inside"
+        app:layout_constraintTop_toBottomOf="@+id/HomePage" />
+
+    <TextView
+        android:id="@+id/HomePage"
+        android:layout_width="153dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="100dp"
+        android:layout_marginEnd="138dp"
+        android:layout_marginStart="138dp"
+        android:layout_marginTop="234dp"
+        android:ems="10"
+        android:fontFamily="@font/allerta"
+        android:inputType="textPersonName"
+        android:text="@string/where_to"
+        android:textAppearance="@android:style/TextAppearance"
+        android:textColor="#A8A8A8"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/editText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Where To?" />
 
     <Button

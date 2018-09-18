@@ -21,7 +21,7 @@ public class HomePageActivity extends Activity {
     PlaceAutocompleteFragment placeAutoComplete = (PlaceAutocompleteFragment)
         getFragmentManager().findFragmentById(R.id.editText);
     Objects.requireNonNull(placeAutoComplete.getView()).setBackgroundColor(Color.WHITE);
-    placeAutoComplete.setHint("Where To");
+    placeAutoComplete.setHint("Enter Address here");
 
     // TODO: Add listener here for autocomplete bar and pass to MapsActivity
   }
