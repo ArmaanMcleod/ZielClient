@@ -12,8 +12,8 @@ public class ChannelRequest implements Model {
   private String channelId;
   private String description;
 
-  public ChannelRequest(String name, String channelId, String description) {
-    this.name = name;
+  public ChannelRequest(String assistedName, String channelId, String description) {
+    this.name = assistedName;
     this.channelId = channelId;
     this.description = description;
   }

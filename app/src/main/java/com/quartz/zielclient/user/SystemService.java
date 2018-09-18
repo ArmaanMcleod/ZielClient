@@ -1,4 +1,4 @@
-package com.quartz.zielclient.services;
+package com.quartz.zielclient.user;
 
 import android.content.Context;
 import android.content.pm.PackageManager;

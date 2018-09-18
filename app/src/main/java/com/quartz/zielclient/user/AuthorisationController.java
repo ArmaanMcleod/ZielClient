@@ -1,4 +1,4 @@
-package com.quartz.zielclient.controllers;
+package com.quartz.zielclient.user;
 
 import android.app.Activity;
 import android.util.Log;

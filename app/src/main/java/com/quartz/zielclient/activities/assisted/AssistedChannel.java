@@ -104,6 +104,8 @@ public class AssistedChannel extends AppCompatActivity implements ChannelListene
         intentToMaps.putExtra(getResources().getString(R.string.channel_key), channelData.getChannelKey());
         startActivity(intentToMaps);
         break;
+      default:
+        break;
     }
   }
 
