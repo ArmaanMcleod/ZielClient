@@ -61,7 +61,7 @@ public class CarerMapsActivity extends AppCompatActivity
     setContentView(R.layout.activity_carer_maps);
     toTextChat = findViewById(R.id.toTextChat);
     toTextChat.setOnClickListener(this);
-    channelId = getIntent().getStringExtra("channelKey");
+    channelId = getIntent().getStringExtra(getApplicationContext().getString(R.string.channel_key));
     channel = ChannelController.retrieveChannel(channelId, this);
 
     // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -140,7 +140,7 @@ public class CarerMapsActivity extends AppCompatActivity
     switch (view.getId()) {
       case R.id.toTextChat:
         Intent intentToTextChat = new Intent(CarerMapsActivity.this, TextChatActivity.class);
-        intentToTextChat.putExtra("channelKey", channelId);
+        intentToTextChat.putExtra(getApplicationContext().getString(R.string.channel_key), channelId);
         startActivity(intentToTextChat);
         break;
       default:

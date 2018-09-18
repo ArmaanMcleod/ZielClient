@@ -24,7 +24,7 @@ public final class ChannelController {
     // Intentionally empty
   }
 
-  private static DatabaseReference channelsReference = FirebaseDatabase.getInstance().getReference("channels");
+  private static DatabaseReference channelsReference = FirebaseDatabase.getInstance().getReference("channels/");
 
   /**
    * create and initialise a channel
