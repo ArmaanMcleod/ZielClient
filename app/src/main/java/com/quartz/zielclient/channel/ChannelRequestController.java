@@ -11,13 +11,18 @@ import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.models.ChannelRequest;
 import com.quartz.zielclient.user.User;
 
-public class RequestController {
+/**
+ * Controller for channel requests.
+ *
+ * @author alexvosnakis
+ */
+public class ChannelRequestController {
 
-  private static final String TAG = RequestController.class.getSimpleName();
+  private static final String TAG = ChannelRequestController.class.getSimpleName();
   private static final String REQUESTS_PATH = "channelRequests";
   private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-  private RequestController() {
+  private ChannelRequestController() {
     // Intentionally empty
   }
 

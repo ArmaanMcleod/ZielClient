@@ -14,7 +14,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
-import com.quartz.zielclient.channel.RequestController;
 import com.quartz.zielclient.exceptions.AuthorisationException;
 import com.quartz.zielclient.user.UserController;
 import com.quartz.zielclient.user.User;

@@ -17,7 +17,7 @@ import com.quartz.zielclient.activities.common.MapsActivity;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
-import com.quartz.zielclient.channel.RequestController;
+import com.quartz.zielclient.channel.ChannelRequestController;
 import com.quartz.zielclient.exceptions.AuthorisationException;
 import com.quartz.zielclient.user.User;
 import com.quartz.zielclient.user.UserController;
@@ -112,7 +112,7 @@ public class AssistedChannel extends AppCompatActivity implements ChannelListene
     Optional<User> maybeAssisted = UserFactory.getUser(dataSnapshot);
     if (maybeAssisted.isPresent()) {
       User assisted = maybeAssisted.get();
-      RequestController.createRequest(assisted, carerId, channelData.getChannelKey(), "");
+      ChannelRequestController.createRequest(assisted, carerId, channelData.getChannelKey(), "");
     } else {
       // TODO error handling
     }
