@@ -2,6 +2,8 @@ package com.quartz.zielclient.models;
 
 import android.os.Bundle;
 
+import java.util.Map;
+
 /**
  * ListItem class for representing server data in any RecyclerView in the front-end.
  *
@@ -18,6 +20,12 @@ public class ListItem implements Model {
     this.name = name;
     this.description = description;
     this.channelId = channelId;
+  }
+
+  public ListItem(Map<String, String> requestData) {
+    this.name = requestData.get("name");
+    this.description = requestData.get("description");
+    this.channelId = requestData.get("channelId");
   }
 
   // Getters and Setters
