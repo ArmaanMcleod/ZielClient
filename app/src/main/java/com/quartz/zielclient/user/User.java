@@ -42,6 +42,10 @@ public class User implements Model {
     return assisted;
   }
 
+  public String fullName() {
+    return firstName + " " + lastName;
+  }
+
   @Override
   public Bundle toBundle() {
     Bundle bundle = new Bundle();

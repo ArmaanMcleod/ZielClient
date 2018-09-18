@@ -52,7 +52,7 @@ public class CarerChannel extends AppCompatActivity
       finish();
     }
 
-    channelId = getIntent().getStringExtra("channelId");
+    channelId = getIntent().getStringExtra(getResources().getString(R.string.channel_key));
 
     acceptButton = findViewById(R.id.acceptButton);
     acceptButton.setOnClickListener(this);
@@ -84,7 +84,7 @@ public class CarerChannel extends AppCompatActivity
         break;
       case R.id.toTrackingActivity:
         Intent intentToTracking = new Intent(CarerChannel.this, CarerMapsActivity.class);
-        intentToTracking.putExtra("channelKey", channelId);
+        intentToTracking.putExtra(getResources().getString(R.string.channel_key), channelId);
         startActivity(intentToTracking);
         break;
       default:

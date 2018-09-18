@@ -2,17 +2,28 @@ package com.quartz.zielclient.activities.assisted;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.common.MapsActivity;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
+import com.quartz.zielclient.channel.ChannelRequestController;
+import com.quartz.zielclient.exceptions.AuthorisationException;
+import com.quartz.zielclient.user.User;
+import com.quartz.zielclient.user.UserController;
+import com.quartz.zielclient.user.UserFactory;
+
+import java.util.Optional;
 
 
 /**
@@ -22,7 +33,7 @@ import com.quartz.zielclient.channel.ChannelListener;
  *
  * @author Bilal Shehata
  */
-public class AssistedChannel extends AppCompatActivity implements ChannelListener, View.OnClickListener {
+public class AssistedChannel extends AppCompatActivity implements ChannelListener, View.OnClickListener, ValueEventListener {
 
   private TextView status;
   private Button waveButton;
@@ -52,6 +63,11 @@ public class AssistedChannel extends AppCompatActivity implements ChannelListene
     setSupportActionBar(toolbar);
     status = findViewById(R.id.channelStatus);
     channelData = ChannelController.createChannel(this);
+    try {
+      UserController.fetchThisUser(this);
+    } catch (AuthorisationException e) {
+      // TODO
+    }
   }
 
   @Override
@@ -85,11 +101,27 @@ public class AssistedChannel extends AppCompatActivity implements ChannelListene
         break;
       case R.id.toMapsActivity:
         Intent intentToMaps = new Intent(AssistedChannel.this, MapsActivity.class);
-        intentToMaps.putExtra("channelKey", channelData.getChannelKey());
+        intentToMaps.putExtra(getResources().getString(R.string.channel_key), channelData.getChannelKey());
         startActivity(intentToMaps);
         break;
-
+      default:
+        break;
     }
+  }
+
+  @Override
+  public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+    Optional<User> maybeAssisted = UserFactory.getUser(dataSnapshot);
+    if (maybeAssisted.isPresent()) {
+      User assisted = maybeAssisted.get();
+      ChannelRequestController.createRequest(assisted, carerId, channelData.getChannelKey(), "");
+    } else {
+      // TODO error handling
+    }
+  }
+
+  @Override
+  public void onCancelled(@NonNull DatabaseError databaseError) {
 
   }
 

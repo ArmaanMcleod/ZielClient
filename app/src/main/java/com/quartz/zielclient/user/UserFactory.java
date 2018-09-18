@@ -22,6 +22,10 @@ public class UserFactory {
     // Intentionally empty
   }
 
+  public static User getUser(String firstName, String lastName, String phoneNumber, boolean assisted) {
+    return new User(firstName, lastName, phoneNumber, assisted);
+  }
+
   /**
    * Constructs a user from raw data extracted from Firebase.
    * @param rawUserData Raw user data as a map object.

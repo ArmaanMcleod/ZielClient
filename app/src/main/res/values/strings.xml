@@ -33,4 +33,5 @@
     <string name="channel_active">Channel is active</string>
     <string name="channel_inactive">Channel is inactive</string>
     <string name="carer_status">carerStatus</string>
+    <string name="channel_key">channelId</string>
 </resources>

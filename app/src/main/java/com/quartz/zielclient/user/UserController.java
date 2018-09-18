@@ -8,19 +8,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.exceptions.AuthorisationException;
-import com.quartz.zielclient.user.User;
 
 import java.util.Optional;
 
 public final class UserController {
+
+  private static final String TAG = UserController.class.getSimpleName();
 
   /**
    * Path to the users in the database.
    */
   private static final String USER_DATABASE_PATH = "users";
 
-  private static FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-  private static FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+  private static final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+  private static final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
   private UserController() {
     // Intentionally empty

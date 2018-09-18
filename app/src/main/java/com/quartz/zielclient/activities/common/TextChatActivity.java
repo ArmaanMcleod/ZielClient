@@ -31,7 +31,7 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    String channelKey = getIntent().getStringExtra("channelKey");
+    String channelKey = getIntent().getStringExtra(getApplicationContext().getString(R.string.channel_key));
     channel = ChannelController.retrieveChannel(channelKey, this);
     setContentView(R.layout.activity_text_chat);
     // initialize graphical elements

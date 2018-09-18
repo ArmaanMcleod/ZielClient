@@ -62,9 +62,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   // Custom permissions request code
   private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-
   private static final int DEFAULT_ZOOM = 11;
-
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
   private final String activity = this.getClass().getSimpleName();
@@ -76,9 +74,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   private LatLng source;
   private LatLng destination;
-  private Button toTextChatButton;
 
-  private static String channelID = "90a2c51d-4d9a-4d15-af8e-9639ff472231";
+  private String channelId;
 
   private ChannelData channel;
 
@@ -105,7 +102,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             + location.getLongitude());
 
         // Update and draw source location
-        setSource(new LatLng(location.getLatitude(), location.getLongitude()));
+        source = new LatLng(location.getLatitude(), location.getLongitude());
         channel.setAssistedLocation(location);
         drawMarker(source, HUE_MAGENTA);
       }
@@ -124,9 +121,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
-    channelID = this.getIntent().getStringExtra("channelKey");
-    channel = ChannelController.retrieveChannel(channelID, this);
-    toTextChatButton = findViewById(R.id.toTextChat);
+    channelId = getIntent().getStringExtra(getResources().getString(R.string.channel_key));
+    channel = ChannelController.retrieveChannel(channelId, this);
+    Button toTextChatButton = findViewById(R.id.toTextChat);
     toTextChatButton.setOnClickListener(this);
 
     // Create autocomplete bar
@@ -143,7 +140,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mGoogleMap.clear();
 
         Log.d(activity, "Place selected: " + place.getLatLng());
-        setDestination(place.getLatLng());
+        destination = place.getLatLng();
 
         // Compute path to destination
         String directionsURL = getDirectionsUrl();
@@ -151,8 +148,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         fetchUrl.execute(directionsURL);
         channel.setDirectionsURL(directionsURL);
         // Redraw both source and destination markers to screen
-        drawMarker(getSource(), HUE_MAGENTA);
-        drawMarker(getDestination(), HUE_RED);
+        drawMarker(source, HUE_MAGENTA);
+        drawMarker(destination, HUE_RED);
       }
 
       @Override
@@ -364,10 +361,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private String getDirectionsUrl() {
 
     // Source and destination formats
-    String strSource = "origin=" + getSource().latitude + "," + getSource().longitude;
+    String strSource = "origin=" + source.latitude + "," + source.longitude;
     String strDestination = "destination=" +
-        getDestination().latitude + "," +
-        getDestination().longitude;
+        destination.latitude + "," +
+        destination.longitude;
 
     // Sensor initialisation
     String sensor = "sensor=false";
@@ -384,30 +381,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     return apiRequest;
   }
 
-  public LatLng getDestination() {
-    return destination;
-  }
-
-  public void setDestination(LatLng destination) {
-    this.destination = destination;
-  }
-
-  public LatLng getSource() {
-    return source;
-  }
-
-  public void setSource(LatLng source) {
-    this.source = source;
-  }
-
   @Override
   public void dataChanged() {
     // notify user about new messages
   }
 
-  public static void setChannelID(String channelID) {
-    MapsActivity.channelID = channelID;
-  }
   @Override
   public String getAssistedId() {
     return null;
@@ -423,7 +401,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     switch (view.getId()) {
       case R.id.toTextChat:
         Intent intentToTextChat = new Intent(MapsActivity.this, TextChatActivity.class);
-        intentToTextChat.putExtra("channelKey", channelID);
+        intentToTextChat.putExtra(getResources().getString(R.string.channel_key), channelId);
         startActivity(intentToTextChat);
         break;
       default:
