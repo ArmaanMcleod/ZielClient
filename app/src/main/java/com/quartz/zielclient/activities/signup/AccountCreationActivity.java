@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.CarerHomepageActivity;
 import com.quartz.zielclient.activities.SplashScreenActivity;
 import com.quartz.zielclient.activities.common.LaunchPadActivity;
 import com.quartz.zielclient.user.UserController;
@@ -55,8 +56,16 @@ public class AccountCreationActivity extends AppCompatActivity implements OnClic
   }
 
   private void completeAccountCreation(User user) {
-    Intent intent = new Intent(this, LaunchPadActivity.class);
+    Intent intent = new Intent();
     intent.putExtra("user", user.toBundle());
+
+    // Redirect the user to the appropriate home page
+    if (user.isAssisted()) {
+      intent.setClass(this, LaunchPadActivity.class);
+    } else {
+      intent.setClass(this, CarerHomepageActivity.class);
+    }
+
     startActivity(intent);
     finish();
   }
