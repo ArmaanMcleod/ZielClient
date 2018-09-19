@@ -104,7 +104,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         LatLng newSource = new LatLng(location.getLatitude(), location.getLongitude());
 
-        // Only draw onto map for first callback or if source location has changed
+        // Only draw onto map for first callback or if source location has changed.
+        // Ensures directions api doesn't get called too many times on start up.
         if (source == null || !newSource.equals(source)) {
           source = newSource;
           drawOntoMap();
