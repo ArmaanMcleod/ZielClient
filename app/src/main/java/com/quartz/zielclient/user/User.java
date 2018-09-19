@@ -19,6 +19,10 @@ public class User implements Model {
   private String phoneNumber;
   private boolean assisted;
 
+  public User() {
+    // Intentionally empty
+  }
+
   User(String firstName, String lastName, String phoneNumber, boolean assisted) {
     this.firstName = firstName;
     this.lastName = lastName;
