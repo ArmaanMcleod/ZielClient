@@ -36,6 +36,7 @@ public class HomePageActivity extends Activity {
     Objects.requireNonNull(placeAutoComplete.getView()).setBackgroundColor(Color.WHITE);
     placeAutoComplete.setHint("Search Place");
 
+    // Listen for user entering place 
     placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
       @Override
       public void onPlaceSelected(Place place) {
@@ -51,6 +52,8 @@ public class HomePageActivity extends Activity {
 
     Button directMeButton = findViewById(R.id.directMeButton);
     directMeButton.setOnClickListener(v -> {
+
+      // If destination exists, start MapsActivity
       if (destination != null) {
         Intent intent = new Intent(HomePageActivity.this, MapsActivity.class);
         intent.putExtra("destination", destination);

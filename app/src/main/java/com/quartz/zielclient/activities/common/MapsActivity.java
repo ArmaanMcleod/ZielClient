@@ -79,6 +79,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   private ChannelData channel;
 
+  // Flag indicating if initial route needs be drawn
+  private boolean initialRoute = true;
+
   private final LocationCallback mLocationCallback = new LocationCallback() {
 
     /**
@@ -104,14 +107,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Update and draw locations
         source = new LatLng(location.getLatitude(), location.getLongitude());
 
+        // Execute channel is available
         if (channel != null) {
           channel.setAssistedLocation(location);
         }
-        drawMarker(source, HUE_MAGENTA);
-        drawMarker(destination, HUE_RED);
 
-        // Draw route between source and destination
-        drawRoute();
+        // Draw markers and route just once
+        if (initialRoute) {
+          drawMarker(source, HUE_MAGENTA);
+          drawMarker(destination, HUE_RED);
+          drawRoute();
+          initialRoute = false;
+        }
       }
     }
   };
@@ -167,7 +174,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       }
 
       @Override
-      public void onError(Status status) {
+      public void onError(@NonNull Status status) {
         Log.d(activity, "An error occurred: " + status);
       }
     });
@@ -184,12 +191,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
   }
 
+  /**
+   * Draws route between two points on the map
+   */
   private void drawRoute() {
     // Compute path to destination
     String directionsURL = getDirectionsUrl();
     FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
     fetchUrl.execute(directionsURL);
 
+    // Send directions to channel
     if (channel != null) {
       channel.setDirectionsURL(directionsURL);
     }
@@ -201,7 +212,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * @param location This is the location on the map.
    * @param colour   This is the colour of the marker.
    */
-  private void drawMarker(LatLng location, float colour) {
+  private void drawMarker(@NonNull LatLng location, float colour) {
     MarkerOptions markerOptions = new MarkerOptions();
 
     // Update marker options
@@ -227,7 +238,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * @param location This is the location.
    * @return String This is the address in String format.
    */
-  private String getAddress(LatLng location) {
+  private String getAddress(@NonNull LatLng location) {
     String address = "";
 
     // Create address geo coder
@@ -268,7 +279,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    * @param googleMap This is the Google Map
    */
   @Override
-  public void onMapReady(GoogleMap googleMap) {
+  public void onMapReady(@NonNull GoogleMap googleMap) {
 
     // Initialise Google map
     mGoogleMap = googleMap;
@@ -422,7 +433,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   @Override
-  public void onClick(View view) {
+  public void onClick(@NonNull View view) {
     int i = view.getId();
     if (i == R.id.toTextChat) {
       Intent intentToTextChat = new Intent(MapsActivity.this, TextChatActivity.class);
