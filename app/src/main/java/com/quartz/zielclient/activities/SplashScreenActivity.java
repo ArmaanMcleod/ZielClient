@@ -2,7 +2,6 @@ package com.quartz.zielclient.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,6 +9,7 @@ import android.util.Log;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.quartz.zielclient.activities.carer.CarerHomepageActivity;
 import com.quartz.zielclient.activities.common.LaunchPadActivity;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
 import com.quartz.zielclient.exceptions.AuthorisationException;
@@ -36,13 +36,8 @@ public class SplashScreenActivity extends AppCompatActivity implements ValueEven
 
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-    Optional<User> maybeUser = UserFactory.getUser(dataSnapshot);
-    if (maybeUser.isPresent()) {
-      User user = maybeUser.get();
-      redirect(user);
-    } else {
-      goToSignin();
-    }
+    User user = UserFactory.getUser(dataSnapshot);
+    redirect(user);
   }
 
   @Override

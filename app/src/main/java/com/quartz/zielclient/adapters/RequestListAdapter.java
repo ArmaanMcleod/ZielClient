@@ -21,13 +21,13 @@ import java.util.List;
  *
  * @author wei how ng
  */
-public class ListAdapter extends RecyclerView.Adapter<ListAdapter.TextViewHolder> {
+public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.TextViewHolder> {
 
   private List<ChannelRequest> listItems;
   private Context context;
 
   // Constructor
-  public ListAdapter(List<ChannelRequest> listItems, Context context) {
+  public RequestListAdapter(List<ChannelRequest> listItems, Context context) {
     this.listItems = listItems;
     this.context = context;
   }
@@ -63,7 +63,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.TextViewHolder
   }
 
   /**
-   * TextViewHolder class made for this ListAdapter
+   * TextViewHolder class made for this RequestListAdapter
    */
   class TextViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

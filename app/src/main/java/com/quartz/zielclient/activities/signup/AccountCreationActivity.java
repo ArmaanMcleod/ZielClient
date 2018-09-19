@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.activities.CarerHomepageActivity;
+import com.quartz.zielclient.activities.carer.CarerHomepageActivity;
 import com.quartz.zielclient.activities.SplashScreenActivity;
 import com.quartz.zielclient.activities.common.LaunchPadActivity;
 import com.quartz.zielclient.user.UserController;

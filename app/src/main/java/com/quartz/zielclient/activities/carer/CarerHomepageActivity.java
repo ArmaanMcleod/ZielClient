@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities;
+package com.quartz.zielclient.activities.carer;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,10 +15,11 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
-import com.quartz.zielclient.adapters.ListAdapter;
+import com.quartz.zielclient.adapters.RequestListAdapter;
 import com.quartz.zielclient.models.ChannelRequest;
 import com.quartz.zielclient.user.UserController;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,9 +73,11 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
    * @param channelRequestsData Collection of all appropriate channel requests.
    */
   private void initData(List<ChannelRequest> channelRequestsData) {
-    this.listItems = channelRequestsData;
+    Collections.sort(channelRequestsData);
+    listItems = channelRequestsData;
+
     // Using the Adapter to convert the data into the recycler view
-    mAdapter = new ListAdapter(listItems, this);
+    mAdapter = new RequestListAdapter(listItems, this);
     mRecyclerView.setAdapter(mAdapter);
   }
 

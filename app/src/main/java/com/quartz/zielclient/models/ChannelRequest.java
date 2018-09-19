@@ -3,6 +3,12 @@ package com.quartz.zielclient.models;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Objects;
+
 /**
  * Model representation of a channel request.
  *
@@ -34,7 +40,14 @@ public class ChannelRequest implements Model, Comparable<ChannelRequest> {
     this.description = description;
 
     // Convert Unix time from ms to s
-    this.timestamp = System.currentTimeMillis() / 1000L;
+    this.timestamp = System.currentTimeMillis();
+  }
+
+  public ChannelRequest(ChannelRequest channelRequest) {
+    this.name = channelRequest.name;
+    this.channelId = channelRequest.channelId;
+    this.description = channelRequest.description;
+    this.timestamp = channelRequest.timestamp;
   }
 
   public String getName() {
@@ -69,9 +82,18 @@ public class ChannelRequest implements Model, Comparable<ChannelRequest> {
     this.timestamp = timestamp;
   }
 
+  /**
+   * Formats the timestamp to a string representation.
+   * @return A formatted timestamp.
+   */
+  public String formattedTimestamp() {
+    Timestamp time = new Timestamp(timestamp);
+    return new SimpleDateFormat("HH:mm, dd/MM/yyyy").format(time);
+  }
+
   @Override
   public int compareTo(@NonNull ChannelRequest o) {
-    return (int) (timestamp - o.timestamp);
+    return Long.compare(timestamp, o.timestamp);
   }
 
   @Override
@@ -81,5 +103,21 @@ public class ChannelRequest implements Model, Comparable<ChannelRequest> {
     bundle.putString(CHANNEL_ID_KEY, channelId);
     bundle.putString(DESCRIPTION_KEY, description);
     return bundle;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ChannelRequest that = (ChannelRequest) o;
+    return timestamp == that.timestamp &&
+        Objects.equals(name, that.name) &&
+        Objects.equals(channelId, that.channelId) &&
+        Objects.equals(description, that.description);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, channelId, description, timestamp);
   }
 }

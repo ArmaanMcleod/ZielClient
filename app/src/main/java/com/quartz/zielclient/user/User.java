@@ -42,6 +42,22 @@ public class User implements Model {
     return assisted;
   }
 
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
+
+  public void setAssisted(boolean assisted) {
+    this.assisted = assisted;
+  }
+
   public String fullName() {
     return firstName + " " + lastName;
   }

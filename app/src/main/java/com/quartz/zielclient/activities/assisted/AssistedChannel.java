@@ -111,13 +111,8 @@ public class AssistedChannel extends AppCompatActivity implements ChannelListene
 
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-    Optional<User> maybeAssisted = UserFactory.getUser(dataSnapshot);
-    if (maybeAssisted.isPresent()) {
-      User assisted = maybeAssisted.get();
-      ChannelRequestController.createRequest(assisted, carerId, channelData.getChannelKey(), "");
-    } else {
-      // TODO error handling
-    }
+    User assisted = UserFactory.getUser(dataSnapshot);
+    ChannelRequestController.createRequest(assisted, carerId, channelData.getChannelKey(), "");
   }
 
   @Override

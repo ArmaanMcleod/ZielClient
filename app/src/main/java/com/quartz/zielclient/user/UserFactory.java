@@ -60,13 +60,7 @@ public class UserFactory {
    * @param dataSnapshot The data snapshot from Firebase.
    * @return A user model.
    */
-  public static Optional<User> getUser(DataSnapshot dataSnapshot) {
-    GenericTypeIndicator<Map<String, Object>> t = new GenericTypeIndicator<Map<String, Object>>() {
-    };
-    Map<String, Object> rawUserData = dataSnapshot.getValue(t);
-    if (rawUserData == null) {
-      return Optional.empty();
-    }
-    return Optional.of(getUser(rawUserData));
+  public static User getUser(DataSnapshot dataSnapshot) {
+    return dataSnapshot.getValue(User.class);
   }
 }

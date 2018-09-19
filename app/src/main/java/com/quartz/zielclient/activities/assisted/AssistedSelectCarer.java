@@ -58,19 +58,14 @@ public class AssistedSelectCarer extends AppCompatActivity implements View.OnCli
     final String carerId = carerEntry.getText().toString();
     try {
       String thisUserId = UserController.retrieveFirebaseUser().getUid();
-      Optional<User> maybeCarer = UserFactory.getUser(dataSnapshot);
-      if (maybeCarer.isPresent()) {
-        Log.i(TAG, "Creating channel");
+      Log.i(TAG, "Creating channel");
 
-        Intent intent = new Intent(this, AssistedChannel.class);
-        intent.putExtra("assisted", thisUserId);
-        intent.putExtra("carer", carerId);
+      Intent intent = new Intent(this, AssistedChannel.class);
+      intent.putExtra("assisted", thisUserId);
+      intent.putExtra("carer", carerId);
 
-        startActivity(intent);
-        finish();
-      } else {
-        carerEntry.setError("Invalid user");
-      }
+      startActivity(intent);
+      finish();
     } catch (AuthorisationException e) {
       // In case of authorisation error go back to sign in
       Log.e(TAG, "Invalid login");

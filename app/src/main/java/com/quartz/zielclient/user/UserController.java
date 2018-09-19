@@ -1,6 +1,7 @@
 package com.quartz.zielclient.user;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -67,6 +68,7 @@ public final class UserController {
                                 String lastName,
                                 boolean assisted) {
     String userId = firebaseUser.getUid();
+    Log.i(TAG, "Creating user " + userId);
     String phoneNumber = firebaseUser.getPhoneNumber();
     User user = new User(firstName, lastName, phoneNumber, assisted);
 

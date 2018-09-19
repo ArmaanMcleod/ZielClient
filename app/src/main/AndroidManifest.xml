@@ -35,7 +35,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".activities.CarerHomepageActivity"
+            android:name=".activities.carer.CarerHomepageActivity"
             android:label="@string/title_activity_carer_homepage">
         </activity>
 
@@ -82,7 +82,6 @@
             android:required="false" />
 
         <activity android:name=".activities.assisted.AssistedSelectCarer" />
-        <activity android:name=".activities.carer.CarerSelectAssisted"></activity>
         <activity android:name=".activities.common.TextChatActivity"
             android:label="@string/title_activity_maps" />
 
