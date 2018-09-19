@@ -80,9 +80,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   private ChannelData channel;
 
-  // Flag indicating if initial route needs be drawn
-  private boolean initialRoute = true;
-
   private final LocationCallback mLocationCallback = new LocationCallback() {
 
     /**
@@ -113,13 +110,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           channel.setAssistedLocation(location);
         }
 
-        // Draw markers and route just once
-        if (initialRoute) {
-          drawMarker(source, HUE_MAGENTA);
-          drawMarker(destination, HUE_RED);
-          drawRoute();
-          initialRoute = false;
-        }
+        // Draw location and route onto map
+        drawMarker(source, HUE_MAGENTA);
+        drawMarker(destination, HUE_RED);
+        drawRoute();
+
       }
     }
   };
