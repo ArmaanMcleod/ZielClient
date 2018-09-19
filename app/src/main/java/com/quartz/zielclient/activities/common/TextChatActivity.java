@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.adapters.MessageListAdapter;
 import com.quartz.zielclient.channel.ChannelController;
@@ -33,6 +34,7 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
   private ChannelData channel;
   private TextView chatOutput;
   private EditText chatInput;
+  private String currentUser;
 
   // Recycler Views and Adapter for the text chat
   private RecyclerView mMessageRecycler;
@@ -53,6 +55,9 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
     String channelKey = getIntent().getStringExtra(getApplicationContext()
         .getString(R.string.channel_key));
     channel = ChannelController.retrieveChannel(channelKey, this);
+
+    // Getting the current user's username
+    currentUser = FirebaseAuth.getInstance().getUid();
 
     // Initialise the graphical elements
     chatInput = findViewById(R.id.enter_chat_box);
@@ -78,8 +83,12 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
     return null;
   }
 
+  /**
+   * Rendering the Message List whenever there is a new message
+   */
   @Override
   public void dataChanged() {
+    // Make sure the database of messages for the channel is not empty
     if (channel.getMessages() != null) {
       // this is completely unstylised representation of the messages
       chatOutput.setText(channel.getMessages().toString());
@@ -98,12 +107,11 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
 
   /**
    * Send message located in the input view
-   * TODO: Add the sender/ receiver's username into this instead of the hardcoded string
-   * @param view
+   * @param view The view input for the button, the messageText in this case
    */
   @Override
   public void onClick(View view) {
-    Message messageToSend = MessageFactory.makeTextMessage(chatInput.getText().toString(), "Name");
+    Message messageToSend = MessageFactory.makeTextMessage(chatInput.getText().toString(), currentUser);
     channel.sendMessage(messageToSend);
   }
 }
