@@ -80,8 +80,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   private ChannelData channel;
 
-  private boolean initialRoute = true;
-
   private final LocationCallback mLocationCallback = new LocationCallback() {
 
     /**
@@ -104,15 +102,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             + " "
             + location.getLongitude());
 
-        // Initialise source location
-        source = new LatLng(location.getLatitude(), location.getLongitude());
+        LatLng newSource = new LatLng(location.getLatitude(), location.getLongitude());
 
-        // Draw location and route onto map
-        drawMarker(source, HUE_MAGENTA);
-        drawMarker(destination, HUE_RED);
-        if (initialRoute) {
-          drawRoute();
-          initialRoute = false;
+        // Only draw onto map for first callback or if source location has changed
+        if (source == null || !newSource.equals(source)) {
+          source = newSource;
+          drawOntoMap();
         }
 
         // Execute channel is available
@@ -167,12 +162,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d(activity, "Place selected: " + place.getLatLng());
         destination = place.getLatLng();
 
-        // Compute path to destination
-        drawRoute();
-
-        // Redraw both source and destination markers to screen
-        drawMarker(source, HUE_MAGENTA);
-        drawMarker(destination, HUE_RED);
+        drawOntoMap();
       }
 
       @Override
@@ -191,6 +181,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     if (mapFrag != null) {
       mapFrag.getMapAsync(this);
     }
+  }
+
+  /**
+   * Draws source/destination markers and route onto map.
+   */
+  private void drawOntoMap() {
+    // draw both source and destination markers to map screen
+    drawMarker(source, HUE_MAGENTA);
+    drawMarker(destination, HUE_RED);
+
+    // Draw route to map screen
+    drawRoute();
   }
 
   /**
