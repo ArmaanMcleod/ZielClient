@@ -50,6 +50,7 @@ public class HomePageActivity extends Activity {
       }
     });
 
+    // Check if direction button has been pressed
     Button directMeButton = findViewById(R.id.directMeButton);
     directMeButton.setOnClickListener(v -> {
 

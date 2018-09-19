@@ -104,7 +104,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             + " "
             + location.getLongitude());
 
-        // Update and draw locations
+        // Initialise source location
         source = new LatLng(location.getLatitude(), location.getLongitude());
 
         // Execute channel is available
@@ -432,6 +432,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     return null;
   }
 
+  /**
+   * Called when a view has been clicked.
+   * @param view This is the view that was clicked.
+   */
   @Override
   public void onClick(@NonNull View view) {
     int i = view.getId();
