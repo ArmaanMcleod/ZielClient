@@ -19,6 +19,10 @@ public class User implements Model {
   private String phoneNumber;
   private boolean assisted;
 
+  public User() {
+    // Intentionally empty
+  }
+
   User(String firstName, String lastName, String phoneNumber, boolean assisted) {
     this.firstName = firstName;
     this.lastName = lastName;
@@ -40,6 +44,22 @@ public class User implements Model {
 
   public boolean isAssisted() {
     return assisted;
+  }
+
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
+
+  public void setAssisted(boolean assisted) {
+    this.assisted = assisted;
   }
 
   public String fullName() {

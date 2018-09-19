@@ -35,11 +35,11 @@ public class ChannelRequestController {
    * @param channelId The ID of the channel created.
    * @param desc The description of the request.
    */
-  public static void createRequest(User assisted, String carerId, String channelId, String desc) {
+  public static ChannelRequest createRequest(User assisted, String carerId, String channelId, String desc) {
     Log.i(TAG, String.format("Creating channel request from %1s to %2s", assisted.fullName(), carerId));
 
     DatabaseReference reference = database.getReference(REQUESTS_PATH).child(carerId);
-    ChannelRequest request = new ChannelRequest(assisted.fullName(), channelId, desc);
+    ChannelRequest request = ChannelRequestFactory.getChannelRequest(assisted, channelId, desc);
 
     reference.addListenerForSingleValueEvent(new ValueEventListener() {
       @Override
@@ -53,5 +53,7 @@ public class ChannelRequestController {
         Log.e(TAG, "Error reading from database", databaseError.toException());
       }
     });
+
+    return request;
   }
 }
