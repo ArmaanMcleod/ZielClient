@@ -101,10 +101,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             + " "
             + location.getLongitude());
 
-        // Update and draw source location
+        // Update and draw locations
         source = new LatLng(location.getLatitude(), location.getLongitude());
-        channel.setAssistedLocation(location);
+
+        if (channel != null) {
+          channel.setAssistedLocation(location);
+        }
         drawMarker(source, HUE_MAGENTA);
+        drawMarker(destination, HUE_RED);
+
+        // Draw route between source and destination
+        drawRoute();
       }
     }
   };
@@ -122,9 +129,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
     channelId = getIntent().getStringExtra(getResources().getString(R.string.channel_key));
-    channel = ChannelController.retrieveChannel(channelId, this);
+    if (channelId != null) {
+      channel = ChannelController.retrieveChannel(channelId, this);
+    }
+
     Button toTextChatButton = findViewById(R.id.toTextChat);
     toTextChatButton.setOnClickListener(this);
+
+    // Get bundle of arguments passed from Home Page Activity
+    Bundle bundle = getIntent().getExtras();
+    if (bundle != null) {
+      destination = bundle.getParcelable("destination");
+    }
 
     // Create autocomplete bar
     PlaceAutocompleteFragment placeAutoComplete = (PlaceAutocompleteFragment)
@@ -143,10 +159,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         destination = place.getLatLng();
 
         // Compute path to destination
-        String directionsURL = getDirectionsUrl();
-        FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
-        fetchUrl.execute(directionsURL);
-        channel.setDirectionsURL(directionsURL);
+        drawRoute();
+
         // Redraw both source and destination markers to screen
         drawMarker(source, HUE_MAGENTA);
         drawMarker(destination, HUE_RED);
@@ -167,6 +181,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     if (mapFrag != null) {
       mapFrag.getMapAsync(this);
+    }
+  }
+
+  private void drawRoute() {
+    // Compute path to destination
+    String directionsURL = getDirectionsUrl();
+    FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
+    fetchUrl.execute(directionsURL);
+
+    if (channel != null) {
+      channel.setDirectionsURL(directionsURL);
     }
   }
 
@@ -398,14 +423,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   @Override
   public void onClick(View view) {
-    switch (view.getId()) {
-      case R.id.toTextChat:
-        Intent intentToTextChat = new Intent(MapsActivity.this, TextChatActivity.class);
-        intentToTextChat.putExtra(getResources().getString(R.string.channel_key), channelId);
-        startActivity(intentToTextChat);
-        break;
-      default:
-        break;
+    int i = view.getId();
+    if (i == R.id.toTextChat) {
+      Intent intentToTextChat = new Intent(MapsActivity.this, TextChatActivity.class);
+      intentToTextChat.putExtra(getResources().getString(R.string.channel_key), channelId);
+      startActivity(intentToTextChat);
+
     }
   }
 }
