@@ -38,8 +38,8 @@
         app:layout_constraintLeft_toLeftOf="parent">
 
         <EditText
-            android:id="@+id/edittext_chatbox"
-            android:hint="Enter message"
+            android:id="@+id/enter_chat_box"
+            android:hint="Enter Message"
             android:background="@android:color/transparent"
             android:layout_gravity="center"
             android:layout_marginLeft="16dp"

@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.quartz.zielclient.R;
@@ -33,7 +34,7 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
   // temporary for debugging will become a dynamic channel
   private final ChannelData channel = ChannelController.retrieveChannel(DEBUG_ID, this);
   private TextView chatOutput;
-  private TextInputEditText chatInput;
+  private EditText chatInput;
 
   // Recycler Views and Adapter for the text chat
   private RecyclerView mMessageRecycler;
@@ -43,7 +44,7 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_text_chat);
+    setContentView(R.layout.activity_text_chat_message_list);
 
     // Chat using RecyclerView
     mMessageRecycler = findViewById(R.id.message_recyclerview);
@@ -51,6 +52,7 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
     mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
 
     // Initialise the graphical elements
+    chatInput = findViewById(R.id.enter_chat_box);
     Button sendMessage = findViewById(R.id.button_chatbox_send);
     sendMessage.setOnClickListener(this);
 
@@ -61,6 +63,16 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
     Button sendButton = findViewById(R.id.sendButton);
     sendButton.setOnClickListener(this);
     */
+  }
+
+  /**
+   * Fetching the channel chat to be displayed
+   * @return Respective ChannelData Object
+   */
+  public ChannelData getCurrentChannel() {
+
+
+    return null;
   }
 
   @Override

@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Service layer for messages.
  *
- * @author wei how ng
+ * @author Wei How Ng
  */
 public class MessageService {
 
@@ -17,7 +17,7 @@ public class MessageService {
   }
 
   /**
-   * Deserialise a nested structure of raw message data from firebase.
+   * Deserialise a nested structure of raw message data from FireBase.
    * The structure is:
    *
    *   messageKey: {
