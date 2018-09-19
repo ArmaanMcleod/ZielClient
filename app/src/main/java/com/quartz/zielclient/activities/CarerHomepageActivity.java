@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,14 +17,10 @@ import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
 import com.quartz.zielclient.adapters.ListAdapter;
 import com.quartz.zielclient.models.ChannelRequest;
-import com.quartz.zielclient.models.ListItem;
 import com.quartz.zielclient.user.UserController;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Activity to display a carer's home page.
@@ -37,7 +32,7 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
   private RecyclerView mRecyclerView;
   private RecyclerView.Adapter mAdapter;
   private RecyclerView.LayoutManager mLayoutManager;
-  private List<ListItem> listItems;
+  private List<ChannelRequest> listItems;
   private DatabaseReference requestsReference;
   private String userID;
 
@@ -76,12 +71,8 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
    *
    * @param channelRequestsData Collection of all appropriate channel requests.
    */
-  private void initData(List<Map<String, String>> channelRequestsData) {
-    // Adding each user name and description to the listItem object and then appending them in
-    listItems = channelRequestsData.stream()
-        .map(ListItem::new)
-        .collect(Collectors.toList());
-
+  private void initData(List<ChannelRequest> channelRequestsData) {
+    this.listItems = channelRequestsData;
     // Using the Adapter to convert the data into the recycler view
     mAdapter = new ListAdapter(listItems, this);
     mRecyclerView.setAdapter(mAdapter);
@@ -91,10 +82,10 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
     // Getting the channel data and calling the rendering method on it
     // Nasty generic types needed unfortunately
-    GenericTypeIndicator<List<Map<String, String>>> t =
-        new GenericTypeIndicator<List<Map<String, String>>>() {
+    GenericTypeIndicator<List<ChannelRequest>> t =
+        new GenericTypeIndicator<List<ChannelRequest>>() {
         };
-    List<Map<String, String>> channelRequestsData = dataSnapshot.getValue(t);
+    List<ChannelRequest> channelRequestsData = dataSnapshot.getValue(t);
     if (channelRequestsData != null) {
       initData(channelRequestsData);
     }

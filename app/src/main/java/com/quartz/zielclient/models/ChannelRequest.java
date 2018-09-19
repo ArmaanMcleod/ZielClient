@@ -2,6 +2,12 @@ package com.quartz.zielclient.models;
 
 import android.os.Bundle;
 
+/**
+ * Model representation of a channel request.
+ *
+ * @author wei how ng
+ * @author alexvosnakis
+ */
 public class ChannelRequest implements Model {
 
   private static final String NAME_KEY = "name";
@@ -11,6 +17,10 @@ public class ChannelRequest implements Model {
   private String name;
   private String channelId;
   private String description;
+
+  public ChannelRequest() {
+    // Intentionally empty
+  }
 
   public ChannelRequest(String assistedName, String channelId, String description) {
     this.name = assistedName;
@@ -22,12 +32,24 @@ public class ChannelRequest implements Model {
     return name;
   }
 
+  public void setName(String name) {
+    this.name = name;
+  }
+
   public String getChannelId() {
     return channelId;
   }
 
+  public void setChannelId(String channelId) {
+    this.channelId = channelId;
+  }
+
   public String getDescription() {
     return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   @Override
