@@ -80,6 +80,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   private ChannelData channel;
 
+  private boolean initialRoute = true;
+
   private final LocationCallback mLocationCallback = new LocationCallback() {
 
     /**
@@ -105,16 +107,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Initialise source location
         source = new LatLng(location.getLatitude(), location.getLongitude());
 
+        // Draw location and route onto map
+        drawMarker(source, HUE_MAGENTA);
+        drawMarker(destination, HUE_RED);
+        if (initialRoute) {
+          drawRoute();
+          initialRoute = false;
+        }
+
         // Execute channel is available
         if (channel != null) {
           channel.setAssistedLocation(location);
         }
-
-        // Draw location and route onto map
-        drawMarker(source, HUE_MAGENTA);
-        drawMarker(destination, HUE_RED);
-        drawRoute();
-
       }
     }
   };
