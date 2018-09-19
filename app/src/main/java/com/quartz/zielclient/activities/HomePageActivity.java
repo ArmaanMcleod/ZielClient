@@ -18,6 +18,16 @@ import com.quartz.zielclient.activities.common.MapsActivity;
 
 import java.util.Objects;
 
+/**
+ * This class is responsible for handling home page activities. This includes prompting the
+ * assisted to enter in a location they wish to travel to, and passing that destination to the
+ * Maps Activity. 
+ * 
+ *  @author Wei How Ng and Armaan McLeod
+ *  @version 1.1
+ *  19/09/2018
+ */
+
 public class HomePageActivity extends Activity {
 
   private LatLng destination;

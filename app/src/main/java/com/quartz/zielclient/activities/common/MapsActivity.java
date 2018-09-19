@@ -55,10 +55,11 @@ import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
  * how-to-get-current-location-in-googlemap-using-fusedlocationproviderclient/44993694#44993694
  *
  * @author Armaan McLeod
- * @version 1.0- 1
- * 28/08/2018
+ * @version 1.1
+ * 19/09/2018
  */
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ChannelListener, View.OnClickListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ChannelListener,
+    View.OnClickListener {
 
   // Custom permissions request code
   private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
@@ -135,6 +136,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
+
+    // Initialise channel
     channelId = getIntent().getStringExtra(getResources().getString(R.string.channel_key));
     if (channelId != null) {
       channel = ChannelController.retrieveChannel(channelId, this);
@@ -434,6 +437,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * Called when a view has been clicked.
+   *
    * @param view This is the view that was clicked.
    */
   @Override
