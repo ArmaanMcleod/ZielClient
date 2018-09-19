@@ -75,6 +75,10 @@ public class ChannelData implements ValueEventListener {
     channelReference.child("messages").setValue(messages);
   }
 
+  /**
+   * Adding the message object into the channel Database as a JSON object.
+   * @param message The new message being sent in
+   */
   public void sendMessage(Message message) {
     Map<String, String> messageObject = new HashMap<>();
 

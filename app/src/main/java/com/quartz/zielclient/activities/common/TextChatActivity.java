@@ -48,7 +48,6 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
 
     // Chat using RecyclerView
     mMessageRecycler = findViewById(R.id.message_recyclerview);
-    mMessageListAdapter = new MessageListAdapter(this, messageList);
     mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
 
     // Fetching channel using handler
@@ -73,15 +72,6 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
     */
   }
 
-  /**
-   * Fetching the channel chat to be displayed
-   * @return Respective ChannelData Object
-   */
-  public ChannelData getCurrentChannel() {
-
-
-    return null;
-  }
 
   /**
    * Rendering the Message List whenever there is a new message
@@ -90,8 +80,10 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
   public void dataChanged() {
     // Make sure the database of messages for the channel is not empty
     if (channel.getMessages() != null) {
-      // this is completely unstylised representation of the messages
-      chatOutput.setText(channel.getMessages().toString());
+
+      // Creating a new Adapter to render the messages
+      mMessageListAdapter = new MessageListAdapter(this, messageList);
+      mMessageRecycler.setAdapter(mMessageListAdapter);
     }
   }
 
@@ -106,7 +98,7 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
   }
 
   /**
-   * Send message located in the input view
+   * Send message located in the input view into the channel database
    * @param view The view input for the button, the messageText in this case
    */
   @Override
