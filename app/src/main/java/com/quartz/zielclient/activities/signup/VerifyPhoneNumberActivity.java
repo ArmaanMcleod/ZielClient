@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.services.SystemService;
+import com.quartz.zielclient.user.SystemService;
 
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.view.View.OnClickListener;

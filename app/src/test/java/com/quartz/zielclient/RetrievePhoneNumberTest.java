@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.telephony.TelephonyManager;
 
-import com.quartz.zielclient.services.SystemService;
+import com.quartz.zielclient.user.SystemService;
 
 import org.junit.Assert;
 import org.junit.Before;

@@ -1,4 +1,4 @@
-package com.quartz.zielclient.controllers;
+package com.quartz.zielclient.user;
 
 import android.app.Activity;
 import android.util.Log;
@@ -32,13 +32,13 @@ public final class AuthorisationController {
   }
 
   public void sendConfirmationCode(OnVerificationStateChangedCallbacks callbacks) {
-    Log.d(TAG, "Sending confirmation code to number: " + phoneNumber);
+    Log.i(TAG, "Sending confirmation code to number: " + phoneNumber);
     phoneAuthProvider.verifyPhoneNumber(phoneNumber, TIMEOUT, TIMEOUT_UNITS, activity, callbacks);
   }
 
   public void resendConfirmationCode(OnVerificationStateChangedCallbacks callbacks,
                                      ForceResendingToken resendingToken) {
-    Log.d(TAG, "Sending confirmation code to number: " + phoneNumber);
+    Log.i(TAG, "Sending confirmation code to number: " + phoneNumber);
     phoneAuthProvider.verifyPhoneNumber(
         phoneNumber, TIMEOUT, TIMEOUT_UNITS, activity, callbacks, resendingToken
     );
@@ -46,7 +46,7 @@ public final class AuthorisationController {
 
   public void signInWithPhoneAuthCredential(PhoneAuthCredential credential,
                                             OnCompleteListener<AuthResult> listener) {
-    Log.d(TAG, "Signing in user");
+    Log.i(TAG, "Signing in user.");
     firebaseAuth.signInWithCredential(credential)
         .addOnCompleteListener(activity, listener);
   }

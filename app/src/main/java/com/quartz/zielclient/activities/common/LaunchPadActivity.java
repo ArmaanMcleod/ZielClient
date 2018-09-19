@@ -9,7 +9,6 @@ import android.widget.Button;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.CarerHomepageActivity;
 import com.quartz.zielclient.activities.HomePageActivity;
-import com.quartz.zielclient.activities.carer.CarerMapsActivity;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
 
 
@@ -29,17 +28,11 @@ public class LaunchPadActivity extends AppCompatActivity implements View.OnClick
     setContentView(R.layout.activity_launch_pad);
     Button signIn = findViewById(R.id.signInButton);
     Button signUp = findViewById(R.id.signUpButton);
-    Button navigation = findViewById(R.id.navigationButton);
-    Button textChat = findViewById(R.id.textChatButton);
     Button sessionMaker = findViewById(R.id.sessionMakerButton);
-    Button tracking = findViewById(R.id.trackingButton);
     Button assistedHome = findViewById(R.id.assistedHome);
-    tracking.setOnClickListener(this);
     Button carerHome = findViewById(R.id.carerHome);
     signIn.setOnClickListener(this);
     signUp.setOnClickListener(this);
-    navigation.setOnClickListener(this);
-    textChat.setOnClickListener(this);
     sessionMaker.setOnClickListener(this);
     assistedHome.setOnClickListener(this);
     carerHome.setOnClickListener(this);
@@ -54,18 +47,8 @@ public class LaunchPadActivity extends AppCompatActivity implements View.OnClick
       case R.id.signUpButton:
         startActivity(new Intent(LaunchPadActivity.this, SignUpActivity.class));
         break;
-      case R.id.textChatButton:
-        // do your code
-        startActivity(new Intent(LaunchPadActivity.this,TextChatActivity.class));
-        break;
-      case R.id.navigationButton:
-        startActivity(new Intent(LaunchPadActivity.this, MapsActivity.class));
-        break;
       case R.id.sessionMakerButton:
         startActivity(new Intent(LaunchPadActivity.this, ManualRedirect.class));
-        break;
-      case R.id.trackingButton:
-        startActivity(new Intent(LaunchPadActivity.this, CarerMapsActivity.class));
         break;
       case R.id.assistedHome:
         startActivity(new Intent(LaunchPadActivity.this, HomePageActivity.class));

@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.controllers.AuthorisationController;
+import com.quartz.zielclient.user.AuthorisationController;
 
 import static com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks;
 import static com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken;

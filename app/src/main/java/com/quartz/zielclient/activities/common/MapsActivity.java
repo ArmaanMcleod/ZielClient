@@ -11,6 +11,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
@@ -56,13 +58,11 @@ import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
  * @version 1.0- 1
  * 28/08/2018
  */
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ChannelListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ChannelListener, View.OnClickListener {
 
   // Custom permissions request code
   private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-
   private static final int DEFAULT_ZOOM = 11;
-
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
   private final String activity = this.getClass().getSimpleName();
@@ -75,9 +75,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private LatLng source;
   private LatLng destination;
 
-  private static final String channelID = "90a2c51d-4d9a-4d15-af8e-9639ff472231";
+  private String channelId;
 
-  private ChannelData channel = ChannelController.retrieveChannel(channelID, this);
+  private ChannelData channel;
 
   private final LocationCallback mLocationCallback = new LocationCallback() {
 
@@ -102,7 +102,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             + location.getLongitude());
 
         // Update and draw source location
-        setSource(new LatLng(location.getLatitude(), location.getLongitude()));
+        source = new LatLng(location.getLatitude(), location.getLongitude());
         channel.setAssistedLocation(location);
         drawMarker(source, HUE_MAGENTA);
       }
@@ -121,6 +121,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
+    channelId = getIntent().getStringExtra(getResources().getString(R.string.channel_key));
+    channel = ChannelController.retrieveChannel(channelId, this);
+    Button toTextChatButton = findViewById(R.id.toTextChat);
+    toTextChatButton.setOnClickListener(this);
 
     // Create autocomplete bar
     PlaceAutocompleteFragment placeAutoComplete = (PlaceAutocompleteFragment)
@@ -136,7 +140,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mGoogleMap.clear();
 
         Log.d(activity, "Place selected: " + place.getLatLng());
-        setDestination(place.getLatLng());
+        destination = place.getLatLng();
 
         // Compute path to destination
         String directionsURL = getDirectionsUrl();
@@ -144,8 +148,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         fetchUrl.execute(directionsURL);
         channel.setDirectionsURL(directionsURL);
         // Redraw both source and destination markers to screen
-        drawMarker(getSource(), HUE_MAGENTA);
-        drawMarker(getDestination(), HUE_RED);
+        drawMarker(source, HUE_MAGENTA);
+        drawMarker(destination, HUE_RED);
       }
 
       @Override
@@ -357,10 +361,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private String getDirectionsUrl() {
 
     // Source and destination formats
-    String strSource = "origin=" + getSource().latitude + "," + getSource().longitude;
+    String strSource = "origin=" + source.latitude + "," + source.longitude;
     String strDestination = "destination=" +
-        getDestination().latitude + "," +
-        getDestination().longitude;
+        destination.latitude + "," +
+        destination.longitude;
 
     // Sensor initialisation
     String sensor = "sensor=false";
@@ -377,22 +381,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     return apiRequest;
   }
 
-  public LatLng getDestination() {
-    return destination;
-  }
-
-  public void setDestination(LatLng destination) {
-    this.destination = destination;
-  }
-
-  public LatLng getSource() {
-    return source;
-  }
-
-  public void setSource(LatLng source) {
-    this.source = source;
-  }
-
   @Override
   public void dataChanged() {
     // notify user about new messages
@@ -406,5 +394,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   @Override
   public String getCarerId() {
     return null;
+  }
+
+  @Override
+  public void onClick(View view) {
+    switch (view.getId()) {
+      case R.id.toTextChat:
+        Intent intentToTextChat = new Intent(MapsActivity.this, TextChatActivity.class);
+        intentToTextChat.putExtra(getResources().getString(R.string.channel_key), channelId);
+        startActivity(intentToTextChat);
+        break;
+      default:
+        break;
+    }
   }
 }

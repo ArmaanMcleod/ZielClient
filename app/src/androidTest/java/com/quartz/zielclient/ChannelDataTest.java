@@ -31,7 +31,7 @@ public class ChannelDataTest {
   public void testOnDataChange() {
     DataSnapshot testSnapShot = Mockito.mock(DataSnapshot.class);
     DatabaseReference databaseReference = Mockito.mock(DatabaseReference.class);
-    ChannelData channelData = new ChannelData(databaseReference, channelListener);
+    ChannelData channelData = new ChannelData(databaseReference, channelListener, "noKeyNeeded");
     channelData.onDataChange(testSnapShot);
     Mockito.verify(channelListener).dataChanged();
   }

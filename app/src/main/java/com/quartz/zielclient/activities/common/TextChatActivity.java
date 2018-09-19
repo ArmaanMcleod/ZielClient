@@ -28,11 +28,9 @@ import java.util.Objects;
  */
 public class TextChatActivity extends AppCompatActivity implements ChannelListener, View.OnClickListener {
 
-  // TODO handle channels.
-  private static final String DEBUG_ID = "90a2c51d-4d9a-4d15-af8e-9639ff472231";
 
   // temporary for debugging will become a dynamic channel
-  private final ChannelData channel = ChannelController.retrieveChannel(DEBUG_ID, this);
+  private ChannelData channel;
   private TextView chatOutput;
   private EditText chatInput;
 
@@ -50,6 +48,11 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
     mMessageRecycler = findViewById(R.id.message_recyclerview);
     mMessageListAdapter = new MessageListAdapter(this, messageList);
     mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
+
+    // Fetching channel using handler
+    String channelKey = getIntent().getStringExtra(getApplicationContext()
+        .getString(R.string.channel_key));
+    channel = ChannelController.retrieveChannel(channelKey, this);
 
     // Initialise the graphical elements
     chatInput = findViewById(R.id.enter_chat_box);

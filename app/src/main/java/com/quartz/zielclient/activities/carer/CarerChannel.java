@@ -2,7 +2,6 @@ package com.quartz.zielclient.activities.carer;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -11,21 +10,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
-import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelController;
+import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
 import com.quartz.zielclient.exceptions.AuthorisationException;
-import com.quartz.zielclient.notifications.NotificationHandler;
 import com.quartz.zielclient.user.UserController;
-
-import static android.view.View.VISIBLE;
 
 /**
  * This activity allows the Carer to accept a session with an assisted and allows them to establish
@@ -33,7 +24,8 @@ import static android.view.View.VISIBLE;
  *
  * @author Bilal Shehata
  */
-public class CarerChannel extends AppCompatActivity implements View.OnClickListener, ChannelListener {
+public class CarerChannel extends AppCompatActivity
+        implements View.OnClickListener, ChannelListener {
 
   private static final String TAG = CarerChannel.class.getSimpleName();
 
@@ -44,11 +36,14 @@ public class CarerChannel extends AppCompatActivity implements View.OnClickListe
   private String channelId;
   private String id;
   private ChannelData channelData;
+  private Button toTrackingButton;
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.acitivty_carer_session);
-
+    toTrackingButton = findViewById(R.id.toTrackingActivity);
+    toTrackingButton.setOnClickListener(this);
+    toTrackingButton.setVisibility(View.INVISIBLE);
     try {
       id = UserController.retrieveFirebaseUser().getUid();
     } catch (AuthorisationException e) {
@@ -57,7 +52,7 @@ public class CarerChannel extends AppCompatActivity implements View.OnClickListe
       finish();
     }
 
-    channelId = getIntent().getStringExtra("channelId");
+    channelId = getIntent().getStringExtra(getResources().getString(R.string.channel_key));
 
     acceptButton = findViewById(R.id.acceptButton);
     acceptButton.setOnClickListener(this);
@@ -67,8 +62,7 @@ public class CarerChannel extends AppCompatActivity implements View.OnClickListe
 
     status = findViewById(R.id.channelStatus);
 
-    Toast.makeText(getApplicationContext(),
-        "request has been made", Toast.LENGTH_LONG).show();
+    Toast.makeText(getApplicationContext(), "request has been made", Toast.LENGTH_LONG).show();
 
     // begin listening to the session
     channelData = ChannelController.retrieveChannel(channelId, this);
@@ -82,10 +76,20 @@ public class CarerChannel extends AppCompatActivity implements View.OnClickListe
     super.onBackPressed();
   }
 
-
   @Override
   public void onClick(View view) {
-    channelData.setCarerStatus(true);
+    switch (view.getId()) {
+      case R.id.acceptButton:
+        channelData.setCarerStatus(true);
+        break;
+      case R.id.toTrackingActivity:
+        Intent intentToTracking = new Intent(CarerChannel.this, CarerMapsActivity.class);
+        intentToTracking.putExtra(getResources().getString(R.string.channel_key), channelId);
+        startActivity(intentToTracking);
+        break;
+      default:
+        break;
+    }
   }
 
   /**
@@ -97,17 +101,15 @@ public class CarerChannel extends AppCompatActivity implements View.OnClickListe
     // check values on channelData and modify state accordingly
     if (channelData.getAssistedStatus()) {
       status.setText("ChannelData is active ");
+      toTrackingButton.setVisibility(View.VISIBLE);
+
     } else {
       status.setText("ChannelData is inactive");
     }
 
     if (channelData.getPing()) {
       channelData.setPing(false);
-      Toast.makeText(
-          getApplicationContext(),
-          "Assisted has waved",
-          Toast.LENGTH_LONG
-      ).show();
+      Toast.makeText(getApplicationContext(), "Assisted has waved", Toast.LENGTH_LONG).show();
     }
   }
 
