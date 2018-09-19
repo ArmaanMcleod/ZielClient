@@ -1,6 +1,7 @@
 package com.quartz.zielclient.models;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 /**
  * Model representation of a channel request.
@@ -8,7 +9,7 @@ import android.os.Bundle;
  * @author wei how ng
  * @author alexvosnakis
  */
-public class ChannelRequest implements Model {
+public class ChannelRequest implements Model, Comparable<ChannelRequest> {
 
   private static final String NAME_KEY = "name";
   private static final String CHANNEL_ID_KEY = "channelId";
@@ -18,6 +19,11 @@ public class ChannelRequest implements Model {
   private String channelId;
   private String description;
 
+  /**
+   * Timestamp in Unix time (seconds since January 1 1970).
+   */
+  private long timestamp;
+
   public ChannelRequest() {
     // Intentionally empty
   }
@@ -26,6 +32,9 @@ public class ChannelRequest implements Model {
     this.name = assistedName;
     this.channelId = channelId;
     this.description = description;
+
+    // Convert Unix time from ms to s
+    this.timestamp = System.currentTimeMillis() / 1000L;
   }
 
   public String getName() {
@@ -50,6 +59,19 @@ public class ChannelRequest implements Model {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public long getTimestamp() {
+    return timestamp;
+  }
+
+  public void setTimestamp(long timestamp) {
+    this.timestamp = timestamp;
+  }
+
+  @Override
+  public int compareTo(@NonNull ChannelRequest o) {
+    return (int) (timestamp - o.timestamp);
   }
 
   @Override
