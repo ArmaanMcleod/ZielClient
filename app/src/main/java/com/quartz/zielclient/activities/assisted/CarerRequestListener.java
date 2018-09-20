@@ -5,6 +5,4 @@ public interface CarerRequestListener {
   void userNotFound();
 
   void userFound();
-
-
 }

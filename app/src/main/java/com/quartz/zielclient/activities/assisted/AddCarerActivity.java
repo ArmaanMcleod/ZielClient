@@ -10,10 +10,12 @@ import android.widget.Toast;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.request.AddCarerRequestHandler;
 
-public class AddCarerActivity extends AppCompatActivity implements View.OnClickListener, CarerRequestListener {
+public class AddCarerActivity extends AppCompatActivity
+        implements View.OnClickListener, CarerRequestListener {
 
   private EditText inputNumber;
   private AddCarerRequestHandler addCarerRequestHandler;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -45,6 +47,5 @@ public class AddCarerActivity extends AppCompatActivity implements View.OnClickL
   public void userFound() {
     Toast.makeText(getApplicationContext(), R.string.userAdded, Toast.LENGTH_LONG).show();
     onBackPressed();
-
   }
 }

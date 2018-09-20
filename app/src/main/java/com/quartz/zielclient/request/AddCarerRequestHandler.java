@@ -17,7 +17,6 @@ public class AddCarerRequestHandler implements ValueEventListener {
   private DatabaseReference userReference = firebaseDatabase.getReference("users/");
   private CarerRequestListener carerRequestListener;
 
-
   public AddCarerRequestHandler() {
     super();
   }
@@ -49,7 +48,6 @@ public class AddCarerRequestHandler implements ValueEventListener {
       carerRequestListener.userNotFound();
     }
   }
-
 
   @Override
   public void onCancelled(@NonNull DatabaseError databaseError) {
