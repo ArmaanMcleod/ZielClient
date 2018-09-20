@@ -20,6 +20,7 @@ import com.quartz.zielclient.channel.ChannelListener;
 import com.quartz.zielclient.messages.Message;
 import com.quartz.zielclient.messages.MessageFactory;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -72,6 +73,14 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
     */
   }
 
+  /**
+   * Sorts the messages fetched from FireBase and assigns them to messageList to be displayed
+   * @param messagesInChat List of Messages already in the database
+   */
+  public void prepareData(List<Message> messagesInChat) {
+    Collections.sort(messagesInChat);
+    messageList = messagesInChat;
+  }
 
   /**
    * Rendering the Message List whenever there is a new message
