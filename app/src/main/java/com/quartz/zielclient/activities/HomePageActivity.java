@@ -38,44 +38,44 @@ public class HomePageActivity extends Activity {
     setContentView(R.layout.activity_home_page);
     Button addCarerActivity = findViewById(R.id.addCarerButton);
     addCarerActivity.setOnClickListener(
-            v -> {
-              startActivity(new Intent(HomePageActivity.this, AddCarerActivity.class));
-            });
+        v -> {
+          startActivity(new Intent(HomePageActivity.this, AddCarerActivity.class));
+        });
 
     // Create autocomplete bar
     PlaceAutocompleteFragment placeAutoComplete =
-            (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.editText);
+        (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.editText);
     Objects.requireNonNull(placeAutoComplete.getView()).setBackgroundColor(Color.WHITE);
     placeAutoComplete.setHint("Search Place");
 
     // Listen for user entering place
     placeAutoComplete.setOnPlaceSelectedListener(
-            new PlaceSelectionListener() {
-              @Override
-              public void onPlaceSelected(Place place) {
-                Log.d(activity, "Place selected: " + place.getLatLng());
-                destination = place.getLatLng();
-              }
+        new PlaceSelectionListener() {
+          @Override
+          public void onPlaceSelected(Place place) {
+            Log.d(activity, "Place selected: " + place.getLatLng());
+            destination = place.getLatLng();
+          }
 
-              @Override
-              public void onError(Status status) {
-                Log.d(activity, "An error occurred: " + status);
-              }
-            });
+          @Override
+          public void onError(Status status) {
+            Log.d(activity, "An error occurred: " + status);
+          }
+        });
 
     // Check if direction button has been pressed
     Button directMeButton = findViewById(R.id.directMeButton);
     directMeButton.setOnClickListener(
-            v -> {
-              // If destination exists, start MapsActivity
-              if (destination != null) {
-                Intent intent = new Intent(HomePageActivity.this, AssistedSelectCarerActivity.class);
-                intent.putExtra("destination", destination);
-                startActivity(intent);
-              } else {
-                Toast.makeText(this, "Please select a place before proceeding", Toast.LENGTH_LONG)
-                        .show();
-              }
-            });
+        v -> {
+          // If destination exists, start MapsActivity
+          if (destination != null) {
+            Intent intent = new Intent(HomePageActivity.this, AssistedSelectCarerActivity.class);
+            intent.putExtra("destination", destination);
+            startActivity(intent);
+          } else {
+            Toast.makeText(this, "Please select a place before proceeding", Toast.LENGTH_LONG)
+                .show();
+          }
+        });
   }
 }
