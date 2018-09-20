@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.carer.CarerChannel;
-import com.quartz.zielclient.models.ListItem;
+import com.quartz.zielclient.models.ChannelRequest;
 
 import java.util.List;
 
@@ -21,13 +21,13 @@ import java.util.List;
  *
  * @author wei how ng
  */
-public class ListAdapter extends RecyclerView.Adapter<ListAdapter.TextViewHolder> {
+public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.TextViewHolder> {
 
-  private List<ListItem> listItems;
+  private List<ChannelRequest> listItems;
   private Context context;
 
   // Constructor
-  public ListAdapter(List<ListItem> listItems, Context context) {
+  public RequestListAdapter(List<ChannelRequest> listItems, Context context) {
     this.listItems = listItems;
     this.context = context;
   }
@@ -47,13 +47,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.TextViewHolder
   // statusing the data to the ViewHolders
   @Override
   public void onBindViewHolder(@NonNull TextViewHolder textViewHolder, int i) {
-    ListItem listItem = listItems.get(i);
+    ChannelRequest channelRequest = listItems.get(i);
 
     // Fetching the Names and Descriptions
-    textViewHolder.textViewName.setText(listItem.getName());
-    textViewHolder.textViewDesc.setText(listItem.getDescription());
+    textViewHolder.textViewName.setText(channelRequest.getName());
+    textViewHolder.textViewDesc.setText(channelRequest.getDescription());
 
-    textViewHolder.setChannelId(listItem.getChannelId());
+    textViewHolder.setChannelId(channelRequest.getChannelId());
   }
 
   // Returns size of list
@@ -63,7 +63,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.TextViewHolder
   }
 
   /**
-   * TextViewHolder class made for this ListAdapter
+   * TextViewHolder class made for this RequestListAdapter
    */
   class TextViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.activities.CarerHomepageActivity;
+import com.quartz.zielclient.activities.carer.CarerHomepageActivity;
 import com.quartz.zielclient.activities.HomePageActivity;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
 
