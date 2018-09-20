@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,6 +45,7 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
   private MessageListAdapter mMessageListAdapter;
   private List<Message> messageList;
 
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -54,8 +56,10 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
     mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
 
     // Fetching channel using handler
-    String channelKey = getIntent().getStringExtra(getApplicationContext()
-        .getString(R.string.channel_key));
+    String channelKey = "channel-1";
+        /*getIntent().getStringExtra(getApplicationContext()
+        .getString(R.string.channel_key));*/
+
     channel = ChannelController.retrieveChannel(channelKey, this);
 
     // Getting the current user's username
