@@ -10,13 +10,9 @@ public class CarerSelectionFactory {
     // Intentionally empty
   }
 
-
-  public static CarerSelectionItem getChannelRequest(String name, String phoneNumber, String carerId) {
-    return new CarerSelectionItem(
-            name,
-            phoneNumber,
-            carerId
-    );
+  public static CarerSelectionItem getChannelRequest(
+      String name, String phoneNumber, String carerId) {
+    return new CarerSelectionItem(name, phoneNumber, carerId);
   }
 
   /**

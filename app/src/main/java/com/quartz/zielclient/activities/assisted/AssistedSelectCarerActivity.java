@@ -47,7 +47,7 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
     }
 
     requestsReference =
-            FirebaseDatabase.getInstance().getReference("relationships/" + firebaseAuth.getUid());
+        FirebaseDatabase.getInstance().getReference("relationships/" + firebaseAuth.getUid());
     requestsReference.addValueEventListener(this);
 
     // Initialising RecyclerView
@@ -69,10 +69,10 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
   private void initData(HashMap<String, CarerSelectionItem> items) {
     List<CarerSelectionItem> list = new ArrayList<CarerSelectionItem>();
     items.forEach(
-            (key, value) -> {
-              value.setCarerId(key);
-              list.add(value);
-            });
+        (key, value) -> {
+          value.setCarerId(key);
+          list.add(value);
+        });
 
     // Using the Adapter to convert the data into the recycler view
     mAdapter = new CarerSelectListAdapter(list, this);
@@ -87,8 +87,7 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
     GenericTypeIndicator<HashMap<String, CarerSelectionItem>> t =
-            new GenericTypeIndicator<HashMap<String, CarerSelectionItem>>() {
-            };
+        new GenericTypeIndicator<HashMap<String, CarerSelectionItem>>() {};
     HashMap<String, CarerSelectionItem> carerSelectionItems = dataSnapshot.getValue(t);
     if (carerSelectionItems != null) {
       initData(carerSelectionItems);
@@ -96,6 +95,5 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
   }
 
   @Override
-  public void onCancelled(@NonNull DatabaseError databaseError) {
-  }
+  public void onCancelled(@NonNull DatabaseError databaseError) {}
 }

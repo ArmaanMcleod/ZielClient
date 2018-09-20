@@ -24,9 +24,9 @@ public class AddCarerRequestHandler implements ValueEventListener {
   public void addCarer(String phoneNumber, CarerRequestListener requestListener) {
     carerRequestListener = requestListener;
     userReference
-            .orderByChild("phoneNumber")
-            .equalTo(phoneNumber)
-            .addListenerForSingleValueEvent(this);
+        .orderByChild("phoneNumber")
+        .equalTo(phoneNumber)
+        .addListenerForSingleValueEvent(this);
   }
 
   @Override
@@ -34,15 +34,15 @@ public class AddCarerRequestHandler implements ValueEventListener {
     // since mobile numbers are unique this should only return a single user
     if (dataSnapshot.exists()) {
       dataSnapshot
-              .getChildren()
-              .forEach(
-                      (user) -> {
-                        String carerId = user.getKey();
-                        relationshipReference
-                                .child(firebaseAuth.getUid())
-                                .child(carerId)
-                                .setValue(user.getValue());
-                      });
+          .getChildren()
+          .forEach(
+              (user) -> {
+                String carerId = user.getKey();
+                relationshipReference
+                    .child(firebaseAuth.getUid())
+                    .child(carerId)
+                    .setValue(user.getValue());
+              });
       carerRequestListener.userFound();
     } else {
       carerRequestListener.userNotFound();
@@ -50,6 +50,5 @@ public class AddCarerRequestHandler implements ValueEventListener {
   }
 
   @Override
-  public void onCancelled(@NonNull DatabaseError databaseError) {
-  }
+  public void onCancelled(@NonNull DatabaseError databaseError) {}
 }

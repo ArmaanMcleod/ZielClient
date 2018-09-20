@@ -16,7 +16,7 @@ import com.quartz.zielclient.request.AddCarerRequestHandler;
  * @author Bilal Shehata
  */
 public class AddCarerActivity extends AppCompatActivity
-        implements View.OnClickListener, CarerRequestListener {
+    implements View.OnClickListener, CarerRequestListener {
 
   private EditText inputNumber;
   private AddCarerRequestHandler addCarerRequestHandler;
@@ -43,9 +43,7 @@ public class AddCarerActivity extends AppCompatActivity
     }
   }
 
-  /**
-   * display error if user is not found in DB
-   */
+  /** display error if user is not found in DB */
   @Override
   public void userNotFound() {
     Toast.makeText(getApplicationContext(), R.string.userNotFound, Toast.LENGTH_LONG).show();
