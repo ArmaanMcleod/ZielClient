@@ -43,11 +43,17 @@ public class AddCarerActivity extends AppCompatActivity
     }
   }
 
+  /**
+   * display error if user is not found in DB
+   */
   @Override
   public void userNotFound() {
     Toast.makeText(getApplicationContext(), R.string.userNotFound, Toast.LENGTH_LONG).show();
   }
 
+  /**
+   * Return to home if user is found and added
+   */
   @Override
   public void userFound() {
     Toast.makeText(getApplicationContext(), R.string.userAdded, Toast.LENGTH_LONG).show();
