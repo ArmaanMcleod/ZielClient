@@ -30,14 +30,13 @@ import com.quartz.zielclient.map.FetchUrl;
 public class CarerMapsActivity extends AppCompatActivity
         implements OnMapReadyCallback, ChannelListener, View.OnClickListener {
 
-  private String channelId;
-
   // These constants are displayed until map syncronizes (only momentarily)
   // This prevents the default usage of  0,0
   private final double MELBOURNEUNILAT = -37.7964;
   private final double MELBOURNEUNILONG = 144.9612;
   // initialize assisted location marker
   private final MarkerOptions assistedMarkerOptions = new MarkerOptions();
+  private String channelId;
   private GoogleMap mGoogleMap;
   private String currentDestinationURL = "none";
   // default to melbourne uni
@@ -109,7 +108,6 @@ public class CarerMapsActivity extends AppCompatActivity
     longitude[0] = channel.getAssistedLocation().longitude;
     updateMapCoords();
 
-
     // if the assisted has entered a route then generate that same route
     if ((channel.getDirectionsURL() != null) && !channel.getDirectionsURL().equals("none")) {
       // if the route is already the current route then don't update
@@ -140,7 +138,8 @@ public class CarerMapsActivity extends AppCompatActivity
     switch (view.getId()) {
       case R.id.toTextChat:
         Intent intentToTextChat = new Intent(CarerMapsActivity.this, TextChatActivity.class);
-        intentToTextChat.putExtra(getApplicationContext().getString(R.string.channel_key), channelId);
+        intentToTextChat.putExtra(
+                getApplicationContext().getString(R.string.channel_key), channelId);
         startActivity(intentToTextChat);
         break;
       default:

@@ -37,9 +37,10 @@ public class HomePageActivity extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home_page);
     Button addCarerActivity = findViewById(R.id.addCarerButton);
-    addCarerActivity.setOnClickListener(v -> {
-      startActivity(new Intent(HomePageActivity.this, AddCarerActivity.class));
-    });
+    addCarerActivity.setOnClickListener(
+            v -> {
+              startActivity(new Intent(HomePageActivity.this, AddCarerActivity.class));
+            });
 
     // Create autocomplete bar
     PlaceAutocompleteFragment placeAutoComplete =
@@ -66,7 +67,6 @@ public class HomePageActivity extends Activity {
     Button directMeButton = findViewById(R.id.directMeButton);
     directMeButton.setOnClickListener(
             v -> {
-
               // If destination exists, start MapsActivity
               if (destination != null) {
                 Intent intent = new Intent(HomePageActivity.this, AssistedSelectCarerActivity.class);
@@ -78,6 +78,4 @@ public class HomePageActivity extends Activity {
               }
             });
   }
-
-
 }

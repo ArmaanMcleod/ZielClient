@@ -52,8 +52,7 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
     }
 
     // Getting requestsReference from FireBase
-    requestsReference = FirebaseDatabase.getInstance()
-        .getReference("channelRequests/" + userID);
+    requestsReference = FirebaseDatabase.getInstance().getReference("channelRequests/" + userID);
     requestsReference.addValueEventListener(this);
 
     // Initialising RecyclerView
@@ -86,17 +85,16 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
     // Getting the channel data and calling the rendering method on it
     // Nasty generic types needed unfortunately
     GenericTypeIndicator<List<ChannelRequest>> t =
-        new GenericTypeIndicator<List<ChannelRequest>>() {
-        };
+            new GenericTypeIndicator<List<ChannelRequest>>() {
+            };
     List<ChannelRequest> channelRequestsData = dataSnapshot.getValue(t);
     if (channelRequestsData != null) {
       initData(channelRequestsData);
     }
   }
 
-  //TODO
+  // TODO
   @Override
   public void onCancelled(@NonNull DatabaseError databaseError) {
-
   }
 }

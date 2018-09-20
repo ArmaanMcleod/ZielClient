@@ -51,9 +51,7 @@ public class AddCarerActivity extends AppCompatActivity
     Toast.makeText(getApplicationContext(), R.string.userNotFound, Toast.LENGTH_LONG).show();
   }
 
-  /**
-   * Return to home if user is found and added
-   */
+  /** Return to home if user is found and added */
   @Override
   public void userFound() {
     Toast.makeText(getApplicationContext(), R.string.userAdded, Toast.LENGTH_LONG).show();
