@@ -3,9 +3,7 @@ package com.quartz.zielclient.models;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Objects;
 
@@ -38,7 +36,6 @@ public class ChannelRequest implements Model, Comparable<ChannelRequest> {
     this.name = assistedName;
     this.channelId = channelId;
     this.description = description;
-
     // Convert Unix time from ms to s
     this.timestamp = System.currentTimeMillis();
   }
