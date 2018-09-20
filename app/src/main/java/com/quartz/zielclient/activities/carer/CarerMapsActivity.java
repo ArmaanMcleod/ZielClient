@@ -28,7 +28,7 @@ import com.quartz.zielclient.map.FetchUrl;
  * @author Bilal Shehata
  */
 public class CarerMapsActivity extends AppCompatActivity
-        implements OnMapReadyCallback, ChannelListener, View.OnClickListener {
+    implements OnMapReadyCallback, ChannelListener, View.OnClickListener {
 
   // These constants are displayed until map syncronizes (only momentarily)
   // This prevents the default usage of  0,0
@@ -65,7 +65,7 @@ public class CarerMapsActivity extends AppCompatActivity
 
     // Obtain the SupportMapFragment and get notified when the map is ready to be used.
     SupportMapFragment mapFragment =
-            (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
     if (mapFragment != null) {
       mapFragment.getMapAsync(this);
     }
@@ -85,9 +85,7 @@ public class CarerMapsActivity extends AppCompatActivity
     updateMapCoords();
   }
 
-  /**
-   * Update the Coordinates based on the latest Assisted's location
-   */
+  /** Update the Coordinates based on the latest Assisted's location */
   public void updateMapCoords() {
     LatLng assistedLocation = new LatLng(latitude[0], longitude[0]);
     // Safety check
@@ -139,7 +137,7 @@ public class CarerMapsActivity extends AppCompatActivity
       case R.id.toTextChat:
         Intent intentToTextChat = new Intent(CarerMapsActivity.this, TextChatActivity.class);
         intentToTextChat.putExtra(
-                getApplicationContext().getString(R.string.channel_key), channelId);
+            getApplicationContext().getString(R.string.channel_key), channelId);
         startActivity(intentToTextChat);
         break;
       default:

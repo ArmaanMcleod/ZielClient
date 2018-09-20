@@ -32,18 +32,18 @@ import com.quartz.zielclient.user.UserFactory;
 import java.util.List;
 
 public class CarerSelectListAdapter
-        extends RecyclerView.Adapter<CarerSelectListAdapter.TextViewHolder> {
+    extends RecyclerView.Adapter<CarerSelectListAdapter.TextViewHolder> {
   private List<CarerSelectionItem> listItems;
   private AssistedSelectCarerActivity context;
 
   // Constructor
   public CarerSelectListAdapter(
-          List<CarerSelectionItem> listItems, AssistedSelectCarerActivity assistedSelectCarerActivity) {
+      List<CarerSelectionItem> listItems, AssistedSelectCarerActivity assistedSelectCarerActivity) {
     this.listItems = listItems;
     listItems.forEach(
-            x -> {
-              Log.d("ASDF", x.getPhoneNumber());
-            });
+        x -> {
+          Log.d("ASDF", x.getPhoneNumber());
+        });
     this.context = assistedSelectCarerActivity;
   }
 
@@ -51,11 +51,11 @@ public class CarerSelectListAdapter
   @NonNull
   @Override
   public CarerSelectListAdapter.TextViewHolder onCreateViewHolder(
-          @NonNull ViewGroup parent, int viewType) {
+      @NonNull ViewGroup parent, int viewType) {
     // Get context of the view from respective XML
     View view =
-            LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.carer_select_list_item, parent, false);
+        LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.carer_select_list_item, parent, false);
 
     // Return view
     return new CarerSelectListAdapter.TextViewHolder(view);
@@ -64,7 +64,7 @@ public class CarerSelectListAdapter
   // Binding the data to the ViewHolders
   @Override
   public void onBindViewHolder(
-          @NonNull CarerSelectListAdapter.TextViewHolder textViewHolder, int i) {
+      @NonNull CarerSelectListAdapter.TextViewHolder textViewHolder, int i) {
     CarerSelectionItem carerSelectionItem = listItems.get(i);
 
     // Fetching the Names and number
@@ -77,11 +77,9 @@ public class CarerSelectListAdapter
     return listItems.size();
   }
 
-  /**
-   * TextViewHolder class made for this CarerSelectListAdapter
-   */
+  /** TextViewHolder class made for this CarerSelectListAdapter */
   class TextViewHolder extends RecyclerView.ViewHolder
-          implements View.OnClickListener, ValueEventListener {
+      implements View.OnClickListener, ValueEventListener {
 
     // Defining TextViews of the Assisted List Objects
     private TextView textViewId;
@@ -104,22 +102,21 @@ public class CarerSelectListAdapter
     @Override
     public void onClick(View v) {
       channelData =
-              ChannelController.createChannel(
-                      new ChannelListener() {
-                        @Override
-                        public void dataChanged() {
-                        }
+          ChannelController.createChannel(
+              new ChannelListener() {
+                @Override
+                public void dataChanged() {}
 
-                        @Override
-                        public String getAssistedId() {
-                          return FirebaseAuth.getInstance().getUid();
-                        }
+                @Override
+                public String getAssistedId() {
+                  return FirebaseAuth.getInstance().getUid();
+                }
 
-                        @Override
-                        public String getCarerId() {
-                          return textViewId.getText().toString();
-                        }
-                      });
+                @Override
+                public String getCarerId() {
+                  return textViewId.getText().toString();
+                }
+              });
       // start intent to open maps
       intentToMaps = new Intent(context, MapsActivity.class);
       intentToMaps.putExtra(context.getString(R.string.channel_key), channelData.getChannelKey());
@@ -129,7 +126,7 @@ public class CarerSelectListAdapter
       if (bundle != null) {
         LatLng destination = bundle.getParcelable("destination");
         intentToMaps.putExtra("destination", destination);
-      }// get the user
+      } // get the user
       try {
         UserController.fetchThisUser(this);
       } catch (AuthorisationException e) {
@@ -146,7 +143,6 @@ public class CarerSelectListAdapter
     }
 
     @Override
-    public void onCancelled(@NonNull DatabaseError databaseError) {
-    }
+    public void onCancelled(@NonNull DatabaseError databaseError) {}
   }
 }

@@ -85,8 +85,7 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
     // Getting the channel data and calling the rendering method on it
     // Nasty generic types needed unfortunately
     GenericTypeIndicator<List<ChannelRequest>> t =
-            new GenericTypeIndicator<List<ChannelRequest>>() {
-            };
+        new GenericTypeIndicator<List<ChannelRequest>>() {};
     List<ChannelRequest> channelRequestsData = dataSnapshot.getValue(t);
     if (channelRequestsData != null) {
       initData(channelRequestsData);
@@ -95,6 +94,5 @@ public class CarerHomepageActivity extends Activity implements ValueEventListene
 
   // TODO
   @Override
-  public void onCancelled(@NonNull DatabaseError databaseError) {
-  }
+  public void onCancelled(@NonNull DatabaseError databaseError) {}
 }

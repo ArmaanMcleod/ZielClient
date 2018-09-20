@@ -14,9 +14,7 @@ public class CarerSelectionItem implements Model {
   private String phoneNumber;
   private String carerId;
 
-  public CarerSelectionItem() {
-
-  }
+  public CarerSelectionItem() {}
 
   public CarerSelectionItem(String name, String phoneNumber, String carerId) {
     this.name = name;
@@ -54,7 +52,6 @@ public class CarerSelectionItem implements Model {
   public void setName(String name) {
     this.name = name;
   }
-
 
   @Override
   public int hashCode() {
