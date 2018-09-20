@@ -91,7 +91,8 @@
             android:name=".activities.carer.CarerMapsActivity"
             android:label="@string/title_activity_carer_maps" />
         <activity android:name=".activities.common.StreetViewActivity" />
-        <activity android:name=".activities.assisted.AddCarerActivity"></activity>
+        <activity android:name=".activities.assisted.AddCarerActivity" />
+        <activity android:name=".activities.assisted.AssistedSelectCarerActivity"></activity>
     </application>
 
 </manifest>

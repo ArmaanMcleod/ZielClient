@@ -15,7 +15,7 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.assisted.AddCarerActivity;
-import com.quartz.zielclient.activities.common.MapsActivity;
+import com.quartz.zielclient.activities.assisted.AssistedSelectCarerActivity;
 
 import java.util.Objects;
 
@@ -69,7 +69,7 @@ public class HomePageActivity extends Activity {
 
               // If destination exists, start MapsActivity
               if (destination != null) {
-                Intent intent = new Intent(HomePageActivity.this, MapsActivity.class);
+                Intent intent = new Intent(HomePageActivity.this, AssistedSelectCarerActivity.class);
                 intent.putExtra("destination", destination);
                 startActivity(intent);
               } else {

@@ -10,6 +10,11 @@ import android.widget.Toast;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.request.AddCarerRequestHandler;
 
+/**
+ * Activity allows user to add a permanent carer
+ *
+ * @author Bilal Shehata
+ */
 public class AddCarerActivity extends AppCompatActivity
         implements View.OnClickListener, CarerRequestListener {
 
