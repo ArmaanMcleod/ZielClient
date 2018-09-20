@@ -20,8 +20,10 @@ import com.quartz.zielclient.channel.ChannelListener;
 import com.quartz.zielclient.messages.Message;
 import com.quartz.zielclient.messages.MessageFactory;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -89,7 +91,12 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
   public void dataChanged() {
     // Make sure the database of messages for the channel is not empty
     if (channel.getMessages() != null) {
+      // Convert Map of messages to List of messages
+      Map<String, Message> messagesMap = channel.getMessages();
+      List<Message> messages = new ArrayList<Message>(messagesMap.values());
 
+      prepareData(messages);
+      
       // Creating a new Adapter to render the messages
       mMessageListAdapter = new MessageListAdapter(this, messageList);
       mMessageRecycler.setAdapter(mMessageListAdapter);
