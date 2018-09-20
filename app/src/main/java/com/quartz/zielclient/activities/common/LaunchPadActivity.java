@@ -31,11 +31,13 @@ public class LaunchPadActivity extends AppCompatActivity implements View.OnClick
     Button sessionMaker = findViewById(R.id.sessionMakerButton);
     Button assistedHome = findViewById(R.id.assistedHome);
     Button carerHome = findViewById(R.id.carerHome);
+    Button textChat = findViewById(R.id.text_chat_button);
     signIn.setOnClickListener(this);
     signUp.setOnClickListener(this);
     sessionMaker.setOnClickListener(this);
     assistedHome.setOnClickListener(this);
     carerHome.setOnClickListener(this);
+    textChat.setOnClickListener(this);
   }
 
   @Override
@@ -55,6 +57,9 @@ public class LaunchPadActivity extends AppCompatActivity implements View.OnClick
         break;
       case R.id.carerHome:
         startActivity(new Intent(LaunchPadActivity.this, CarerHomepageActivity.class));
+        break;
+      case R.id.text_chat_button:
+        startActivity(new Intent(LaunchPadActivity.this, TextChatActivity.class));
         break;
       default:
         break;
