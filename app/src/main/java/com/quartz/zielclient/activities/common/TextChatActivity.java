@@ -96,7 +96,7 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
       List<Message> messages = new ArrayList<Message>(messagesMap.values());
 
       prepareData(messages);
-      
+
       // Creating a new Adapter to render the messages
       mMessageListAdapter = new MessageListAdapter(this, messageList);
       mMessageRecycler.setAdapter(mMessageListAdapter);
