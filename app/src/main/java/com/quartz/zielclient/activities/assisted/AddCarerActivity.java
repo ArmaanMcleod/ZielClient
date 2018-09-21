@@ -17,25 +17,31 @@ import com.quartz.zielclient.request.AddCarerRequestHandler;
  */
 public class AddCarerActivity extends AppCompatActivity
     implements View.OnClickListener, CarerRequestListener {
-
+  // Input for the Number should be in +61.... format
   private EditText inputNumber;
+  // Request handler allows this activity to know whether the request passed or failed
   private AddCarerRequestHandler addCarerRequestHandler;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     addCarerRequestHandler = new AddCarerRequestHandler();
-
+    // set the current layout file
     setContentView(R.layout.activity_add_carer);
     Button sendRequest = findViewById(R.id.sendRequestButton);
     sendRequest.setOnClickListener(this);
     inputNumber = findViewById(R.id.carerNumberInput);
   }
 
+  /**
+   * when the button is clicked a request is sent based on the input number
+   * @param view
+   */
   @Override
   public void onClick(View view) {
     switch (view.getId()) {
       case (R.id.sendRequestButton):
+        // Pass this as an arguement to allow for callback to be made
         addCarerRequestHandler.addCarer(inputNumber.getText().toString(), this);
         break;
       default:

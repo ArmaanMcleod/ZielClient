@@ -10,6 +10,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.activities.assisted.CarerRequestListener;
 
+/**
+ * this class handles Allowing an assisted to add a carer to their list
+ *
+ * @author Bilal Shehata
+ */
 public class AddCarerRequestHandler implements ValueEventListener {
   private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
   private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();

@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class CarerSelectionItem implements Model {
 
-  private static final String NAME_KEY = "name";
+  private static final String NAME_KEY = "firstName";
   private static final String NUMBER_KEY = "phoneNumber";
   private static final String CARER_ID = "carer_id";
 
