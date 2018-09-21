@@ -5,6 +5,9 @@ import android.support.annotation.NonNull;
 import com.google.firebase.database.DataSnapshot;
 import com.quartz.zielclient.models.CarerSelectionItem;
 
+/**
+ * This factory creates CarerSelectionItems that populate the CarerSelection vie
+ */
 public class CarerSelectionFactory {
   private CarerSelectionFactory() {
     // Intentionally empty
