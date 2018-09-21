@@ -80,11 +80,7 @@ public class ChannelData implements ValueEventListener {
    * @param message The new message being sent in
    */
   public void sendMessage(Message message) {
-    Map<String, String> messageObject = new HashMap<>();
-
-    messageObject.put("messageType", message.getType().toString());
-    messageObject.put("messageValue", message.getMessageValue());
-    channelReference.child("messages").push().setValue(messageObject);
+    channelReference.child("messages").push().setValue(message);
   }
 
   /**
