@@ -139,6 +139,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     Button toTextChatButton = findViewById(R.id.toTextChat);
+    Button toVoiceChatButton = findViewById(R.id.toVoiceChat);
+    toVoiceChatButton.setOnClickListener(this);
     toTextChatButton.setOnClickListener(this);
 
     // Get bundle of arguments passed from Home Page Activity
@@ -450,6 +452,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       intentToTextChat.putExtra(getResources().getString(R.string.channel_key), channelId);
       startActivity(intentToTextChat);
 
+    }
+    if(i == R.id.toVoiceChat){
+    startActivity(new Intent(MapsActivity.this,VoiceActivity.class));
     }
   }
 }

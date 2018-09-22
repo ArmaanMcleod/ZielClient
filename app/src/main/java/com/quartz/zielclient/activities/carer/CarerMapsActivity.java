@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.common.TextChatActivity;
+import com.quartz.zielclient.activities.common.VoiceActivity;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
@@ -44,6 +45,7 @@ public class CarerMapsActivity extends AppCompatActivity
   private Double[] latitude = {MELBOURNEUNILAT};
   private Double[] longitude = {MELBOURNEUNILONG};
   private Button toTextChat;
+  private Button toVoiceChat;
   private Marker assistedMarker;
 
   // debug channel to be replaced with the current channel that was handled by a previous activity.
@@ -59,6 +61,8 @@ public class CarerMapsActivity extends AppCompatActivity
     // set xml view file
     setContentView(R.layout.activity_carer_maps);
     toTextChat = findViewById(R.id.toTextChat);
+    toVoiceChat = findViewById(R.id.toVoiceChat);
+    toVoiceChat.setOnClickListener(this);
     toTextChat.setOnClickListener(this);
     channelId = getIntent().getStringExtra(getApplicationContext().getString(R.string.channel_key));
     channel = ChannelController.retrieveChannel(channelId, this);
@@ -140,6 +144,8 @@ public class CarerMapsActivity extends AppCompatActivity
             getApplicationContext().getString(R.string.channel_key), channelId);
         startActivity(intentToTextChat);
         break;
+      case R.id.toVoiceChat:
+        startActivity(new Intent(CarerMapsActivity.this, VoiceActivity.class));
       default:
         break;
     }

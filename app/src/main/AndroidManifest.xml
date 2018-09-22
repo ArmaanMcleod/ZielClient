@@ -6,12 +6,19 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ziel"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/ZielTheme">
+        <service android:name=".activities.common.fcm.VoiceFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".activities.SplashScreenActivity"
             android:theme="@style/SplashTheme">
@@ -92,7 +99,8 @@
             android:label="@string/title_activity_carer_maps" />
         <activity android:name=".activities.common.StreetViewActivity" />
         <activity android:name=".activities.assisted.AddCarerActivity" />
-        <activity android:name=".activities.assisted.AssistedSelectCarerActivity"></activity>
+        <activity android:name=".activities.assisted.AssistedSelectCarerActivity" />
+        <activity android:name=".activities.common.VoiceActivity"></activity>
     </application>
 
 </manifest>

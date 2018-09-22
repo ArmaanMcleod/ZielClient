@@ -36,4 +36,7 @@
     <string name="channel_key">channelId</string>
     <string name="userAdded">User Added</string>
     <string name="userNotFound">User not found try again</string>
+    <string name="turn_speaker_on">Speaker ON</string>
+    <string name="callee">client identity or phone number</string>
+    <string name="callHint">Dial a client name or phone number. Leaving the field empty results in an automated response.</string>
 </resources>
