@@ -85,6 +85,7 @@ public class VoiceActivity extends AppCompatActivity {
   private AlertDialog alertDialog;
   private CallInvite activeCallInvite;
   private Call activeCall;
+  private static  String toCall;
   Call.Listener callListener = callListener();
   private int activeCallNotificationId;
 
@@ -114,9 +115,11 @@ public class VoiceActivity extends AppCompatActivity {
     alertDialogBuilder.setNegativeButton("Cancel", cancelClickListener);
     alertDialogBuilder.setCancelable(false);
 
+
     LayoutInflater li = LayoutInflater.from(context);
     View dialogView = li.inflate(R.layout.dialog_call, null);
     final EditText contact = (EditText) dialogView.findViewById(R.id.contact);
+    contact.setText(toCall);
     contact.setHint(R.string.callee);
     alertDialogBuilder.setView(dialogView);
 
@@ -187,6 +190,9 @@ public class VoiceActivity extends AppCompatActivity {
     }
     if(getIntent().getIntExtra("initiate",0)==1){
       onBackPressed();
+    }else{
+      toCall = getIntent().getStringExtra("CallId");
+
     }
 
   }
