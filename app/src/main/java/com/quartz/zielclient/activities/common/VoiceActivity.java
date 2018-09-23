@@ -66,7 +66,7 @@ public class VoiceActivity extends AppCompatActivity {
   private static final String TWILIO_ACCESS_TOKEN_SERVER_URL = "http://35.189.54.26:3000/accessToken";
   private static final int MIC_PERMISSION_REQUEST_CODE = 1;
   private static final int SNACKBAR_DURATION = 4000;
-  private static String identity = "bob";
+  private static String identity = "alice";
   // Empty HashMap, never populated for the Quickstart
   HashMap<String, String> twiMLParams = new HashMap<>();
   private String accessToken;
@@ -185,6 +185,10 @@ public class VoiceActivity extends AppCompatActivity {
     } else {
       retrieveAccessToken();
     }
+    if(getIntent().getIntExtra("initiate",0)==1){
+      onBackPressed();
+    }
+
   }
 
   @Override
