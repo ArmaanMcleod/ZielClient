@@ -66,7 +66,9 @@ public class CarerMapsActivity extends AppCompatActivity
     toTextChat.setOnClickListener(this);
     channelId = getIntent().getStringExtra(getApplicationContext().getString(R.string.channel_key));
     channel = ChannelController.retrieveChannel(channelId, this);
-
+    Intent intentVoice = new Intent(CarerMapsActivity.this,VoiceActivity.class);
+    intentVoice.putExtra("initiate",1);
+    startActivity(intentVoice);
     // Obtain the SupportMapFragment and get notified when the map is ready to be used.
     SupportMapFragment mapFragment =
         (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -145,9 +147,18 @@ public class CarerMapsActivity extends AppCompatActivity
         startActivity(intentToTextChat);
         break;
       case R.id.toVoiceChat:
-        startActivity(new Intent(CarerMapsActivity.this, VoiceActivity.class));
+        Intent intentVoice = new Intent(CarerMapsActivity.this,VoiceActivity.class);
+        intentVoice.putExtra("initiate",0);
+        intentVoice.putExtra("CallId",channel.getAssisted());
+        startActivity(intentVoice);
       default:
         break;
     }
+  }
+
+  @Override
+  public void onBackPressed(){
+    VoiceActivity.endCall();
+    super.onBackPressed();
   }
 }

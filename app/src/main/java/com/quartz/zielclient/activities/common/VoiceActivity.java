@@ -34,6 +34,7 @@ import android.view.WindowManager;
 import android.widget.Chronometer;
 import android.widget.EditText;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -84,7 +85,7 @@ public class VoiceActivity extends AppCompatActivity {
   private NotificationManager notificationManager;
   private AlertDialog alertDialog;
   private CallInvite activeCallInvite;
-  private Call activeCall;
+  private static Call activeCall;
   private static  String toCall;
   Call.Listener callListener = callListener();
   private int activeCallNotificationId;
@@ -189,6 +190,7 @@ public class VoiceActivity extends AppCompatActivity {
       retrieveAccessToken();
     }
     if(getIntent().getIntExtra("initiate",0)==1){
+      identity = FirebaseAuth.getInstance().getUid();
       onBackPressed();
     }else{
       toCall = getIntent().getStringExtra("CallId");
@@ -606,5 +608,9 @@ public class VoiceActivity extends AppCompatActivity {
         handleIncomingCallIntent(intent);
       }
     }
+  }
+  public static void endCall(){
+    activeCall.disconnect();
+
   }
 }

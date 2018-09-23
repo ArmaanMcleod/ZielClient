@@ -79,7 +79,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private String channelId;
 
   private ChannelData channel;
-
+  private VoiceActivity voiceActivity;
   private final LocationCallback mLocationCallback = new LocationCallback() {
 
     /**
@@ -131,7 +131,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
-
     // Initialise channel
     channelId = getIntent().getStringExtra(getResources().getString(R.string.channel_key));
     if (channelId != null) {
@@ -464,6 +463,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       intentVoice.putExtra("CallId",channel.getCarer());
     startActivity(intentVoice);
     }
+  }
+  @Override
+  public void onBackPressed(){
+    VoiceActivity.endCall();
+    super.onBackPressed();
   }
 
 
