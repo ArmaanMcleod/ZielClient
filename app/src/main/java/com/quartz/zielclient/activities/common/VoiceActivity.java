@@ -174,8 +174,11 @@ public class VoiceActivity extends AppCompatActivity {
     /*
      * Setup the UI
      */
-    resetUI();
-
+    if(activeCall!=null){
+      setCallUI();
+    } else {
+      resetUI();
+      }
     /*
      * Displays a call dialog if the intent contains a call invite
      */
