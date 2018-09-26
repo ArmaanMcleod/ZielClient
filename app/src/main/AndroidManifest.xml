@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/ZielTheme">
         <activity
-            android:name=".activities.SplashScreenActivity"
+            android:name=".activities.common.SplashScreenActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,9 +26,8 @@
         <activity android:name=".activities.signup.ConfirmationCodeActivity" />
         <activity android:name=".activities.signup.AccountCreationActivity" />
         <activity
-            android:name=".activities.HomePageActivity"
+            android:name=".activities.assisted.AssistedHomePageActivity"
             android:label="@string/title_activity_home_page" />
-        <activity android:name=".activities.common.LaunchPadActivity" />
         <activity
             android:name=".activities.carer.CarerChannel"
             android:label="@string/title_activity_carer_session"
