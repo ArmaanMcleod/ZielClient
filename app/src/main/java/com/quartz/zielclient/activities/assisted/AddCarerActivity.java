@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.request.AddCarerRequestHandler;
+import com.quartz.zielclient.request.CarerRequestListener;
 
 /**
  * Activity allows user to add a permanent carer
@@ -41,7 +42,7 @@ public class AddCarerActivity extends AppCompatActivity
   public void onClick(View view) {
     switch (view.getId()) {
       case (R.id.sendRequestButton):
-        // Pass this as an arguement to allow for callback to be made
+        // Pass this as an argument to allow for callback to be made
         addCarerRequestHandler.addCarer(inputNumber.getText().toString(), this);
         break;
       default:

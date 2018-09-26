@@ -29,18 +29,18 @@ public final class ChannelController {
   /**
    * create and initialise a channel
    *
-   * @param channelListener Callback that listens on the channel's database entry.
+   * @param listener Callback that listens on the channel's database entry.
    * @return A new channel.
    */
-  public static ChannelData createChannel(ChannelListener channelListener) {
+  public static ChannelData createChannel(ChannelListener listener, String carerId, String assistedId) {
     final String channelKey = UUID.randomUUID().toString();
-    ChannelData channelData = new ChannelData(channelsReference.child(channelKey), channelListener, channelKey);
+    ChannelData channelData = new ChannelData(channelsReference.child(channelKey), listener, channelKey);
     Location initialLocation = new Location("");
     initialLocation.setLongitude(0);
     initialLocation.setLongitude(0);
     channelData.setAssistedLocation(initialLocation);
-    channelData.setAssisted(channelListener.getAssistedId());
-    channelData.setCarer(channelListener.getCarerId());
+    channelData.setAssisted(assistedId);
+    channelData.setCarer(carerId);
     channelData.setAssistedStatus(true);
     channelData.setCarerStatus(false);
     channelData.setChannelKey(channelKey);

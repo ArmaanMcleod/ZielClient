@@ -1,9 +1,9 @@
 package com.quartz.zielclient.activities.assisted;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
@@ -24,7 +24,7 @@ import java.util.Objects;
  * @author Wei How Ng and Armaan McLeod
  * @version 1.1 19/09/2018
  */
-public class AssistedHomePageActivity extends Activity {
+public class AssistedHomePageActivity extends AppCompatActivity {
 
   private final String activity = this.getClass().getSimpleName();
   private LatLng destination;
