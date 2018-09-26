@@ -6,8 +6,6 @@ import android.util.Log;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -45,6 +43,7 @@ public final class ChannelController {
     channelData.setCarerStatus(false);
     channelData.setChannelKey(channelKey);
     channelData.setDirectionsURL("none");
+
     Log.i("ChannelController", String.format("Creating new channel %s", channelKey));
     return channelData;
   }
