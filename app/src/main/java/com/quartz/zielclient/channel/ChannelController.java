@@ -43,12 +43,8 @@ public final class ChannelController {
     channelData.setCarer(channelListener.getCarerId());
     channelData.setAssistedStatus(true);
     channelData.setCarerStatus(false);
-    Map<String, String> initialMessage = new HashMap<>();
-    initialMessage.put("TEXT", "welcome to the chat");
     channelData.setChannelKey(channelKey);
     channelData.setDirectionsURL("none");
-    channelData.setMessages(initialMessage);
-    channelData.setPing(false);
     Log.i("ChannelController", String.format("Creating new channel %s", channelKey));
     return channelData;
   }

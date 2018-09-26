@@ -29,16 +29,8 @@
             android:name=".activities.assisted.AssistedHomePageActivity"
             android:label="@string/title_activity_home_page" />
         <activity
-            android:name=".activities.carer.CarerChannel"
-            android:label="@string/title_activity_carer_session"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".activities.carer.CarerHomepageActivity"
             android:label="@string/title_activity_carer_homepage" />
-        <activity
-            android:name=".activities.assisted.AssistedChannel"
-            android:label="@string/title_activity_assisted_session"
-            android:theme="@style/AppTheme.NoActionBar" />
         <!--
            The API key for Google Maps-based APIs is defined as a string resource.
            (See the file "res/values/google_maps_api.xml").
