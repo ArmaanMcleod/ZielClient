@@ -31,7 +31,6 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity implements OnCl
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_verify_phone_number);
 
-    requestPermissions(new String[]{READ_PHONE_STATE}, 1);
     populatePhoneNumber();
 
     Button confirmButton = findViewById(R.id.confirmNumber);
