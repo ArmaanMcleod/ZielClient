@@ -39,10 +39,6 @@
             android:name=".activities.assisted.AssistedChannel"
             android:label="@string/title_activity_assisted_session"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.common.ManualRedirect"
-            android:label="@string/title_activity_manual_redirect"
-            android:theme="@style/AppTheme.NoActionBar" />
         <!--
            The API key for Google Maps-based APIs is defined as a string resource.
            (See the file "res/values/google_maps_api.xml").
