@@ -33,8 +33,6 @@ import java.util.Objects;
  */
 public class TextChatActivity extends AppCompatActivity implements ChannelListener, View.OnClickListener {
 
-
-  // temporary for debugging will become a dynamic channel
   private ChannelData channel;
   private TextView chatOutput;
   private EditText chatInput;
@@ -45,6 +43,8 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
   private MessageListAdapter mMessageListAdapter;
   private List<Message> messageList;
 
+  // Graphical interfaces
+  private Button sendMessage;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +54,10 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
     // Chat using RecyclerView
     mMessageRecycler = findViewById(R.id.message_recyclerview);
     mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
+
+    // Creating a new Adapter to render the messages
+    mMessageListAdapter = new MessageListAdapter(this, messageList);
+    mMessageRecycler.setAdapter(mMessageListAdapter);
 
     // Fetching channel using handler
     String channelKey = "channel-1";
@@ -67,7 +71,7 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
 
     // Initialise the graphical elements
     chatInput = findViewById(R.id.enter_chat_box);
-    Button sendMessage = findViewById(R.id.button_chatbox_send);
+    sendMessage = findViewById(R.id.button_chatbox_send);
     sendMessage.setOnClickListener(this);
 
     /*
@@ -101,9 +105,6 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
 
       prepareData(messages);
 
-      // Creating a new Adapter to render the messages
-      mMessageListAdapter = new MessageListAdapter(this, messageList);
-      mMessageRecycler.setAdapter(mMessageListAdapter);
     }
   }
 
@@ -123,6 +124,8 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
    */
   @Override
   public void onClick(View view) {
+
+
     Message messageToSend = MessageFactory.makeTextMessage(chatInput.getText().toString(), currentUser);
     channel.sendMessage(messageToSend);
   }
