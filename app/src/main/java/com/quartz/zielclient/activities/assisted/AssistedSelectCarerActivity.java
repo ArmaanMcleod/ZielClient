@@ -18,7 +18,6 @@ import com.quartz.zielclient.R;
 import com.quartz.zielclient.adapters.CarerSelectListAdapter;
 import com.quartz.zielclient.models.CarerSelectionItem;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +40,7 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_assisted_select_carer2);
+    setContentView(R.layout.activity_assisted_select_carer);
     Bundle bundle = getIntent().getExtras();
 
     if (bundle != null) {
