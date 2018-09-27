@@ -106,7 +106,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Only draw onto map for first callback or if source location has changed.
         // Ensures directions api doesn't get called too many times on start up.
-        if (source == null || !newSource.equals(source)) {
+        if (!newSource.equals(source)) {
           source = newSource;
           drawOntoMap();
         }

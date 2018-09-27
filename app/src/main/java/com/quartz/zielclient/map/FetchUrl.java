@@ -82,18 +82,16 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
    */
   private String downloadUrl(@NonNull String strUrl) throws IOException {
     String data = "";
-    InputStream iStream = null;
-    HttpURLConnection urlConnection = null;
+    HttpURLConnection urlConnection;
 
-    try {
+    // Open connection with endpoint
+    URL url = new URL(strUrl);
+    urlConnection = (HttpURLConnection) url.openConnection();
+    urlConnection.connect();
 
-      // Open connection with endpoint
-      URL url = new URL(strUrl);
-      urlConnection = (HttpURLConnection) url.openConnection();
-      urlConnection.connect();
+    try (InputStream iStream = urlConnection.getInputStream()) {
 
       // Setup input stream ready to buffer data
-      iStream = urlConnection.getInputStream();
       try (BufferedReader br = new BufferedReader(new InputStreamReader(iStream))) {
         StringBuilder sb = new StringBuilder();
 
@@ -111,13 +109,7 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
       Log.d(activity, e.toString());
 
     } finally {
-      if (iStream != null) {
-        iStream.close();
-      }
-
-      if (urlConnection != null) {
         urlConnection.disconnect();
-      }
     }
 
     return data;
