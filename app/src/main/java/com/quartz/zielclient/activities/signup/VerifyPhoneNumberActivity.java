@@ -31,7 +31,6 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity implements OnCl
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_verify_phone_number);
 
-    requestPermissions(new String[]{READ_PHONE_STATE}, 1);
     populatePhoneNumber();
 
     Button confirmButton = findViewById(R.id.confirmNumber);
@@ -46,8 +45,14 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity implements OnCl
       return;
     }
 
-    Dialog yesNoDialog = buildConfirmationPrompt();
-    yesNoDialog.show();
+    // Check that the phone number is correctly formatted and if so prompt the user to continue
+    String phoneNumber = phoneNumberEntry.getText().toString();
+    if (SystemService.verifyNumberFormat(phoneNumber)) {
+      Dialog yesNoDialog = buildConfirmationPrompt();
+      yesNoDialog.show();
+    } else {
+      phoneNumberEntry.setError("Phone number is incorrectly formatted.");
+    }
   }
 
   /**

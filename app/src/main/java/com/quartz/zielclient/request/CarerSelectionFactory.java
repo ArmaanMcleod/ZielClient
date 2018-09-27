@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities.assisted;
+package com.quartz.zielclient.request;
 
 import android.support.annotation.NonNull;
 

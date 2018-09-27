@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities.assisted;
+package com.quartz.zielclient.request;
 
 /**
  * interface for objects that want to add users by phone number

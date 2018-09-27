@@ -119,18 +119,6 @@ public class CarerMapsActivity extends AppCompatActivity
     }
   }
 
-  // return the carer and assisted associated to this activtiy
-  // should become getUser.Id and getAssisted.ID
-  @Override
-  public String getAssistedId() {
-    return "Assisted1";
-  }
-
-  @Override
-  public String getCarerId() {
-    return "carer1";
-  }
-
   @Override
   public void onClick(View view) {
     switch (view.getId()) {
