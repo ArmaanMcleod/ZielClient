@@ -18,6 +18,7 @@ public class FetchUrlTest {
   public void setUp() {
 
     // Test API urls from https://jsonplaceholder.typicode.com/
+    // Fake Online REST API
     testUrls = new String[] {
         "https://jsonplaceholder.typicode.com/posts",
         "https://jsonplaceholder.typicode.com/comments",
