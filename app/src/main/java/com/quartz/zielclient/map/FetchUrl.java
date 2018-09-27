@@ -23,7 +23,7 @@ import java.net.URL;
  */
 public class FetchUrl extends AsyncTask<String, Void, String> {
 
-  private final String activity = this.getClass().getSimpleName();
+  private static final String ACTIVITY = "FetchUrl";
 
   private final GoogleMap googleMap;
 
@@ -48,9 +48,9 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
     // Attempt to download the URL
     try {
       data = downloadUrl(url[0]);
-      Log.d(activity, data);
+      Log.d(ACTIVITY, data);
     } catch (Exception e) {
-      Log.d(activity, e.toString());
+      Log.d(ACTIVITY, e.toString());
     }
 
     return data;
@@ -80,7 +80,7 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
    * @return String This is the JSON data in String format.
    * @throws IOException This is the IO exception that triggers when reading the file fails.
    */
-  private String downloadUrl(@NonNull String strUrl) throws IOException {
+  public static String downloadUrl(@NonNull String strUrl) throws IOException {
     String data = "";
     HttpURLConnection urlConnection;
 
@@ -102,11 +102,11 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
         }
 
         data = sb.toString();
-        Log.d(activity, data);
+        Log.d(ACTIVITY, data);
       }
 
     } catch (MalformedURLException e) {
-      Log.d(activity, e.toString());
+      Log.d(ACTIVITY, e.toString());
 
     } finally {
         urlConnection.disconnect();
