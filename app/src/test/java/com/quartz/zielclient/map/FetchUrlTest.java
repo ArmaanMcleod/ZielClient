@@ -56,6 +56,7 @@ public class FetchUrlTest {
         String result = FetchUrl.downloadUrl(url);
         assertFalse(result.isEmpty());
       } catch (IOException e) {
+        System.err.println("Error downloading URL");
         e.printStackTrace();
       }
     }
