@@ -35,8 +35,7 @@ public class CarerSelectListAdapter
   private Activity activity;
 
   // Constructor
-  public CarerSelectListAdapter(
-      List<CarerSelectionItem> listItems, Activity activity) {
+  public CarerSelectListAdapter(List<CarerSelectionItem> listItems, Activity activity) {
     this.listItems = listItems;
     this.activity = activity;
   }
@@ -62,6 +61,9 @@ public class CarerSelectListAdapter
     CarerSelectionItem carerSelectionItem = listItems.get(i);
 
     // Fetching the Names and number
+    String carerFullName =
+        carerSelectionItem.getFirstName() + " " + carerSelectionItem.getLastName();
+    textViewHolder.carerName.setText(carerFullName);
     textViewHolder.textViewId.setText(carerSelectionItem.getCarerId());
   }
 
@@ -71,9 +73,7 @@ public class CarerSelectListAdapter
     return listItems.size();
   }
 
-  /**
-   * TextViewHolder class made for this CarerSelectListAdapter
-   */
+  /** TextViewHolder class made for this CarerSelectListAdapter */
   class TextViewHolder extends RecyclerView.ViewHolder
       implements View.OnClickListener, ValueEventListener {
 
@@ -98,8 +98,9 @@ public class CarerSelectListAdapter
     // when user is selected make a channel request to them
     @Override
     public void onClick(View v) {
-      channelData = ChannelController.createChannel(() -> {},
-          textViewId.getText().toString(), FirebaseAuth.getInstance().getUid());
+      channelData =
+          ChannelController.createChannel(
+              () -> {}, textViewId.getText().toString(), FirebaseAuth.getInstance().getUid());
 
       // start intent to open maps
       intentToMaps = new Intent(activity, MapsActivity.class);
@@ -127,7 +128,6 @@ public class CarerSelectListAdapter
     }
 
     @Override
-    public void onCancelled(@NonNull DatabaseError databaseError) {
-    }
+    public void onCancelled(@NonNull DatabaseError databaseError) {}
   }
 }

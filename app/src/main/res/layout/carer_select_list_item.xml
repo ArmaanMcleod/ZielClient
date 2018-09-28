@@ -21,14 +21,17 @@
                 android:id="@+id/carerName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Name" />
+                android:text="Name"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/DisplayID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="displayID" />
+                android:text="displayID"
+                android:visibility="invisible" />
 
 
         </LinearLayout>
