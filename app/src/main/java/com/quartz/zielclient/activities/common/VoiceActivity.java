@@ -55,15 +55,8 @@ public class VoiceActivity extends AppCompatActivity {
   public static final String ACTION_INCOMING_CALL = "ACTION_INCOMING_CALL";
   public static final String ACTION_FCM_TOKEN = "ACTION_FCM_TOKEN";
   private static final String TAG = "VoiceActivity";
-  /*
-   * You must provide the URL to the publicly accessible Twilio access token server route
-   *
-   * For example: https://myurl.io/accessToken
-   *
-   * If your token server is written in PHP, TWILIO_ACCESS_TOKEN_SERVER_URL needs .php extension at the end.
-   *
-   * For example : https://myurl.io/accessToken.php
-   */
+
+  // Server for access token
   private static final String TWILIO_ACCESS_TOKEN_SERVER_URL =
       "http://35.189.54.26:3000/accessToken";
   private static final int MIC_PERMISSION_REQUEST_CODE = 1;
@@ -352,58 +345,37 @@ public class VoiceActivity extends AppCompatActivity {
   }
 
   private DialogInterface.OnClickListener answerCallClickListener() {
-    return new DialogInterface.OnClickListener() {
-
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        soundPoolManager.stopRinging();
-        answer();
-        setCallUI();
-        alertDialog.dismiss();
-      }
+    return (dialog, which) -> {
+      soundPoolManager.stopRinging();
+      answer();
+      setCallUI();
+      alertDialog.dismiss();
     };
   }
 
   private DialogInterface.OnClickListener callClickListener() {
-    return new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        // Place a call
-        EditText contact = (EditText) ((AlertDialog) dialog).findViewById(R.id.contact);
-        twiMLParams.put("to", contact.getText().toString());
-        activeCall = Voice.call(VoiceActivity.this, accessToken, twiMLParams, callListener);
-        setCallUI();
-        alertDialog.dismiss();
-      }
+    return (dialog, which) -> {
+      // Place a call
+      EditText contact = (EditText) ((AlertDialog) dialog).findViewById(R.id.contact);
+      twiMLParams.put("to", contact.getText().toString());
+      activeCall = Voice.call(VoiceActivity.this, accessToken, twiMLParams, callListener);
+      setCallUI();
+      alertDialog.dismiss();
     };
   }
 
   private DialogInterface.OnClickListener cancelCallClickListener() {
-    return new DialogInterface.OnClickListener() {
-
-      @Override
-      public void onClick(DialogInterface dialogInterface, int i) {
-        soundPoolManager.stopRinging();
-        if (activeCallInvite != null) {
-          activeCallInvite.reject(VoiceActivity.this);
-          notificationManager.cancel(activeCallNotificationId);
-        }
-        alertDialog.dismiss();
+    return (dialogInterface, i) -> {
+      soundPoolManager.stopRinging();
+      if (activeCallInvite != null) {
+        activeCallInvite.reject(VoiceActivity.this);
+        notificationManager.cancel(activeCallNotificationId);
       }
+      alertDialog.dismiss();
     };
   }
 
-  /*
-   * Register your FCM token with Twilio to receive incoming call invites
-   *
-   * If a valid google-services.json has not been provided or the FirebaseInstanceId has not been
-   * initialized the fcmToken will be null.
-   *
-   * In the case where the FirebaseInstanceId has not yet been initialized the
-   * VoiceFirebaseInstanceIDService.onTokenRefresh should result in a LocalBroadcast to this
-   * activity which will attempt registerForCallInvites again.
-   *
-   */
+  /** Register for Call invites on the Cloud messaging serevr */
   private void registerForCallInvites() {
     final String fcmToken = FirebaseInstanceId.getInstance().getToken();
     if (fcmToken != null) {
@@ -413,28 +385,32 @@ public class VoiceActivity extends AppCompatActivity {
     }
   }
 
+  /**
+   * Button to allow for calls
+   *
+   * @return
+   */
   private View.OnClickListener callActionFabClickListener() {
-    return new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        alertDialog =
-            createCallDialog(callClickListener(), cancelCallClickListener(), VoiceActivity.this);
-        alertDialog.show();
-      }
+    return v -> {
+      alertDialog =
+          createCallDialog(callClickListener(), cancelCallClickListener(), VoiceActivity.this);
+      alertDialog.show();
     };
   }
 
   private View.OnClickListener hangupActionFabClickListener() {
-    return new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        soundPoolManager.playDisconnect();
-        resetUI();
-        disconnect();
-      }
+    return v -> {
+      soundPoolManager.playDisconnect();
+      resetUI();
+      disconnect();
     };
   }
 
+  /**
+   * Mute the current call
+   *
+   * @return
+   */
   private View.OnClickListener muteActionFabClickListener() {
     return new View.OnClickListener() {
       @Override
@@ -444,17 +420,13 @@ public class VoiceActivity extends AppCompatActivity {
     };
   }
 
-  /*
-   * Accept an incoming Call
-   */
+  /** Accept an incoming Call */
   private void answer() {
     activeCallInvite.accept(this, callListener);
     notificationManager.cancel(activeCallNotificationId);
   }
 
-  /*
-   * Disconnect from Call
-   */
+  /** Disconnect from Call */
   private void disconnect() {
     if (activeCall != null) {
       activeCall.disconnect();
@@ -462,6 +434,7 @@ public class VoiceActivity extends AppCompatActivity {
     }
   }
 
+  /** Mute current call */
   private void mute() {
     if (activeCall != null) {
       boolean mute = !activeCall.isMuted();
@@ -476,6 +449,11 @@ public class VoiceActivity extends AppCompatActivity {
     }
   }
 
+  /**
+   * Allows from switching between loud and quiet speaker
+   *
+   * @param setFocus
+   */
   private void setAudioFocus(boolean setFocus) {
     if (audioManager != null) {
       if (setFocus) {
@@ -502,12 +480,7 @@ public class VoiceActivity extends AppCompatActivity {
           audioManager.requestAudioFocus(
               null, AudioManager.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
         }
-        /*
-         * Start by setting MODE_IN_COMMUNICATION as default audio mode. It is
-         * required to be in this mode when playout and/or recording starts for
-         * best possible VoIP performance. Some devices have difficulties with speaker mode
-         * if this is not set.
-         */
+        // set the mode the speaker by default
         audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
       } else {
         audioManager.setMode(savedAudioMode);
@@ -516,6 +489,11 @@ public class VoiceActivity extends AppCompatActivity {
     }
   }
 
+  /**
+   * Check the MicroPhone Permissions
+   *
+   * @return
+   */
   private boolean checkPermissionForMicrophone() {
     int resultMic = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
     return resultMic == PackageManager.PERMISSION_GRANTED;
