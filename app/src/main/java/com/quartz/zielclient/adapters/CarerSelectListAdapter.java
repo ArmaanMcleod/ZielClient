@@ -1,10 +1,10 @@
 package com.quartz.zielclient.adapters;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +17,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.activities.assisted.AssistedSelectCarerActivity;
 import com.quartz.zielclient.activities.common.MapsActivity;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
-import com.quartz.zielclient.channel.ChannelListener;
 import com.quartz.zielclient.channel.ChannelRequestController;
 import com.quartz.zielclient.exceptions.AuthorisationException;
 import com.quartz.zielclient.models.CarerSelectionItem;
@@ -34,17 +32,13 @@ import java.util.List;
 public class CarerSelectListAdapter
     extends RecyclerView.Adapter<CarerSelectListAdapter.TextViewHolder> {
   private List<CarerSelectionItem> listItems;
-  private AssistedSelectCarerActivity context;
+  private Activity activity;
 
   // Constructor
   public CarerSelectListAdapter(
-      List<CarerSelectionItem> listItems, AssistedSelectCarerActivity assistedSelectCarerActivity) {
+      List<CarerSelectionItem> listItems, Activity activity) {
     this.listItems = listItems;
-    listItems.forEach(
-        x -> {
-          Log.d("ASDF", x.getPhoneNumber());
-        });
-    this.context = assistedSelectCarerActivity;
+    this.activity = activity;
   }
 
   // Create ViewGroup whenever TextViewHolder gets instantiated
@@ -77,7 +71,9 @@ public class CarerSelectListAdapter
     return listItems.size();
   }
 
-  /** TextViewHolder class made for this CarerSelectListAdapter */
+  /**
+   * TextViewHolder class made for this CarerSelectListAdapter
+   */
   class TextViewHolder extends RecyclerView.ViewHolder
       implements View.OnClickListener, ValueEventListener {
 
@@ -102,26 +98,13 @@ public class CarerSelectListAdapter
     // when user is selected make a channel request to them
     @Override
     public void onClick(View v) {
-      channelData =
-          ChannelController.createChannel(
-              new ChannelListener() {
-                @Override
-                public void dataChanged() {}
+      channelData = ChannelController.createChannel(() -> {},
+          textViewId.getText().toString(), FirebaseAuth.getInstance().getUid());
 
-                @Override
-                public String getAssistedId() {
-                  return FirebaseAuth.getInstance().getUid();
-                }
-
-                @Override
-                public String getCarerId() {
-                  return textViewId.getText().toString();
-                }
-              });
       // start intent to open maps
-      intentToMaps = new Intent(context, MapsActivity.class);
-      intentToMaps.putExtra(context.getString(R.string.channel_key), channelData.getChannelKey());
-      Bundle bundle = context.getIntent().getExtras();
+      intentToMaps = new Intent(activity, MapsActivity.class);
+      intentToMaps.putExtra(activity.getString(R.string.channel_key), channelData.getChannelKey());
+      Bundle bundle = activity.getIntent().getExtras();
 
       // inject the destination which was established on the homepage
       if (bundle != null) {
@@ -140,10 +123,11 @@ public class CarerSelectListAdapter
       assisted = UserFactory.getUser(dataSnapshot);
       carerId = textViewId.getText().toString();
       ChannelRequestController.createRequest(assisted, carerId, channelData.getChannelKey(), "");
-      context.startActivity(intentToMaps);
+      activity.startActivity(intentToMaps);
     }
 
     @Override
-    public void onCancelled(@NonNull DatabaseError databaseError) {}
+    public void onCancelled(@NonNull DatabaseError databaseError) {
+    }
   }
 }
