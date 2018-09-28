@@ -91,7 +91,7 @@ public class VideoActivity extends AppCompatActivity {
    * You must provide a Twilio Access Token to connect to the Video service
    */
 
-  private static final String ACCESS_TOKEN_SERVER = "http://35.189.54.26:3001/";
+  private static final String ACCESS_TOKEN_SERVER = "http://35.189.54.26:3001/token";
 
   /*
    * Access token used to connect. This field will be set either from the console generated token
@@ -1060,6 +1060,7 @@ public class VideoActivity extends AppCompatActivity {
               public void onCompleted(Exception e, String token) {
                 if (e == null) {
                   VideoActivity.this.accessToken = token;
+                  Log.d("TOKEN",token);
                 } else {
                   Toast.makeText(VideoActivity.this,
                           R.string.error_retrieving_access_token, Toast.LENGTH_LONG)
