@@ -141,9 +141,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     intentVoice.putExtra("initiate",1);
     startActivity(intentVoice);
 
-
+    Button toVideoChatButton = findViewById(R.id.toVideoChatButton);
     Button toTextChatButton = findViewById(R.id.toTextChat);
     Button toVoiceChatButton = findViewById(R.id.toVoiceChat);
+    toVideoChatButton.setOnClickListener(this);
     toVoiceChatButton.setOnClickListener(this);
     toTextChatButton.setOnClickListener(this);
 
@@ -452,6 +453,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       intentVoice.putExtra("initiate",0);
       intentVoice.putExtra("CallId",channel.getCarer());
     startActivity(intentVoice);
+    }
+    if(i == R.id.toVideoChatButton){
+      startActivity(new Intent(MapsActivity.this,VideoActivity.class));
     }
   }
   @Override
