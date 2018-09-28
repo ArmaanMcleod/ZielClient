@@ -80,7 +80,7 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
    * @return String This is the JSON data in String format.
    * @throws IOException This is the IO exception that triggers when reading the file fails.
    */
-  public static String downloadUrl(@NonNull String strUrl) throws IOException {
+  static String downloadUrl(@NonNull String strUrl) throws IOException {
     String data = "";
     HttpURLConnection urlConnection;
 
