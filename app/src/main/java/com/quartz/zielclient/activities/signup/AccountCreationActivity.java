@@ -14,9 +14,9 @@ import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.assisted.AssistedHomePageActivity;
 import com.quartz.zielclient.activities.carer.CarerHomepageActivity;
 import com.quartz.zielclient.activities.common.SplashScreenActivity;
-import com.quartz.zielclient.user.UserController;
 import com.quartz.zielclient.exceptions.AuthorisationException;
 import com.quartz.zielclient.user.User;
+import com.quartz.zielclient.user.UserController;
 
 import static android.view.View.OnClickListener;
 

@@ -16,6 +16,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    // Specify that we want to split up the APK based on ABI
+    splits {
+        abi {
+            // Enable ABI split
+            enable true
+
+            // Clear list of ABIs
+            reset()
+
+            // Specify each architecture currently supported by the Video SDK
+            include "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+
+            // Specify that we do not want an additional universal SDK
+            universalApk false
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -47,6 +63,10 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.android.support:cardview-v7:28.0.0'
     implementation 'com.google.firebase:firebase-auth:16.0.3'
+    implementation 'com.twilio:voice-android:2.0.9'
+    implementation 'com.squareup.retrofit:retrofit:1.9.0'
+    implementation 'com.koushikdutta.ion:ion:2.1.8'
+    implementation 'com.google.firebase:firebase-messaging:17.3.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

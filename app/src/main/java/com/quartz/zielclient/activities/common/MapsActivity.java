@@ -79,7 +79,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   private String channelId;
 
   private ChannelData channel;
-
+  private VoiceActivity voiceActivity;
   private final LocationCallback mLocationCallback = new LocationCallback() {
 
     /**
@@ -131,14 +131,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
-
     // Initialise channel
     channelId = getIntent().getStringExtra(getResources().getString(R.string.channel_key));
     if (channelId != null) {
       channel = ChannelController.retrieveChannel(channelId, this);
     }
 
+    Intent intentVoice = new Intent(MapsActivity.this,VoiceActivity.class);
+    intentVoice.putExtra("initiate",1);
+    startActivity(intentVoice);
+
+
     Button toTextChatButton = findViewById(R.id.toTextChat);
+    Button toVoiceChatButton = findViewById(R.id.toVoiceChat);
+    toVoiceChatButton.setOnClickListener(this);
     toTextChatButton.setOnClickListener(this);
 
     // Get bundle of arguments passed from Home Page Activity
@@ -441,5 +447,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       startActivity(intentToTextChat);
 
     }
+    if(i == R.id.toVoiceChat){
+      Intent intentVoice = new Intent(MapsActivity.this,VoiceActivity.class);
+      intentVoice.putExtra("initiate",0);
+      intentVoice.putExtra("CallId",channel.getCarer());
+    startActivity(intentVoice);
+    }
   }
+  @Override
+  public void onBackPressed(){
+    VoiceActivity.endCall();
+    super.onBackPressed();
+  }
+
+
 }
