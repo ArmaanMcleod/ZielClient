@@ -83,6 +83,7 @@ public class CarerSelectListAdapter
 
     // Defining TextViews of the Assisted List Objects
     private TextView textViewId;
+    private TextView carerName;
 
     private String carerId;
     private User assisted;
@@ -91,7 +92,7 @@ public class CarerSelectListAdapter
 
     TextViewHolder(@NonNull View itemView) {
       super(itemView);
-
+      carerName = itemView.findViewById(R.id.carerName);
       textViewId = itemView.findViewById(R.id.DisplayID);
 
       Button connectButton = itemView.findViewById(R.id.createChannelButton);
