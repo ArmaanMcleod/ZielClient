@@ -6,8 +6,6 @@ import android.util.Log;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -29,26 +27,23 @@ public final class ChannelController {
   /**
    * create and initialise a channel
    *
-   * @param channelListener Callback that listens on the channel's database entry.
+   * @param listener Callback that listens on the channel's database entry.
    * @return A new channel.
    */
-  public static ChannelData createChannel(ChannelListener channelListener) {
+  public static ChannelData createChannel(ChannelListener listener, String carerId, String assistedId) {
     final String channelKey = UUID.randomUUID().toString();
-    ChannelData channelData = new ChannelData(channelsReference.child(channelKey), channelListener, channelKey);
+    ChannelData channelData = new ChannelData(channelsReference.child(channelKey), listener, channelKey);
     Location initialLocation = new Location("");
     initialLocation.setLongitude(0);
     initialLocation.setLongitude(0);
     channelData.setAssistedLocation(initialLocation);
-    channelData.setAssisted(channelListener.getAssistedId());
-    channelData.setCarer(channelListener.getCarerId());
+    channelData.setAssisted(assistedId);
+    channelData.setCarer(carerId);
     channelData.setAssistedStatus(true);
     channelData.setCarerStatus(false);
-    Map<String, String> initialMessage = new HashMap<>();
-    initialMessage.put("TEXT", "welcome to the chat");
     channelData.setChannelKey(channelKey);
     channelData.setDirectionsURL("none");
-    channelData.setMessages(initialMessage);
-    channelData.setPing(false);
+
     Log.i("ChannelController", String.format("Creating new channel %s", channelKey));
     return channelData;
   }

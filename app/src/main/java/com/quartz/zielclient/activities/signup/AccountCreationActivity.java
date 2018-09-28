@@ -11,9 +11,9 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.assisted.AssistedHomePageActivity;
 import com.quartz.zielclient.activities.carer.CarerHomepageActivity;
-import com.quartz.zielclient.activities.SplashScreenActivity;
-import com.quartz.zielclient.activities.common.LaunchPadActivity;
+import com.quartz.zielclient.activities.common.SplashScreenActivity;
 import com.quartz.zielclient.user.UserController;
 import com.quartz.zielclient.exceptions.AuthorisationException;
 import com.quartz.zielclient.user.User;
@@ -61,7 +61,7 @@ public class AccountCreationActivity extends AppCompatActivity implements OnClic
 
     // Redirect the user to the appropriate home page
     if (user.isAssisted()) {
-      intent.setClass(this, LaunchPadActivity.class);
+      intent.setClass(this, AssistedHomePageActivity.class);
     } else {
       intent.setClass(this, CarerHomepageActivity.class);
     }

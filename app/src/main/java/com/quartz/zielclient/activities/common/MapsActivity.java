@@ -433,16 +433,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     // notify user about new messages
   }
 
-  @Override
-  public String getAssistedId() {
-    return null;
-  }
-
-  @Override
-  public String getCarerId() {
-    return null;
-  }
-
   /**
    * Called when a view has been clicked.
    *
