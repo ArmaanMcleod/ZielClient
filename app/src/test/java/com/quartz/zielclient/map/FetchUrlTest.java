@@ -45,10 +45,10 @@ public class FetchUrlTest {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.connect();
         assertEquals(HttpURLConnection.HTTP_OK, urlConnection.getResponseCode());
-        System.out.println("PASSED");
+        System.out.println(strUrl + " PASSED");
 
       } catch (IOException e) {
-        System.err.println("FAILED: Error creating HTTP connection");
+        System.out.println(strUrl + " FAILED: Error creating HTTP connection");
         e.printStackTrace();
       }
     }
@@ -63,10 +63,10 @@ public class FetchUrlTest {
       try {
         String result = FetchUrl.downloadUrl(url);
         assertFalse(result.isEmpty());
-        System.out.println("PASSED");
+        System.out.println(url + " PASSED");
 
       } catch (IOException e) {
-        System.err.println("FAILED: Error downloading URL");
+        System.out.println(url + " FAILED: Error downloading URL");
         e.printStackTrace();
       }
     }
