@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.common.TextChatActivity;
+import com.quartz.zielclient.activities.common.VideoActivity;
 import com.quartz.zielclient.activities.common.VoiceActivity;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
@@ -62,6 +63,8 @@ public class CarerMapsActivity extends AppCompatActivity
     setContentView(R.layout.activity_carer_maps);
     toTextChat = findViewById(R.id.toTextChat);
     toVoiceChat = findViewById(R.id.toVoiceChat);
+    Button toVideoChat = findViewById(R.id.toVideoActivity);
+    toVideoChat.setOnClickListener(this);
     toVoiceChat.setOnClickListener(this);
     toTextChat.setOnClickListener(this);
     channelId = getIntent().getStringExtra(getApplicationContext().getString(R.string.channel_key));
@@ -139,6 +142,9 @@ public class CarerMapsActivity extends AppCompatActivity
         intentVoice.putExtra("initiate",0);
         intentVoice.putExtra("CallId",channel.getAssisted());
         startActivity(intentVoice);
+        break;
+      case R.id.toVideoActivity:
+        startActivity(new Intent(CarerMapsActivity.this, VideoActivity.class));
       default:
         break;
     }
