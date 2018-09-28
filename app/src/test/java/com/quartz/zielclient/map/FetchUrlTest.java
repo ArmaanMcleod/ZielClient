@@ -36,14 +36,19 @@ public class FetchUrlTest {
 
   @Test
   public void testUrls() {
+    System.out.println("Running: testUrls");
+
     for (String strUrl : testUrls) {
+
       try {
         URL url = new URL(strUrl);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.connect();
         assertEquals(HttpURLConnection.HTTP_OK, urlConnection.getResponseCode());
+        System.out.println("PASSED");
+
       } catch (IOException e) {
-        System.err.println("Error creating HTTP connection");
+        System.err.println("FAILED: Error creating HTTP connection");
         e.printStackTrace();
       }
     }
@@ -51,12 +56,17 @@ public class FetchUrlTest {
 
   @Test
   public void downloadUrls() {
+    System.out.println("Running: downloadUrls");
+
     for (String url : testUrls) {
+
       try {
         String result = FetchUrl.downloadUrl(url);
         assertFalse(result.isEmpty());
+        System.out.println("PASSED");
+
       } catch (IOException e) {
-        System.err.println("Error downloading URL");
+        System.err.println("FAILED: Error downloading URL");
         e.printStackTrace();
       }
     }
