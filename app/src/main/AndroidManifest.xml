@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/ZielTheme">
-        <service android:name=".activities.common.fcm.VoiceFirebaseMessagingService">
+        <service android:name=".fcm.VoiceFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -21,6 +21,7 @@
 
         <activity
             android:name=".activities.SplashScreenActivity"
+            android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,7 +43,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.carer.CarerHomepageActivity"
-            android:label="@string/title_activity_carer_homepage" />
+            android:label="@string/title_activity_carer_homepage"
+            android:exported="true"
+            />
         <activity
             android:name=".activities.assisted.AssistedChannel"
             android:label="@string/title_activity_assisted_session"

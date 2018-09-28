@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities.common.fcm;
+package com.quartz.zielclient.fcm;
 
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;

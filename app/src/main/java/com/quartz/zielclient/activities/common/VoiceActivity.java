@@ -64,10 +64,13 @@ public class VoiceActivity extends AppCompatActivity {
    *
    * For example : https://myurl.io/accessToken.php
    */
-  private static final String TWILIO_ACCESS_TOKEN_SERVER_URL = "http://35.189.54.26:3000/accessToken";
+  private static final String TWILIO_ACCESS_TOKEN_SERVER_URL =
+      "http://35.189.54.26:3000/accessToken";
   private static final int MIC_PERMISSION_REQUEST_CODE = 1;
   private static final int SNACKBAR_DURATION = 4000;
   private static String identity = "alice";
+  private static Call activeCall;
+  private static String toCall;
   // Empty HashMap, never populated for the Quickstart
   HashMap<String, String> twiMLParams = new HashMap<>();
   private String accessToken;
@@ -81,13 +84,11 @@ public class VoiceActivity extends AppCompatActivity {
   private FloatingActionButton hangupActionFab;
   private FloatingActionButton muteActionFab;
   private Chronometer chronometer;
+  Call.Listener callListener = callListener();
   private SoundPoolManager soundPoolManager;
   private NotificationManager notificationManager;
   private AlertDialog alertDialog;
   private CallInvite activeCallInvite;
-  private static Call activeCall;
-  private static  String toCall;
-  Call.Listener callListener = callListener();
   private int activeCallNotificationId;
 
   public static AlertDialog createIncomingCallDialog(
@@ -116,7 +117,6 @@ public class VoiceActivity extends AppCompatActivity {
     alertDialogBuilder.setNegativeButton("Cancel", cancelClickListener);
     alertDialogBuilder.setCancelable(false);
 
-
     LayoutInflater li = LayoutInflater.from(context);
     View dialogView = li.inflate(R.layout.dialog_call, null);
     final EditText contact = (EditText) dialogView.findViewById(R.id.contact);
@@ -125,6 +125,12 @@ public class VoiceActivity extends AppCompatActivity {
     alertDialogBuilder.setView(dialogView);
 
     return alertDialogBuilder.create();
+  }
+
+  public static void endCall() {
+    if (activeCall != null) {
+      activeCall.disconnect();
+    }
   }
 
   @Override
@@ -174,11 +180,11 @@ public class VoiceActivity extends AppCompatActivity {
     /*
      * Setup the UI
      */
-    if(activeCall!=null){
+    if (activeCall != null) {
       setCallUI();
     } else {
       resetUI();
-      }
+    }
     /*
      * Displays a call dialog if the intent contains a call invite
      */
@@ -192,14 +198,12 @@ public class VoiceActivity extends AppCompatActivity {
     } else {
       retrieveAccessToken();
     }
-    if(getIntent().getIntExtra("initiate",0)==1){
+    if (getIntent().getIntExtra("initiate", 0) == 1) {
       identity = FirebaseAuth.getInstance().getUid();
       onBackPressed();
-    }else{
+    } else {
       toCall = getIntent().getStringExtra("CallId");
-
     }
-
   }
 
   @Override
@@ -611,9 +615,5 @@ public class VoiceActivity extends AppCompatActivity {
         handleIncomingCallIntent(intent);
       }
     }
-  }
-  public static void endCall(){
-    activeCall.disconnect();
-
   }
 }
