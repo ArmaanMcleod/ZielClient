@@ -45,6 +45,7 @@ public class AssistedHomePageActivity extends AppCompatActivity {
     Objects.requireNonNull(placeAutoComplete.getView()).setBackgroundColor(Color.WHITE);
     placeAutoComplete.setHint("Search Place");
 
+
     // Listen for user entering place
     placeAutoComplete.setOnPlaceSelectedListener(
         new PlaceSelectionListener() {

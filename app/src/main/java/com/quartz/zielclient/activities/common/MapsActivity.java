@@ -8,7 +8,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -37,7 +36,6 @@ import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
 import com.quartz.zielclient.map.FetchUrl;
-import com.quartz.zielclient.voipUtilities.SendToVideoListener;
 
 import java.io.IOException;
 import java.util.List;
@@ -78,7 +76,7 @@ public class MapsActivity extends AppCompatActivity
   private LatLng destination;
 
   private String channelId;
-
+  private AlertDialog alertDialog;
   private ChannelData channel;
   private final LocationCallback mLocationCallback =
       new LocationCallback() {
@@ -140,7 +138,7 @@ public class MapsActivity extends AppCompatActivity
     Intent intentVoice = new Intent(MapsActivity.this, VoiceActivity.class);
     intentVoice.putExtra("initiate", 1);
     startActivity(intentVoice);
-
+    alertDialog = makeVideoAlert();
     Button toVideoChatButton = findViewById(R.id.toVideoChatButton);
     Button toTextChatButton = findViewById(R.id.toTextChat);
     Button toVoiceChatButton = findViewById(R.id.toVoiceChat);
@@ -420,15 +418,13 @@ public class MapsActivity extends AppCompatActivity
   public void dataChanged() {
     // notify user about new messages
     if (channel != null) {
+
       if (channel.getVideoCallStatus()) {
-        Log.d("VIDEOSHARE","share was made");
-        Snackbar.make(
-                findViewById(R.id.mapsActivityId),
-                "User is trying to share video with you",
-                Snackbar.LENGTH_INDEFINITE)
-            .setAction("OPEN", new SendToVideoListener(getApplicationContext(), channelId))
-            .show();
+        alertDialog.show();
+      }else{
+        alertDialog.cancel();
       }
+
     }
   }
 
@@ -453,7 +449,7 @@ public class MapsActivity extends AppCompatActivity
     }
     if (i == R.id.toVideoChatButton) {
       Intent intentToVideo = new Intent(MapsActivity.this, VideoActivity.class);
-      intentToVideo.putExtra(getResources().getString(R.string.channel_key),channelId);
+      intentToVideo.putExtra(getResources().getString(R.string.channel_key), channelId);
       startActivity(intentToVideo);
     }
   }
@@ -462,5 +458,21 @@ public class MapsActivity extends AppCompatActivity
   public void onBackPressed() {
     VoiceActivity.endCall();
     super.onBackPressed();
+  }
+
+  public AlertDialog makeVideoAlert() {
+    alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle("Video Share?");
+    alertDialog.setMessage("Carer wants to share video with you  please also join the channel");
+    alertDialog.setButton(
+        AlertDialog.BUTTON_NEUTRAL,
+        "OK",
+        (dialog, which) -> {
+          Intent intentToVideo = new Intent(getApplicationContext(), VideoActivity.class);
+          intentToVideo.putExtra(
+              getApplicationContext().getResources().getString(R.string.channel_key), channelId);
+          getApplicationContext().startActivity(intentToVideo);
+        });
+    return alertDialog;
   }
 }
