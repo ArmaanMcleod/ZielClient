@@ -24,7 +24,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -160,6 +159,8 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
      * Set the initial state of the UI
      */
     intializeUI();
+    showConnectDialog();
+
   }
 
   @Override
@@ -483,8 +484,9 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
    */
   private void showConnectDialog() {
 
-    EditText roomEditText = new EditText(this);
-    roomEditText.setText(channelId,TextView.BufferType.EDITABLE);
+    TextView roomEditText = new TextView(this);
+    roomEditText.setText(channelId);
+    roomEditText.setVisibility(View.INVISIBLE);
 
     connectDialog =
         Dialog.createConnectDialog(
@@ -560,7 +562,9 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
    */
   private void removeRemoteParticipant(RemoteParticipant remoteParticipant) {
     channel.setVideoCallStatus(false);
+    room.disconnect();
     videoStatusTextView.setText("User Left.");
+
     if (!remoteParticipant.getIdentity().equals(remoteParticipantIdentity)) {
       return;
     }
@@ -671,7 +675,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     return new VideoRemoteParticipant(this);
   }
 
-  private DialogInterface.OnClickListener connectClickListener(final EditText roomEditText) {
+  private DialogInterface.OnClickListener connectClickListener(final TextView roomEditText) {
     return (dialog, which) -> {
       /*
        * Connect to room
