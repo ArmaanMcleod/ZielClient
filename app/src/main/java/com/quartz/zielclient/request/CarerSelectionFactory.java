@@ -14,8 +14,8 @@ public class CarerSelectionFactory {
   }
 
   public static CarerSelectionItem getChannelRequest(
-      String name, String phoneNumber, String carerId) {
-    return new CarerSelectionItem(name, phoneNumber, carerId);
+      String name, String phoneNumber, String carerId,String lastName) {
+    return new CarerSelectionItem(name, phoneNumber, carerId,lastName);
   }
 
   /**
