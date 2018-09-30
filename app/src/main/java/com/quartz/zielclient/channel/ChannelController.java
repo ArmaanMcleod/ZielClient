@@ -36,6 +36,7 @@ public final class ChannelController {
     Location initialLocation = new Location("");
     initialLocation.setLongitude(0);
     initialLocation.setLongitude(0);
+    channelData.setVideoCallStatus(false);
     channelData.setAssistedLocation(initialLocation);
     channelData.setAssisted(assistedId);
     channelData.setCarer(carerId);
