@@ -2,6 +2,7 @@ package com.quartz.zielclient.activities.carer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
 import com.quartz.zielclient.map.FetchUrl;
+import com.quartz.zielclient.voipUtilities.SendToVideoListener;
 
 /**
  * This activity Reads coordinate and route information from a channel and displays a Map accordigly
@@ -69,8 +71,8 @@ public class CarerMapsActivity extends AppCompatActivity
     toTextChat.setOnClickListener(this);
     channelId = getIntent().getStringExtra(getApplicationContext().getString(R.string.channel_key));
     channel = ChannelController.retrieveChannel(channelId, this);
-    Intent intentVoice = new Intent(CarerMapsActivity.this,VoiceActivity.class);
-    intentVoice.putExtra("initiate",1);
+    Intent intentVoice = new Intent(CarerMapsActivity.this, VoiceActivity.class);
+    intentVoice.putExtra("initiate", 1);
     startActivity(intentVoice);
     // Obtain the SupportMapFragment and get notified when the map is ready to be used.
     SupportMapFragment mapFragment =
@@ -126,6 +128,16 @@ public class CarerMapsActivity extends AppCompatActivity
         currentDestinationURL = channel.getDirectionsURL();
       }
     }
+    if (channel.getVideoCallStatus()) {
+
+      Log.d("VIDEOSHARE", "share was made");
+      Snackbar.make(
+              findViewById(R.id.CarerMapsActivityId),
+              "User is trying to share video with you",
+              Snackbar.LENGTH_INDEFINITE)
+          .setAction("OPEN", new SendToVideoListener(getApplicationContext(), channelId))
+          .show();
+    }
   }
 
   @Override
@@ -138,20 +150,22 @@ public class CarerMapsActivity extends AppCompatActivity
         startActivity(intentToTextChat);
         break;
       case R.id.toVoiceChat:
-        Intent intentVoice = new Intent(CarerMapsActivity.this,VoiceActivity.class);
-        intentVoice.putExtra("initiate",0);
-        intentVoice.putExtra("CallId",channel.getAssisted());
+        Intent intentVoice = new Intent(CarerMapsActivity.this, VoiceActivity.class);
+        intentVoice.putExtra("initiate", 0);
+        intentVoice.putExtra("CallId", channel.getAssisted());
         startActivity(intentVoice);
         break;
       case R.id.toVideoActivity:
-        startActivity(new Intent(CarerMapsActivity.this, VideoActivity.class));
+        Intent intentToVideo = new Intent(CarerMapsActivity.this, VideoActivity.class);
+        intentToVideo.putExtra(getResources().getString(R.string.channel_key), channelId);
+        startActivity(intentToVideo);
       default:
         break;
     }
   }
 
   @Override
-  public void onBackPressed(){
+  public void onBackPressed() {
     VoiceActivity.endCall();
     super.onBackPressed();
   }

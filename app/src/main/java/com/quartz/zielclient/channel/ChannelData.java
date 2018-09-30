@@ -155,7 +155,12 @@ public class ChannelData implements ValueEventListener {
   public void setCarerStatus(boolean carerStatus) {
     channelReference.child("carerStatus").setValue(carerStatus);
   }
-
+  public Boolean getVideoCallStatus(){
+    return channelValues.get("videoCallStatus").equals(true);
+  }
+  public void setVideoCallStatus(Boolean active){
+    channelReference.child("videoCallStatus").setValue(active);
+  }
   public void setChannelKey(String channelKey) {
     this.channelKey = channelKey;
   }
