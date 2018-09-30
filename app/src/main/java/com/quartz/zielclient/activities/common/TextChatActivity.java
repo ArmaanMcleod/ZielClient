@@ -1,6 +1,7 @@
 package com.quartz.zielclient.activities.common;
 
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -55,9 +56,6 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
     mMessageRecycler = findViewById(R.id.message_recyclerview);
     mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
 
-    // Creating a new Adapter to render the messages
-    mMessageListAdapter = new MessageListAdapter(this, messageList);
-    mMessageRecycler.setAdapter(mMessageListAdapter);
 
     // Fetching channel using handler
     String channelKey = "channel-1";
@@ -74,6 +72,8 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
     sendMessage = findViewById(R.id.button_chatbox_send);
     sendMessage.setOnClickListener(this);
 
+    // Greet User
+    //Snackbar.make(mMessageRecycler, "Welcome to the Text Chat", Snackbar.LENGTH_SHORT);
     /*
     // initialize graphical elements
     chatOutput = findViewById(R.id.chatOutput);
@@ -104,6 +104,10 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
       List<Message> messages = new ArrayList<Message>(messagesMap.values());
 
       prepareData(messages);
+
+      // Creating a new Adapter to render the messages
+      mMessageListAdapter = new MessageListAdapter(this, messageList);
+      mMessageRecycler.setAdapter(mMessageListAdapter);
 
     }
   }
