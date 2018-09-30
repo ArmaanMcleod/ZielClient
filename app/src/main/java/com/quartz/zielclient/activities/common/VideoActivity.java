@@ -512,7 +512,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
       return;
     }
     remoteParticipantIdentity = remoteParticipant.getIdentity();
-    videoStatusTextView.setText("RemoteParticipant " + remoteParticipantIdentity + " joined");
+    videoStatusTextView.setText("User joined");
 
     /*
      * Add remote participant renderer
@@ -560,7 +560,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
    */
   private void removeRemoteParticipant(RemoteParticipant remoteParticipant) {
     channel.setVideoCallStatus(false);
-    videoStatusTextView.setText("RemoteParticipant " + remoteParticipant.getIdentity() + " left.");
+    videoStatusTextView.setText("User Left.");
     if (!remoteParticipant.getIdentity().equals(remoteParticipantIdentity)) {
       return;
     }
@@ -607,7 +607,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
       @Override
       public void onConnected(Room room) {
         localParticipant = room.getLocalParticipant();
-        videoStatusTextView.setText("Connected to " + room.getName());
+        videoStatusTextView.setText("Connected to  Channel video Chat" );
         setTitle(room.getName());
         channel.setVideoCallStatus(true);
 
@@ -627,7 +627,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
       @Override
       public void onDisconnected(Room room, TwilioException e) {
         localParticipant = null;
-        videoStatusTextView.setText("Disconnected from " + room.getName());
+        videoStatusTextView.setText("Disconnected from Channel Video Chat");
         VideoActivity.this.room = null;
         // Only reinitialize the UI if disconnect was not called from onDestroy()
         if (!disconnectedFromOnDestroy) {
