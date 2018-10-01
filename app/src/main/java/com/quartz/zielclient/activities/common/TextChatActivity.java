@@ -33,7 +33,8 @@ import java.util.Map;
  * Chat activity allows users to communicate with eachother through messaging
  * This activity is currently unstyled.
  */
-public class TextChatActivity extends AppCompatActivity implements View.OnClickListener, ValueEventListener, ChannelListener {
+public class TextChatActivity extends AppCompatActivity
+    implements View.OnClickListener, ValueEventListener, ChannelListener {
 
   private ChannelData channel;
   private TextView chatOutput;
@@ -60,10 +61,16 @@ public class TextChatActivity extends AppCompatActivity implements View.OnClickL
 
     channel = ChannelController.retrieveChannel(channelKey, this);
 
+    // Fetch the pre-existing messages from the database first
+    // Convert Map of messages to List of messages
+    /*
+    Map<String, Message> messagesMap = channel.getMessages();
+    List<Message> messages = new ArrayList<Message>(messagesMap.values());
+    prepareData(messages);
+    */
 
     // Chat using RecyclerView
     mMessageRecycler = findViewById(R.id.message_recyclerview);
-    mMessageListAdapter = new MessageListAdapter(this, messageList);
     mLayoutManager = new LinearLayoutManager(this);
     mMessageRecycler.setLayoutManager(mLayoutManager);
 
@@ -76,7 +83,8 @@ public class TextChatActivity extends AppCompatActivity implements View.OnClickL
     sendMessage.setOnClickListener(this);
 
     // Greet User
-    Snackbar.make(mMessageRecycler, "Welcome to the Text Chat " + currentUser, Snackbar.LENGTH_SHORT);
+    Snackbar.make(mMessageRecycler, "Welcome to the Text Chat "
+        + currentUser, Snackbar.LENGTH_SHORT).show();
     /*
     // initialize graphical elements
     chatInput = findViewById(R.id.chatInput);
