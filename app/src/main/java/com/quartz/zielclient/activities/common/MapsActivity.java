@@ -421,10 +421,9 @@ public class MapsActivity extends AppCompatActivity
 
       if (channel.getVideoCallStatus()) {
         alertDialog.show();
-      }else{
+      } else {
         alertDialog.cancel();
       }
-
     }
   }
 
@@ -444,7 +443,9 @@ public class MapsActivity extends AppCompatActivity
     if (i == R.id.toVoiceChat) {
       Intent intentVoice = new Intent(MapsActivity.this, VoiceActivity.class);
       intentVoice.putExtra("initiate", 0);
-      intentVoice.putExtra("CallId", channel.getCarer());
+      if (channel != null) {
+        intentVoice.putExtra("CallId", channel.getCarer());
+      }
       startActivity(intentVoice);
     }
     if (i == R.id.toVideoChatButton) {
