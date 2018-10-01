@@ -71,7 +71,9 @@ public class CarerMapsActivity extends AppCompatActivity
     alertDialog = makeVideoAlert();
     toTextChat.setOnClickListener(this);
     channelId = getIntent().getStringExtra(getApplicationContext().getString(R.string.channel_key));
-    channel = ChannelController.retrieveChannel(channelId, this);
+    if (channelId != null) {
+      channel = ChannelController.retrieveChannel(channelId, this);
+    }
     Intent intentVoice = new Intent(CarerMapsActivity.this, VoiceActivity.class);
     intentVoice.putExtra("initiate", 1);
     startActivity(intentVoice);
@@ -149,8 +151,10 @@ public class CarerMapsActivity extends AppCompatActivity
         break;
       case R.id.toVoiceChat:
         Intent intentVoice = new Intent(CarerMapsActivity.this, VoiceActivity.class);
-        intentVoice.putExtra("initiate", 0);
-        intentVoice.putExtra("CallId", channel.getAssisted());
+        if (channel != null) {
+          intentVoice.putExtra("initiate", 0);
+          intentVoice.putExtra("CallId", channel.getAssisted());
+        }
         startActivity(intentVoice);
         break;
       case R.id.toVideoActivity:
