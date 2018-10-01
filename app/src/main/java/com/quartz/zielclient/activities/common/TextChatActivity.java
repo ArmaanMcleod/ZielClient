@@ -1,19 +1,21 @@
 package com.quartz.zielclient.activities.common;
 
-import android.support.constraint.ConstraintLayout;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.adapters.MessageListAdapter;
 import com.quartz.zielclient.channel.ChannelController;
@@ -26,13 +28,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Chat activity allows users to communicate with eachother through messaging
  * This activity is currently unstyled.
  */
-public class TextChatActivity extends AppCompatActivity implements ChannelListener, View.OnClickListener {
+public class TextChatActivity extends AppCompatActivity implements View.OnClickListener, ValueEventListener, ChannelListener {
 
   private ChannelData channel;
   private TextView chatOutput;
@@ -41,7 +42,8 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
 
   // Recycler Views and Adapter for the text chat
   private RecyclerView mMessageRecycler;
-  private MessageListAdapter mMessageListAdapter;
+  private RecyclerView.LayoutManager mLayoutManager;
+  private RecyclerView.Adapter mMessageListAdapter;
   private List<Message> messageList;
 
   // Graphical interfaces
@@ -52,17 +54,18 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_text_chat_message_list);
 
-    // Chat using RecyclerView
-    mMessageRecycler = findViewById(R.id.message_recyclerview);
-    mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
-
-
     // Fetching channel using handler
-    String channelKey = "channel-1";
-        /*getIntent().getStringExtra(getApplicationContext()
-        .getString(R.string.channel_key));*/
+    String channelKey = getIntent().getStringExtra(getApplicationContext()
+        .getString(R.string.channel_key));
 
     channel = ChannelController.retrieveChannel(channelKey, this);
+
+
+    // Chat using RecyclerView
+    mMessageRecycler = findViewById(R.id.message_recyclerview);
+    mMessageListAdapter = new MessageListAdapter(this, messageList);
+    mLayoutManager = new LinearLayoutManager(this);
+    mMessageRecycler.setLayoutManager(mLayoutManager);
 
     // Getting the current user's username
     currentUser = FirebaseAuth.getInstance().getUid();
@@ -73,10 +76,9 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
     sendMessage.setOnClickListener(this);
 
     // Greet User
-    //Snackbar.make(mMessageRecycler, "Welcome to the Text Chat", Snackbar.LENGTH_SHORT);
+    Snackbar.make(mMessageRecycler, "Welcome to the Text Chat " + currentUser, Snackbar.LENGTH_SHORT);
     /*
     // initialize graphical elements
-    chatOutput = findViewById(R.id.chatOutput);
     chatInput = findViewById(R.id.chatInput);
     Button sendButton = findViewById(R.id.sendButton);
     sendButton.setOnClickListener(this);
@@ -96,7 +98,8 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
    * Rendering the Message List whenever there is a new message
    */
   @Override
-  public void dataChanged() {
+  public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+    System.out.println("hello");
     // Make sure the database of messages for the channel is not empty
     if (channel.getMessages() != null) {
       // Convert Map of messages to List of messages
@@ -108,7 +111,6 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
       // Creating a new Adapter to render the messages
       mMessageListAdapter = new MessageListAdapter(this, messageList);
       mMessageRecycler.setAdapter(mMessageListAdapter);
-
     }
   }
 
@@ -118,9 +120,19 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
    */
   @Override
   public void onClick(View view) {
-
-
     Message messageToSend = MessageFactory.makeTextMessage(chatInput.getText().toString(), currentUser);
     channel.sendMessage(messageToSend);
+  }
+
+  // TODO
+  @Override
+  public void onCancelled(@NonNull DatabaseError databaseError) {
+
+  }
+
+  // TODO
+  @Override
+  public void dataChanged() {
+
   }
 }
