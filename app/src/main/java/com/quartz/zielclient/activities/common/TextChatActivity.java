@@ -26,6 +26,7 @@ import com.quartz.zielclient.messages.MessageFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -84,7 +85,7 @@ public class TextChatActivity extends AppCompatActivity
 
     // Greet User
     Snackbar.make(mMessageRecycler, "Welcome to the Text Chat "
-        + currentUser, Snackbar.LENGTH_SHORT).show();
+        + currentUser + "!", Snackbar.LENGTH_SHORT).show();
     /*
     // initialize graphical elements
     chatInput = findViewById(R.id.chatInput);
@@ -100,6 +101,9 @@ public class TextChatActivity extends AppCompatActivity
   public void prepareData(List<Message> messagesInChat) {
     Collections.sort(messagesInChat);
     messageList = messagesInChat;
+    // Creating a new Adapter to render the messages
+    mMessageListAdapter = new MessageListAdapter(this, messageList);
+    mMessageRecycler.setAdapter(mMessageListAdapter);
   }
 
   /**
@@ -108,17 +112,17 @@ public class TextChatActivity extends AppCompatActivity
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
     System.out.println("hello");
+    Map<String, Message> messagesMap = new HashMap<>();
+    System.out.println(dataSnapshot.getValue());
+    //List<Object> messages = dataSnapshot.getValue();
+
     // Make sure the database of messages for the channel is not empty
     if (channel.getMessages() != null) {
       // Convert Map of messages to List of messages
-      Map<String, Message> messagesMap = channel.getMessages();
-      List<Message> messages = new ArrayList<Message>(messagesMap.values());
+      //Map<String, Message> messagesMap = channel.getMessages();
+      //List<Message> messages = new ArrayList<Message>(messagesMap.values());
 
-      prepareData(messages);
-
-      // Creating a new Adapter to render the messages
-      mMessageListAdapter = new MessageListAdapter(this, messageList);
-      mMessageRecycler.setAdapter(mMessageListAdapter);
+      //prepareData(messages);
     }
   }
 
