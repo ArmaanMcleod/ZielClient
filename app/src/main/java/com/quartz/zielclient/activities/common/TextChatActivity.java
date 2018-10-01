@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.adapters.MessageListAdapter;
@@ -112,9 +113,11 @@ public class TextChatActivity extends AppCompatActivity
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
     System.out.println("hello");
-    Map<String, Message> messagesMap = new HashMap<>();
-    System.out.println(dataSnapshot.getValue());
-    //List<Object> messages = dataSnapshot.getValue();
+
+    GenericTypeIndicator<Map<String, Message>> t =
+        new GenericTypeIndicator<Map<String, Message>>() {};
+    Map<String, Message> messagesMap = dataSnapshot.getValue(t);
+    List<Message> messages = new ArrayList<Message>(messagesMap.values());
 
     // Make sure the database of messages for the channel is not empty
     if (channel.getMessages() != null) {
@@ -122,7 +125,7 @@ public class TextChatActivity extends AppCompatActivity
       //Map<String, Message> messagesMap = channel.getMessages();
       //List<Message> messages = new ArrayList<Message>(messagesMap.values());
 
-      //prepareData(messages);
+      prepareData(messages);
     }
   }
 
