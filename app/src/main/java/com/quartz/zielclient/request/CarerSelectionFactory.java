@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities.assisted;
+package com.quartz.zielclient.request;
 
 import android.support.annotation.NonNull;
 
@@ -14,8 +14,8 @@ public class CarerSelectionFactory {
   }
 
   public static CarerSelectionItem getChannelRequest(
-      String name, String phoneNumber, String carerId) {
-    return new CarerSelectionItem(name, phoneNumber, carerId);
+      String name, String phoneNumber, String carerId,String lastName) {
+    return new CarerSelectionItem(name, phoneNumber, carerId,lastName);
   }
 
   /**

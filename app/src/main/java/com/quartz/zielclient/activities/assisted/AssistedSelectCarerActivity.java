@@ -18,9 +18,10 @@ import com.quartz.zielclient.R;
 import com.quartz.zielclient.adapters.CarerSelectListAdapter;
 import com.quartz.zielclient.models.CarerSelectionItem;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This activity allows the user to select another user to estabish a channel with
@@ -39,7 +40,7 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_assisted_select_carer2);
+    setContentView(R.layout.activity_assisted_select_carer);
     Bundle bundle = getIntent().getExtras();
 
     if (bundle != null) {
@@ -67,12 +68,11 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
    * @param items
    */
   private void initData(HashMap<String, CarerSelectionItem> items) {
-    List<CarerSelectionItem> list = new ArrayList<CarerSelectionItem>();
-    items.forEach(
-        (key, value) -> {
-          value.setCarerId(key);
-          list.add(value);
-        });
+    List<CarerSelectionItem> list = items.entrySet()
+        .stream()
+        .peek(entry -> entry.getValue().setCarerId(entry.getKey()))
+        .map(Map.Entry::getValue)
+        .collect(Collectors.toList());
 
     // Using the Adapter to convert the data into the recycler view
     mAdapter = new CarerSelectListAdapter(list, this);

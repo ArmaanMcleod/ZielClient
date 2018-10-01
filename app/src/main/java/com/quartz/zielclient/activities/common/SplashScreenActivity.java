@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities;
+package com.quartz.zielclient.activities.common;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,15 +9,13 @@ import android.util.Log;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.quartz.zielclient.activities.assisted.AssistedHomePageActivity;
 import com.quartz.zielclient.activities.carer.CarerHomepageActivity;
-import com.quartz.zielclient.activities.common.LaunchPadActivity;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
 import com.quartz.zielclient.exceptions.AuthorisationException;
 import com.quartz.zielclient.user.User;
 import com.quartz.zielclient.user.UserController;
 import com.quartz.zielclient.user.UserFactory;
-
-import java.util.Optional;
 
 public class SplashScreenActivity extends AppCompatActivity implements ValueEventListener {
 
@@ -55,7 +53,7 @@ public class SplashScreenActivity extends AppCompatActivity implements ValueEven
   private void redirect(User user) {
     if (user.isAssisted()) {
       // TODO implement assisted home page
-      startActivity(new Intent(this, LaunchPadActivity.class));
+      startActivity(new Intent(this, AssistedHomePageActivity.class));
     } else {
       startActivity(new Intent(this, CarerHomepageActivity.class));
     }

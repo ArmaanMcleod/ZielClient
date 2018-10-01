@@ -1,9 +1,9 @@
-package com.quartz.zielclient.activities;
+package com.quartz.zielclient.activities.assisted;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
@@ -14,8 +14,6 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.activities.assisted.AddCarerActivity;
-import com.quartz.zielclient.activities.assisted.AssistedSelectCarerActivity;
 
 import java.util.Objects;
 
@@ -26,7 +24,7 @@ import java.util.Objects;
  * @author Wei How Ng and Armaan McLeod
  * @version 1.1 19/09/2018
  */
-public class HomePageActivity extends Activity {
+public class AssistedHomePageActivity extends AppCompatActivity {
 
   private final String activity = this.getClass().getSimpleName();
   private LatLng destination;
@@ -36,17 +34,17 @@ public class HomePageActivity extends Activity {
     setTheme(R.style.HomeTheme);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home_page);
+
     Button addCarerActivity = findViewById(R.id.addCarerButton);
     addCarerActivity.setOnClickListener(
-        v -> {
-          startActivity(new Intent(HomePageActivity.this, AddCarerActivity.class));
-        });
+        v -> startActivity(new Intent(AssistedHomePageActivity.this, AddCarerActivity.class)));
 
     // Create autocomplete bar
     PlaceAutocompleteFragment placeAutoComplete =
         (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.editText);
     Objects.requireNonNull(placeAutoComplete.getView()).setBackgroundColor(Color.WHITE);
     placeAutoComplete.setHint("Search Place");
+
 
     // Listen for user entering place
     placeAutoComplete.setOnPlaceSelectedListener(
@@ -69,7 +67,7 @@ public class HomePageActivity extends Activity {
         v -> {
           // If destination exists, start MapsActivity
           if (destination != null) {
-            Intent intent = new Intent(HomePageActivity.this, AssistedSelectCarerActivity.class);
+            Intent intent = new Intent(AssistedHomePageActivity.this, AssistedSelectCarerActivity.class);
             intent.putExtra("destination", destination);
             startActivity(intent);
           } else {

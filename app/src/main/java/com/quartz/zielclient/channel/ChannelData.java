@@ -22,13 +22,14 @@ import java.util.Map;
  * @author Bilal Shehata
  */
 public class ChannelData implements ValueEventListener {
+
   // contains current channel values in database
   private Map<String, Object> channelValues;
-  // reference to the database
+
   private DatabaseReference channelReference;
+
   // the object that wants to listen to this channel
   private ChannelListener channelListener;
-  // the ID of the channel;
   private String channelKey;
 
   /**
@@ -48,8 +49,8 @@ public class ChannelData implements ValueEventListener {
     final String xCoord = String.valueOf(location.getLatitude());
     final String yCoord = String.valueOf(location.getLongitude());
 
-    this.channelReference.child("assistedLocation").child("xCoord").setValue(xCoord);
-    this.channelReference.child("assistedLocation").child("yCoord").setValue(yCoord);
+    channelReference.child("assistedLocation").child("xCoord").setValue(xCoord);
+    channelReference.child("assistedLocation").child("yCoord").setValue(yCoord);
   }
 
   /**
@@ -59,8 +60,8 @@ public class ChannelData implements ValueEventListener {
    */
   @SuppressWarnings("unchecked")
   public LatLng getAssistedLocation() {
-    if (this.channelValues != null) {
-      Map<String, String> assistedLocationCordinates = ((Map<String, String>) this.channelValues.get("assistedLocation"));
+    if (channelValues != null) {
+      Map<String, String> assistedLocationCordinates = (Map<String, String>) channelValues.get("assistedLocation");
 
       double xCoord = Double.parseDouble(assistedLocationCordinates.get("xCoord"));
       double yCoord = Double.parseDouble(assistedLocationCordinates.get("yCoord"));
@@ -79,6 +80,7 @@ public class ChannelData implements ValueEventListener {
    * Adding the message object into the channel Database as a JSON object.
    * @param message The new message being sent in
    */
+
   public void sendMessage(Message message) {
     channelReference.child("messages").push().setValue(message);
   }
@@ -156,15 +158,12 @@ public class ChannelData implements ValueEventListener {
   public void setCarerStatus(boolean carerStatus) {
     channelReference.child("carerStatus").setValue(carerStatus);
   }
-
-  public boolean getPing() {
-    return channelValues.get("Ping").equals(true);
+  public Boolean getVideoCallStatus(){
+    return channelValues.get("videoCallStatus").equals(true);
   }
-
-  public void setPing(Boolean ping) {
-    channelReference.child("Ping").setValue(ping);
+  public void setVideoCallStatus(Boolean active){
+    channelReference.child("videoCallStatus").setValue(active);
   }
-
   public void setChannelKey(String channelKey) {
     this.channelKey = channelKey;
   }

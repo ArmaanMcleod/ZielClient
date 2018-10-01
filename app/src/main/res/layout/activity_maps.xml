@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mapsActivityId"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -19,6 +20,18 @@
         android:layout_width="match_parent"
         android:layout_height="766dp"
         android:layout_weight="0.4" />
+
+    <Button
+        android:id="@+id/toVideoChatButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TO video chat" />
+
+    <Button
+        android:id="@+id/toVoiceChat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="VOICE CALL " />
 
     <Button
         android:id="@+id/toTextChat"

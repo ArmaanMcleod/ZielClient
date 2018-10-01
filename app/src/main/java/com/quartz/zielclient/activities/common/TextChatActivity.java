@@ -112,16 +112,6 @@ public class TextChatActivity extends AppCompatActivity implements ChannelListen
     }
   }
 
-  @Override
-  public String getAssistedId() {
-    return null;
-  }
-
-  @Override
-  public String getCarerId() {
-    return null;
-  }
-
   /**
    * Send message located in the input view into the channel database
    * @param view The view input for the button, the messageText in this case

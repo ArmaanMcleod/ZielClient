@@ -6,4 +6,5 @@
     <dimen name="send_margin">18dp</dimen>
     <dimen name="design_fab_size_normal" tools:override="true">80dp</dimen>
     <dimen name="design_fab_image_size" tools:override="true">60dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
 </resources>
