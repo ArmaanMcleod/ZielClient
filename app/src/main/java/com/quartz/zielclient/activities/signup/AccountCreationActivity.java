@@ -55,7 +55,7 @@ public class AccountCreationActivity extends AppCompatActivity implements OnClic
     }
   }
 
-  private void completeAccountCreation(User user) {
+  public void completeAccountCreation(User user) {
     Intent intent = new Intent();
     intent.putExtra("user", user.toBundle());
 
