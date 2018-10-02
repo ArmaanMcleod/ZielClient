@@ -82,6 +82,7 @@ public class TextChatActivity extends AppCompatActivity
     mMessageRecycler = findViewById(R.id.message_recyclerview);
     mLayoutManager = new LinearLayoutManager(this);
     mMessageRecycler.setLayoutManager(mLayoutManager);
+    mMessageRecycler.setAdapter(new MessageListAdapter(this, new ArrayList<>()));
 
     // Getting the current user's username
     currentUser = FirebaseAuth.getInstance().getUid();
@@ -129,12 +130,7 @@ public class TextChatActivity extends AppCompatActivity
     // Greet User
     Snackbar.make(mMessageRecycler, "Welcome to the Text Chat "
         + currentUser + "!", Snackbar.LENGTH_SHORT).show();
-    /*
-    // initialize graphical elements
-    chatInput = findViewById(R.id.chatInput);
-    Button sendButton = findViewById(R.id.sendButton);
-    sendButton.setOnClickListener(this);
-    */
+
   }
 
   @Override
@@ -184,8 +180,11 @@ public class TextChatActivity extends AppCompatActivity
    */
   @Override
   public void onClick(View view) {
-    Message messageToSend = MessageFactory.makeTextMessage(chatInput.getText().toString(), currentUser);
+    Message messageToSend = MessageFactory.makeTextMessage(
+        chatInput.getText().toString(), currentUser);
     channel.sendMessage(messageToSend);
+
+    mMessageRecycler.setAdapter(mMessageListAdapter);
   }
 
   /**

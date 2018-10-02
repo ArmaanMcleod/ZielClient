@@ -110,7 +110,6 @@ public class MessageListAdapter extends RecyclerView.Adapter{
     }
   }
 
-
   /**
    * Holder class for the received messages
    */
