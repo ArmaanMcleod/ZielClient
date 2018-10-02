@@ -15,10 +15,16 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.robolectric.Shadows.shadowOf;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 26)
 public class CarerMapsActivityTest {
+  @Test
+  public void testActivityNotNull() {
+    CarerMapsActivity activity = Robolectric.setupActivity(CarerMapsActivity.class);
+    assertNotNull(activity);
+  }
 
   @Test
   public void clickingTextChatShouldOpenActivity() {
