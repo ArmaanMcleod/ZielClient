@@ -1,12 +1,19 @@
 package com.quartz.zielclient.activities.common;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,8 +46,6 @@ public class TextChatActivity extends AppCompatActivity
     implements View.OnClickListener, ValueEventListener, ChannelListener {
 
   private ChannelData channel;
-  private TextView chatOutput;
-  private EditText chatInput;
   private String currentUser;
 
   // Recycler Views and Adapter for the text chat
@@ -51,6 +56,8 @@ public class TextChatActivity extends AppCompatActivity
 
   // Graphical interfaces
   private Button sendMessage;
+  private EditText chatInput;
+  private Button mediaButton;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +89,42 @@ public class TextChatActivity extends AppCompatActivity
     // Initialise the graphical elements
     chatInput = findViewById(R.id.enter_chat_box);
     sendMessage = findViewById(R.id.button_chatbox_send);
+    // TODO initialise media button
     sendMessage.setOnClickListener(this);
+
+    /**
+     * Adding a listener to see if the text input has changed
+     */
+    chatInput.addTextChangedListener(new TextWatcher() {
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        // Intentionally Empty
+      }
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+        // Intentionally Empty
+      }
+
+      // Make sure blank input does not get sent
+      @Override
+      public void afterTextChanged(Editable s) {
+        if(s.length() > 0) {
+          sendMessage.setEnabled(true);
+        } else {
+          sendMessage.setEnabled(false);
+        }
+      }
+    });
+    
+    /*
+    mediaButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        requestMedia();
+      }
+    });
+    */
 
     // Greet User
     Snackbar.make(mMessageRecycler, "Welcome to the Text Chat "
@@ -93,6 +135,11 @@ public class TextChatActivity extends AppCompatActivity
     Button sendButton = findViewById(R.id.sendButton);
     sendButton.setOnClickListener(this);
     */
+  }
+
+  @Override
+  public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+    return super.onCreateView(parent, name, context, attrs);
   }
 
   /**
@@ -112,18 +159,20 @@ public class TextChatActivity extends AppCompatActivity
    */
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-    System.out.println("hello");
+    //System.out.println("hello");
 
+    /*
     GenericTypeIndicator<Map<String, Message>> t =
         new GenericTypeIndicator<Map<String, Message>>() {};
     Map<String, Message> messagesMap = dataSnapshot.getValue(t);
     List<Message> messages = new ArrayList<Message>(messagesMap.values());
+    */
 
     // Make sure the database of messages for the channel is not empty
     if (channel.getMessages() != null) {
       // Convert Map of messages to List of messages
-      //Map<String, Message> messagesMap = channel.getMessages();
-      //List<Message> messages = new ArrayList<Message>(messagesMap.values());
+      Map<String, Message> messagesMap = channel.getMessages();
+      List<Message> messages = new ArrayList<Message>(messagesMap.values());
 
       prepareData(messages);
     }
@@ -137,6 +186,13 @@ public class TextChatActivity extends AppCompatActivity
   public void onClick(View view) {
     Message messageToSend = MessageFactory.makeTextMessage(chatInput.getText().toString(), currentUser);
     channel.sendMessage(messageToSend);
+  }
+
+  /**
+   * Request media from the device and request for permission if it has already not done so.
+   */
+  public void requestMedia() {
+
   }
 
   // TODO
