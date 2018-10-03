@@ -1,10 +1,12 @@
 package com.quartz.zielclient.activities.assisted;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Button;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,6 +49,10 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
       destination = bundle.getParcelable("destination");
     }
 
+
+    Button addCarerActivity = findViewById(R.id.addCarerButton);
+    addCarerActivity.setOnClickListener(
+            v -> startActivity(new Intent(AssistedSelectCarerActivity.this, AddCarerActivity.class)));
     requestsReference =
         FirebaseDatabase.getInstance().getReference("relationships/" + firebaseAuth.getUid());
     requestsReference.addValueEventListener(this);
