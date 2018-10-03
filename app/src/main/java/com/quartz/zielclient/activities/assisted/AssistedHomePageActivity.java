@@ -35,9 +35,6 @@ public class AssistedHomePageActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home_page);
 
-    Button addCarerActivity = findViewById(R.id.addCarerButton);
-    addCarerActivity.setOnClickListener(
-        v -> startActivity(new Intent(AssistedHomePageActivity.this, AddCarerActivity.class)));
 
     // Create autocomplete bar
     PlaceAutocompleteFragment placeAutoComplete =
