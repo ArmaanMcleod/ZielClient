@@ -19,7 +19,6 @@
         android:ems="10"
         android:fontFamily="@font/allerta"
         android:inputType="textPersonName"
-        android:text="@string/where_to"
         android:textAppearance="@android:style/TextAppearance"
         android:textColor="#ffffff"
         android:textSize="30sp"
@@ -29,6 +28,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="spread_inside" />
+
+    <!--android:text="@string/where_to"-->
 
     <TextView
         android:id="@+id/HomePage"
@@ -40,19 +41,19 @@
         android:layout_marginTop="234dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="@string/where_to"
-        android:textColor="#ffffff"
-        android:textAppearance="@android:style/TextAppearance"
-        android:textSize="35sp"
         android:textAlignment="center"
+        android:textAppearance="@android:style/TextAppearance"
+        android:textColor="#ffffff"
+        android:textSize="35sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/editText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         tools:text="Where To?" />
         <!--android:fontFamily="@font/allerta"-->
+    <!--android:text="@string/where_to"-->
 
 
     <Button
