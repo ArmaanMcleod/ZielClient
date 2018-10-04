@@ -51,7 +51,7 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
 
     // Fetching the Names and Descriptions
     textViewHolder.textViewName.setText(channelRequest.getName());
-    textViewHolder.textViewDesc.setText(channelRequest.getDescription());
+    textViewHolder.textViewDesc.setText(channelRequest.formattedTimestamp());
 
     textViewHolder.setChannelId(channelRequest.getChannelId());
   }
