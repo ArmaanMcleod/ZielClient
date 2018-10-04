@@ -84,17 +84,17 @@ public class NotificationHandler {
     alertUser.show();
 
     vibrator.vibrate(VibrationEffect.createWaveform(new long[] {1000, 1000, 1000, 1000, 1000}, 0));
-    soundPoolManager.playRinging();
-
+    if (soundPoolManager != null) {
+      soundPoolManager.playRinging();
+    }
     NotificationCompat.Builder notificationBuilder =
         new NotificationCompat.Builder(context, "helpChannel")
-            .setSmallIcon(R.drawable.ic_launcher_background) // your app icon
-            .setBadgeIconType(R.drawable.ic_launcher_background) // your app icon
+            .setSmallIcon(R.mipmap.ziel_logo) // your app icon
+            .setBadgeIconType(R.mipmap.ziel_logo) // your app icon
             .setChannelId("helpChannel")
             .setContentTitle(channelRequest.getName() + " Requires your assistance")
             .setAutoCancel(true)
             .setNumber(1)
-            .setColor(255)
             .setContentIntent(newLauncherIntent(context))
             .setContentText("Please open App")
             .setWhen(System.currentTimeMillis())
