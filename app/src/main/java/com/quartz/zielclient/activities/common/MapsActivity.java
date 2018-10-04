@@ -105,7 +105,13 @@ public class MapsActivity extends AppCompatActivity
             // Ensures directions api doesn't get called too many times on start up.
             if (!newSource.equals(source)) {
               source = newSource;
-              drawOntoMap();
+
+              // draw both source and destination markers to map screen
+              drawMarker(source, HUE_MAGENTA);
+              drawMarker(destination, HUE_RED);
+
+              // Zoom in on map location
+              mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(source, DEFAULT_ZOOM));
             }
 
             // Execute channel is available
@@ -115,7 +121,6 @@ public class MapsActivity extends AppCompatActivity
           }
         }
       };
-  private VoiceActivity voiceActivity;
 
   /**
    * Creates map along with its attributes.
@@ -169,7 +174,15 @@ public class MapsActivity extends AppCompatActivity
             Log.d(activity, "Place selected: " + place.getLatLng());
             destination = place.getLatLng();
 
-            drawOntoMap();
+            // draw both source and destination markers to map screen
+            drawMarker(source, HUE_MAGENTA);
+            drawMarker(destination, HUE_RED);
+
+            // Zoom in on map location
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(source, DEFAULT_ZOOM));
+
+            // Draw route to map screen
+            drawRoute();
           }
 
           @Override
@@ -188,16 +201,6 @@ public class MapsActivity extends AppCompatActivity
     if (mapFrag != null) {
       mapFrag.getMapAsync(this);
     }
-  }
-
-  /** Draws source/destination markers and route onto map. */
-  private void drawOntoMap() {
-    // draw both source and destination markers to map screen
-    drawMarker(source, HUE_MAGENTA);
-    drawMarker(destination, HUE_RED);
-
-    // Draw route to map screen
-    drawRoute();
   }
 
   /** Draws route between two points on the map */
@@ -234,9 +237,6 @@ public class MapsActivity extends AppCompatActivity
 
     // Add marker to the map
     mGoogleMap.addMarker(markerOptions).showInfoWindow();
-
-    // Zoom in on map location
-    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM));
   }
 
   /**
