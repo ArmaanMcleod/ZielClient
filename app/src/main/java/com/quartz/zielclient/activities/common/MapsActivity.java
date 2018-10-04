@@ -110,6 +110,9 @@ public class MapsActivity extends AppCompatActivity
               drawMarker(source, HUE_MAGENTA);
               drawMarker(destination, HUE_RED);
 
+              // Draw the route between the two locations
+              drawRoute();
+
               // Zoom in on map location
               mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(source, DEFAULT_ZOOM));
             }
@@ -178,11 +181,12 @@ public class MapsActivity extends AppCompatActivity
             drawMarker(source, HUE_MAGENTA);
             drawMarker(destination, HUE_RED);
 
+            // Draw route to map screen
+            drawRoute();
+
             // Zoom in on map location
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(source, DEFAULT_ZOOM));
 
-            // Draw route to map screen
-            drawRoute();
           }
 
           @Override
@@ -205,8 +209,10 @@ public class MapsActivity extends AppCompatActivity
 
   /** Draws route between two points on the map */
   private void drawRoute() {
+
     // Compute path to destination
     String directionsURL = getDirectionsUrl();
+
     FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
     fetchUrl.execute(directionsURL);
 
