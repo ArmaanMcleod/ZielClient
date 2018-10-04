@@ -80,6 +80,10 @@ public class MessageListAdapter extends RecyclerView.Adapter{
       // Bind received message
       ((ReceivedMessageHolder) viewHolder).bind(message);
     }
+
+    else {
+      System.out.println("AAAAAAAAAAAAAAAAAA");
+    }
   }
 
   /**

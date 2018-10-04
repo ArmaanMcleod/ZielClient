@@ -155,23 +155,7 @@ public class TextChatActivity extends AppCompatActivity
    */
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-    //System.out.println("hello");
 
-    /*
-    GenericTypeIndicator<Map<String, Message>> t =
-        new GenericTypeIndicator<Map<String, Message>>() {};
-    Map<String, Message> messagesMap = dataSnapshot.getValue(t);
-    List<Message> messages = new ArrayList<Message>(messagesMap.values());
-    */
-
-    // Make sure the database of messages for the channel is not empty
-    if (channel.getMessages() != null) {
-      // Convert Map of messages to List of messages
-      Map<String, Message> messagesMap = channel.getMessages();
-      List<Message> messages = new ArrayList<Message>(messagesMap.values());
-
-      prepareData(messages);
-    }
   }
 
   /**
@@ -203,6 +187,13 @@ public class TextChatActivity extends AppCompatActivity
   // TODO
   @Override
   public void dataChanged() {
+    // Make sure the database of messages for the channel is not empty
+    if (channel.getMessages() != null) {
+      // Convert Map of messages to List of messages
+      Map<String, Message> messagesMap = channel.getMessages();
+      List<Message> messages = new ArrayList<Message>(messagesMap.values());
 
+      prepareData(messages);
+    }
   }
 }
