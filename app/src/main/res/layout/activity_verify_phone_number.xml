@@ -15,7 +15,7 @@
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="46dp"
-        android:text="Ziel will send you an SMS message to verify your phone number. \nPlease enter your phone number:"
+        android:text="Ziel will send you an SMS message to verify your phone number. \nPlease enter your phone number (include country coude):"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/phoneEntry"
         app:layout_constraintEnd_toEndOf="parent"
