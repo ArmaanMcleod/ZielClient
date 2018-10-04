@@ -30,7 +30,7 @@
         android:layout_marginEnd="31dp"
         android:layout_marginStart="31dp"
         android:text="Ziel will send you an SMS message to verify your phone number. \n*Please ensure country code is included"
-        android:textSize="20sp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/phoneEntry"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
