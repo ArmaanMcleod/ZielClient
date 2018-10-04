@@ -14,10 +14,12 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ziel"
@@ -29,6 +31,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <activity
             android:name=".activities.common.VideoActivity"
             android:configChanges="orientation|screenSize">
@@ -62,7 +65,8 @@
 
         <activity
             android:name=".activities.carer.CarerHomepageActivity"
-            android:label="@string/title_activity_carer_homepage" />
+            android:label="@string/title_activity_carer_homepage"
+            android:launchMode="singleTop"/>
         <!--
            The API key for Google Maps-based APIs is defined as a string resource.
            (See the file "res/values/google_maps_api.xml").
@@ -107,7 +111,9 @@
 
         <activity
             android:name=".activities.carer.CarerMapsActivity"
-            android:label="@string/title_activity_carer_maps" />
+            android:label="@string/title_activity_carer_maps"
+            />
+
         <activity android:name=".activities.common.StreetViewActivity" />
         <activity android:name=".activities.assisted.AddCarerActivity" />
         <activity android:name=".activities.assisted.AssistedSelectCarerActivity" />
