@@ -147,12 +147,16 @@ public class MapsActivity extends AppCompatActivity
     intentVoice.putExtra("initiate", 1);
     startActivity(intentVoice);
     alertDialog = makeVideoAlert();
+
+    // Create buttons and listeners below
     Button toVideoChatButton = findViewById(R.id.toVideoChatButton);
-    Button toTextChatButton = findViewById(R.id.toTextChat);
-    Button toVoiceChatButton = findViewById(R.id.toVoiceChat);
     toVideoChatButton.setOnClickListener(this);
-    toVoiceChatButton.setOnClickListener(this);
+
+    Button toTextChatButton = findViewById(R.id.toTextChat);
     toTextChatButton.setOnClickListener(this);
+
+    Button toVoiceChatButton = findViewById(R.id.toVoiceChat);
+    toVoiceChatButton.setOnClickListener(this);
 
     // Get bundle of arguments passed from Home Page Activity
     Bundle bundle = getIntent().getExtras();
@@ -440,24 +444,27 @@ public class MapsActivity extends AppCompatActivity
    */
   @Override
   public void onClick(@NonNull View view) {
-    int i = view.getId();
-    if (i == R.id.toTextChat) {
-      Intent intentToTextChat = new Intent(MapsActivity.this, TextChatActivity.class);
-      intentToTextChat.putExtra(getResources().getString(R.string.channel_key), channelId);
-      startActivity(intentToTextChat);
-    }
-    if (i == R.id.toVoiceChat) {
-      Intent intentVoice = new Intent(MapsActivity.this, VoiceActivity.class);
-      intentVoice.putExtra("initiate", 0);
-      if (channel != null) {
-        intentVoice.putExtra("CallId", channel.getCarer());
-      }
-      startActivity(intentVoice);
-    }
-    if (i == R.id.toVideoChatButton) {
-      Intent intentToVideo = new Intent(MapsActivity.this, VideoActivity.class);
-      intentToVideo.putExtra(getResources().getString(R.string.channel_key), channelId);
-      startActivity(intentToVideo);
+    switch (view.getId()) {
+      case R.id.toTextChat:
+        Intent intentToTextChat = new Intent(MapsActivity.this, TextChatActivity.class);
+        intentToTextChat.putExtra(getResources().getString(R.string.channel_key), channelId);
+        startActivity(intentToTextChat);
+        break;
+      case R.id.toVoiceChat:
+        Intent intentVoice = new Intent(MapsActivity.this, VoiceActivity.class);
+        intentVoice.putExtra("initiate", 0);
+        if (channel != null) {
+          intentVoice.putExtra("CallId", channel.getCarer());
+        }
+        startActivity(intentVoice);
+        break;
+      case R.id.toVideoChatButton:
+        Intent intentToVideo = new Intent(MapsActivity.this, VideoActivity.class);
+        intentToVideo.putExtra(getResources().getString(R.string.channel_key), channelId);
+        startActivity(intentToVideo);
+        break;
+      default:
+        break;
     }
   }
 
