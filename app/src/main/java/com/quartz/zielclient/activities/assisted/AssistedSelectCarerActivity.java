@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
  * @author Bilal
  */
 public class AssistedSelectCarerActivity extends AppCompatActivity implements ValueEventListener {
-  private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+  private FirebaseAuth firebaseAuth = firebaseAuthInit();
   private RecyclerView mRecyclerView;
   private RecyclerView.Adapter mAdapter;
   private RecyclerView.LayoutManager mLayoutManager;
@@ -49,14 +49,13 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
       destination = bundle.getParcelable("destination");
     }
 
-
     Button addCarerActivity = findViewById(R.id.addCarerButton);
     addCarerActivity.setOnClickListener(
-            v -> startActivity(new Intent(AssistedSelectCarerActivity.this, AddCarerActivity.class)));
-    requestsReference =
-        FirebaseDatabase.getInstance().getReference("relationships/" + firebaseAuth.getUid());
-    requestsReference.addValueEventListener(this);
-
+        v -> startActivity(new Intent(AssistedSelectCarerActivity.this, AddCarerActivity.class)));
+    requestsReference = getRelationshipReference();
+    if(requestsReference!=null){
+      requestsReference.addValueEventListener(this);
+    }
     // Initialising RecyclerView
     mRecyclerView = findViewById(R.id.carer_list_recycler_view);
 
@@ -74,11 +73,13 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
    * @param items
    */
   private void initData(HashMap<String, CarerSelectionItem> items) {
-    List<CarerSelectionItem> list = items.entrySet()
-        .stream()
-        .peek(entry -> entry.getValue().setCarerId(entry.getKey()))
-        .map(Map.Entry::getValue)
-        .collect(Collectors.toList());
+    List<CarerSelectionItem> list =
+        items
+            .entrySet()
+            .stream()
+            .peek(entry -> entry.getValue().setCarerId(entry.getKey()))
+            .map(Map.Entry::getValue)
+            .collect(Collectors.toList());
 
     // Using the Adapter to convert the data into the recycler view
     mAdapter = new CarerSelectListAdapter(list, this);
@@ -102,4 +103,22 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
 
   @Override
   public void onCancelled(@NonNull DatabaseError databaseError) {}
+
+  private FirebaseAuth firebaseAuthInit() {
+    try {
+      return firebaseAuth.getInstance();
+    } catch (IllegalStateException e) {
+      return null;
+    }
+  }
+
+  private DatabaseReference getRelationshipReference() {
+    try {
+
+      return FirebaseDatabase.getInstance().getReference("relationships/" + firebaseAuth.getUid());
+
+    } catch (IllegalStateException e) {
+      return null;
+    }
+  }
 }
