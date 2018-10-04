@@ -108,6 +108,7 @@ public class NotificationHandler {
     vibrator.cancel();
     soundPoolManager.stopRinging();
     alertUser.dismiss();
+
   }
 
   private DialogInterface.OnClickListener answerHelpClickListener() {
