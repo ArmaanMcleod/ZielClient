@@ -11,12 +11,12 @@
         android:layout_width="266dp"
         android:layout_height="0dp"
         android:layout_marginBottom="20dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginStart="31dp"
         android:layout_marginTop="53dp"
         android:text="SMS Confirmation"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/channelIdEntry"
-        app:layout_constraintStart_toStartOf="@+id/channelIdEntry"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -66,7 +66,7 @@
     <Button
         android:id="@+id/confirmCodeButton"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="55dp"
         android:layout_marginBottom="239dp"
         android:layout_marginEnd="31dp"
         android:background="@drawable/whitebutton"
