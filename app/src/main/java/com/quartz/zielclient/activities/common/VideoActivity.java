@@ -108,6 +108,8 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   private VideoRenderer localVideoView;
   private boolean disconnectedFromOnDestroy;
   private ChannelData channelData;
+
+
   private String channelId;
   private ChannelData channel;
   @Override
@@ -482,7 +484,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   /*
    * Creates an connect UI dialog
    */
-  private void showConnectDialog() {
+  public void showConnectDialog() {
 
     TextView roomEditText = new TextView(this);
     roomEditText.setText(channelId);
@@ -831,7 +833,13 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   }
   @Override
   public void onBackPressed(){
-    channel.setVideoCallStatus(false);
+    if (channel != null) {
+      channel.setVideoCallStatus(false);
+      }
     super.onBackPressed();
+  }
+
+  public String getChannelId() {
+    return channelId;
   }
 }

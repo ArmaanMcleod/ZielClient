@@ -12,11 +12,19 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 26)
 public class MapsActivityTest {
+
+  @Test
+  public void testActivityNotNull() {
+    MapsActivity activity = Robolectric.setupActivity(MapsActivity.class);
+    assertNotNull(activity);
+  }
+
 
   @Test
   public void clickingTextChatShouldOpenActivity() {

@@ -49,6 +49,7 @@ public class CarerMapsActivity extends AppCompatActivity
   private Double[] longitude = {MELBOURNEUNILONG};
   private Button toTextChat;
   private Button toVoiceChat;
+  private String key;
   private Marker assistedMarker;
 
   // debug channel to be replaced with the current channel that was handled by a previous activity.
@@ -61,8 +62,10 @@ public class CarerMapsActivity extends AppCompatActivity
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     // set xml view file
     setContentView(R.layout.activity_carer_maps);
+    key = getApplicationContext().getString(R.string.google_api_key);
     toTextChat = findViewById(R.id.toTextChat);
     toVoiceChat = findViewById(R.id.toVoiceChat);
     Button toVideoChat = findViewById(R.id.toVideoActivity);
@@ -128,7 +131,7 @@ public class CarerMapsActivity extends AppCompatActivity
           // update the route
           Log.d("DIRECTIONS", channel.getDirectionsURL());
           FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
-          fetchUrl.execute(channel.getDirectionsURL());
+          fetchUrl.execute(channel.getDirectionsURL() + key);
           currentDestinationURL = channel.getDirectionsURL();
         }
       }
@@ -161,6 +164,7 @@ public class CarerMapsActivity extends AppCompatActivity
         Intent intentToVideo = new Intent(CarerMapsActivity.this, VideoActivity.class);
         intentToVideo.putExtra(getResources().getString(R.string.channel_key), channelId);
         startActivity(intentToVideo);
+        break;
       default:
         break;
     }

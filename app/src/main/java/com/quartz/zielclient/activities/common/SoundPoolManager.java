@@ -65,7 +65,9 @@ public class SoundPoolManager {
 
   public void playRinging() {
     if (loaded && !playing) {
-      ringingStreamId = soundPool.play(ringingSoundId, volume, volume, 1, -1, 1f);
+      if (soundPool != null) {
+        ringingStreamId = soundPool.play(ringingSoundId, volume, volume, 1, -1, 1f);
+      }
       playing = true;
     } else {
       playingCalled = true;
@@ -74,7 +76,9 @@ public class SoundPoolManager {
 
   public void stopRinging() {
     if (playing) {
-      soundPool.stop(ringingStreamId);
+      if (soundPool != null) {
+        soundPool.stop(ringingStreamId);
+      }
       playing = false;
     }
   }
