@@ -80,7 +80,9 @@ The complete list of coding practices is available [here](https://docs.google.co
 
 ## Built With
 
-````````* [Gradle](https://gradle.org/) - Dependency Management
+
+[Gradle](https://gradle.org/) - Dependency Management
+
 
 
 
