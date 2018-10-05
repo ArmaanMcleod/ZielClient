@@ -167,7 +167,7 @@ public class MapsActivity extends AppCompatActivity
 
     // Allow user to see street view suggestion
     Toast streetviewSuggestion =  Toast.makeText(this, "Click on a marker to see street view", Toast.LENGTH_LONG);
-    streetviewSuggestion.setGravity(Gravity.CENTER, 0, 0);
+    streetviewSuggestion.setGravity(Gravity.BOTTOM,0,250);
     streetviewSuggestion.show();
   }
 
