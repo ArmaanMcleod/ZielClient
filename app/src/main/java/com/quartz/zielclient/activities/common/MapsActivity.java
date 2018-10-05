@@ -39,6 +39,7 @@ import com.quartz.zielclient.channel.ChannelListener;
 import com.quartz.zielclient.map.FetchUrl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -76,6 +77,7 @@ public class MapsActivity extends AppCompatActivity
   private LatLng source;
   private Marker sourceMarker;
   private Marker destinationMarker;
+  private ArrayList<LatLng> markers;
   private LatLng destination;
   private LatLng currentDestination;
   private String channelId;
@@ -112,7 +114,7 @@ public class MapsActivity extends AppCompatActivity
               channel.setAssistedLocation(location);
             }
 
-            mGoogleMap.clear();
+
             source = newSource;
 
             drawMarker(newSource, HUE_MAGENTA);
@@ -246,6 +248,9 @@ public class MapsActivity extends AppCompatActivity
     // Add marker to the map
     mGoogleMap.addMarker(markerOptions).showInfoWindow();
   }
+
+
+
 
   /**
    * Gets the address of a location.
@@ -409,9 +414,9 @@ public class MapsActivity extends AppCompatActivity
 
     // Sensor initialisation
     String sensor = "sensor=false";
-
+    String key = "&key="+ getBaseContext().getString(R.string.google_api_key);
     // Building the parameters to the web service
-    String parameters = strSource + "&" + strDestination + "&" + sensor;
+    String parameters = strSource + "&" + strDestination + "&" + sensor + key;
 
     // Add parameters to api url
     String apiRequest = API_URL + parameters;
