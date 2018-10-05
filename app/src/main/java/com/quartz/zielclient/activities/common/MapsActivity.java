@@ -30,6 +30,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.channel.ChannelController;
@@ -73,8 +74,10 @@ public class MapsActivity extends AppCompatActivity
   private FusedLocationProviderClient mFusedLocationClient;
 
   private LatLng source;
+  private Marker sourceMarker;
+  private Marker destinationMarker;
   private LatLng destination;
-
+  private LatLng currentDestination;
   private String channelId;
   private AlertDialog alertDialog;
   private ChannelData channel;
@@ -103,23 +106,24 @@ public class MapsActivity extends AppCompatActivity
 
             // Only draw onto map for first callback or if source location has changed.
             // Ensures directions api doesn't get called too many times on start up.
-            if (!newSource.equals(source)) {
-              source = newSource;
+            // draw both source and destination markers to map screen
+            // Execute channel is available
+            if (channel != null) {
+              channel.setAssistedLocation(location);
+            }
 
-              // draw both source and destination markers to map screen
-              drawMarker(source, HUE_MAGENTA);
-              drawMarker(destination, HUE_RED);
+            mGoogleMap.clear();
+            source = newSource;
 
-              // Draw the route between the two locations
+            drawMarker(newSource, HUE_MAGENTA);
+            drawMarker(destination, HUE_RED);
+            Log.d("DESTINATION CHANGE", destination.toString());
+            if (currentDestination==null || !destination.equals(currentDestination)) {
+              currentDestination = destination;
               drawRoute();
 
               // Zoom in on map location
               mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(source, DEFAULT_ZOOM));
-            }
-
-            // Execute channel is available
-            if (channel != null) {
-              channel.setAssistedLocation(location);
             }
           }
         }
@@ -180,17 +184,11 @@ public class MapsActivity extends AppCompatActivity
 
             Log.d(activity, "Place selected: " + place.getLatLng());
             destination = place.getLatLng();
-
-            // draw both source and destination markers to map screen
             drawMarker(source, HUE_MAGENTA);
             drawMarker(destination, HUE_RED);
 
-            // Draw route to map screen
-            drawRoute();
-
             // Zoom in on map location
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(source, DEFAULT_ZOOM));
-
           }
 
           @Override
