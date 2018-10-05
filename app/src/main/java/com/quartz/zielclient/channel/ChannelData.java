@@ -10,6 +10,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.messages.Message;
+import com.quartz.zielclient.messages.MessageService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,12 +72,17 @@ public class ChannelData implements ValueEventListener {
     return new LatLng(0, 0);
   }
 
-  public void sendMessage(Message message) {
-    Map<String, String> messageObject = new HashMap<>();
+  public void setMessages(Map<String, String> messages) {
+    channelReference.child("messages").setValue(messages);
+  }
 
-    messageObject.put("messageType", message.getType().toString());
-    messageObject.put("messageValue", message.getMessageValue());
-    channelReference.child("messages").push().setValue(messageObject);
+  /**
+   * Adding the message object into the channel Database as a JSON object.
+   * @param message The new message being sent in
+   */
+
+  public void sendMessage(Message message) {
+    channelReference.child("messages").push().setValue(message);
   }
 
   /**
@@ -86,15 +92,12 @@ public class ChannelData implements ValueEventListener {
    *
    * @return A map of the messages.
    */
-  @SuppressWarnings("unchecked")
-  public Map<String, String> getMessages() {
+  public Map<String, Message> getMessages() {
     if (channelValues.get("messages") != null) {
-      return (Map<String, String>) channelValues.get("messages");
+      return MessageService.deserialiseMessages(channelValues.get("messages"));
     }
 
-    Map<String, String> messageObject = new HashMap<>();
-    messageObject.put("messageType", "TEXT");
-    messageObject.put("messageValue", "this chatroom has no messages");
+    Map<String, Message> messageObject = new HashMap<>();
     return messageObject;
   }
 
