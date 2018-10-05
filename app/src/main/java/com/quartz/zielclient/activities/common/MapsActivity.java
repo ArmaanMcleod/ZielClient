@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -163,6 +164,11 @@ public class MapsActivity extends AppCompatActivity
     if (mapFrag != null) {
       mapFrag.getMapAsync(this);
     }
+
+    // Allow user to see street view suggestion
+    Toast streetviewSuggestion =  Toast.makeText(this, "Click on a marker to see street view", Toast.LENGTH_LONG);
+    streetviewSuggestion.setGravity(Gravity.CENTER, 0, 0);
+    streetviewSuggestion.show();
   }
 
   /**
@@ -220,9 +226,23 @@ public class MapsActivity extends AppCompatActivity
     mGoogleMap.setOnMarkerClickListener(
         marker -> {
           marker.showInfoWindow();
-          Intent intent = new Intent(MapsActivity.this, StreetViewActivity.class);
-          intent.putExtra("destination", marker.getPosition());
-          startActivity(intent);
+
+          // Prompt Street view
+          new AlertDialog.Builder(this)
+              .setIcon(R.drawable.street_view_logo)
+              .setTitle("Google Maps Street View")
+              .setMessage("Show street view?")
+
+              // Start Street view activity when pressed
+              .setPositiveButton("Yes", (dialog, which) -> {
+                Intent intent = new Intent(MapsActivity.this, StreetViewActivity.class);
+                intent.putExtra("destination", marker.getPosition());
+                startActivity(intent);
+              })
+              .setNegativeButton("No", (dialog, which) -> {
+
+              })
+              .show();
           return true;
         });
 
