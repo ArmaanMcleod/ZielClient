@@ -161,6 +161,7 @@ public class CarerMapsActivity extends AppCompatActivity
         Intent intentToVideo = new Intent(CarerMapsActivity.this, VideoActivity.class);
         intentToVideo.putExtra(getResources().getString(R.string.channel_key), channelId);
         startActivity(intentToVideo);
+        break;
       default:
         break;
     }

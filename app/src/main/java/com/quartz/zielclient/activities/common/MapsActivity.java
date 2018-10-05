@@ -30,6 +30,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.channel.ChannelController;
@@ -73,8 +74,10 @@ public class MapsActivity extends AppCompatActivity
   private FusedLocationProviderClient mFusedLocationClient;
 
   private LatLng source;
+  private Marker sourceMarker;
+  private Marker destinationMarker;
   private LatLng destination;
-
+  private LatLng currentDestination;
   private String channelId;
   private AlertDialog alertDialog;
   private ChannelData channel;
@@ -103,19 +106,28 @@ public class MapsActivity extends AppCompatActivity
 
             // Only draw onto map for first callback or if source location has changed.
             // Ensures directions api doesn't get called too many times on start up.
-            if (!newSource.equals(source)) {
-              source = newSource;
-              drawOntoMap();
-            }
-
+            // draw both source and destination markers to map screen
             // Execute channel is available
             if (channel != null) {
               channel.setAssistedLocation(location);
             }
+
+            mGoogleMap.clear();
+            source = newSource;
+
+            drawMarker(newSource, HUE_MAGENTA);
+            drawMarker(destination, HUE_RED);
+            Log.d("DESTINATION CHANGE", destination.toString());
+            if (currentDestination==null || !destination.equals(currentDestination)) {
+              currentDestination = destination;
+              drawRoute();
+
+              // Zoom in on map location
+              mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(source, DEFAULT_ZOOM));
+            }
           }
         }
       };
-  private VoiceActivity voiceActivity;
 
   /**
    * Creates map along with its attributes.
@@ -139,12 +151,16 @@ public class MapsActivity extends AppCompatActivity
     intentVoice.putExtra("initiate", 1);
     startActivity(intentVoice);
     alertDialog = makeVideoAlert();
+
+    // Create buttons and listeners below
     Button toVideoChatButton = findViewById(R.id.toVideoChatButton);
-    Button toTextChatButton = findViewById(R.id.toTextChat);
-    Button toVoiceChatButton = findViewById(R.id.toVoiceChat);
     toVideoChatButton.setOnClickListener(this);
-    toVoiceChatButton.setOnClickListener(this);
+
+    Button toTextChatButton = findViewById(R.id.toTextChat);
     toTextChatButton.setOnClickListener(this);
+
+    Button toVoiceChatButton = findViewById(R.id.toVoiceChat);
+    toVoiceChatButton.setOnClickListener(this);
 
     // Get bundle of arguments passed from Home Page Activity
     Bundle bundle = getIntent().getExtras();
@@ -168,8 +184,11 @@ public class MapsActivity extends AppCompatActivity
 
             Log.d(activity, "Place selected: " + place.getLatLng());
             destination = place.getLatLng();
+            drawMarker(source, HUE_MAGENTA);
+            drawMarker(destination, HUE_RED);
 
-            drawOntoMap();
+            // Zoom in on map location
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(source, DEFAULT_ZOOM));
           }
 
           @Override
@@ -190,20 +209,12 @@ public class MapsActivity extends AppCompatActivity
     }
   }
 
-  /** Draws source/destination markers and route onto map. */
-  private void drawOntoMap() {
-    // draw both source and destination markers to map screen
-    drawMarker(source, HUE_MAGENTA);
-    drawMarker(destination, HUE_RED);
-
-    // Draw route to map screen
-    drawRoute();
-  }
-
   /** Draws route between two points on the map */
   private void drawRoute() {
+
     // Compute path to destination
     String directionsURL = getDirectionsUrl();
+
     FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
     fetchUrl.execute(directionsURL);
 
@@ -234,9 +245,6 @@ public class MapsActivity extends AppCompatActivity
 
     // Add marker to the map
     mGoogleMap.addMarker(markerOptions).showInfoWindow();
-
-    // Zoom in on map location
-    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM));
   }
 
   /**
@@ -434,24 +442,27 @@ public class MapsActivity extends AppCompatActivity
    */
   @Override
   public void onClick(@NonNull View view) {
-    int i = view.getId();
-    if (i == R.id.toTextChat) {
-      Intent intentToTextChat = new Intent(MapsActivity.this, TextChatActivity.class);
-      intentToTextChat.putExtra(getResources().getString(R.string.channel_key), channelId);
-      startActivity(intentToTextChat);
-    }
-    if (i == R.id.toVoiceChat) {
-      Intent intentVoice = new Intent(MapsActivity.this, VoiceActivity.class);
-      intentVoice.putExtra("initiate", 0);
-      if (channel != null) {
-        intentVoice.putExtra("CallId", channel.getCarer());
-      }
-      startActivity(intentVoice);
-    }
-    if (i == R.id.toVideoChatButton) {
-      Intent intentToVideo = new Intent(MapsActivity.this, VideoActivity.class);
-      intentToVideo.putExtra(getResources().getString(R.string.channel_key), channelId);
-      startActivity(intentToVideo);
+    switch (view.getId()) {
+      case R.id.toTextChat:
+        Intent intentToTextChat = new Intent(MapsActivity.this, TextChatActivity.class);
+        intentToTextChat.putExtra(getResources().getString(R.string.channel_key), channelId);
+        startActivity(intentToTextChat);
+        break;
+      case R.id.toVoiceChat:
+        Intent intentVoice = new Intent(MapsActivity.this, VoiceActivity.class);
+        intentVoice.putExtra("initiate", 0);
+        if (channel != null) {
+          intentVoice.putExtra("CallId", channel.getCarer());
+        }
+        startActivity(intentVoice);
+        break;
+      case R.id.toVideoChatButton:
+        Intent intentToVideo = new Intent(MapsActivity.this, VideoActivity.class);
+        intentToVideo.putExtra(getResources().getString(R.string.channel_key), channelId);
+        startActivity(intentToVideo);
+        break;
+      default:
+        break;
     }
   }
 
