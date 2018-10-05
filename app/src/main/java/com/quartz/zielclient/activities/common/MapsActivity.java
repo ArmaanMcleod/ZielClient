@@ -47,7 +47,6 @@ import java.util.Objects;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.google.android.gms.location.LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
-import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_MAGENTA;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
 
 /**
@@ -68,12 +67,10 @@ public class MapsActivity extends AppCompatActivity
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
   private final String activity = this.getClass().getSimpleName();
-
+  private final LocationCallback mLocationCallback = locationCallBackMaker() ;
   private GoogleMap mGoogleMap;
-
   private LocationRequest mLocationRequest;
   private FusedLocationProviderClient mFusedLocationClient;
-
   private LatLng source;
   private Marker sourceMarker;
   private Marker destinationMarker;
@@ -83,65 +80,6 @@ public class MapsActivity extends AppCompatActivity
   private String channelId;
   private AlertDialog alertDialog;
   private ChannelData channel;
-  private final LocationCallback mLocationCallback =
-      new LocationCallback() {
-
-        /**
-         * Moves camera to last known location of user.
-         *
-         * @param locationResult location results fetched from API.
-         */
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-
-          // All previous locations
-          List<Location> locationList = locationResult.getLocations();
-
-          // If one location exists
-          if (!locationList.isEmpty()) {
-
-            // The last location in the list is the newest
-            Location location = locationList.get(locationList.size() - 1);
-            Log.i(activity, "Location: " + location.getLatitude() + " " + location.getLongitude());
-
-            LatLng newSource = new LatLng(location.getLatitude(), location.getLongitude());
-
-            // Only draw onto map for first callback or if source location has changed.
-            // Ensures directions api doesn't get called too many times on start up.
-            // draw both source and destination markers to map screen
-            // Execute channel is available
-            if (channel != null) {
-              channel.setAssistedLocation(location);
-            }
-
-
-            source = newSource;
-            // clear destination and source
-            for (Marker marker : new ArrayList<>(markers)) {
-              marker.remove();
-              markers.remove(marker);
-            }
-
-            MarkerOptions sourceOptions = new MarkerOptions();
-            sourceOptions.position(newSource);
-            MarkerOptions destinationOptions = new MarkerOptions();
-            destinationOptions.position(destination);
-            Marker source = mGoogleMap.addMarker(sourceOptions);
-            markers.add(source);
-            Marker dest = mGoogleMap.addMarker(destinationOptions);
-            markers.add(dest);
-
-            Log.d("DESTINATION CHANGE", destination.toString());
-            if (currentDestination==null || !destination.equals(currentDestination)) {
-              currentDestination = destination;
-              drawRoute();
-
-              // Zoom in on map location
-              mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newSource, DEFAULT_ZOOM));
-            }
-          }
-        }
-      };
 
   /**
    * Creates map along with its attributes.
@@ -196,9 +134,10 @@ public class MapsActivity extends AppCompatActivity
             // Clear all previous points on map
             mGoogleMap.clear();
 
+
+
             Log.d(activity, "Place selected: " + place.getLatLng());
             destination = place.getLatLng();
-            drawMarker(source, HUE_MAGENTA);
             drawMarker(destination, HUE_RED);
 
             // Zoom in on map location
@@ -299,7 +238,7 @@ public class MapsActivity extends AppCompatActivity
 
     // Stop location updates when Activity is no longer active
     if (mFusedLocationClient != null) {
-      mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+
     }
   }
 
@@ -504,4 +443,73 @@ public class MapsActivity extends AppCompatActivity
         });
     return alertDialog;
   }
+
+  private LocationCallback locationCallBackMaker(){
+
+    return new LocationCallback() {
+
+      /**
+       * Moves camera to last known location of user.
+       *
+       * @param locationResult location results fetched from API.
+       */
+      @Override
+      public void onLocationResult(LocationResult locationResult) {
+
+        // All previous locations
+        List<Location> locationList = locationResult.getLocations();
+
+        // If one location exists
+        if (!locationList.isEmpty()) {
+
+          // The last location in the list is the newest
+          Location location = locationList.get(locationList.size() - 1);
+          Log.i(activity, "Location: " + location.getLatitude() + " " + location.getLongitude());
+
+          LatLng newSource = new LatLng(location.getLatitude(), location.getLongitude());
+
+          // Only draw onto map for first callback or if source location has changed.
+          // Ensures directions api doesn't get called too many times on start up.
+          // draw both source and destination markers to map screen
+          // Execute channel is available
+          if (channel != null) {
+            channel.setAssistedLocation(location);
+          }
+
+
+          source = newSource;
+          // clear destination and source
+          for (Marker marker : new ArrayList<>(markers)) {
+            marker.remove();
+            markers.remove(marker);
+          }
+
+          MarkerOptions sourceOptions = new MarkerOptions();
+          sourceOptions.position(newSource);
+          MarkerOptions destinationOptions = new MarkerOptions();
+          destinationOptions.position(destination);
+          Marker source = mGoogleMap.addMarker(sourceOptions);
+          markers.add(source);
+          Marker dest = mGoogleMap.addMarker(destinationOptions);
+          markers.add(dest);
+
+          Log.d("DESTINATION CHANGE", destination.toString());
+          if (currentDestination==null || !destination.equals(currentDestination)) {
+            currentDestination = destination;
+            drawRoute();
+
+            // Zoom in on map location
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newSource, DEFAULT_ZOOM));
+          }
+        }
+      }
+
+    };
+  };
 }
+
+
+
+
+
+
