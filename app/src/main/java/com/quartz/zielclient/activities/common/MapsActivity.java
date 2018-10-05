@@ -27,7 +27,6 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -67,8 +66,8 @@ public class MapsActivity extends AppCompatActivity
   private static final int DEFAULT_ZOOM = 8;
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
-  private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
-  private long FASTEST_INTERVAL = 2000; /* 2 sec */
+  private static final long UPDATE_INTERVAL = 10000;  /* 10 secs */
+  private static final long FASTEST_INTERVAL = 2000; /* 2 sec */
 
   private final String activity = this.getClass().getSimpleName();
   private final LocationCallback mLocationCallback = locationCallBackMaker();
