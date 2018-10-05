@@ -20,6 +20,8 @@ import java.util.List;
 
 /**
  * Adapter Class used for adapting the Message objects into the Chat View.
+ *
+ * @author Wei How Ng
  */
 public class MessageListAdapter extends RecyclerView.Adapter{
 

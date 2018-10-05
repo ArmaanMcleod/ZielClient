@@ -151,13 +151,19 @@ public class TextChatActivity extends AppCompatActivity
   }
 
   /**
-   * Rendering the Message List whenever there is a new message
+   * Update method to render messages as it updates
    */
   @Override
-  public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+  public void dataChanged() {
+    // Make sure the database of messages for the channel is not empty
+    if (channel.getMessages() != null) {
+      // Convert Map of messages to List of messages
+      Map<String, Message> messagesMap = channel.getMessages();
+      List<Message> messages = new ArrayList<Message>(messagesMap.values());
 
+      prepareData(messages);
+    }
   }
-
   /**
    * Send message located in the input view into the channel database
    * @param view The view input for the button, the messageText in this case
@@ -186,14 +192,7 @@ public class TextChatActivity extends AppCompatActivity
 
   // TODO
   @Override
-  public void dataChanged() {
-    // Make sure the database of messages for the channel is not empty
-    if (channel.getMessages() != null) {
-      // Convert Map of messages to List of messages
-      Map<String, Message> messagesMap = channel.getMessages();
-      List<Message> messages = new ArrayList<Message>(messagesMap.values());
+  public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-      prepareData(messages);
-    }
   }
 }
