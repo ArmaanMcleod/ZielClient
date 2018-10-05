@@ -77,7 +77,7 @@ public class MapsActivity extends AppCompatActivity
   private LatLng source;
   private Marker sourceMarker;
   private Marker destinationMarker;
-  private ArrayList<LatLng> markers;
+  private ArrayList<Marker> markers = new ArrayList();
   private LatLng destination;
   private LatLng currentDestination;
   private String channelId;
@@ -116,16 +116,28 @@ public class MapsActivity extends AppCompatActivity
 
 
             source = newSource;
+            // clear destination and source
+            for (Marker marker : new ArrayList<>(markers)) {
+              marker.remove();
+              markers.remove(marker);
+            }
 
-            drawMarker(newSource, HUE_MAGENTA);
-            drawMarker(destination, HUE_RED);
+            MarkerOptions sourceOptions = new MarkerOptions();
+            sourceOptions.position(newSource);
+            MarkerOptions destinationOptions = new MarkerOptions();
+            destinationOptions.position(destination);
+            Marker source = mGoogleMap.addMarker(sourceOptions);
+            markers.add(source);
+            Marker dest = mGoogleMap.addMarker(destinationOptions);
+            markers.add(dest);
+
             Log.d("DESTINATION CHANGE", destination.toString());
             if (currentDestination==null || !destination.equals(currentDestination)) {
               currentDestination = destination;
               drawRoute();
 
               // Zoom in on map location
-              mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(source, DEFAULT_ZOOM));
+              mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newSource, DEFAULT_ZOOM));
             }
           }
         }
