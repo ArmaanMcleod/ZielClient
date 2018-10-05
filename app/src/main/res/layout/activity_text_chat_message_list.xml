@@ -51,12 +51,24 @@
             android:maxLines="6"/>
 
         <Button
+            android:id="@+id/button_media_send"
+            android:drawableLeft="@drawable/send_media"
+            android:paddingLeft="@dimen/send_margin"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:layout_gravity="bottom"
+            />
+
+        <Button
             android:id="@+id/button_chatbox_send"
             android:drawableRight="@drawable/send_message"
             android:paddingRight="@dimen/send_margin"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
-            android:layout_width="64dp"
+            android:layout_width="48dp"
             android:layout_height="48dp"
             android:gravity="center"
             android:layout_gravity="bottom" />

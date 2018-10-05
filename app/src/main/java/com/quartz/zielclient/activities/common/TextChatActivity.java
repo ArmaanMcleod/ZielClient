@@ -90,7 +90,7 @@ public class TextChatActivity extends AppCompatActivity
     // Initialise the graphical elements
     chatInput = findViewById(R.id.enter_chat_box);
     sendMessage = findViewById(R.id.button_chatbox_send);
-    // TODO initialise media button
+    mediaButton = findViewById(R.id.button_media_send);
     sendMessage.setOnClickListener(this);
 
     /**
@@ -118,14 +118,13 @@ public class TextChatActivity extends AppCompatActivity
       }
     });
     
-    /*
+    // Set a listener on the media button to call requestMedia
     mediaButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         requestMedia();
       }
     });
-    */
 
     // Greet User
     Snackbar.make(mMessageRecycler, "Welcome to the Text Chat "
