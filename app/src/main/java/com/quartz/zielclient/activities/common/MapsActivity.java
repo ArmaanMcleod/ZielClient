@@ -67,6 +67,9 @@ public class MapsActivity extends AppCompatActivity
   private static final int DEFAULT_ZOOM = 8;
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
+  private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
+  private long FASTEST_INTERVAL = 2000; /* 2 sec */
+
   private final String activity = this.getClass().getSimpleName();
   private final LocationCallback mLocationCallback = locationCallBackMaker();
   private GoogleMap mGoogleMap;
@@ -249,8 +252,8 @@ public class MapsActivity extends AppCompatActivity
 
     // Setup location request and intervals between requests
     mLocationRequest = new LocationRequest();
-    mLocationRequest.setInterval(1000); // two minute interval
-    mLocationRequest.setFastestInterval(1000);
+    mLocationRequest.setInterval(UPDATE_INTERVAL); // two minute interval
+    mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
     mLocationRequest.setPriority(PRIORITY_BALANCED_POWER_ACCURACY);
 
     requestLocation();
