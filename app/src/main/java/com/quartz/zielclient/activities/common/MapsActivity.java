@@ -140,6 +140,7 @@ public class MapsActivity extends AppCompatActivity
 
 
             Log.d(activity, "Place selected: " + place.getLatLng());
+            currentDestination=null;
             destination = place.getLatLng();
             drawMarker(destination, HUE_RED);
 
