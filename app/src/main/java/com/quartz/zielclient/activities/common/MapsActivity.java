@@ -64,11 +64,11 @@ public class MapsActivity extends AppCompatActivity
 
   // Custom permissions request code
   private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-  private static final int DEFAULT_ZOOM = 11;
+  private static final int DEFAULT_ZOOM = 8;
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
   private final String activity = this.getClass().getSimpleName();
-
+  private final LocationCallback mLocationCallback = locationCallBackMaker();
   private GoogleMap mGoogleMap;
 
   private LocationRequest mLocationRequest;
@@ -84,68 +84,6 @@ public class MapsActivity extends AppCompatActivity
 
   private AlertDialog alertDialog;
   private ChannelData channel;
-
-  private final LocationCallback mLocationCallback =
-      new LocationCallback() {
-
-        /**
-         * Moves camera to last known location of user.
-         *
-         * @param locationResult location results fetched from API.
-         */
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-
-          // All previous locations
-          List<Location> locationList = locationResult.getLocations();
-
-          // If one location exists
-          if (!locationList.isEmpty()) {
-
-            // The last location in the list is the newest
-            Location location = locationList.get(locationList.size() - 1);
-            Log.i(activity, "Location: " + location.getLatitude() + " " + location.getLongitude());
-
-            LatLng newSource = new LatLng(location.getLatitude(), location.getLongitude());
-
-            // Only draw onto map for first callback or if source location has changed.
-            // Ensures directions api doesn't get called too many times on start up.
-            // draw both source and destination markers to map screen
-            // Execute channel is available
-            if (channel != null) {
-              channel.setAssistedLocation(location);
-            }
-
-
-            source = newSource;
-
-            // clear destination and source
-            markers.forEach(Marker::remove);
-            markers.clear();
-
-            MarkerOptions sourceOptions = new MarkerOptions();
-            sourceOptions.position(source);
-
-            MarkerOptions destinationOptions = new MarkerOptions();
-            destinationOptions.position(destination);
-
-            Marker sourceMarker = mGoogleMap.addMarker(sourceOptions);
-            markers.add(sourceMarker);
-
-            Marker destinationMarker = mGoogleMap.addMarker(destinationOptions);
-            markers.add(destinationMarker);
-
-            Log.d("DESTINATION CHANGE", destination.toString());
-            if (!destination.equals(currentDestination)) {
-              currentDestination = destination;
-              drawRoute();
-
-              // Zoom in on map location
-              mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newSource, DEFAULT_ZOOM));
-            }
-          }
-        }
-      };
 
   /**
    * Creates map along with its attributes.
@@ -200,10 +138,10 @@ public class MapsActivity extends AppCompatActivity
             // Clear all previous points on map
             mGoogleMap.clear();
 
+            // Update destination
             Log.d(activity, "Place selected: " + place.getLatLng());
+            currentDestination = null;
             destination = place.getLatLng();
-            drawMarker(source, HUE_MAGENTA);
-            drawMarker(destination, HUE_RED);
 
             // Zoom in on map location
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(source, DEFAULT_ZOOM));
@@ -245,30 +183,6 @@ public class MapsActivity extends AppCompatActivity
   }
 
   /**
-   * Draws marker on the Google map.
-   *
-   * @param location This is the location on the map.
-   * @param colour   This is the colour of the marker.
-   */
-  private void drawMarker(@NonNull LatLng location, float colour) {
-    MarkerOptions markerOptions = new MarkerOptions();
-
-    // Update marker options
-    markerOptions.position(location);
-
-    // Create address title of marker
-    String locationAddress = getAddress(location);
-    Log.d(activity, "Marker address: " + locationAddress);
-    markerOptions.title(getAddress(location));
-
-    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(colour));
-
-    // Add marker to the map
-    mGoogleMap.addMarker(markerOptions).showInfoWindow();
-  }
-
-
-  /**
    * Gets the address of a location.
    *
    * @param location This is the location.
@@ -292,22 +206,6 @@ public class MapsActivity extends AppCompatActivity
   }
 
   /**
-   * This is called when user received an event call.
-   *
-   * <p>Documentation : https://developers.google.com/android/reference/com/google/android/gms/maps/
-   * OnMapReadyCallback.html#onMapReady(com.google.android.gms.maps.GoogleMap)
-   */
-  @Override
-  public void onPause() {
-    super.onPause();
-
-    // Stop location updates when Activity is no longer active
-    if (mFusedLocationClient != null) {
-      mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-    }
-  }
-
-  /**
    * This initialises map activities and checks permissions.
    *
    * @param googleMap This is the Google Map
@@ -321,6 +219,7 @@ public class MapsActivity extends AppCompatActivity
     // Set listener for markers
     mGoogleMap.setOnMarkerClickListener(
         marker -> {
+          marker.showInfoWindow();
           Intent intent = new Intent(MapsActivity.this, StreetViewActivity.class);
           intent.putExtra("destination", marker.getPosition());
           startActivity(intent);
@@ -468,11 +367,13 @@ public class MapsActivity extends AppCompatActivity
   @Override
   public void onClick(@NonNull View view) {
     switch (view.getId()) {
+
       case R.id.toTextChat:
         Intent intentToTextChat = new Intent(MapsActivity.this, TextChatActivity.class);
         intentToTextChat.putExtra(getResources().getString(R.string.channel_key), channelId);
         startActivity(intentToTextChat);
         break;
+
       case R.id.toVoiceChat:
         Intent intentVoice = new Intent(MapsActivity.this, VoiceActivity.class);
         intentVoice.putExtra("initiate", 0);
@@ -481,6 +382,7 @@ public class MapsActivity extends AppCompatActivity
         }
         startActivity(intentVoice);
         break;
+
       case R.id.toVideoChatButton:
         Intent intentToVideo = new Intent(MapsActivity.this, VideoActivity.class);
         intentToVideo.putExtra(getResources().getString(R.string.channel_key), channelId);
@@ -511,5 +413,76 @@ public class MapsActivity extends AppCompatActivity
           getApplicationContext().startActivity(intentToVideo);
         });
     return alertDialog;
+  }
+
+  private LocationCallback locationCallBackMaker() {
+    return new LocationCallback() {
+
+      /**
+       * Moves camera to last known location of user.
+       *
+       * @param locationResult location results fetched from API.
+       */
+      @Override
+      public void onLocationResult(LocationResult locationResult) {
+
+        // All previous locations
+        List<Location> locationList = locationResult.getLocations();
+
+        // If one location exists
+        if (!locationList.isEmpty()) {
+
+          // The last location in the list is the newest
+          Location location = locationList.get(locationList.size() - 1);
+          Log.i(activity, "Location: " + location.getLatitude() + " " + location.getLongitude());
+
+          LatLng newSource = new LatLng(location.getLatitude(), location.getLongitude());
+
+          // Only draw onto map for first callback or if source location has changed.
+          // Ensures directions api doesn't get called too many times on start up.
+          // draw both source and destination markers to map screen
+          // Execute channel is available
+          if (channel != null) {
+            channel.setAssistedLocation(location);
+          }
+
+          source = newSource;
+
+          // clear destination and source
+          markers.forEach(Marker::remove);
+          markers.clear();
+
+          // Source and Destination options for markers
+          MarkerOptions sourceOptions = new MarkerOptions();
+          sourceOptions.position(source);
+          sourceOptions.title(getAddress(source));
+          sourceOptions.icon(BitmapDescriptorFactory.defaultMarker(HUE_MAGENTA));
+
+          MarkerOptions destinationOptions = new MarkerOptions();
+          destinationOptions.position(destination);
+          destinationOptions.title(getAddress(destination));
+          destinationOptions.icon(BitmapDescriptorFactory.defaultMarker(HUE_RED));
+
+          // Source and Destination markers
+          Marker sourceMarker = mGoogleMap.addMarker(sourceOptions);
+          markers.add(sourceMarker);
+
+          Marker destinationMarker = mGoogleMap.addMarker(destinationOptions);
+          destinationMarker.showInfoWindow();
+          markers.add(destinationMarker);
+
+          Log.d("DESTINATION CHANGE", destination.toString());
+
+          if (!destination.equals(currentDestination)) {
+            currentDestination = destination;
+            drawRoute();
+
+            // Zoom in on map location
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newSource, DEFAULT_ZOOM));
+          }
+        }
+      }
+
+    };
   }
 }
