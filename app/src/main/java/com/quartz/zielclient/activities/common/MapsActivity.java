@@ -63,8 +63,6 @@ import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
 public class MapsActivity extends AppCompatActivity
     implements OnMapReadyCallback, ChannelListener, View.OnClickListener {
 
-  // Custom permissions request code
-  private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
   private static final int DEFAULT_ZOOM = 8;
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
@@ -252,80 +250,7 @@ public class MapsActivity extends AppCompatActivity
     mLocationRequest.setFastestInterval(1000);
     mLocationRequest.setPriority(PRIORITY_BALANCED_POWER_ACCURACY);
 
-    // Check permissions
-    if (checkSelfPermission(ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
-      requestLocation();
-    } else {
-      // Request Location Permission
-      requestLocationPermission();
-    }
-  }
-
-  /**
-   * Check location permissions before showing user location.
-   */
-  private void requestLocationPermission() {
-    // If permission is not granted
-    if (checkSelfPermission(ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
-
-      // Should we show an explanation?
-      if (shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION)) {
-
-        // Show an explanation to the user *asynchronously* -- don't block
-        // This thread waiting for the user's response! After the user
-        // Sees the explanation, try again to request the permission.
-        new AlertDialog.Builder(this)
-            .setTitle("Location Permission Needed")
-            .setMessage(
-                "This app needs the Location permission, "
-                    + "please accept to use location functionality")
-            .setPositiveButton(
-                "OK",
-                // Prompt the user once explanation has been shown
-                (dialogInterface, i) ->
-                    requestPermissions(
-                        new String[]{ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION))
-            .create()
-            .show();
-
-      } else {
-        // No explanation needed, we can request the permission.
-        requestPermissions(new String[]{ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
-      }
-    }
-  }
-
-  /**
-   * This is a callback for requesting and checking the result of a permission.
-   *
-   * <p>Documentation : https://developer.android.com/reference/android/support/v4/app/
-   * ActivityCompat.OnRequestPermissionsResultCallback#onRequestPermissionsResult
-   *
-   * @param requestCode  This is the request code passed to requestPermissions.
-   * @param permissions  This is the permissions.
-   * @param grantResults This is results for granted or un-granted permissions.
-   */
-  @Override
-  public void onRequestPermissionsResult(
-      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (requestCode == MY_PERMISSIONS_REQUEST_LOCATION) {
-      handleLocationPermission(grantResults);
-    }
-  }
-
-  /**
-   * This is responsible for requesting a location permission from the user.
-   *
-   * @param grantResults This is results for granted or un-granted permissions.
-   */
-  private void handleLocationPermission(@NonNull int[] grantResults) {
-    // If request is cancelled, the result arrays are empty.
-    if (grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED) {
-      requestLocation();
-    } else {
-      // Permission denied
-      Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
-    }
+    requestLocation();
   }
 
   /**
