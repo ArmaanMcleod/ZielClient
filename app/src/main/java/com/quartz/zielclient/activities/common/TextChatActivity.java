@@ -119,12 +119,7 @@ public class TextChatActivity extends AppCompatActivity
     });
     
     // Set a listener on the media button to call requestMedia
-    mediaButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        requestMedia();
-      }
-    });
+    mediaButton.setOnClickListener(v -> requestMedia());
 
     // Greet User
     Snackbar.make(mMessageRecycler, "Welcome to the Text Chat "
@@ -176,7 +171,10 @@ public class TextChatActivity extends AppCompatActivity
         chatInput.getText().toString(), currentUser);
     channel.sendMessage(messageToSend);
 
-    mMessageRecycler.setAdapter(mMessageListAdapter);
+    // Erasing the previously typed message
+    if (chatInput != null) {
+      chatInput.setText("");
+    }
   }
 
   /**

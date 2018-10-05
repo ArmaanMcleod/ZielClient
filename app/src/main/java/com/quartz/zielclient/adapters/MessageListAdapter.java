@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.messages.Message;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -134,9 +135,8 @@ public class MessageListAdapter extends RecyclerView.Adapter{
     // TODO Add profile picture support
     void bind(Message message) {
       messageText.setText(message.getMessageValue());
-      Date date = new Date(message.getMessageTime());
-      timeStamp.setText(DateUtils.formatDateTime(mContext, message.getMessageTime(), 0));
-      // ADD PROFILE PICTURE BIND HERE
+      String timeString = new SimpleDateFormat("h:mm a").format(message.getMessageTime());
+      timeStamp.setText(timeString);
     }
   }
 
@@ -159,7 +159,8 @@ public class MessageListAdapter extends RecyclerView.Adapter{
     // Bind Method
     void bind(Message message) {
       messageText.setText(message.getMessageValue());
-      timeStamp.setText(DateUtils.formatDateTime(mContext, message.getMessageTime(), 0));
+      String timeString = new SimpleDateFormat("h:mm a").format(message.getMessageTime());
+      timeStamp.setText(timeString);;
     }
   }
 }
