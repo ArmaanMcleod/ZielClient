@@ -12,6 +12,34 @@ Navigation software designed to facilitate a channel which allows assistance to 
 * Follow the instructions in [this link](https://developer.android.com/studio/run/) to set up your emulator.
 
 Please note that we use Android SDK Version 28, and targeting Java 8. See [this link](https://developer.android.com/studio/write/java8-support) to see how to configure Android Studio to use Java 8.
+## Using Application 
+To use this application to test its features you should do the following
+
+1. Build and run the application on two devices. 
+
+2. Using two devices one device should sign up as a carer and the other as an assisted
+
+3. The assisted should then request the carer by choosing a location and adding the carer using the phone number.
+
+4. The carer should get a notification and open the channel with the user.
+
+Since account creation is based on phone numbers. Feel free to use these numbers when working with emulator.
+* Number: +61111222333  Verification Number: 123456
+* Number: +61444555666  Verification Number: 123456
+
+
+
+
+
+## Current Features
+* Feature 1: Account  creation using phone numbers
+* Feature 2: Display Route and location  to Assisted
+* Feature 3:  Link permanent Carers to Assisted 
+* Feature 4: Request Assistance from Carer by sending notification
+* Feature 5:  Location and Route shared from Assisted to Carer
+* Feature 6: Audio and Video Call Functions 
+* Feature 7: Text Chat 
+* Feature 8: Carer’s home page- Carer can view their assisted list 
 
 ## Setting up Google API keys
 
@@ -52,7 +80,7 @@ The complete list of coding practices is available [here](https://docs.google.co
 
 ## Built With
 
-* [Gradle](https://gradle.org/) - Dependency Management
+````````* [Gradle](https://gradle.org/) - Dependency Management
 
 
 
