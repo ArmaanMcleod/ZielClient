@@ -138,7 +138,6 @@ public class MapsActivity extends AppCompatActivity
             // Clear all previous points on map
             mGoogleMap.clear();
 
-
             // Update destination
             Log.d(activity, "Place selected: " + place.getLatLng());
             currentDestination = null;
@@ -220,6 +219,7 @@ public class MapsActivity extends AppCompatActivity
     // Set listener for markers
     mGoogleMap.setOnMarkerClickListener(
         marker -> {
+          marker.showInfoWindow();
           Intent intent = new Intent(MapsActivity.this, StreetViewActivity.class);
           intent.putExtra("destination", marker.getPosition());
           startActivity(intent);
@@ -367,11 +367,13 @@ public class MapsActivity extends AppCompatActivity
   @Override
   public void onClick(@NonNull View view) {
     switch (view.getId()) {
+
       case R.id.toTextChat:
         Intent intentToTextChat = new Intent(MapsActivity.this, TextChatActivity.class);
         intentToTextChat.putExtra(getResources().getString(R.string.channel_key), channelId);
         startActivity(intentToTextChat);
         break;
+
       case R.id.toVoiceChat:
         Intent intentVoice = new Intent(MapsActivity.this, VoiceActivity.class);
         intentVoice.putExtra("initiate", 0);
@@ -380,6 +382,7 @@ public class MapsActivity extends AppCompatActivity
         }
         startActivity(intentVoice);
         break;
+
       case R.id.toVideoChatButton:
         Intent intentToVideo = new Intent(MapsActivity.this, VideoActivity.class);
         intentToVideo.putExtra(getResources().getString(R.string.channel_key), channelId);
@@ -462,7 +465,6 @@ public class MapsActivity extends AppCompatActivity
 
           // Source and Destination markers
           Marker sourceMarker = mGoogleMap.addMarker(sourceOptions);
-          sourceMarker.showInfoWindow();
           markers.add(sourceMarker);
 
           Marker destinationMarker = mGoogleMap.addMarker(destinationOptions);
