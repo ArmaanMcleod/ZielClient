@@ -47,6 +47,7 @@ import java.util.Objects;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.google.android.gms.location.LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_MAGENTA;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
 
 /**
@@ -63,7 +64,7 @@ public class MapsActivity extends AppCompatActivity
 
   // Custom permissions request code
   private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-  private static final int DEFAULT_ZOOM = 11;
+  private static final int DEFAULT_ZOOM = 8;
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
   private final String activity = this.getClass().getSimpleName();
@@ -138,10 +139,10 @@ public class MapsActivity extends AppCompatActivity
             mGoogleMap.clear();
 
 
+            // Update destination
             Log.d(activity, "Place selected: " + place.getLatLng());
-            currentDestination=null;
+            currentDestination = null;
             destination = place.getLatLng();
-            drawMarker(destination, HUE_RED);
 
             // Zoom in on map location
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(source, DEFAULT_ZOOM));
@@ -181,30 +182,6 @@ public class MapsActivity extends AppCompatActivity
       channel.setDirectionsURL(directionsURL);
     }
   }
-
-  /**
-   * Draws marker on the Google map.
-   *
-   * @param location This is the location on the map.
-   * @param colour   This is the colour of the marker.
-   */
-  private void drawMarker(@NonNull LatLng location, float colour) {
-    MarkerOptions markerOptions = new MarkerOptions();
-
-    // Update marker options
-    markerOptions.position(location);
-
-    // Create address title of marker
-    String locationAddress = getAddress(location);
-    Log.d(activity, "Marker address: " + locationAddress);
-    markerOptions.title(getAddress(location));
-
-    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(colour));
-
-    // Add marker to the map
-    mGoogleMap.addMarker(markerOptions).showInfoWindow();
-  }
-
 
   /**
    * Gets the address of a location.
@@ -467,20 +444,29 @@ public class MapsActivity extends AppCompatActivity
           }
 
           source = newSource;
+
           // clear destination and source
           markers.forEach(Marker::remove);
           markers.clear();
 
+          // Source and Destination options for markers
           MarkerOptions sourceOptions = new MarkerOptions();
           sourceOptions.position(source);
+          sourceOptions.title(getAddress(source));
+          sourceOptions.icon(BitmapDescriptorFactory.defaultMarker(HUE_MAGENTA));
 
           MarkerOptions destinationOptions = new MarkerOptions();
           destinationOptions.position(destination);
+          destinationOptions.title(getAddress(destination));
+          destinationOptions.icon(BitmapDescriptorFactory.defaultMarker(HUE_RED));
 
+          // Source and Destination markers
           Marker sourceMarker = mGoogleMap.addMarker(sourceOptions);
+          sourceMarker.showInfoWindow();
           markers.add(sourceMarker);
 
           Marker destinationMarker = mGoogleMap.addMarker(destinationOptions);
+          destinationMarker.showInfoWindow();
           markers.add(destinationMarker);
 
           Log.d("DESTINATION CHANGE", destination.toString());
