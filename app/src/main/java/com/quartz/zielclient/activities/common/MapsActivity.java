@@ -75,14 +75,16 @@ public class MapsActivity extends AppCompatActivity
   private FusedLocationProviderClient mFusedLocationClient;
 
   private LatLng source;
-  private Marker sourceMarker;
-  private Marker destinationMarker;
-  private ArrayList<LatLng> markers;
+  private List<Marker> markers = new ArrayList<>();
+
   private LatLng destination;
+
   private LatLng currentDestination;
   private String channelId;
+
   private AlertDialog alertDialog;
   private ChannelData channel;
+
   private final LocationCallback mLocationCallback =
       new LocationCallback() {
 
@@ -117,15 +119,29 @@ public class MapsActivity extends AppCompatActivity
 
             source = newSource;
 
-            drawMarker(newSource, HUE_MAGENTA);
-            drawMarker(destination, HUE_RED);
+            // clear destination and source
+            markers.forEach(Marker::remove);
+            markers.clear();
+
+            MarkerOptions sourceOptions = new MarkerOptions();
+            sourceOptions.position(source);
+
+            MarkerOptions destinationOptions = new MarkerOptions();
+            destinationOptions.position(destination);
+
+            Marker sourceMarker = mGoogleMap.addMarker(sourceOptions);
+            markers.add(sourceMarker);
+
+            Marker destinationMarker = mGoogleMap.addMarker(destinationOptions);
+            markers.add(destinationMarker);
+
             Log.d("DESTINATION CHANGE", destination.toString());
-            if (currentDestination==null || !destination.equals(currentDestination)) {
+            if (!destination.equals(currentDestination)) {
               currentDestination = destination;
               drawRoute();
 
               // Zoom in on map location
-              mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(source, DEFAULT_ZOOM));
+              mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newSource, DEFAULT_ZOOM));
             }
           }
         }
@@ -211,7 +227,9 @@ public class MapsActivity extends AppCompatActivity
     }
   }
 
-  /** Draws route between two points on the map */
+  /**
+   * Draws route between two points on the map
+   */
   private void drawRoute() {
 
     // Compute path to destination
@@ -230,7 +248,7 @@ public class MapsActivity extends AppCompatActivity
    * Draws marker on the Google map.
    *
    * @param location This is the location on the map.
-   * @param colour This is the colour of the marker.
+   * @param colour   This is the colour of the marker.
    */
   private void drawMarker(@NonNull LatLng location, float colour) {
     MarkerOptions markerOptions = new MarkerOptions();
@@ -248,8 +266,6 @@ public class MapsActivity extends AppCompatActivity
     // Add marker to the map
     mGoogleMap.addMarker(markerOptions).showInfoWindow();
   }
-
-
 
 
   /**
@@ -326,7 +342,9 @@ public class MapsActivity extends AppCompatActivity
     }
   }
 
-  /** Check location permissions before showing user location. */
+  /**
+   * Check location permissions before showing user location.
+   */
   private void requestLocationPermission() {
     // If permission is not granted
     if (checkSelfPermission(ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
@@ -347,13 +365,13 @@ public class MapsActivity extends AppCompatActivity
                 // Prompt the user once explanation has been shown
                 (dialogInterface, i) ->
                     requestPermissions(
-                        new String[] {ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION))
+                        new String[]{ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION))
             .create()
             .show();
 
       } else {
         // No explanation needed, we can request the permission.
-        requestPermissions(new String[] {ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
+        requestPermissions(new String[]{ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
       }
     }
   }
@@ -364,8 +382,8 @@ public class MapsActivity extends AppCompatActivity
    * <p>Documentation : https://developer.android.com/reference/android/support/v4/app/
    * ActivityCompat.OnRequestPermissionsResultCallback#onRequestPermissionsResult
    *
-   * @param requestCode This is the request code passed to requestPermissions.
-   * @param permissions This is the permissions.
+   * @param requestCode  This is the request code passed to requestPermissions.
+   * @param permissions  This is the permissions.
    * @param grantResults This is results for granted or un-granted permissions.
    */
   @Override
@@ -391,7 +409,9 @@ public class MapsActivity extends AppCompatActivity
     }
   }
 
-  /** This enables the location to be shown on the map. */
+  /**
+   * This enables the location to be shown on the map.
+   */
   private void requestLocation() {
     // Permission was granted so we can enable user location
     if (checkSelfPermission(ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
@@ -414,7 +434,7 @@ public class MapsActivity extends AppCompatActivity
 
     // Sensor initialisation
     String sensor = "sensor=false";
-    String key = "&key="+ getBaseContext().getString(R.string.google_api_key);
+    String key = "&key=" + getBaseContext().getString(R.string.google_api_key);
     // Building the parameters to the web service
     String parameters = strSource + "&" + strDestination + "&" + sensor + key;
 
