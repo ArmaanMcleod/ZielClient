@@ -67,7 +67,7 @@ public class MapsActivity extends AppCompatActivity
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
   private final String activity = this.getClass().getSimpleName();
-  private final LocationCallback mLocationCallback = locationCallBackMaker() ;
+  private final LocationCallback mLocationCallback = locationCallBackMaker();
   private GoogleMap mGoogleMap;
 
   private LocationRequest mLocationRequest;
@@ -138,7 +138,6 @@ public class MapsActivity extends AppCompatActivity
             mGoogleMap.clear();
 
 
-
             Log.d(activity, "Place selected: " + place.getLatLng());
             currentDestination=null;
             destination = place.getLatLng();
@@ -166,7 +165,9 @@ public class MapsActivity extends AppCompatActivity
     }
   }
 
-  /** Draws route between two points on the map */
+  /**
+   * Draws route between two points on the map
+   */
   private void drawRoute() {
 
     // Compute path to destination
@@ -185,7 +186,7 @@ public class MapsActivity extends AppCompatActivity
    * Draws marker on the Google map.
    *
    * @param location This is the location on the map.
-   * @param colour This is the colour of the marker.
+   * @param colour   This is the colour of the marker.
    */
   private void drawMarker(@NonNull LatLng location, float colour) {
     MarkerOptions markerOptions = new MarkerOptions();
@@ -203,8 +204,6 @@ public class MapsActivity extends AppCompatActivity
     // Add marker to the map
     mGoogleMap.addMarker(markerOptions).showInfoWindow();
   }
-
-
 
 
   /**
@@ -228,22 +227,6 @@ public class MapsActivity extends AppCompatActivity
     }
 
     return address;
-  }
-
-  /**
-   * This is called when user received an event call.
-   *
-   * <p>Documentation : https://developers.google.com/android/reference/com/google/android/gms/maps/
-   * OnMapReadyCallback.html#onMapReady(com.google.android.gms.maps.GoogleMap)
-   */
-  @Override
-  public void onPause() {
-    super.onPause();
-
-    // Stop location updates when Activity is no longer active
-    if (mFusedLocationClient != null) {
-
-    }
   }
 
   /**
@@ -281,7 +264,9 @@ public class MapsActivity extends AppCompatActivity
     }
   }
 
-  /** Check location permissions before showing user location. */
+  /**
+   * Check location permissions before showing user location.
+   */
   private void requestLocationPermission() {
     // If permission is not granted
     if (checkSelfPermission(ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
@@ -302,13 +287,13 @@ public class MapsActivity extends AppCompatActivity
                 // Prompt the user once explanation has been shown
                 (dialogInterface, i) ->
                     requestPermissions(
-                        new String[] {ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION))
+                        new String[]{ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION))
             .create()
             .show();
 
       } else {
         // No explanation needed, we can request the permission.
-        requestPermissions(new String[] {ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
+        requestPermissions(new String[]{ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
       }
     }
   }
@@ -319,8 +304,8 @@ public class MapsActivity extends AppCompatActivity
    * <p>Documentation : https://developer.android.com/reference/android/support/v4/app/
    * ActivityCompat.OnRequestPermissionsResultCallback#onRequestPermissionsResult
    *
-   * @param requestCode This is the request code passed to requestPermissions.
-   * @param permissions This is the permissions.
+   * @param requestCode  This is the request code passed to requestPermissions.
+   * @param permissions  This is the permissions.
    * @param grantResults This is results for granted or un-granted permissions.
    */
   @Override
@@ -450,8 +435,7 @@ public class MapsActivity extends AppCompatActivity
     return alertDialog;
   }
 
-  private LocationCallback locationCallBackMaker(){
-
+  private LocationCallback locationCallBackMaker() {
     return new LocationCallback() {
 
       /**
@@ -482,25 +466,26 @@ public class MapsActivity extends AppCompatActivity
             channel.setAssistedLocation(location);
           }
 
-
           source = newSource;
           // clear destination and source
-          for (Marker marker : new ArrayList<>(markers)) {
-            marker.remove();
-            markers.remove(marker);
-          }
+          markers.forEach(Marker::remove);
+          markers.clear();
 
           MarkerOptions sourceOptions = new MarkerOptions();
-          sourceOptions.position(newSource);
+          sourceOptions.position(source);
+
           MarkerOptions destinationOptions = new MarkerOptions();
           destinationOptions.position(destination);
-          Marker source = mGoogleMap.addMarker(sourceOptions);
-          markers.add(source);
-          Marker dest = mGoogleMap.addMarker(destinationOptions);
-          markers.add(dest);
+
+          Marker sourceMarker = mGoogleMap.addMarker(sourceOptions);
+          markers.add(sourceMarker);
+
+          Marker destinationMarker = mGoogleMap.addMarker(destinationOptions);
+          markers.add(destinationMarker);
 
           Log.d("DESTINATION CHANGE", destination.toString());
-          if (currentDestination==null || !destination.equals(currentDestination)) {
+
+          if (!destination.equals(currentDestination)) {
             currentDestination = destination;
             drawRoute();
 
@@ -511,11 +496,5 @@ public class MapsActivity extends AppCompatActivity
       }
 
     };
-  };
+  }
 }
-
-
-
-
-
-
