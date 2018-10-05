@@ -162,6 +162,9 @@ public class TextChatActivity extends AppCompatActivity
       List<Message> messages = new ArrayList<Message>(messagesMap.values());
 
       prepareData(messages);
+
+      // Scroll to the bottom of the chat
+      mMessageRecycler.scrollToPosition(messageList.size()-1);
     }
   }
   /**

@@ -22,8 +22,8 @@ public class MessageServiceTest {
     // Testing for correct input
     Map<String, Map<String, Object>> test1 = new HashMap<>();
     Map<String, Object> test1Message = new HashMap<>();
-    test1Message.put("username", "wei");
-    test1Message.put("messageText", "this code sucks");
+    test1Message.put("userName", "wei");
+    test1Message.put("messageValue", "this code sucks");
     test1Message.put("messageType", "TEXT");
     test1Message.put("messageTime", 12345L);
     test1.put("testMessage", test1Message);
@@ -32,10 +32,11 @@ public class MessageServiceTest {
     // Testing for incorrect input
     Map<String, Map<String, Object>> test2 = new HashMap<>();
     Map<String, Object> test2Message = new HashMap<>();
-    test2Message.put("username", "Tom");
-    test2Message.put("messageType", "TEXT");
+    test2Message.put("userName", "Tom");
+    test2Message.put("messageValue", "TEXT");
     test2Message.put("messageTime", 124444L);
     test2Message.put("Text", "I agree");
+    test2.put("testMessage2", test2Message);
     testMessageData2 = test2;
   }
 
@@ -56,6 +57,6 @@ public class MessageServiceTest {
   @Test
   public void deserialise_test2() {
     Map<String, Message> testMessage = MessageService.deserialiseMessages(testMessageData2);
-    assertNotEquals("I disagree", testMessage.get("testMessage").getMessageValue());
+    assertNotEquals("I disagree", testMessage.get("testMessage2").getMessageValue());
   }
 }
