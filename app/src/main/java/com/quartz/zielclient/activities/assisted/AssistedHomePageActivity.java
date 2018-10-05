@@ -16,6 +16,7 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.quartz.zielclient.R;
 
+import java.util.List;
 import java.util.Objects;
 
 import android.Manifest;
@@ -36,6 +37,8 @@ public class AssistedHomePageActivity extends AppCompatActivity {
   private LatLng destination;
 
   private static final int REQUEST_LOCATION_PERMISSION = 1;
+
+  private boolean permissionGranted;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -68,17 +71,23 @@ public class AssistedHomePageActivity extends AppCompatActivity {
     Button directMeButton = findViewById(R.id.directMeButton);
     directMeButton.setOnClickListener(
         v -> {
-          // If destination exists, start MapsActivity
-          if (destination != null) {
-            Intent intent = new Intent(AssistedHomePageActivity.this,
-                AssistedSelectCarerActivity.class);
 
-            intent.putExtra("destination", destination);
-            startActivity(intent);
+          // First make sure permission is granted before continuing
+          if (!permissionGranted) {
+            requestLocationPermission();
           } else {
-            Toast.makeText(this, "Please select a place before proceeding",
-                Toast.LENGTH_LONG)
-                .show();
+            // If destination exists, start MapsActivity
+            if (destination != null) {
+              Intent intent = new Intent(AssistedHomePageActivity.this,
+                  AssistedSelectCarerActivity.class);
+
+              intent.putExtra("destination", destination);
+              startActivity(intent);
+            } else {
+              Toast.makeText(this, "Please select a place before proceeding",
+                  Toast.LENGTH_LONG)
+                  .show();
+            }
           }
         });
 
@@ -115,13 +124,12 @@ public class AssistedHomePageActivity extends AppCompatActivity {
     if(EasyPermissions.hasPermissions(this, perms)) {
       Toast.makeText(this, "Location Permission already granted",
           Toast.LENGTH_SHORT).show();
+      permissionGranted = true;
     }
     else {
       EasyPermissions.requestPermissions(this,
           "Please grant the location permission", REQUEST_LOCATION_PERMISSION, perms);
+      permissionGranted = false;
     }
   }
-
-
-
 }

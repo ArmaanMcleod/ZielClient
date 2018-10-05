@@ -163,7 +163,7 @@ public class MapsActivity extends AppCompatActivity
       mapFrag.getMapAsync(this);
     }
 
-    // Allow user to see street view suggestion
+    // Allow user to see street view suggestion'
     Toast streetviewSuggestion =  Toast.makeText(this,
         "Click on a marker to see street view", Toast.LENGTH_LONG);
     streetviewSuggestion.setGravity(Gravity.BOTTOM,0,250);
@@ -292,6 +292,9 @@ public class MapsActivity extends AppCompatActivity
     return apiRequest;
   }
 
+  /**
+   * CChecks video call status for channel.
+   */
   @Override
   public void dataChanged() {
     // notify user about new messages
@@ -334,6 +337,7 @@ public class MapsActivity extends AppCompatActivity
         intentToVideo.putExtra(getResources().getString(R.string.channel_key), channelId);
         startActivity(intentToVideo);
         break;
+
       default:
         break;
     }
