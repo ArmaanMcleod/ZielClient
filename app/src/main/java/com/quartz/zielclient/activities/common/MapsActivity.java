@@ -69,15 +69,18 @@ public class MapsActivity extends AppCompatActivity
   private final String activity = this.getClass().getSimpleName();
   private final LocationCallback mLocationCallback = locationCallBackMaker() ;
   private GoogleMap mGoogleMap;
+
   private LocationRequest mLocationRequest;
   private FusedLocationProviderClient mFusedLocationClient;
+
   private LatLng source;
-  private Marker sourceMarker;
-  private Marker destinationMarker;
-  private ArrayList<Marker> markers = new ArrayList();
+  private List<Marker> markers = new ArrayList<>();
+
   private LatLng destination;
+
   private LatLng currentDestination;
   private String channelId;
+
   private AlertDialog alertDialog;
   private ChannelData channel;
 
@@ -342,7 +345,9 @@ public class MapsActivity extends AppCompatActivity
     }
   }
 
-  /** This enables the location to be shown on the map. */
+  /**
+   * This enables the location to be shown on the map.
+   */
   private void requestLocation() {
     // Permission was granted so we can enable user location
     if (checkSelfPermission(ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
@@ -365,7 +370,7 @@ public class MapsActivity extends AppCompatActivity
 
     // Sensor initialisation
     String sensor = "sensor=false";
-    String key = "&key="+ getBaseContext().getString(R.string.google_api_key);
+    String key = "&key=" + getBaseContext().getString(R.string.google_api_key);
     // Building the parameters to the web service
     String parameters = strSource + "&" + strDestination + "&" + sensor + key;
 
