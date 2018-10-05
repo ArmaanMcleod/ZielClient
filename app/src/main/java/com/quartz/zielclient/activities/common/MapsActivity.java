@@ -164,7 +164,8 @@ public class MapsActivity extends AppCompatActivity
     }
 
     // Allow user to see street view suggestion
-    Toast streetviewSuggestion =  Toast.makeText(this, "Click on a marker to see street view", Toast.LENGTH_LONG);
+    Toast streetviewSuggestion =  Toast.makeText(this,
+        "Click on a marker to see street view", Toast.LENGTH_LONG);
     streetviewSuggestion.setGravity(Gravity.BOTTOM,0,250);
     streetviewSuggestion.show();
   }
@@ -413,7 +414,6 @@ public class MapsActivity extends AppCompatActivity
           markers.add(sourceMarker);
 
           Marker destinationMarker = mGoogleMap.addMarker(destinationOptions);
-          destinationMarker.showInfoWindow();
           markers.add(destinationMarker);
 
           Log.d("DESTINATION CHANGE", destination.toString());

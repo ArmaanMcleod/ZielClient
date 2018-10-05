@@ -3,6 +3,7 @@ package com.quartz.zielclient.activities.assisted;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
@@ -69,34 +70,55 @@ public class AssistedHomePageActivity extends AppCompatActivity {
         v -> {
           // If destination exists, start MapsActivity
           if (destination != null) {
-            Intent intent = new Intent(AssistedHomePageActivity.this, AssistedSelectCarerActivity.class);
+            Intent intent = new Intent(AssistedHomePageActivity.this,
+                AssistedSelectCarerActivity.class);
+
             intent.putExtra("destination", destination);
             startActivity(intent);
           } else {
-            Toast.makeText(this, "Please select a place before proceeding", Toast.LENGTH_LONG)
+            Toast.makeText(this, "Please select a place before proceeding",
+                Toast.LENGTH_LONG)
                 .show();
           }
         });
 
+    // Verify location permission anyways
     requestLocationPermission();
   }
 
+  /**
+   * This is a callback for requesting and checking the result of a permission.
+   *
+   * <p>Documentation : https://developer.android.com/reference/android/support/v4/app/
+   * ActivityCompat.OnRequestPermissionsResultCallback#onRequestPermissionsResult
+   *
+   * @param requestCode  This is the request code passed to requestPermissions.
+   * @param permissions  This is the permissions.
+   * @param grantResults This is results for granted or un-granted permissions.
+   */
   @Override
-  public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                         @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
     // Forward results to EasyPermissions
-    EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    EasyPermissions.onRequestPermissionsResult(requestCode,
+        permissions, grantResults, this);
   }
 
+  /**
+   * Check location permissions before showing user location.
+   */
   @AfterPermissionGranted(REQUEST_LOCATION_PERMISSION)
   public void requestLocationPermission() {
     String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
     if(EasyPermissions.hasPermissions(this, perms)) {
-      Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show();
+      Toast.makeText(this, "Location Permission already granted",
+          Toast.LENGTH_SHORT).show();
     }
     else {
-      EasyPermissions.requestPermissions(this, "Please grant the location permission", REQUEST_LOCATION_PERMISSION, perms);
+      EasyPermissions.requestPermissions(this,
+          "Please grant the location permission", REQUEST_LOCATION_PERMISSION, perms);
     }
   }
 
