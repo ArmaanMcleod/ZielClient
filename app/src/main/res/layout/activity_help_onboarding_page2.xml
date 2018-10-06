@@ -42,14 +42,14 @@
         android:text="TextView"
         android:textAlignment="center"
         android:textSize="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/signup"
+        app:layout_constraintBottom_toTopOf="@+id/signup2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/onboarding_title"
         tools:text="Be able to search your desired location and connect with a carer to receive immediate help" />
 
     <Button
-        android:id="@+id/signup"
+        android:id="@+id/signup2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="94dp"
@@ -60,12 +60,12 @@
         android:textAllCaps="false"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/next1"
+        app:layout_constraintEnd_toStartOf="@+id/next2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/onboarding_description" />
 
     <Button
-        android:id="@+id/next1"
+        android:id="@+id/next2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="72dp"
@@ -73,7 +73,7 @@
         android:text="Next"
         android:textAllCaps="false"
         android:textSize="20sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/signup"
+        app:layout_constraintBaseline_toBaselineOf="@+id/signup2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/signup" />
+        app:layout_constraintStart_toEndOf="@+id/signup2" />
 </android.support.constraint.ConstraintLayout>
