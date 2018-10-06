@@ -358,7 +358,7 @@ public class MapsActivity extends AppCompatActivity
 
   /**
    * Makes alert for assisted to join carer in video call.
-   * @return AlertDialog A alert dialog box for the assisted to see. 
+   * @return AlertDialog A alert dialog box for the assisted to see.
    */
   public AlertDialog makeVideoAlert() {
     alertDialog = new AlertDialog.Builder(this).create();
