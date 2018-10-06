@@ -48,6 +48,7 @@ import java.util.Objects;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.google.android.gms.location.LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_CYAN;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_MAGENTA;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
 
@@ -77,7 +78,9 @@ public class MapsActivity extends AppCompatActivity
   private FusedLocationProviderClient mFusedLocationClient;
 
   private LatLng source;
-  private List<Marker> markers = new ArrayList<>();
+
+  private List<Marker> sourceDestinationMarkers = new ArrayList<>();
+  private List<Marker> dropMarkers = new ArrayList<>();
 
   private LatLng destination;
 
@@ -353,6 +356,10 @@ public class MapsActivity extends AppCompatActivity
     super.onBackPressed();
   }
 
+  /**
+   * Makes alert for assisted to join carer in video call.
+   * @return AlertDialog A alert dialog box for the assisted to see.
+   */
   public AlertDialog makeVideoAlert() {
     alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle("Video Share?");
@@ -369,6 +376,42 @@ public class MapsActivity extends AppCompatActivity
     return alertDialog;
   }
 
+  /**
+   * Draws markers to map from the carer.
+   * @param coordinates This is the coordinates passed from the carer.
+   */
+  private void drawMarkers(List<LatLng> coordinates) {
+    for (LatLng coordinate : coordinates) {
+      Marker marker = createMarker(coordinate, HUE_CYAN);
+      dropMarkers.add(marker);
+    }
+  }
+
+  /**
+   * Deletes markers from a list.
+   * @param markers the markers stored in the list.
+   */
+  private void deleteMarkers(List<Marker> markers) {
+    markers.forEach(Marker::remove);
+    markers.clear();
+  }
+
+  /**
+   * Creates a marker and shows it on the Google map.
+   * @param location The location of marker.
+   * @param colour The colour of marker.
+   * @return Marker The marker object.
+   */
+  private Marker createMarker(LatLng location, float colour) {
+    MarkerOptions markerOptions = new MarkerOptions()
+        .position(location)
+        .title(getAddress(location))
+        .icon(BitmapDescriptorFactory.defaultMarker(colour));
+
+    return mGoogleMap.addMarker(markerOptions);
+  }
+
+  // Location callback that continually polls Google services API for location updates.
   private LocationCallback locationCallBackMaker() {
     return new LocationCallback() {
 
@@ -403,26 +446,14 @@ public class MapsActivity extends AppCompatActivity
           source = newSource;
 
           // clear destination and source
-          markers.forEach(Marker::remove);
-          markers.clear();
-
-          // Source and Destination options for markers
-          MarkerOptions sourceOptions = new MarkerOptions();
-          sourceOptions.position(source);
-          sourceOptions.title(getAddress(source));
-          sourceOptions.icon(BitmapDescriptorFactory.defaultMarker(HUE_MAGENTA));
-
-          MarkerOptions destinationOptions = new MarkerOptions();
-          destinationOptions.position(destination);
-          destinationOptions.title(getAddress(destination));
-          destinationOptions.icon(BitmapDescriptorFactory.defaultMarker(HUE_RED));
+          deleteMarkers(sourceDestinationMarkers);
 
           // Source and Destination markers
-          Marker sourceMarker = mGoogleMap.addMarker(sourceOptions);
-          markers.add(sourceMarker);
+          Marker sourceMarker = createMarker(source, HUE_MAGENTA);
+          sourceDestinationMarkers.add(sourceMarker);
 
-          Marker destinationMarker = mGoogleMap.addMarker(destinationOptions);
-          markers.add(destinationMarker);
+          Marker destinationMarker = createMarker(destination, HUE_RED);
+          sourceDestinationMarkers.add(destinationMarker);
 
           Log.d("DESTINATION CHANGE", destination.toString());
 

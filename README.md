@@ -15,6 +15,7 @@ Please note that we use Android SDK Version 28, and targeting Java 8. See [this 
 ## Using Application 
 To use this application to test its features you should do the following
 
+Ensure that you pull the latest version of this repository.
 1. Build and run the application on two devices. 
 
 2. Using two devices one device should sign up as a carer and the other as an assisted
