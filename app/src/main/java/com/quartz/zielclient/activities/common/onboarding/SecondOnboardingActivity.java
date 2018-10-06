@@ -27,7 +27,7 @@ public class SecondOnboardingActivity extends AppCompatActivity implements View.
   @Override
   public void onClick(View v) {
     if (v.getId() == R.id.next2) {
-      startActivity(new Intent(this, SecondOnboardingActivity.class));
+      startActivity(new Intent(this, FinalOnboardingActivity.class));
     } else if (v.getId() == R.id.signup2) {
       startActivity(new Intent(this, SignUpActivity.class));
     }
