@@ -65,7 +65,7 @@ public class CarerMapsActivity extends AppCompatActivity
 
     // set xml view file
     setContentView(R.layout.activity_carer_maps);
-    key = getApplicationContext().getString(R.string.google_api_key);
+    key = "&key="+getApplicationContext().getString(R.string.google_api_key);
     toTextChat = findViewById(R.id.toTextChat);
     toVoiceChat = findViewById(R.id.toVoiceChat);
     Button toVideoChat = findViewById(R.id.toVideoActivity);
