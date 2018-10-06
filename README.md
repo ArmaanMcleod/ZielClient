@@ -21,6 +21,8 @@ To use this application to test its features you should do the following
 
 3. The assisted should then request the carer by choosing a location and adding the carer using the phone number.
 
+* If using an emulator you will be required to set location in emulator settings. (Melbourne University has long: 144.9612 and lat: -37.7964)
+
 4. The carer should get a notification and open the channel with the user.
 
 Since account creation is based on phone numbers. Feel free to use these numbers when working with emulator.
