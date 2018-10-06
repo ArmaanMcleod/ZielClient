@@ -106,7 +106,10 @@
         <activity android:name=".activities.common.StreetViewActivity" />
         <activity android:name=".activities.assisted.AddCarerActivity" />
         <activity android:name=".activities.assisted.AssistedSelectCarerActivity" />
-        <activity android:name=".activities.common.VoiceActivity"></activity>
+        <activity android:name=".activities.common.VoiceActivity"/>
+        <activity android:name=".activities.common.onboarding.OnBoardingActivity" />
+        <activity android:name=".activities.common.onboarding.SecondOnboardingActivity" />
+        <activity android:name=".activities.common.onboarding.FinalOnboardingActivity" />
     </application>
 
 </manifest>
