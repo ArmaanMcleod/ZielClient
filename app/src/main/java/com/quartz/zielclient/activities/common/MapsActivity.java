@@ -356,6 +356,10 @@ public class MapsActivity extends AppCompatActivity
     super.onBackPressed();
   }
 
+  /**
+   * Makes alert for assisted to join carer in video call.
+   * @return AlertDialog A alert dialog box for the assisted to see. 
+   */
   public AlertDialog makeVideoAlert() {
     alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle("Video Share?");
@@ -407,6 +411,7 @@ public class MapsActivity extends AppCompatActivity
     return mGoogleMap.addMarker(markerOptions);
   }
 
+  // Location callback that continually polls Google services API for location updates.
   private LocationCallback locationCallBackMaker() {
     return new LocationCallback() {
 
