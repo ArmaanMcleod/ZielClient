@@ -15,10 +15,10 @@ public class FinalOnboardingActivity extends AppCompatActivity implements View.O
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_help_onboarding_page1);
+    setContentView(R.layout.activity_help_onboarding_page3);
 
-    Button skipButton = findViewById(R.id.signup3);
-    skipButton.setOnClickListener(this);
+    Button signupButton = findViewById(R.id.signup3);
+    signupButton.setOnClickListener(this);
   }
 
   @Override

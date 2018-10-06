@@ -25,12 +25,11 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="9dp"
         android:layout_marginStart="24dp"
-        android:text="TextView"
+        android:text="Welcome"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/onboarding_description"
         app:layout_constraintStart_toStartOf="@+id/onboarding_image1"
-        app:layout_constraintTop_toBottomOf="@+id/onboarding_image1"
-        tools:text="Welcome" />
+        app:layout_constraintTop_toBottomOf="@+id/onboarding_image1" />
 
     <TextView
         android:id="@+id/onboarding_description"
@@ -39,14 +38,13 @@
         android:layout_marginBottom="22dp"
         android:layout_marginEnd="70dp"
         android:layout_marginStart="70dp"
-        android:text="TextView"
+        android:text="Connecting with your loved ones to receive virtual assistance immediately.  \nTo receive help from a carer to reach your destination at anytime.  "
         android:textAlignment="center"
         android:textSize="15dp"
         app:layout_constraintBottom_toTopOf="@+id/next1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/onboarding_title"
-        tools:text="Connecting with your loved ones to receive virtual assistance immediately.  \nTo receive help from a carer to reach your destination at anytime.  " />
+        app:layout_constraintTop_toBottomOf="@+id/onboarding_title" />
 
     <Button
         android:id="@+id/signup"

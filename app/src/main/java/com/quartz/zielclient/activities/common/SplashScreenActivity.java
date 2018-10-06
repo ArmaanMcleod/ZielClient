@@ -11,6 +11,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.activities.assisted.AssistedHomePageActivity;
 import com.quartz.zielclient.activities.carer.CarerHomepageActivity;
+import com.quartz.zielclient.activities.common.onboarding.OnBoardingActivity;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
 import com.quartz.zielclient.exceptions.AuthorisationException;
 import com.quartz.zielclient.user.User;
@@ -28,7 +29,10 @@ public class SplashScreenActivity extends AppCompatActivity implements ValueEven
       UserController.fetchThisUser(this);
     } catch (AuthorisationException e) {
       Log.e(TAG, "Error when authorising user", e);
-      goToSignin();
+
+      Intent intent = new Intent(this, OnBoardingActivity.class);
+      startActivity(intent);
+      finish();
     }
   }
 
@@ -52,7 +56,6 @@ public class SplashScreenActivity extends AppCompatActivity implements ValueEven
 
   private void redirect(User user) {
     if (user.isAssisted()) {
-      // TODO implement assisted home page
       startActivity(new Intent(this, AssistedHomePageActivity.class));
     } else {
       startActivity(new Intent(this, CarerHomepageActivity.class));
