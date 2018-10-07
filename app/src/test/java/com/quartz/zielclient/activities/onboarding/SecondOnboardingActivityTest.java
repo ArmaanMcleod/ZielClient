@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk=26)
+@Config(sdk = 26)
 public class SecondOnboardingActivityTest {
 
   @Test
