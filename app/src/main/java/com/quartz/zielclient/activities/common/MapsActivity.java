@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
@@ -73,10 +74,13 @@ public class MapsActivity extends AppCompatActivity
   private final String activity = this.getClass().getSimpleName();
   private final LocationCallback mLocationCallback = locationCallBackMaker();
   private GoogleMap mGoogleMap;
+  private TextView waitingMessage;
 
   private LocationRequest mLocationRequest;
   private FusedLocationProviderClient mFusedLocationClient;
-
+  private  Button toVideoChatButton;
+  private  Button toTextChatButton;
+  private  Button toVoiceChatButton;
   private LatLng source;
 
   private List<Marker> sourceDestinationMarkers = new ArrayList<>();
@@ -115,13 +119,17 @@ public class MapsActivity extends AppCompatActivity
     alertDialog = makeVideoAlert();
 
     // Create buttons and listeners below
-    Button toVideoChatButton = findViewById(R.id.toVideoChatButton);
+
+    waitingMessage = findViewById(R.id.waitForCarerMessage);
+    toVideoChatButton = findViewById(R.id.toVideoChatButton);
+    toVideoChatButton.setVisibility(View.INVISIBLE);
     toVideoChatButton.setOnClickListener(this);
 
-    Button toTextChatButton = findViewById(R.id.toTextChat);
+    toTextChatButton = findViewById(R.id.toTextChat);
     toTextChatButton.setOnClickListener(this);
 
-    Button toVoiceChatButton = findViewById(R.id.toVoiceChat);
+    toVoiceChatButton = findViewById(R.id.toVoiceChat);
+    toVoiceChatButton.setVisibility(View.INVISIBLE);
     toVoiceChatButton.setOnClickListener(this);
 
     // Get bundle of arguments passed from Home Page Activity
@@ -312,6 +320,13 @@ public class MapsActivity extends AppCompatActivity
       } else {
         alertDialog.cancel();
       }
+      if(channel.getCarerStatus()){
+        Toast.makeText(this,"Carer Connected",Toast.LENGTH_SHORT);
+        toTextChatButton.setVisibility(View.VISIBLE);
+        toVideoChatButton.setVisibility(View.VISIBLE);
+        toVoiceChatButton.setVisibility(View.VISIBLE);
+        waitingMessage.setVisibility(View.INVISIBLE);
+      }
     }
   }
 
@@ -441,6 +456,11 @@ public class MapsActivity extends AppCompatActivity
           // Execute channel is available
           if (channel != null) {
             channel.setAssistedLocation(location);
+            deleteMarkers(dropMarkers);
+            if(channel.getCarerMarkerList() != null){
+              drawMarkers(channel.getCarerMarkerList());
+            }
+
           }
 
           source = newSource;

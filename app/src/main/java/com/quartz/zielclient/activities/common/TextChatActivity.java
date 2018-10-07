@@ -1,14 +1,10 @@
 package com.quartz.zielclient.activities.common;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -17,12 +13,10 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.adapters.MessageListAdapter;
@@ -34,7 +28,6 @@ import com.quartz.zielclient.messages.MessageFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -156,6 +149,9 @@ public class TextChatActivity extends AppCompatActivity
   @Override
   public void dataChanged() {
     // Make sure the database of messages for the channel is not empty
+    if(channel.getVideoCallStatus()){
+      onBackPressed();
+    }
     if (channel.getMessages() != null) {
       // Convert Map of messages to List of messages
       Map<String, Message> messagesMap = channel.getMessages();
