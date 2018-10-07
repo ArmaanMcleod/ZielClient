@@ -63,6 +63,12 @@ public final class ChannelController {
    */
   public static ChannelData retrieveChannel(String channelId, ChannelListener channelListener) {
     Log.i(TAG, String.format("Retrieving channel %s", channelId));
+    try{
     return new ChannelData(channelsReference.child(channelId), channelListener, channelId);
+    }catch (IllegalStateException e){
+      e.printStackTrace();
+      return null;
+    }
+
   }
 }
