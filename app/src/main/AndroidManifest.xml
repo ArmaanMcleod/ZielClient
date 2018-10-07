@@ -13,14 +13,15 @@
         android:required="true" />
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ziel"
@@ -35,11 +36,9 @@
 
         <activity
             android:name=".activities.common.VideoActivity"
-            android:configChanges="orientation|screenSize">
-        </activity>
+            android:configChanges="orientation|screenSize"></activity>
         <activity
             android:name=".activities.common.util.SettingsActivity"
-
             android:label="@string/title_activity_settings"
             android:parentActivityName=".activities.common.VideoActivity">
             <meta-data
@@ -47,8 +46,8 @@
                 android:value="com.quartz.zielclient.activities.common.VideoActivity" />
         </activity>
         <activity
-            android:exported="true"
             android:name=".activities.common.SplashScreenActivity"
+            android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -63,11 +62,10 @@
         <activity
             android:name=".activities.assisted.AssistedHomePageActivity"
             android:label="@string/title_activity_home_page" />
-
         <activity
             android:name=".activities.carer.CarerHomepageActivity"
             android:label="@string/title_activity_carer_homepage"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask" />
         <!--
            The API key for Google Maps-based APIs is defined as a string resource.
            (See the file "res/values/google_maps_api.xml").
@@ -78,7 +76,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_api_key"/>
+            android:value="@string/google_api_key" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
@@ -101,16 +99,17 @@
 
         <activity
             android:name=".activities.carer.CarerMapsActivity"
-            android:label="@string/title_activity_carer_maps"
-            />
-
+            android:label="@string/title_activity_carer_maps" />
         <activity android:name=".activities.common.StreetViewActivity" />
         <activity android:name=".activities.assisted.AddCarerActivity" />
         <activity android:name=".activities.assisted.AssistedSelectCarerActivity" />
-        <activity android:name=".activities.common.VoiceActivity"/>
+        <activity android:name=".activities.common.VoiceActivity" />
         <activity android:name=".activities.onboarding.OnboardingActivity" />
         <activity android:name=".activities.onboarding.SecondOnboardingActivity" />
         <activity android:name=".activities.onboarding.FinalOnboardingActivity" />
+        <activity
+            android:name=".activities.common.TakePhotosActivity"
+            android:label="@string/title_activity_take_photos"></activity>
     </application>
 
 </manifest>
