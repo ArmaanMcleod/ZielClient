@@ -122,8 +122,9 @@ public class TextChatActivity extends AppCompatActivity
     mediaButton.setOnClickListener(v -> requestMedia());
 
     // Greet User
+    String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
     Snackbar.make(mMessageRecycler, "Welcome to the Text Chat "
-        + currentUser + "!", Snackbar.LENGTH_SHORT).show();
+        + userName + "!", Snackbar.LENGTH_SHORT).show();
 
   }
 

@@ -122,6 +122,7 @@ public class MessageListAdapter extends RecyclerView.Adapter{
     // Message.MessageType messageType;
     TextView messageText, timeStamp, userName;
     ImageView profilePicture;
+    String sender;
 
     ReceivedMessageHolder(View itemView) {
       super(itemView);
@@ -129,6 +130,8 @@ public class MessageListAdapter extends RecyclerView.Adapter{
       timeStamp = itemView.findViewById(R.id.text_message_time);
       userName = itemView.findViewById(R.id.text_message_name);
       profilePicture = (ImageView) itemView.findViewById(R.id.image_message_profile);
+      // TODO Fix this lmao
+      sender = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
     }
 
     // Bind Method
@@ -137,6 +140,7 @@ public class MessageListAdapter extends RecyclerView.Adapter{
       messageText.setText(message.getMessageValue());
       String timeString = new SimpleDateFormat("h:mm a").format(message.getMessageTime());
       timeStamp.setText(timeString);
+      userName.setText(sender);
     }
   }
 
