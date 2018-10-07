@@ -11,11 +11,11 @@
     tools:context=".activities.common.MapsActivity">
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/toTakePhotoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/place_autocomplete"
-        android:text="Take Photo" />
+        android:text="@string/take_photo" />
 
     <fragment
         android:id="@+id/place_autocomplete"
@@ -57,7 +57,7 @@
             android:drawableTop="@drawable/ic_phone_message"
             android:drawablePadding="-15sp"
             android:scaleType="fitCenter"
-            android:text="\nMessage"
+            android:text="@string/nmessage"
             android:textAllCaps="false"
             android:textColor="#a7a3a3"
             android:textStyle="bold"
@@ -91,7 +91,7 @@
             android:drawableTop="@drawable/ic_phone_video"
             android:drawablePadding="-15sp"
             android:scaleType="fitCenter"
-            android:text="\nVideo Call"
+            android:text="@string/video_call"
             android:textAllCaps="false"
             android:textColor="#a7a3a3"
             android:textStyle="bold"
@@ -104,7 +104,7 @@
             android:id="@+id/waitForCarerMessage"
             android:layout_width="196dp"
             android:layout_height="48dp"
-            android:text="Please wait for carer to join channel..."
+            android:text="@string/please_wait_for_carer_to_join_channel"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

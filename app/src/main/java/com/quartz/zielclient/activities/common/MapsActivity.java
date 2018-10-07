@@ -81,6 +81,7 @@ public class MapsActivity extends AppCompatActivity
   private  Button toVideoChatButton;
   private  Button toTextChatButton;
   private  Button toVoiceChatButton;
+  private Button toTakePhotoButton;
   private LatLng source;
 
   private List<Marker> sourceDestinationMarkers = new ArrayList<>();
@@ -131,6 +132,9 @@ public class MapsActivity extends AppCompatActivity
     toVoiceChatButton = findViewById(R.id.toVoiceChat);
     toVoiceChatButton.setVisibility(View.INVISIBLE);
     toVoiceChatButton.setOnClickListener(this);
+
+    toTakePhotoButton = findViewById(R.id.toTakePhotoButton);
+    toTakePhotoButton.setOnClickListener(this);
 
     // Get bundle of arguments passed from Home Page Activity
     Bundle bundle = getIntent().getExtras();
@@ -321,7 +325,7 @@ public class MapsActivity extends AppCompatActivity
         alertDialog.cancel();
       }
       if(channel.getCarerStatus()){
-        Toast.makeText(this,"Carer Connected",Toast.LENGTH_SHORT);
+        Toast.makeText(this,"Carer Connected",Toast.LENGTH_SHORT).show();
         toTextChatButton.setVisibility(View.VISIBLE);
         toVideoChatButton.setVisibility(View.VISIBLE);
         toVoiceChatButton.setVisibility(View.VISIBLE);
@@ -358,6 +362,11 @@ public class MapsActivity extends AppCompatActivity
         Intent intentToVideo = new Intent(MapsActivity.this, VideoActivity.class);
         intentToVideo.putExtra(getResources().getString(R.string.channel_key), channelId);
         startActivity(intentToVideo);
+        break;
+
+      case R.id.toTakePhotoButton:
+        Intent intentToPhoto = new Intent(MapsActivity.this, TakePhotosActivity.class);
+        startActivity(intentToPhoto);
         break;
 
       default:

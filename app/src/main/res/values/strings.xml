@@ -53,4 +53,8 @@
     <string name="title_activity_settings">Settings</string>
     <string name="vp8_simulcast">VP8 Simulcast</string>
     <string name="title_activity_take_photos">TakePhotosActivity</string>
+    <string name="video_call">Video Call</string>
+    <string name="please_wait_for_carer_to_join_channel">Please wait for carer to join channel...</string>
+    <string name="nmessage">Message</string>
+    <string name="take_photo">Take Photo</string>
 </resources>
