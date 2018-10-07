@@ -10,6 +10,13 @@
     android:windowTranslucentStatus="true"
     tools:context=".activities.common.MapsActivity">
 
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/place_autocomplete"
+        android:text="Take Photo" />
+
     <fragment
         android:id="@+id/place_autocomplete"
         android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
@@ -23,11 +30,12 @@
     <fragment
         android:id="@+id/map"
         class="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="0dp"
-        android:layout_height="469dp"
+        android:layout_width="382dp"
+        android:layout_height="467dp"
 
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/place_autocomplete" />
 
@@ -46,8 +54,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:drawablePadding="-15sp"
             android:drawableTop="@drawable/ic_phone_message"
+            android:drawablePadding="-15sp"
             android:scaleType="fitCenter"
             android:text="\nMessage"
             android:textAllCaps="false"
@@ -63,8 +71,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:drawablePadding="-15sp"
             android:drawableTop="@drawable/ic_phone_call"
+            android:drawablePadding="-15sp"
             android:scaleType="fitCenter"
             android:text="\nCall"
             android:textAllCaps="false"
@@ -80,8 +88,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:drawablePadding="-15sp"
             android:drawableTop="@drawable/ic_phone_video"
+            android:drawablePadding="-15sp"
             android:scaleType="fitCenter"
             android:text="\nVideo Call"
             android:textAllCaps="false"
