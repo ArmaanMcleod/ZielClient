@@ -112,4 +112,10 @@ public class CarerHomepageActivity extends AppCompatActivity implements ValueEve
   // TODO
   @Override
   public void onCancelled(@NonNull DatabaseError databaseError) {}
+
+  // prevent going back on home page
+  @Override
+  public void onBackPressed(){
+
+  }
 }

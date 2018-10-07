@@ -1,5 +1,6 @@
 package com.quartz.zielclient.activities.assisted;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,10 +17,7 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.quartz.zielclient.R;
 
-import java.util.List;
 import java.util.Objects;
-
-import android.Manifest;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -131,5 +129,11 @@ public class AssistedHomePageActivity extends AppCompatActivity {
           "Please grant the location permission", REQUEST_LOCATION_PERMISSION, perms);
       permissionGranted = false;
     }
+  }
+
+  // prevent going back on home page
+  @Override
+  public void onBackPressed(){
+
   }
 }
