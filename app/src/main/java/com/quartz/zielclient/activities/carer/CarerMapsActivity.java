@@ -169,6 +169,9 @@ public class CarerMapsActivity extends AppCompatActivity
         // if the route is already the current route then don't update
         if (!channel.getDirectionsURL().equals(currentDestinationURL)) {
           // update the route
+          mGoogleMap.clear();
+          mGoogleMap.addMarker(new MarkerOptions().position(channel.getAssistedLocation()));
+
           Log.d("DIRECTIONS", channel.getDirectionsURL());
           FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
           fetchUrl.execute(channel.getDirectionsURL() + key);
