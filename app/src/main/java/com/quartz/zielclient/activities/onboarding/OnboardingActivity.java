@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities.common.onboarding;
+package com.quartz.zielclient.activities.onboarding;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,20 +10,25 @@ import android.widget.Button;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
 
-public class FinalOnboardingActivity extends AppCompatActivity implements View.OnClickListener {
+public class OnboardingActivity extends AppCompatActivity implements View.OnClickListener {
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_help_onboarding_page3);
+    setContentView(R.layout.activity_help_onboarding_page1);
 
-    Button signupButton = findViewById(R.id.signup3);
-    signupButton.setOnClickListener(this);
+    Button nextButton = findViewById(R.id.next1);
+    nextButton.setOnClickListener(this);
+
+    Button skipButton = findViewById(R.id.signup);
+    skipButton.setOnClickListener(this);
   }
 
   @Override
   public void onClick(View v) {
-    if (v.getId() == R.id.signup3) {
+    if (v.getId() == R.id.next1) {
+      startActivity(new Intent(this, SecondOnboardingActivity.class));
+    } else if (v.getId() == R.id.signup) {
       startActivity(new Intent(this, SignUpActivity.class));
     }
   }

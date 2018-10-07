@@ -107,9 +107,9 @@
         <activity android:name=".activities.assisted.AddCarerActivity" />
         <activity android:name=".activities.assisted.AssistedSelectCarerActivity" />
         <activity android:name=".activities.common.VoiceActivity"/>
-        <activity android:name=".activities.common.onboarding.OnBoardingActivity" />
-        <activity android:name=".activities.common.onboarding.SecondOnboardingActivity" />
-        <activity android:name=".activities.common.onboarding.FinalOnboardingActivity" />
+        <activity android:name=".activities.onboarding.OnboardingActivity" />
+        <activity android:name=".activities.onboarding.SecondOnboardingActivity" />
+        <activity android:name=".activities.onboarding.FinalOnboardingActivity" />
     </application>
 
 </manifest>

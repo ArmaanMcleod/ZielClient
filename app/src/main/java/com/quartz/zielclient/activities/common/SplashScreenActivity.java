@@ -11,7 +11,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.activities.assisted.AssistedHomePageActivity;
 import com.quartz.zielclient.activities.carer.CarerHomepageActivity;
-import com.quartz.zielclient.activities.common.onboarding.OnBoardingActivity;
+import com.quartz.zielclient.activities.onboarding.OnboardingActivity;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
 import com.quartz.zielclient.exceptions.AuthorisationException;
 import com.quartz.zielclient.user.User;
@@ -30,7 +30,7 @@ public class SplashScreenActivity extends AppCompatActivity implements ValueEven
     } catch (AuthorisationException e) {
       Log.e(TAG, "Error when authorising user", e);
 
-      Intent intent = new Intent(this, OnBoardingActivity.class);
+      Intent intent = new Intent(this, OnboardingActivity.class);
       startActivity(intent);
       finish();
     }

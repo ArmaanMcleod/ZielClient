@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities.common.onboarding;
+package com.quartz.zielclient.activities.onboarding;
 
 import android.content.Intent;
 import android.os.Bundle;
