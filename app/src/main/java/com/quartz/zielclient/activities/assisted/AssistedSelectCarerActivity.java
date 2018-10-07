@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,7 +19,6 @@ import com.quartz.zielclient.R;
 import com.quartz.zielclient.adapters.CarerSelectListAdapter;
 import com.quartz.zielclient.models.CarerSelectionItem;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,31 +29,19 @@ import java.util.stream.Collectors;
  * @author Bilal
  */
 public class AssistedSelectCarerActivity extends AppCompatActivity implements ValueEventListener {
-  private FirebaseAuth firebaseAuth = firebaseAuthInit();
+
+  private FirebaseAuth firebaseAuth = initFirebaseAuth();
   private RecyclerView mRecyclerView;
-  private RecyclerView.Adapter mAdapter;
-  private RecyclerView.LayoutManager mLayoutManager;
-  private List<CarerSelectionItem> listItems;
-  private DatabaseReference requestsReference;
-  private LatLng destination;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_assisted_select_carer);
-    Bundle bundle = getIntent().getExtras();
-
-    if (bundle != null) {
-      destination = bundle.getParcelable("destination");
-    }
 
     Button addCarerActivity = findViewById(R.id.addCarerButton);
     addCarerActivity.setOnClickListener(
         v -> startActivity(new Intent(AssistedSelectCarerActivity.this, AddCarerActivity.class)));
-    requestsReference = getRelationshipReference();
-    if(requestsReference!=null){
-      requestsReference.addValueEventListener(this);
-    }
+
     // Initialising RecyclerView
     mRecyclerView = findViewById(R.id.carer_list_recycler_view);
 
@@ -63,8 +49,12 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
     mRecyclerView.setHasFixedSize(true);
 
     // Use a linear layout manager
-    mLayoutManager = new LinearLayoutManager(this);
+    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
     mRecyclerView.setLayoutManager(mLayoutManager);
+
+    DatabaseReference requestsReference = FirebaseDatabase.getInstance()
+        .getReference("relationships/" + firebaseAuth.getUid());
+    requestsReference.addValueEventListener(this);
   }
 
   /**
@@ -72,17 +62,15 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
    *
    * @param items
    */
-  private void initData(HashMap<String, CarerSelectionItem> items) {
-    List<CarerSelectionItem> list =
-        items
-            .entrySet()
-            .stream()
-            .peek(entry -> entry.getValue().setCarerId(entry.getKey()))
-            .map(Map.Entry::getValue)
-            .collect(Collectors.toList());
+  private void initData(Map<String, CarerSelectionItem> items) {
+    List<CarerSelectionItem> list = items.entrySet()
+        .stream()
+        .peek(entry -> entry.getValue().setCarerId(entry.getKey()))
+        .map(Map.Entry::getValue)
+        .collect(Collectors.toList());
 
     // Using the Adapter to convert the data into the recycler view
-    mAdapter = new CarerSelectListAdapter(list, this);
+    RecyclerView.Adapter mAdapter = new CarerSelectListAdapter(list, this);
     mRecyclerView.setAdapter(mAdapter);
   }
 
@@ -93,31 +81,24 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
    */
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-    GenericTypeIndicator<HashMap<String, CarerSelectionItem>> t =
-        new GenericTypeIndicator<HashMap<String, CarerSelectionItem>>() {};
-    HashMap<String, CarerSelectionItem> carerSelectionItems = dataSnapshot.getValue(t);
+    GenericTypeIndicator<Map<String, CarerSelectionItem>> t =
+        new GenericTypeIndicator<Map<String, CarerSelectionItem>>() {
+        };
+    Map<String, CarerSelectionItem> carerSelectionItems = dataSnapshot.getValue(t);
     if (carerSelectionItems != null) {
       initData(carerSelectionItems);
     }
   }
 
   @Override
-  public void onCancelled(@NonNull DatabaseError databaseError) {}
-
-  private FirebaseAuth firebaseAuthInit() {
-    try {
-      return firebaseAuth.getInstance();
-    } catch (IllegalStateException e) {
-      return null;
-    }
+  public void onCancelled(@NonNull DatabaseError databaseError) {
   }
 
-  private DatabaseReference getRelationshipReference() {
-    try {
-
-      return FirebaseDatabase.getInstance().getReference("relationships/" + firebaseAuth.getUid());
-
-    } catch (IllegalStateException e) {
+  private FirebaseAuth initFirebaseAuth(){
+    try{
+      return FirebaseAuth.getInstance();
+    }catch (IllegalStateException e){
+      e.printStackTrace();
       return null;
     }
   }

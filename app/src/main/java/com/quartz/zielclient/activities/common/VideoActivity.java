@@ -35,7 +35,7 @@ import com.quartz.zielclient.activities.common.util.SettingsActivity;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
-import com.quartz.zielclient.voipUtilities.VideoRemoteParticipant;
+import com.quartz.zielclient.voip.VideoRemoteParticipant;
 import com.twilio.video.AudioCodec;
 import com.twilio.video.CameraCapturer;
 import com.twilio.video.CameraCapturer.CameraSource;

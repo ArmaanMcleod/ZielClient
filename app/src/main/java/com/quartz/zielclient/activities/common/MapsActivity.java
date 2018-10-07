@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -78,10 +79,11 @@ public class MapsActivity extends AppCompatActivity
 
   private LocationRequest mLocationRequest;
   private FusedLocationProviderClient mFusedLocationClient;
+
   private  Button toVideoChatButton;
   private  Button toTextChatButton;
   private  Button toVoiceChatButton;
-  private Button toTakePhotoButton;
+
   private LatLng source;
 
   private List<Marker> sourceDestinationMarkers = new ArrayList<>();
@@ -133,7 +135,7 @@ public class MapsActivity extends AppCompatActivity
     toVoiceChatButton.setVisibility(View.INVISIBLE);
     toVoiceChatButton.setOnClickListener(this);
 
-    toTakePhotoButton = findViewById(R.id.toTakePhotoButton);
+    Button toTakePhotoButton = findViewById(R.id.toTakePhotoButton);
     toTakePhotoButton.setOnClickListener(this);
 
     // Get bundle of arguments passed from Home Page Activity
@@ -183,9 +185,9 @@ public class MapsActivity extends AppCompatActivity
     }
 
     // Allow user to see street view suggestion
-    Toast streetviewSuggestion =  Toast.makeText(this,
+    Toast streetviewSuggestion = Toast.makeText(this,
         "Click on a marker to see street view", Toast.LENGTH_LONG);
-    streetviewSuggestion.setGravity(Gravity.BOTTOM,0,250);
+    streetviewSuggestion.setGravity(Gravity.BOTTOM, 0, 250);
     streetviewSuggestion.show();
   }
 
@@ -318,7 +320,6 @@ public class MapsActivity extends AppCompatActivity
   public void dataChanged() {
     // notify user about new messages
     if (channel != null) {
-
       if (channel.getVideoCallStatus()) {
         alertDialog.show();
       } else {
@@ -382,6 +383,7 @@ public class MapsActivity extends AppCompatActivity
 
   /**
    * Makes alert for assisted to join carer in video call.
+   *
    * @return AlertDialog A alert dialog box for the assisted to see.
    */
   public AlertDialog makeVideoAlert() {
@@ -402,17 +404,20 @@ public class MapsActivity extends AppCompatActivity
 
   /**
    * Draws markers to map from the carer.
+   *
    * @param coordinates This is the coordinates passed from the carer.
    */
   private void drawMarkers(List<LatLng> coordinates) {
-    for (LatLng coordinate : coordinates) {
-      Marker marker = createMarker(coordinate, HUE_CYAN);
-      dropMarkers.add(marker);
-    }
+    dropMarkers.addAll(
+        coordinates.stream()
+        .map(coord -> createMarker(coord, HUE_CYAN))
+        .collect(Collectors.toList())
+    );
   }
 
   /**
    * Deletes markers from a list.
+   *
    * @param markers the markers stored in the list.
    */
   private void deleteMarkers(List<Marker> markers) {
@@ -422,8 +427,9 @@ public class MapsActivity extends AppCompatActivity
 
   /**
    * Creates a marker and shows it on the Google map.
+   *
    * @param location The location of marker.
-   * @param colour The colour of marker.
+   * @param colour   The colour of marker.
    * @return Marker The marker object.
    */
   private Marker createMarker(LatLng location, float colour) {
@@ -466,10 +472,7 @@ public class MapsActivity extends AppCompatActivity
           if (channel != null) {
             channel.setAssistedLocation(location);
             deleteMarkers(dropMarkers);
-            if(channel.getCarerMarkerList() != null){
-              drawMarkers(channel.getCarerMarkerList());
-            }
-
+            drawMarkers(channel.getCarerMarkerList());
           }
 
           source = newSource;
