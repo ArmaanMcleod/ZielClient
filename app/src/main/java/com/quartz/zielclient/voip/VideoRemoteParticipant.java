@@ -1,4 +1,4 @@
-package com.quartz.zielclient.voipUtilities;
+package com.quartz.zielclient.voip;
 
 import android.support.design.widget.Snackbar;
 import android.util.Log;

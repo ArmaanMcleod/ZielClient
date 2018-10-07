@@ -1,4 +1,4 @@
-package com.quartz.zielclient.voipUtilities;
+package com.quartz.zielclient.voip;
 
 import android.content.Context;
 import android.content.Intent;

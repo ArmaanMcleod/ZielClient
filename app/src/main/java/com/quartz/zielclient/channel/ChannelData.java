@@ -9,10 +9,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.quartz.zielclient.map.CoordinateService;
 import com.quartz.zielclient.messages.Message;
 import com.quartz.zielclient.messages.MessageService;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,15 +36,18 @@ public class ChannelData implements ValueEventListener {
   private String channelKey;
 
   /**
-   * @param channelReference - location in database where channel exists
-   * @param channelListener - the object that wants to listen to the channel
-   * @param channelKey
+   * @param channelReference Location in database where channel exists.
+   * @param channelListener  The object that wants to listen to the channel.
+   * @param channelKey UUID of this channel.
    */
   public ChannelData(
-      DatabaseReference channelReference, ChannelListener channelListener, String channelKey) {
+      DatabaseReference channelReference,
+      ChannelListener channelListener,
+      String channelKey) {
     this.channelReference = channelReference;
     this.channelListener = channelListener;
     this.channelKey = channelKey;
+
     channelReference.addValueEventListener(this);
   }
 
@@ -56,12 +59,7 @@ public class ChannelData implements ValueEventListener {
   @SuppressWarnings("unchecked")
   public LatLng getAssistedLocation() {
     if (channelValues != null) {
-      Map<String, String> assistedLocationCordinates =
-          (Map<String, String>) channelValues.get("assistedLocation");
-
-      double xCoord = Double.parseDouble(assistedLocationCordinates.get("xCoord"));
-      double yCoord = Double.parseDouble(assistedLocationCordinates.get("yCoord"));
-      return new LatLng(xCoord, yCoord);
+      return CoordinateService.deserialiseMarker(channelValues.get("assistedLocation"));
     }
 
     // Default to Null Island
@@ -88,8 +86,6 @@ public class ChannelData implements ValueEventListener {
   /**
    * Retrieve all the messages from this channel.
    *
-   * <p>Downcasting is required to serialise the JSON representaiton of the messages to a Java Map.
-   *
    * @return A map of the messages.
    */
   public Map<String, Message> getMessages() {
@@ -97,8 +93,7 @@ public class ChannelData implements ValueEventListener {
       return MessageService.deserialiseMessages(channelValues.get("messages"));
     }
 
-    Map<String, Message> messageObject = new HashMap<>();
-    return messageObject;
+    return new HashMap<>();
   }
 
   public void setMessages(Map<String, String> messages) {
@@ -113,7 +108,8 @@ public class ChannelData implements ValueEventListener {
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
     GenericTypeIndicator<Map<String, Object>> t =
-        new GenericTypeIndicator<Map<String, Object>>() {};
+        new GenericTypeIndicator<Map<String, Object>>() {
+        };
     channelValues = dataSnapshot.getValue(t);
     channelListener.dataChanged();
   }
@@ -163,7 +159,7 @@ public class ChannelData implements ValueEventListener {
     channelReference.child("carerStatus").setValue(carerStatus);
   }
 
-  public Boolean getVideoCallStatus() {
+  public boolean getVideoCallStatus() {
     return channelValues.get("videoCallStatus").equals(true);
   }
 
@@ -180,26 +176,8 @@ public class ChannelData implements ValueEventListener {
   }
 
   public List<LatLng> getCarerMarkerList() {
-    if (channelValues.get("carerMarkerList") != null) {
-      ArrayList<LatLng> markerList = new ArrayList<>();
-      try {
-        Map<String, Map<String, String>> markerMap =
-            (Map<String, Map<String, String>>) channelValues.get("carerMarkerList");
-        markerMap
-            .values()
-            .forEach(
-                value -> {
-                  markerList.add(
-                      new LatLng(
-                          Double.valueOf(value.get("xCoord")),
-                          Double.valueOf(value.get("yCoord"))));
-                });
-        return markerList;
-      } catch (ClassCastException e) {
-        return null;
-      }
-    }
-    return null;
+    Object carerMarkers = channelValues.get("carerMarkerList");
+    return CoordinateService.deserialiseCarerMarkers(carerMarkers);
   }
 
   public void addMarker(LatLng coordinate) {
@@ -212,16 +190,15 @@ public class ChannelData implements ValueEventListener {
         .setValue(String.valueOf(coordinate.latitude));
     // set y coordinate for marker
     channelReference
-            .child("carerMarkerList")
-            .child(coordinateId)
-            .child("yCoord")
-            .setValue(String.valueOf(coordinate.longitude));
-
+        .child("carerMarkerList")
+        .child(coordinateId)
+        .child("yCoord")
+        .setValue(String.valueOf(coordinate.longitude));
   }
 
-  public  void clearMarkers(){
+  public void clearMarkers() {
     channelReference
-            .child("carerMarkerList")
-            .setValue(null);
+        .child("carerMarkerList")
+        .setValue(null);
   }
 }

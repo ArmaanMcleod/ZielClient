@@ -53,7 +53,7 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
     addCarerActivity.setOnClickListener(
         v -> startActivity(new Intent(AssistedSelectCarerActivity.this, AddCarerActivity.class)));
     requestsReference = getRelationshipReference();
-    if(requestsReference!=null){
+    if (requestsReference != null) {
       requestsReference.addValueEventListener(this);
     }
     // Initialising RecyclerView
@@ -73,13 +73,11 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
    * @param items
    */
   private void initData(HashMap<String, CarerSelectionItem> items) {
-    List<CarerSelectionItem> list =
-        items
-            .entrySet()
-            .stream()
-            .peek(entry -> entry.getValue().setCarerId(entry.getKey()))
-            .map(Map.Entry::getValue)
-            .collect(Collectors.toList());
+    List<CarerSelectionItem> list = items.entrySet()
+        .stream()
+        .peek(entry -> entry.getValue().setCarerId(entry.getKey()))
+        .map(Map.Entry::getValue)
+        .collect(Collectors.toList());
 
     // Using the Adapter to convert the data into the recycler view
     mAdapter = new CarerSelectListAdapter(list, this);
@@ -94,7 +92,8 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
     GenericTypeIndicator<HashMap<String, CarerSelectionItem>> t =
-        new GenericTypeIndicator<HashMap<String, CarerSelectionItem>>() {};
+        new GenericTypeIndicator<HashMap<String, CarerSelectionItem>>() {
+        };
     HashMap<String, CarerSelectionItem> carerSelectionItems = dataSnapshot.getValue(t);
     if (carerSelectionItems != null) {
       initData(carerSelectionItems);
@@ -102,11 +101,12 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
   }
 
   @Override
-  public void onCancelled(@NonNull DatabaseError databaseError) {}
+  public void onCancelled(@NonNull DatabaseError databaseError) {
+  }
 
   private FirebaseAuth firebaseAuthInit() {
     try {
-      return firebaseAuth.getInstance();
+      return FirebaseAuth.getInstance();
     } catch (IllegalStateException e) {
       return null;
     }

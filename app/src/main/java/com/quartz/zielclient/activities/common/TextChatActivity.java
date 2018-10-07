@@ -155,7 +155,7 @@ public class TextChatActivity extends AppCompatActivity
     if (channel.getMessages() != null) {
       // Convert Map of messages to List of messages
       Map<String, Message> messagesMap = channel.getMessages();
-      List<Message> messages = new ArrayList<Message>(messagesMap.values());
+      List<Message> messages = new ArrayList<>(messagesMap.values());
 
       prepareData(messages);
 
