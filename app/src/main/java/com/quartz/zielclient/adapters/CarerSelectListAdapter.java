@@ -83,6 +83,7 @@ public class CarerSelectListAdapter
 
     private String carerId;
     private User assisted;
+
     private Intent intentToMaps;
     private ChannelData channelData;
 

@@ -103,7 +103,7 @@ public class TextChatActivity extends AppCompatActivity
       // Make sure blank input does not get sent
       @Override
       public void afterTextChanged(Editable s) {
-        if(s.length() > 0) {
+        if (s.length() > 0) {
           sendMessage.setEnabled(true);
         } else {
           sendMessage.setEnabled(false);
@@ -133,6 +133,7 @@ public class TextChatActivity extends AppCompatActivity
 
   /**
    * Sorts the messages fetched from FireBase and assigns them to messageList to be displayed
+   *
    * @param messagesInChat List of Messages already in the database
    */
   public void prepareData(List<Message> messagesInChat) {
@@ -149,22 +150,22 @@ public class TextChatActivity extends AppCompatActivity
   @Override
   public void dataChanged() {
     // Make sure the database of messages for the channel is not empty
-    if(channel.getVideoCallStatus()){
+    if (channel.getVideoCallStatus()) {
       onBackPressed();
     }
-    if (channel.getMessages() != null) {
-      // Convert Map of messages to List of messages
-      Map<String, Message> messagesMap = channel.getMessages();
-      List<Message> messages = new ArrayList<>(messagesMap.values());
 
-      prepareData(messages);
+    // Convert Map of messages to List of messages
+    Map<String, Message> messagesMap = channel.getMessages();
+    List<Message> messages = new ArrayList<>(messagesMap.values());
+    prepareData(messages);
 
-      // Scroll to the bottom of the chat
-      mMessageRecycler.scrollToPosition(messageList.size()-1);
-    }
+    // Scroll to the bottom of the chat
+    mMessageRecycler.scrollToPosition(messageList.size() - 1);
   }
+
   /**
    * Send message located in the input view into the channel database
+   *
    * @param view The view input for the button, the messageText in this case
    */
   @Override
