@@ -56,6 +56,17 @@ public class CoordinateServiceTest {
     assertEquals(Collections.emptyList(), res);
   }
 
+  @Test
+  public void test_nullFailure() {
+    List<LatLng> res = CoordinateService.deserialiseCarerMarkers(null);
+    assertEquals(Collections.emptyList(), res);
+  }
+
+  @Test
+  public void test_nullSingleFailure() {
+    LatLng res = CoordinateService.deserialiseMarker(null);
+    assertEquals(new LatLng(0, 0), res);
+  }
 
   @Test
   public void test_deserialiseObjectFailure() {
