@@ -29,6 +29,8 @@ import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
 import com.quartz.zielclient.messages.Message;
 import com.quartz.zielclient.messages.MessageFactory;
+import com.quartz.zielclient.user.User;
+import com.quartz.zielclient.user.UserFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,6 +46,9 @@ public class TextChatActivity extends AppCompatActivity
 
   private ChannelData channel;
   private String currentUser;
+
+  private User thisUser;
+  private User otherUser;
 
   // Recycler Views and Adapter for the text chat
   private RecyclerView mMessageRecycler;

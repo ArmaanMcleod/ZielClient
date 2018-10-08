@@ -136,6 +136,8 @@ public class MessageListAdapter extends RecyclerView.Adapter{
       messageText.setText(message.getMessageValue());
       Date date = new Date(message.getMessageTime());
       timeStamp.setText(DateUtils.formatDateTime(mContext, message.getMessageTime(), 0));
+      // TODO
+      // userName.setText(usernameMap.get(message.getUserName()));
       // ADD PROFILE PICTURE BIND HERE
     }
   }
