@@ -1,8 +1,10 @@
 package com.quartz.zielclient.activities.assisted;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
@@ -17,6 +19,9 @@ import com.quartz.zielclient.R;
 
 import java.util.Objects;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
+
 /**
  * This class is responsible for handling home page activities. This includes prompting the assisted
  * to enter in a location they wish to travel to, and passing that destination to the Maps Activity.
@@ -29,19 +34,21 @@ public class AssistedHomePageActivity extends AppCompatActivity {
   private final String activity = this.getClass().getSimpleName();
   private LatLng destination;
 
+  private static final int REQUEST_LOCATION_PERMISSION = 1;
+
+  private boolean permissionGranted;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     setTheme(R.style.HomeTheme);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home_page);
 
-
     // Create autocomplete bar
     PlaceAutocompleteFragment placeAutoComplete =
         (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.editText);
     Objects.requireNonNull(placeAutoComplete.getView()).setBackgroundColor(Color.WHITE);
     placeAutoComplete.setHint("Search Place");
-
 
     // Listen for user entering place
     placeAutoComplete.setOnPlaceSelectedListener(
@@ -62,15 +69,71 @@ public class AssistedHomePageActivity extends AppCompatActivity {
     Button directMeButton = findViewById(R.id.directMeButton);
     directMeButton.setOnClickListener(
         v -> {
-          // If destination exists, start MapsActivity
-          if (destination != null) {
-            Intent intent = new Intent(AssistedHomePageActivity.this, AssistedSelectCarerActivity.class);
-            intent.putExtra("destination", destination);
-            startActivity(intent);
+
+          // First make sure permission is granted before continuing
+          if (!permissionGranted) {
+            requestLocationPermission();
           } else {
-            Toast.makeText(this, "Please select a place before proceeding", Toast.LENGTH_LONG)
-                .show();
+            // If destination exists, start MapsActivity
+            if (destination != null) {
+              Intent intent = new Intent(AssistedHomePageActivity.this,
+                  AssistedSelectCarerActivity.class);
+
+              intent.putExtra("destination", destination);
+              startActivity(intent);
+            } else {
+              Toast.makeText(this, "Please select a place before proceeding",
+                  Toast.LENGTH_LONG)
+                  .show();
+            }
           }
         });
+
+    // Verify location permission anyways
+    requestLocationPermission();
+  }
+
+  /**
+   * This is a callback for requesting and checking the result of a permission.
+   *
+   * <p>Documentation : https://developer.android.com/reference/android/support/v4/app/
+   * ActivityCompat.OnRequestPermissionsResultCallback#onRequestPermissionsResult
+   *
+   * @param requestCode  This is the request code passed to requestPermissions.
+   * @param permissions  This is the permissions.
+   * @param grantResults This is results for granted or un-granted permissions.
+   */
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                         @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+    // Forward results to EasyPermissions
+    EasyPermissions.onRequestPermissionsResult(requestCode,
+        permissions, grantResults, this);
+  }
+
+  /**
+   * Check location permissions before showing user location.
+   */
+  @AfterPermissionGranted(REQUEST_LOCATION_PERMISSION)
+  public void requestLocationPermission() {
+    String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
+    if(EasyPermissions.hasPermissions(this, perms)) {
+      Toast.makeText(this, "Location Permission already granted",
+          Toast.LENGTH_SHORT).show();
+      permissionGranted = true;
+    }
+    else {
+      EasyPermissions.requestPermissions(this,
+          "Please grant the location permission", REQUEST_LOCATION_PERMISSION, perms);
+      permissionGranted = false;
+    }
+  }
+
+  // prevent going back on home page
+  @Override
+  public void onBackPressed(){
+
   }
 }

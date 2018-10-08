@@ -15,11 +15,14 @@ Please note that we use Android SDK Version 28, and targeting Java 8. See [this 
 ## Using Application 
 To use this application to test its features you should do the following
 
+Ensure that you pull the latest version of this repository.
 1. Build and run the application on two devices. 
 
 2. Using two devices one device should sign up as a carer and the other as an assisted
 
 3. The assisted should then request the carer by choosing a location and adding the carer using the phone number.
+
+* If using an emulator you will be required to set location in emulator settings. (Melbourne University has long: 144.9612 and lat: -37.7964)
 
 4. The carer should get a notification and open the channel with the user.
 

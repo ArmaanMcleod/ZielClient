@@ -11,8 +11,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
@@ -43,10 +45,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.google.android.gms.location.LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_CYAN;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_MAGENTA;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
 
@@ -62,20 +66,26 @@ import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
 public class MapsActivity extends AppCompatActivity
     implements OnMapReadyCallback, ChannelListener, View.OnClickListener {
 
-  // Custom permissions request code
-  private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
   private static final int DEFAULT_ZOOM = 8;
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
+
+  private static final long UPDATE_INTERVAL = 10000;  /* 10 secs */
+  private static final long FASTEST_INTERVAL = 2000; /* 2 sec */
 
   private final String activity = this.getClass().getSimpleName();
   private final LocationCallback mLocationCallback = locationCallBackMaker();
   private GoogleMap mGoogleMap;
+  private TextView waitingMessage;
 
   private LocationRequest mLocationRequest;
   private FusedLocationProviderClient mFusedLocationClient;
-
+  private Button toVideoChatButton;
+  private Button toTextChatButton;
+  private Button toVoiceChatButton;
   private LatLng source;
-  private List<Marker> markers = new ArrayList<>();
+
+  private List<Marker> sourceDestinationMarkers = new ArrayList<>();
+  private List<Marker> dropMarkers = new ArrayList<>();
 
   private LatLng destination;
 
@@ -97,6 +107,7 @@ public class MapsActivity extends AppCompatActivity
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_maps);
+
     // Initialise channel
     channelId = getIntent().getStringExtra(getResources().getString(R.string.channel_key));
     if (channelId != null) {
@@ -109,13 +120,17 @@ public class MapsActivity extends AppCompatActivity
     alertDialog = makeVideoAlert();
 
     // Create buttons and listeners below
-    Button toVideoChatButton = findViewById(R.id.toVideoChatButton);
+
+    waitingMessage = findViewById(R.id.waitForCarerMessage);
+    toVideoChatButton = findViewById(R.id.toVideoChatButton);
+    toVideoChatButton.setVisibility(View.INVISIBLE);
     toVideoChatButton.setOnClickListener(this);
 
-    Button toTextChatButton = findViewById(R.id.toTextChat);
+    toTextChatButton = findViewById(R.id.toTextChat);
     toTextChatButton.setOnClickListener(this);
 
-    Button toVoiceChatButton = findViewById(R.id.toVoiceChat);
+    toVoiceChatButton = findViewById(R.id.toVoiceChat);
+    toVoiceChatButton.setVisibility(View.INVISIBLE);
     toVoiceChatButton.setOnClickListener(this);
 
     // Get bundle of arguments passed from Home Page Activity
@@ -163,6 +178,12 @@ public class MapsActivity extends AppCompatActivity
     if (mapFrag != null) {
       mapFrag.getMapAsync(this);
     }
+
+    // Allow user to see street view suggestion
+    Toast streetviewSuggestion = Toast.makeText(this,
+        "Click on a marker to see street view", Toast.LENGTH_LONG);
+    streetviewSuggestion.setGravity(Gravity.BOTTOM, 0, 250);
+    streetviewSuggestion.show();
   }
 
   /**
@@ -220,92 +241,33 @@ public class MapsActivity extends AppCompatActivity
     mGoogleMap.setOnMarkerClickListener(
         marker -> {
           marker.showInfoWindow();
-          Intent intent = new Intent(MapsActivity.this, StreetViewActivity.class);
-          intent.putExtra("destination", marker.getPosition());
-          startActivity(intent);
+
+          // Prompt Street view
+          new AlertDialog.Builder(this)
+              .setIcon(R.drawable.street_view_logo)
+              .setTitle("Google Maps Street View")
+              .setMessage("Show street view?")
+
+              // Start Street view activity when pressed
+              .setPositiveButton("Yes", (dialog, which) -> {
+                Intent intent = new Intent(MapsActivity.this, StreetViewActivity.class);
+                intent.putExtra("destination", marker.getPosition());
+                startActivity(intent);
+              })
+              .setNegativeButton("No", (dialog, which) -> {
+
+              })
+              .show();
           return true;
         });
 
     // Setup location request and intervals between requests
     mLocationRequest = new LocationRequest();
-    mLocationRequest.setInterval(1000); // two minute interval
-    mLocationRequest.setFastestInterval(1000);
+    mLocationRequest.setInterval(UPDATE_INTERVAL); // two minute interval
+    mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
     mLocationRequest.setPriority(PRIORITY_BALANCED_POWER_ACCURACY);
 
-    // Check permissions
-    if (checkSelfPermission(ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
-      requestLocation();
-    } else {
-      // Request Location Permission
-      requestLocationPermission();
-    }
-  }
-
-  /**
-   * Check location permissions before showing user location.
-   */
-  private void requestLocationPermission() {
-    // If permission is not granted
-    if (checkSelfPermission(ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
-
-      // Should we show an explanation?
-      if (shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION)) {
-
-        // Show an explanation to the user *asynchronously* -- don't block
-        // This thread waiting for the user's response! After the user
-        // Sees the explanation, try again to request the permission.
-        new AlertDialog.Builder(this)
-            .setTitle("Location Permission Needed")
-            .setMessage(
-                "This app needs the Location permission, "
-                    + "please accept to use location functionality")
-            .setPositiveButton(
-                "OK",
-                // Prompt the user once explanation has been shown
-                (dialogInterface, i) ->
-                    requestPermissions(
-                        new String[]{ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION))
-            .create()
-            .show();
-
-      } else {
-        // No explanation needed, we can request the permission.
-        requestPermissions(new String[]{ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
-      }
-    }
-  }
-
-  /**
-   * This is a callback for requesting and checking the result of a permission.
-   *
-   * <p>Documentation : https://developer.android.com/reference/android/support/v4/app/
-   * ActivityCompat.OnRequestPermissionsResultCallback#onRequestPermissionsResult
-   *
-   * @param requestCode  This is the request code passed to requestPermissions.
-   * @param permissions  This is the permissions.
-   * @param grantResults This is results for granted or un-granted permissions.
-   */
-  @Override
-  public void onRequestPermissionsResult(
-      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (requestCode == MY_PERMISSIONS_REQUEST_LOCATION) {
-      handleLocationPermission(grantResults);
-    }
-  }
-
-  /**
-   * This is responsible for requesting a location permission from the user.
-   *
-   * @param grantResults This is results for granted or un-granted permissions.
-   */
-  private void handleLocationPermission(@NonNull int[] grantResults) {
-    // If request is cancelled, the result arrays are empty.
-    if (grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED) {
-      requestLocation();
-    } else {
-      // Permission denied
-      Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
-    }
+    requestLocation();
   }
 
   /**
@@ -346,15 +308,25 @@ public class MapsActivity extends AppCompatActivity
     return apiRequest;
   }
 
+  /**
+   * CChecks video call status for channel.
+   */
   @Override
   public void dataChanged() {
     // notify user about new messages
     if (channel != null) {
-
       if (channel.getVideoCallStatus()) {
         alertDialog.show();
       } else {
         alertDialog.cancel();
+      }
+
+      if (channel.getCarerStatus()) {
+        Toast.makeText(this, "Carer Connected", Toast.LENGTH_SHORT);
+        toTextChatButton.setVisibility(View.VISIBLE);
+        toVideoChatButton.setVisibility(View.VISIBLE);
+        toVoiceChatButton.setVisibility(View.VISIBLE);
+        waitingMessage.setVisibility(View.INVISIBLE);
       }
     }
   }
@@ -388,6 +360,7 @@ public class MapsActivity extends AppCompatActivity
         intentToVideo.putExtra(getResources().getString(R.string.channel_key), channelId);
         startActivity(intentToVideo);
         break;
+
       default:
         break;
     }
@@ -399,6 +372,11 @@ public class MapsActivity extends AppCompatActivity
     super.onBackPressed();
   }
 
+  /**
+   * Makes alert for assisted to join carer in video call.
+   *
+   * @return AlertDialog A alert dialog box for the assisted to see.
+   */
   public AlertDialog makeVideoAlert() {
     alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle("Video Share?");
@@ -415,6 +393,46 @@ public class MapsActivity extends AppCompatActivity
     return alertDialog;
   }
 
+  /**
+   * Draws markers to map from the carer.
+   *
+   * @param coordinates This is the coordinates passed from the carer.
+   */
+  private void drawMarkers(List<LatLng> coordinates) {
+    dropMarkers.addAll(
+        coordinates.stream()
+        .map(coord -> createMarker(coord, HUE_CYAN))
+        .collect(Collectors.toList())
+    );
+  }
+
+  /**
+   * Deletes markers from a list.
+   *
+   * @param markers the markers stored in the list.
+   */
+  private void deleteMarkers(List<Marker> markers) {
+    markers.forEach(Marker::remove);
+    markers.clear();
+  }
+
+  /**
+   * Creates a marker and shows it on the Google map.
+   *
+   * @param location The location of marker.
+   * @param colour   The colour of marker.
+   * @return Marker The marker object.
+   */
+  private Marker createMarker(LatLng location, float colour) {
+    MarkerOptions markerOptions = new MarkerOptions()
+        .position(location)
+        .title(getAddress(location))
+        .icon(BitmapDescriptorFactory.defaultMarker(colour));
+
+    return mGoogleMap.addMarker(markerOptions);
+  }
+
+  // Location callback that continually polls Google services API for location updates.
   private LocationCallback locationCallBackMaker() {
     return new LocationCallback() {
 
@@ -444,32 +462,21 @@ public class MapsActivity extends AppCompatActivity
           // Execute channel is available
           if (channel != null) {
             channel.setAssistedLocation(location);
+            deleteMarkers(dropMarkers);
+            drawMarkers(channel.getCarerMarkerList());
           }
 
           source = newSource;
 
           // clear destination and source
-          markers.forEach(Marker::remove);
-          markers.clear();
-
-          // Source and Destination options for markers
-          MarkerOptions sourceOptions = new MarkerOptions();
-          sourceOptions.position(source);
-          sourceOptions.title(getAddress(source));
-          sourceOptions.icon(BitmapDescriptorFactory.defaultMarker(HUE_MAGENTA));
-
-          MarkerOptions destinationOptions = new MarkerOptions();
-          destinationOptions.position(destination);
-          destinationOptions.title(getAddress(destination));
-          destinationOptions.icon(BitmapDescriptorFactory.defaultMarker(HUE_RED));
+          deleteMarkers(sourceDestinationMarkers);
 
           // Source and Destination markers
-          Marker sourceMarker = mGoogleMap.addMarker(sourceOptions);
-          markers.add(sourceMarker);
+          Marker sourceMarker = createMarker(source, HUE_MAGENTA);
+          sourceDestinationMarkers.add(sourceMarker);
 
-          Marker destinationMarker = mGoogleMap.addMarker(destinationOptions);
-          destinationMarker.showInfoWindow();
-          markers.add(destinationMarker);
+          Marker destinationMarker = createMarker(destination, HUE_RED);
+          sourceDestinationMarkers.add(destinationMarker);
 
           Log.d("DESTINATION CHANGE", destination.toString());
 
