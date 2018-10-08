@@ -63,9 +63,10 @@ public class TakePhotosActivity extends AppCompatActivity {
     cameraView = findViewById(R.id.camera);
     cameraView.addCameraKitListener(cameraListener);
 
-    cameraView.setFlash(CameraKit.Constants.FLASH_ON);
-    cameraView.setFocus(CameraKit.Constants.FOCUS_TAP);
-    cameraView.setMethod(CameraKit.Constants.METHOD_STILL);
+    cameraView.setFlash(CameraKit.Constants.FLASH_OFF);
+    cameraView.setFacing(CameraKit.Constants.FACING_BACK);
+    cameraView.setFocus(CameraKit.Constants.FOCUS_CONTINUOUS);
+    cameraView.setMethod(CameraKit.Constants.METHOD_STANDARD);
     cameraView.setZoom(CameraKit.Constants.ZOOM_PINCH);
     cameraView.setPermissions(CameraKit.Constants.PERMISSIONS_STRICT);
     cameraView.setJpegQuality(100);
