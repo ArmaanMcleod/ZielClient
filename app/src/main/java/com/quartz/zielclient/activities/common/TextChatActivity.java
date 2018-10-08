@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,6 +55,8 @@ public class TextChatActivity extends AppCompatActivity
   private Button sendMessage;
   private EditText chatInput;
   private Button mediaButton;
+
+  private static final int INTENT_REQUEST_CHOOSE_MEDIA = 301;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -184,7 +187,14 @@ public class TextChatActivity extends AppCompatActivity
    * Request media from the device and request for permission if it has already not done so.
    */
   public void requestMedia() {
+    // If permission is not requested, request them.
+    if(!checkPermissionForMedia()) {
 
+    } else {
+      ActivityCompat.requestPermissions(this,
+          new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+          INTENT_REQUEST_CHOOSE_MEDIA);
+    }
   }
 
   /**
