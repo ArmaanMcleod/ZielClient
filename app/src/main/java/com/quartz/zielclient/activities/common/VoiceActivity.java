@@ -32,13 +32,14 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Chronometer;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.channel.ChannelData;
 import com.twilio.voice.Call;
 import com.twilio.voice.CallException;
 import com.twilio.voice.CallInvite;
@@ -48,7 +49,7 @@ import com.twilio.voice.Voice;
 
 import java.util.HashMap;
 
-public class VoiceActivity extends AppCompatActivity {
+public class VoiceActivity extends AppCompatActivity  {
 
   public static final String INCOMING_CALL_INVITE = "INCOMING_CALL_INVITE";
   public static final String INCOMING_CALL_NOTIFICATION_ID = "INCOMING_CALL_NOTIFICATION_ID";
@@ -83,6 +84,10 @@ public class VoiceActivity extends AppCompatActivity {
   private AlertDialog alertDialog;
   private CallInvite activeCallInvite;
   private int activeCallNotificationId;
+  private ChannelData channelData;
+
+
+  private String channelId;
 
   public static AlertDialog createIncomingCallDialog(
       Context context,
@@ -112,7 +117,8 @@ public class VoiceActivity extends AppCompatActivity {
 
     LayoutInflater li = LayoutInflater.from(context);
     View dialogView = li.inflate(R.layout.dialog_call, null);
-    final EditText contact = (EditText) dialogView.findViewById(R.id.contact);
+    final TextView contact = (TextView) dialogView.findViewById(R.id.contact);
+    contact.setVisibility(View.INVISIBLE);
     contact.setText(toCall);
     contact.setHint(R.string.callee);
     alertDialogBuilder.setView(dialogView);
@@ -195,6 +201,7 @@ public class VoiceActivity extends AppCompatActivity {
       identity = FirebaseAuth.getInstance().getUid();
       onBackPressed();
     } else {
+
       toCall = getIntent().getStringExtra("CallId");
     }
   }
@@ -204,6 +211,7 @@ public class VoiceActivity extends AppCompatActivity {
     super.onNewIntent(intent);
     handleIncomingCallIntent(intent);
   }
+
 
   private RegistrationListener registrationListener() {
     return new RegistrationListener() {
@@ -356,7 +364,8 @@ public class VoiceActivity extends AppCompatActivity {
   private DialogInterface.OnClickListener callClickListener() {
     return (dialog, which) -> {
       // Place a call
-      EditText contact = (EditText) ((AlertDialog) dialog).findViewById(R.id.contact);
+      TextView contact = (TextView) ((AlertDialog) dialog).findViewById(R.id.contact);
+      contact.setVisibility(View.INVISIBLE);
       twiMLParams.put("to", contact.getText().toString());
       activeCall = Voice.call(VoiceActivity.this, accessToken, twiMLParams, callListener);
       setCallUI();
@@ -580,6 +589,9 @@ public class VoiceActivity extends AppCompatActivity {
               }
             });
   }
+
+
+
 
   private class VoiceBroadcastReceiver extends BroadcastReceiver {
 
