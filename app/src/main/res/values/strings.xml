@@ -57,4 +57,5 @@
     <string name="please_wait_for_carer_to_join_channel">Please wait for carer to join channel...</string>
     <string name="nmessage">Message</string>
     <string name="take_photo">Take Photo</string>
+    <string name="capture_image">Capture Image</string>
 </resources>

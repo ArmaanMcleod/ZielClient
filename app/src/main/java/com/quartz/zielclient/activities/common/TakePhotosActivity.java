@@ -26,8 +26,6 @@ public class TakePhotosActivity extends AppCompatActivity {
 
     cameraView = findViewById(R.id.camera);
 
-    cameraView.setPermissions(CameraKit.Constants.PERMISSIONS_STRICT);
-
     cameraView.bindCameraKitListener(new CameraKitEventListener() {
       @Override
       public void onEvent(CameraKitEvent cameraKitEvent) {
