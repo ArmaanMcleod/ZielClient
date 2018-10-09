@@ -6,7 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions;
+import com.google.firebase.ml.vision.cloud.landmark.FirebaseVisionCloudLandmarkDetector;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.quartz.zielclient.R;
 import com.wonderkiln.camerakit.CameraKit;
 import com.wonderkiln.camerakit.CameraKitError;
@@ -32,6 +37,8 @@ public class TakePhotosActivity extends AppCompatActivity {
   private boolean canTakePicture;
 
   private final String activity = this.getClass().getSimpleName();
+
+  private Bitmap currentPicture;
 
   /**
    * Camera event listener which listens for camera events.
@@ -72,7 +79,8 @@ public class TakePhotosActivity extends AppCompatActivity {
     public void onImage(CameraKitImage cameraKitImage) {
       Log.d(activity, "Taking picture");
       byte[] picture = cameraKitImage.getJpeg();
-      Bitmap result = BitmapFactory.decodeByteArray(picture, 0, picture.length);
+      currentPicture = BitmapFactory.decodeByteArray(picture, 0, picture.length);
+      runLandMarkRecognition();
     }
 
     /**
@@ -82,6 +90,51 @@ public class TakePhotosActivity extends AppCompatActivity {
     @Override
     public void onVideo(CameraKitVideo cameraKitVideo) {
       Log.d(activity, "Taking video");
+    }
+
+    /**
+     * Detects landmark in photo taken.
+     */
+    private void runLandMarkRecognition() {
+
+      // Use latest model options
+      FirebaseVisionCloudDetectorOptions options =
+          new FirebaseVisionCloudDetectorOptions.Builder()
+              .setModelType(FirebaseVisionCloudDetectorOptions.LATEST_MODEL)
+              .setMaxResults(15)
+              .build();
+
+      // Convert to firebase image
+      FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(currentPicture);
+
+      // Create landmark detector
+      FirebaseVisionCloudLandmarkDetector detector = FirebaseVision.getInstance()
+          .getVisionCloudLandmarkDetector(options);
+
+      // Check to see if it is a landmark
+      detector.detectInImage(image)
+          .addOnSuccessListener(firebaseVisionCloudLandmarks -> {
+            Log.d(activity, "Listener success");
+            Log.d(activity, Integer.toString(firebaseVisionCloudLandmarks.size()));
+
+            if (firebaseVisionCloudLandmarks.isEmpty()) {
+              Toast.makeText(TakePhotosActivity.this,
+                  "Landmark not recognised",
+                  Toast.LENGTH_LONG).show();
+            } else {
+
+              // Show the first landmark given
+              Toast.makeText(TakePhotosActivity.this,
+                  "Landmark: " + firebaseVisionCloudLandmarks.get(0).getLandmark(),
+                  Toast.LENGTH_LONG).show();
+            }
+          })
+          .addOnFailureListener(e -> {
+            Log.d(activity, "Listener failure");
+            Toast.makeText(TakePhotosActivity.this,
+                "Landmark recognition not operation currently",
+                Toast.LENGTH_LONG).show();
+          });
     }
   };
 

@@ -23,6 +23,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -66,7 +67,7 @@ import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
 public class MapsActivity extends AppCompatActivity
     implements OnMapReadyCallback, ChannelListener, View.OnClickListener {
 
-  private static final int DEFAULT_ZOOM = 8;
+  private static final int DEFAULT_ZOOM = 9;
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
   private static final long UPDATE_INTERVAL = 10000;  /* 10 secs */
@@ -96,6 +97,8 @@ public class MapsActivity extends AppCompatActivity
 
   private AlertDialog alertDialog;
   private ChannelData channel;
+
+  private GeoDataClient mGeoDataClient;
 
   /**
    * Creates map along with its attributes.
