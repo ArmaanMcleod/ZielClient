@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.firebase.ml.vision.FirebaseVision;
@@ -37,6 +38,10 @@ public class TakePhotosActivity extends AppCompatActivity {
   private boolean canTakePicture;
 
   private final String activity = this.getClass().getSimpleName();
+
+  private ImageView imageView;
+
+  private String currentPhotoPath;
 
   /**
    * Camera event listener which listens for camera events.
@@ -79,6 +84,7 @@ public class TakePhotosActivity extends AppCompatActivity {
       byte[] picture = cameraKitImage.getJpeg();
       Bitmap bitmap = BitmapFactory.decodeByteArray(picture, 0, picture.length);
       runLandMarkRecognition(bitmap);
+      imageView.setImageBitmap(bitmap);
     }
 
     /**
@@ -154,6 +160,8 @@ public class TakePhotosActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.take_photos);
 
+    imageView = findViewById(R.id.photo);
+
     // Create camera view
     cameraView = findViewById(R.id.camera);
     cameraView.addCameraKitListener(cameraListener);
@@ -179,6 +187,8 @@ public class TakePhotosActivity extends AppCompatActivity {
       }
     });
   }
+
+
 
   /**
    * Called when the activity will start interacting with the user.
