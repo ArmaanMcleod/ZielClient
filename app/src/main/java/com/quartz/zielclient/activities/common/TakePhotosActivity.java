@@ -1,7 +1,10 @@
 package com.quartz.zielclient.activities.common;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +24,15 @@ import com.wonderkiln.camerakit.CameraKitEventListener;
 import com.wonderkiln.camerakit.CameraKitImage;
 import com.wonderkiln.camerakit.CameraKitVideo;
 import com.wonderkiln.camerakit.CameraView;
+
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Locale;
 
 /**
  * This class is responsible for setting up a camera view to take photos of a location.
@@ -42,6 +54,8 @@ public class TakePhotosActivity extends AppCompatActivity {
   private ImageView imageView;
 
   private String currentPhotoPath;
+
+  private String packageName;
 
   /**
    * Camera event listener which listens for camera events.
@@ -81,10 +95,22 @@ public class TakePhotosActivity extends AppCompatActivity {
     @Override
     public void onImage(CameraKitImage cameraKitImage) {
       Log.d(activity, "Taking picture");
+
+      // Extract bitmap picture
       byte[] picture = cameraKitImage.getJpeg();
       Bitmap bitmap = BitmapFactory.decodeByteArray(picture, 0, picture.length);
+
+      // Run firebase ML recognition
       runLandMarkRecognition(bitmap);
       imageView.setImageBitmap(bitmap);
+
+      // Save the file to photos path
+      try {
+        saveImageFile(bitmap);
+        Log.d(activity, "Saving file to " + currentPhotoPath);
+      } catch (IOException e) {
+        Log.d(activity, e.toString());
+      }
     }
 
     /**
@@ -160,6 +186,8 @@ public class TakePhotosActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.take_photos);
 
+    packageName = getApplicationContext().getPackageName();
+
     imageView = findViewById(R.id.photo);
 
     // Create camera view
@@ -188,7 +216,63 @@ public class TakePhotosActivity extends AppCompatActivity {
     });
   }
 
+  /**
+   * Saves an image in storage location.
+   * @param image The image to save.
+   * @throws IOException Throws exception if file cannot write out.
+   */
+  private void saveImageFile(Bitmap image) throws IOException {
+    File storageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "/"
+        + packageName);
 
+    boolean success = true;
+
+    // Create the directory if it doesn't exist
+    if (!storageDir.exists()) {
+      success = storageDir.mkdirs();
+    }
+
+    if (success) {
+      // Create an image file
+      String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+          .format(new Date());
+      String imageFileName = "JPEG_" + timeStamp + "_";
+      File imageFile = File.createTempFile(
+          imageFileName,  /* prefix */
+          ".jpg",         /* suffix */
+          storageDir      /* directory */
+      );
+
+      currentPhotoPath = imageFile.getAbsolutePath();
+
+      // Write file
+      try {
+        OutputStream fileOut = new FileOutputStream(imageFile);
+        image.compress(Bitmap.CompressFormat.JPEG, 100, fileOut);
+        fileOut.close();
+      } catch(Exception e) {
+        Log.d(activity, e.toString());
+      }
+
+      // Add file to gallery
+      galleryAddPic();
+
+      Toast.makeText(this,
+          "Photo added to " + currentPhotoPath,
+          Toast.LENGTH_LONG).show();
+    }
+  }
+
+  /**
+   * Adds the image to the gallery.
+   */
+  private void galleryAddPic() {
+    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+    File f = new File(currentPhotoPath);
+    Uri contentUri = Uri.fromFile(f);
+    mediaScanIntent.setData(contentUri);
+    this.sendBroadcast(mediaScanIntent);
+  }
 
   /**
    * Called when the activity will start interacting with the user.
