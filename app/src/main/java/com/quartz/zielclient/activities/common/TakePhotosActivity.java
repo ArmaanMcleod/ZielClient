@@ -38,8 +38,6 @@ public class TakePhotosActivity extends AppCompatActivity {
 
   private final String activity = this.getClass().getSimpleName();
 
-  private Bitmap currentPicture;
-
   /**
    * Camera event listener which listens for camera events.
    */
@@ -79,8 +77,8 @@ public class TakePhotosActivity extends AppCompatActivity {
     public void onImage(CameraKitImage cameraKitImage) {
       Log.d(activity, "Taking picture");
       byte[] picture = cameraKitImage.getJpeg();
-      currentPicture = BitmapFactory.decodeByteArray(picture, 0, picture.length);
-      runLandMarkRecognition();
+      Bitmap bitmap = BitmapFactory.decodeByteArray(picture, 0, picture.length);
+      runLandMarkRecognition(bitmap);
     }
 
     /**
@@ -95,7 +93,7 @@ public class TakePhotosActivity extends AppCompatActivity {
     /**
      * Detects landmark in photo taken.
      */
-    private void runLandMarkRecognition() {
+    private void runLandMarkRecognition(Bitmap bitmap) {
 
       // Use latest model options
       FirebaseVisionCloudDetectorOptions options =
@@ -105,7 +103,7 @@ public class TakePhotosActivity extends AppCompatActivity {
               .build();
 
       // Convert to firebase image
-      FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(currentPicture);
+      FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);
 
       // Create landmark detector
       FirebaseVisionCloudLandmarkDetector detector = FirebaseVision.getInstance()
