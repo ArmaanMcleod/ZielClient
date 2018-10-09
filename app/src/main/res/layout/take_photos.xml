@@ -14,12 +14,12 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="wrap_content"
+        android:layout_width="76dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="3dp"
-        android:text="@string/capture_image"
+        android:layout_marginBottom="0dp"
+        android:drawableStart="@drawable/camera_icon_scale"
         tools:layout_editor_absoluteX="135dp"
         tools:layout_editor_absoluteY="492dp" />
 
