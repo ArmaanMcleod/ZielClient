@@ -365,6 +365,7 @@ public class MapsActivity extends AppCompatActivity
         Intent intentVoice = new Intent(MapsActivity.this, VoiceActivity.class);
         intentVoice.putExtra("initiate", 0);
         if (channel != null) {
+          intentVoice.putExtra(getResources().getString(R.string.channel_key), channelId);
           intentVoice.putExtra("CallId", channel.getCarer());
         }
         startActivity(intentVoice);

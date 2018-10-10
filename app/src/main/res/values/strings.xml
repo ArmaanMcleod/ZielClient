@@ -38,7 +38,7 @@
     <string name="userNotFound">User not found try again</string>
     <string name="turn_speaker_on">Speaker ON</string>
     <string name="callee">client identity or phone number</string>
-    <string name="callHint">Dial a client name or phone number. Leaving the field empty results in an automated response.</string>
+    <string name="callHint">This will establish a call with the other user.</string>
     <string name="codec_title">Set your preferred audio and video codec. Not all codecs are supported with Group rooms. The media server will fallback to OPUS or VP8 if a preferred codec is not supported.</string>
     <string name="pref_title_audio_codec">Audio Codec</string>
     <string name="pref_title_video_codec">Video Codec</string>

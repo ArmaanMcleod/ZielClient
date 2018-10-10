@@ -34,6 +34,7 @@ public class ChannelData implements ValueEventListener {
   // the object that wants to listen to this channel
   private ChannelListener channelListener;
   private String channelKey;
+  private static final String USER_DATABASE_PATH = "users";
 
   /**
    * @param channelReference Location in database where channel exists.
@@ -201,4 +202,6 @@ public class ChannelData implements ValueEventListener {
         .child("carerMarkerList")
         .setValue(null);
   }
+
+
 }
