@@ -3,6 +3,7 @@ package com.quartz.zielclient.activities.common;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
@@ -64,6 +65,7 @@ public class TakePhotosActivity extends AppCompatActivity {
   private File storageDir;
 
   private static final int REQUEST_WRITE_PERMISSION = 1;
+  private static final int PICK_IMAGE = 1;
 
   private boolean permissionGranted;
 
@@ -233,9 +235,20 @@ public class TakePhotosActivity extends AppCompatActivity {
 
     Button galleryPhotoButton = findViewById(R.id.gallery_button);
     galleryPhotoButton.setOnClickListener(v -> {
-
+      Intent intent = new Intent();
+      intent.setType("image/*");
+      intent.setAction(Intent.ACTION_GET_CONTENT);
+      startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
     });
+
     requestStoragePermission();
+  }
+
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if (requestCode == PICK_IMAGE) {
+      Toast.makeText(this, "Picked Image!", Toast.LENGTH_LONG).show();
+    }
   }
 
   /**
