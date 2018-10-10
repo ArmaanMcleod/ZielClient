@@ -1,6 +1,5 @@
 package com.quartz.zielclient.activities.common;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -22,7 +21,6 @@ import com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions;
 import com.google.firebase.ml.vision.cloud.landmark.FirebaseVisionCloudLandmarkDetector;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.quartz.zielclient.R;
-import com.wonderkiln.camerakit.CameraKit;
 import com.wonderkiln.camerakit.CameraKitError;
 import com.wonderkiln.camerakit.CameraKitEvent;
 import com.wonderkiln.camerakit.CameraKitEventListener;
@@ -41,6 +39,17 @@ import java.util.Locale;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
+
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
+import static com.wonderkiln.camerakit.CameraKit.Constants.FLASH_OFF;
+import static com.wonderkiln.camerakit.CameraKit.Constants.FACING_BACK;
+import static com.wonderkiln.camerakit.CameraKit.Constants.FOCUS_CONTINUOUS;
+import static com.wonderkiln.camerakit.CameraKit.Constants.METHOD_STANDARD;
+import static com.wonderkiln.camerakit.CameraKit.Constants.ZOOM_PINCH;
+import static com.wonderkiln.camerakit.CameraKit.Constants.PERMISSIONS_STRICT;
+
+import static android.graphics.Bitmap.CompressFormat.JPEG;
 
 /**
  * This class is responsible for setting up a camera view to take photos of a location.
@@ -201,6 +210,7 @@ public class TakePhotosActivity extends AppCompatActivity {
 
     String packageName = getApplicationContext().getPackageName();
 
+    // Storage directory for photos taken
     storageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), packageName);
 
     imageView = findViewById(R.id.photo);
@@ -210,12 +220,12 @@ public class TakePhotosActivity extends AppCompatActivity {
     cameraView.addCameraKitListener(cameraListener);
 
     // Initialise preferred settings
-    cameraView.setFlash(CameraKit.Constants.FLASH_OFF);
-    cameraView.setFacing(CameraKit.Constants.FACING_BACK);
-    cameraView.setFocus(CameraKit.Constants.FOCUS_CONTINUOUS);
-    cameraView.setMethod(CameraKit.Constants.METHOD_STANDARD);
-    cameraView.setZoom(CameraKit.Constants.ZOOM_PINCH);
-    cameraView.setPermissions(CameraKit.Constants.PERMISSIONS_STRICT);
+    cameraView.setFlash(FLASH_OFF);
+    cameraView.setFacing(FACING_BACK);
+    cameraView.setFocus(FOCUS_CONTINUOUS);
+    cameraView.setMethod(METHOD_STANDARD);
+    cameraView.setZoom(ZOOM_PINCH);
+    cameraView.setPermissions(PERMISSIONS_STRICT);
     cameraView.setJpegQuality(100);
 
     // button which captures photo
@@ -300,7 +310,7 @@ public class TakePhotosActivity extends AppCompatActivity {
    */
   @AfterPermissionGranted(REQUEST_WRITE_PERMISSION)
   public void requestStoragePermission() {
-    String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    String[] perms = {WRITE_EXTERNAL_STORAGE};
     if(EasyPermissions.hasPermissions(this, perms)) {
       Toast.makeText(this, "Storage Permission already granted",
           Toast.LENGTH_SHORT).show();
@@ -342,7 +352,7 @@ public class TakePhotosActivity extends AppCompatActivity {
       // Write file to directory
       try {
         OutputStream fileOut = new FileOutputStream(imageFile);
-        image.compress(Bitmap.CompressFormat.JPEG, 100, fileOut);
+        image.compress(JPEG, 100, fileOut);
         fileOut.close();
       } catch(Exception e) {
         Log.d(activity, e.toString());
