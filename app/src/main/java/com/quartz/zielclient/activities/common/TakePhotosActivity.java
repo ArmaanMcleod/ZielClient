@@ -1,10 +1,16 @@
 package com.quartz.zielclient.activities.common;
 
+import android.Manifest;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +40,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
+
 /**
  * This class is responsible for setting up a camera view to take photos of a location.
  * This class uses the CameraKit API.
@@ -56,6 +65,10 @@ public class TakePhotosActivity extends AppCompatActivity {
   private String currentPhotoPath;
 
   private File storageDir;
+
+  private static final int REQUEST_WRITE_PERMISSION = 1;
+
+  private boolean permissionGranted;
 
   /**
    * Camera event listener which listens for camera events.
@@ -188,7 +201,7 @@ public class TakePhotosActivity extends AppCompatActivity {
 
     String packageName = getApplicationContext().getPackageName();
 
-    storageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "/" + packageName);
+    storageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), packageName);
 
     imageView = findViewById(R.id.photo);
 
@@ -211,11 +224,55 @@ public class TakePhotosActivity extends AppCompatActivity {
       Log.d(activity, Boolean.toString(canTakePicture));
       Log.d(activity, "Clicked button");
 
-      if (canTakePicture) {
-        Log.d(activity, "Captured image");
-        cameraView.captureImage();
+      if (!permissionGranted) {
+        requestStoragePermission();
+      } else {
+        if (canTakePicture) {
+          Log.d(activity, "Captured image");
+          cameraView.captureImage();
+        }
       }
     });
+
+    requestStoragePermission();
+  }
+
+  /**
+   * This is a callback for requesting and checking the result of a permission.
+   *
+   * <p>Documentation : https://developer.android.com/reference/android/support/v4/app/
+   * ActivityCompat.OnRequestPermissionsResultCallback#onRequestPermissionsResult
+   *
+   * @param requestCode  This is the request code passed to requestPermissions.
+   * @param permissions  This is the permissions.
+   * @param grantResults This is results for granted or un-granted permissions.
+   */
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                         @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+    // Forward results to EasyPermissions
+    EasyPermissions.onRequestPermissionsResult(requestCode,
+        permissions, grantResults, this);
+  }
+
+  /**
+   * Check location permissions before showing user location.
+   */
+  @AfterPermissionGranted(REQUEST_WRITE_PERMISSION)
+  public void requestStoragePermission() {
+    String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    if(EasyPermissions.hasPermissions(this, perms)) {
+      Toast.makeText(this, "Storage Permission already granted",
+          Toast.LENGTH_SHORT).show();
+      permissionGranted = true;
+    }
+    else {
+      EasyPermissions.requestPermissions(this,
+          "Please grant the storage permission", REQUEST_WRITE_PERMISSION, perms);
+      permissionGranted = false;
+    }
   }
 
   /**
@@ -254,7 +311,7 @@ public class TakePhotosActivity extends AppCompatActivity {
       }
 
       // Add file to gallery
-      galleryAddPic();
+      addImageToGallery(getContentResolver(), "jpg", imageFile);
 
       Toast.makeText(this,
           "Photo added to " + currentPhotoPath,
@@ -262,15 +319,17 @@ public class TakePhotosActivity extends AppCompatActivity {
     }
   }
 
-  /**
-   * Adds the image to the gallery.
-   */
-  private void galleryAddPic() {
-    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-    File f = new File(currentPhotoPath);
-    Uri contentUri = Uri.fromFile(f);
-    mediaScanIntent.setData(contentUri);
-    this.sendBroadcast(mediaScanIntent);
+  public void addImageToGallery(ContentResolver cr, String imgType, File filepath) {
+    ContentValues values = new ContentValues();
+    values.put(MediaStore.Images.Media.TITLE, "player");
+    values.put(MediaStore.Images.Media.DISPLAY_NAME, "player");
+    values.put(MediaStore.Images.Media.DESCRIPTION, "");
+    values.put(MediaStore.Images.Media.MIME_TYPE, "image/" + imgType);
+    values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis());
+    values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+    values.put(MediaStore.Images.Media.DATA, filepath.toString());
+
+    cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
   }
 
   /**
