@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -279,10 +280,13 @@ public class TakePhotosActivity extends AppCompatActivity {
     if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
       Toast.makeText(this, "Picked Image!", Toast.LENGTH_LONG).show();
 
-      Bundle extras = data.getExtras();
-      if (extras != null) {
-        Bitmap bitmap = (Bitmap)extras.get("data");
+      Uri selectedImage = data.getData();
+
+      try {
+        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
         imageView.setImageBitmap(bitmap);
+      } catch (IOException e) {
+        Log.d(activity, e.toString());
       }
     }
   }
