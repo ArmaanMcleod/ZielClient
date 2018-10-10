@@ -25,9 +25,11 @@
 
     <ImageView
         android:id="@+id/photo"
-        android:layout_width="138dp"
+        android:layout_width="130dp"
         android:layout_height="130dp"
-        android:contentDescription="@string/picture" />
+        android:contentDescription="@string/picture"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"/>
 
     <Button
         android:id="@+id/gallery_button"
