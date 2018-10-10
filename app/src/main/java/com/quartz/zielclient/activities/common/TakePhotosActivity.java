@@ -7,7 +7,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -34,10 +33,10 @@ import com.wonderkiln.camerakit.CameraView;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Locale;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -239,15 +238,28 @@ public class TakePhotosActivity extends AppCompatActivity {
     Button galleryPhotoButton = findViewById(R.id.gallery_button);
     galleryPhotoButton.setOnClickListener(v -> {
       Log.d(activity, "Clicked gallery button");
-      Intent intent = new Intent();
-      intent.setType("image/*");
-      intent.setAction(Intent.ACTION_GET_CONTENT);
-      startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+      pickImageGallery();
     });
 
     requestStoragePermission();
   }
 
+  /**
+   * Opens up image gallery to select a photo.
+   */
+  private void pickImageGallery() {
+    Intent intent = new Intent();
+    intent.setType("image/*");
+    intent.setAction(Intent.ACTION_GET_CONTENT);
+    startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+  }
+
+  /**
+   * Notifies when image has been selected from gallery
+   * @param requestCode This is the request code passed through to verify activity.
+   * @param resultCode This is the result code is the activity was created.
+   * @param data The data extracted from activity
+   */
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
@@ -255,9 +267,11 @@ public class TakePhotosActivity extends AppCompatActivity {
     if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
       Toast.makeText(this, "Picked Image!", Toast.LENGTH_LONG).show();
 
-      Uri url = data.getData();
-
-      
+      Bundle extras = data.getExtras();
+      if (extras != null) {
+        Bitmap bitmap = (Bitmap)extras.get("data");
+        imageView.setImageBitmap(bitmap);
+      }
     }
   }
 
@@ -325,7 +339,7 @@ public class TakePhotosActivity extends AppCompatActivity {
 
       currentPhotoPath = imageFile.getAbsolutePath();
 
-      // Write file
+      // Write file to directory
       try {
         OutputStream fileOut = new FileOutputStream(imageFile);
         image.compress(Bitmap.CompressFormat.JPEG, 100, fileOut);
@@ -343,11 +357,19 @@ public class TakePhotosActivity extends AppCompatActivity {
     }
   }
 
+  /**
+   * Adds image to media store to be visible by gallery.
+   * @param cr THe content resolver manager which manages media files.
+   * @param imgType The image extension to set the mime type.
+   * @param filepath The filepath of the image stored on the device.
+   */
   public void addImageToGallery(ContentResolver cr, String imgType, File filepath) {
     ContentValues values = new ContentValues();
-    values.put(MediaStore.Images.Media.TITLE, "player");
-    values.put(MediaStore.Images.Media.DISPLAY_NAME, "player");
-    values.put(MediaStore.Images.Media.DESCRIPTION, "");
+
+    // Set properties for media file
+    values.put(MediaStore.Images.Media.TITLE, filepath.getName());
+    values.put(MediaStore.Images.Media.DISPLAY_NAME, filepath.getName());
+    values.put(MediaStore.Images.Media.DESCRIPTION, "ZielClient photo");
     values.put(MediaStore.Images.Media.MIME_TYPE, "image/" + imgType);
     values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis());
     values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
