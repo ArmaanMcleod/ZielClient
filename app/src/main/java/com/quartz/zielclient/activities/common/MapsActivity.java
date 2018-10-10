@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
@@ -44,10 +45,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.google.android.gms.location.LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_CYAN;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_MAGENTA;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
 
@@ -72,12 +75,17 @@ public class MapsActivity extends AppCompatActivity
   private final String activity = this.getClass().getSimpleName();
   private final LocationCallback mLocationCallback = locationCallBackMaker();
   private GoogleMap mGoogleMap;
+  private TextView waitingMessage;
 
   private LocationRequest mLocationRequest;
   private FusedLocationProviderClient mFusedLocationClient;
-
+  private Button toVideoChatButton;
+  private Button toTextChatButton;
+  private Button toVoiceChatButton;
   private LatLng source;
-  private List<Marker> markers = new ArrayList<>();
+
+  private List<Marker> sourceDestinationMarkers = new ArrayList<>();
+  private List<Marker> dropMarkers = new ArrayList<>();
 
   private LatLng destination;
 
@@ -112,13 +120,17 @@ public class MapsActivity extends AppCompatActivity
     alertDialog = makeVideoAlert();
 
     // Create buttons and listeners below
-    Button toVideoChatButton = findViewById(R.id.toVideoChatButton);
+
+    waitingMessage = findViewById(R.id.waitForCarerMessage);
+    toVideoChatButton = findViewById(R.id.toVideoChatButton);
+    toVideoChatButton.setVisibility(View.INVISIBLE);
     toVideoChatButton.setOnClickListener(this);
 
-    Button toTextChatButton = findViewById(R.id.toTextChat);
+    toTextChatButton = findViewById(R.id.toTextChat);
     toTextChatButton.setOnClickListener(this);
 
-    Button toVoiceChatButton = findViewById(R.id.toVoiceChat);
+    toVoiceChatButton = findViewById(R.id.toVoiceChat);
+    toVoiceChatButton.setVisibility(View.INVISIBLE);
     toVoiceChatButton.setOnClickListener(this);
 
     // Get bundle of arguments passed from Home Page Activity
@@ -168,9 +180,9 @@ public class MapsActivity extends AppCompatActivity
     }
 
     // Allow user to see street view suggestion
-    Toast streetviewSuggestion =  Toast.makeText(this,
+    Toast streetviewSuggestion = Toast.makeText(this,
         "Click on a marker to see street view", Toast.LENGTH_LONG);
-    streetviewSuggestion.setGravity(Gravity.BOTTOM,0,250);
+    streetviewSuggestion.setGravity(Gravity.BOTTOM, 0, 250);
     streetviewSuggestion.show();
   }
 
@@ -303,11 +315,18 @@ public class MapsActivity extends AppCompatActivity
   public void dataChanged() {
     // notify user about new messages
     if (channel != null) {
-
       if (channel.getVideoCallStatus()) {
         alertDialog.show();
       } else {
         alertDialog.cancel();
+      }
+
+      if (channel.getCarerStatus()) {
+        Toast.makeText(this, "Carer Connected", Toast.LENGTH_SHORT);
+        toTextChatButton.setVisibility(View.VISIBLE);
+        toVideoChatButton.setVisibility(View.VISIBLE);
+        toVoiceChatButton.setVisibility(View.VISIBLE);
+        waitingMessage.setVisibility(View.INVISIBLE);
       }
     }
   }
@@ -331,6 +350,7 @@ public class MapsActivity extends AppCompatActivity
         Intent intentVoice = new Intent(MapsActivity.this, VoiceActivity.class);
         intentVoice.putExtra("initiate", 0);
         if (channel != null) {
+          intentVoice.putExtra(getResources().getString(R.string.channel_key), channelId);
           intentVoice.putExtra("CallId", channel.getCarer());
         }
         startActivity(intentVoice);
@@ -353,6 +373,11 @@ public class MapsActivity extends AppCompatActivity
     super.onBackPressed();
   }
 
+  /**
+   * Makes alert for assisted to join carer in video call.
+   *
+   * @return AlertDialog A alert dialog box for the assisted to see.
+   */
   public AlertDialog makeVideoAlert() {
     alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle("Video Share?");
@@ -369,6 +394,46 @@ public class MapsActivity extends AppCompatActivity
     return alertDialog;
   }
 
+  /**
+   * Draws markers to map from the carer.
+   *
+   * @param coordinates This is the coordinates passed from the carer.
+   */
+  private void drawMarkers(List<LatLng> coordinates) {
+    dropMarkers.addAll(
+        coordinates.stream()
+        .map(coord -> createMarker(coord, HUE_CYAN))
+        .collect(Collectors.toList())
+    );
+  }
+
+  /**
+   * Deletes markers from a list.
+   *
+   * @param markers the markers stored in the list.
+   */
+  private void deleteMarkers(List<Marker> markers) {
+    markers.forEach(Marker::remove);
+    markers.clear();
+  }
+
+  /**
+   * Creates a marker and shows it on the Google map.
+   *
+   * @param location The location of marker.
+   * @param colour   The colour of marker.
+   * @return Marker The marker object.
+   */
+  private Marker createMarker(LatLng location, float colour) {
+    MarkerOptions markerOptions = new MarkerOptions()
+        .position(location)
+        .title(getAddress(location))
+        .icon(BitmapDescriptorFactory.defaultMarker(colour));
+
+    return mGoogleMap.addMarker(markerOptions);
+  }
+
+  // Location callback that continually polls Google services API for location updates.
   private LocationCallback locationCallBackMaker() {
     return new LocationCallback() {
 
@@ -398,31 +463,21 @@ public class MapsActivity extends AppCompatActivity
           // Execute channel is available
           if (channel != null) {
             channel.setAssistedLocation(location);
+            deleteMarkers(dropMarkers);
+            drawMarkers(channel.getCarerMarkerList());
           }
 
           source = newSource;
 
           // clear destination and source
-          markers.forEach(Marker::remove);
-          markers.clear();
-
-          // Source and Destination options for markers
-          MarkerOptions sourceOptions = new MarkerOptions();
-          sourceOptions.position(source);
-          sourceOptions.title(getAddress(source));
-          sourceOptions.icon(BitmapDescriptorFactory.defaultMarker(HUE_MAGENTA));
-
-          MarkerOptions destinationOptions = new MarkerOptions();
-          destinationOptions.position(destination);
-          destinationOptions.title(getAddress(destination));
-          destinationOptions.icon(BitmapDescriptorFactory.defaultMarker(HUE_RED));
+          deleteMarkers(sourceDestinationMarkers);
 
           // Source and Destination markers
-          Marker sourceMarker = mGoogleMap.addMarker(sourceOptions);
-          markers.add(sourceMarker);
+          Marker sourceMarker = createMarker(source, HUE_MAGENTA);
+          sourceDestinationMarkers.add(sourceMarker);
 
-          Marker destinationMarker = mGoogleMap.addMarker(destinationOptions);
-          markers.add(destinationMarker);
+          Marker destinationMarker = createMarker(destination, HUE_RED);
+          sourceDestinationMarkers.add(destinationMarker);
 
           Log.d("DESTINATION CHANGE", destination.toString());
 

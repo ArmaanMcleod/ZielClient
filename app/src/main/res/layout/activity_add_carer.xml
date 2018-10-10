@@ -10,7 +10,7 @@
 
     <ImageView
         android:id="@+id/imageView4"
-        android:layout_width="199dp"
+        android:layout_width="196dp"
         android:layout_height="196dp"
         android:layout_marginBottom="23dp"
         android:layout_marginTop="57dp"
@@ -54,7 +54,7 @@
         android:layout_height="32dp"
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
-        android:text="*Please ensure country code is Included"
+        android:text="*Please ensure country code is included"
         android:textSize="20dp"
         app:layout_constraintBottom_toTopOf="@+id/carerNumberInput"
         app:layout_constraintEnd_toEndOf="parent"
