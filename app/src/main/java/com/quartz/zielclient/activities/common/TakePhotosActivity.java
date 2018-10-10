@@ -1,11 +1,13 @@
 package com.quartz.zielclient.activities.common;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -221,7 +223,7 @@ public class TakePhotosActivity extends AppCompatActivity {
     Button takePhotoButton = findViewById(R.id.camera_button);
     takePhotoButton.setOnClickListener(v -> {
       Log.d(activity, Boolean.toString(canTakePicture));
-      Log.d(activity, "Clicked button");
+      Log.d(activity, "Clicked photo button");
 
       if (!permissionGranted) {
         requestStoragePermission();
@@ -233,8 +235,10 @@ public class TakePhotosActivity extends AppCompatActivity {
       }
     });
 
+    // Shows gallery of recently taken photos
     Button galleryPhotoButton = findViewById(R.id.gallery_button);
     galleryPhotoButton.setOnClickListener(v -> {
+      Log.d(activity, "Clicked gallery button");
       Intent intent = new Intent();
       intent.setType("image/*");
       intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -245,9 +249,15 @@ public class TakePhotosActivity extends AppCompatActivity {
   }
 
   @Override
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == PICK_IMAGE) {
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
       Toast.makeText(this, "Picked Image!", Toast.LENGTH_LONG).show();
+
+      Uri url = data.getData();
+
+      
     }
   }
 
