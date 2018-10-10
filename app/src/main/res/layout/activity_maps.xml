@@ -16,7 +16,7 @@
         android:layout_height="52dp"
         android:drawableLeft="@drawable/camera_icon_scale"
         app:layout_constraintTop_toBottomOf="@+id/place_autocomplete"
-        tools:layout_editor_absoluteX="0dp" />
+        android:layout_marginTop="10dp"/>
 
     <fragment
         android:id="@+id/place_autocomplete"
@@ -32,10 +32,11 @@
         android:id="@+id/map"
         class="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="0dp"
-        android:layout_height="469dp"
+        android:layout_height="470dp"
 
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/place_autocomplete" />
 
@@ -113,6 +114,4 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.507" />
     </android.support.constraint.ConstraintLayout>
-
-
 </android.support.constraint.ConstraintLayout>

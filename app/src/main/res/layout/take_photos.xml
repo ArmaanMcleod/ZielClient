@@ -16,8 +16,9 @@
         android:id="@+id/camera_button"
         android:layout_width="76dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_marginStart="100dp"
         android:layout_marginBottom="0dp"
         android:drawableStart="@drawable/camera_icon_scale"
         tools:layout_editor_absoluteX="135dp"
@@ -37,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="53dp"
+        android:layout_marginEnd="99dp"
         android:layout_marginBottom="0dp"
         android:drawableStart="@drawable/gallery_icon_scale" />
 
