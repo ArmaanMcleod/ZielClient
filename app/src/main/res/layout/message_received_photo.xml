@@ -6,22 +6,6 @@
     android:paddingLeft="8dp"
     android:paddingRight="8dp">
 
-    <TextView
-        android:id="@+id/text_group_chat_date"
-        android:text="February 22"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="0dp"
-        android:gravity="center"
-        android:textSize="14sp" />
-
     <ImageView
         android:id="@+id/image_group_chat_profile"
         android:src="@drawable/chat_avatar"
