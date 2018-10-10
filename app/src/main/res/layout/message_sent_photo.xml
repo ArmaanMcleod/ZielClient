@@ -47,7 +47,6 @@
         android:layout_above="@id/text_group_chat_time"
         android:layout_alignRight="@id/text_group_chat_time"
         android:visibility="gone"
-        app:draw_progress_text="false"
         app:progress_stroke_width="3.5dp"
         app:progress_start_color="#875eff"
         app:progress_end_color="#875eff"

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.dinuscxj.progressbar.CircleProgressBar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.messages.Message;
@@ -169,50 +170,118 @@ public class MessageListAdapter extends RecyclerView.Adapter{
     void bind(Message message) {
       messageText.setText(message.getMessageValue());
       String timeString = new SimpleDateFormat("h:mm a").format(message.getMessageTime());
-      timeStamp.setText(timeString);;
+      timeStamp.setText(timeString);
     }
   }
-}
 
+  /**
+   * A ViewHolder for file messages that are images.
+   * Displays only the image thumbnail.
+   */
 
-/**
- * A ViewHolder for file messages that are images.
- * Displays only the image thumbnail.
- */
-/*
-private class MyImageFileMessageHolder extends RecyclerView.ViewHolder {
-  TextView timeText, readReceiptText, dateText;
-  ImageView fileThumbnailImage;
-  CircleProgressBar circleProgressBar;
+  private class SentImageHolder extends RecyclerView.ViewHolder {
+    TextView timeText;
+    ImageView fileThumbnailImage;
+    CircleProgressBar circleProgressBar;
 
-  public MyImageFileMessageHolder(View itemView) {
-    super(itemView);
+    public SentImageHolder(View itemView) {
+      super(itemView);
 
-    timeText = (TextView) itemView.findViewById(R.id.text_group_chat_time);
-    fileThumbnailImage = (ImageView) itemView.findViewById(R.id.image_group_chat_file_thumbnail);
-    readReceiptText = (TextView) itemView.findViewById(R.id.text_group_chat_read_receipt);
-    circleProgressBar = (CircleProgressBar) itemView.findViewById(R.id.circle_progress);
-    dateText = (TextView) itemView.findViewById(R.id.text_group_chat_date);
+      timeText = (TextView) itemView.findViewById(R.id.text_group_chat_time);
+      fileThumbnailImage = (ImageView) itemView.findViewById(R.id.image_group_chat_file_thumbnail);
+      circleProgressBar = (CircleProgressBar) itemView.findViewById(R.id.circle_progress);
+    }
+
+    void bind(Context context, final FileMessage message, GroupChannel channel, boolean isNewDay, boolean isTempMessage, boolean isFailedMessage, Uri tempFileMessageUri, final OnItemClickListener listener) {
+      timeText.setText(DateUtils.formatTime(message.getCreatedAt()));
+
+      if (isFailedMessage) {
+        readReceiptText.setText(R.string.message_failed);
+        readReceiptText.setVisibility(View.VISIBLE);
+
+        circleProgressBar.setVisibility(View.GONE);
+        mFileMessageMap.remove(message);
+      } else if (isTempMessage) {
+        readReceiptText.setText(R.string.message_sending);
+        readReceiptText.setVisibility(View.GONE);
+
+        circleProgressBar.setVisibility(View.VISIBLE);
+        mFileMessageMap.put(message, circleProgressBar);
+      } else {
+        circleProgressBar.setVisibility(View.GONE);
+        mFileMessageMap.remove(message);
+
+        // Since setChannel is set slightly after adapter is created, check if null.
+        if (channel != null) {
+          int readReceipt = channel.getReadReceipt(message);
+          if (readReceipt > 0) {
+            readReceiptText.setVisibility(View.VISIBLE);
+            readReceiptText.setText(String.valueOf(readReceipt));
+          } else {
+            readReceiptText.setVisibility(View.INVISIBLE);
+          }
+        }
+      }
+
+      // Show the date if the message was sent on a different date than the previous message.
+      if (isNewDay) {
+        dateText.setVisibility(View.VISIBLE);
+        dateText.setText(DateUtils.formatDate(message.getCreatedAt()));
+      } else {
+        dateText.setVisibility(View.GONE);
+      }
+
+      if (isTempMessage && tempFileMessageUri != null) {
+        ImageUtils.displayImageFromUrl(context, tempFileMessageUri.toString(), fileThumbnailImage, null);
+      } else {
+        // Get thumbnails from FileMessage
+        ArrayList<FileMessage.Thumbnail> thumbnails = (ArrayList<FileMessage.Thumbnail>) message.getThumbnails();
+
+        // If thumbnails exist, get smallest (first) thumbnail and display it in the message
+        if (thumbnails.size() > 0) {
+          if (message.getType().toLowerCase().contains("gif")) {
+            ImageUtils.displayGifImageFromUrl(context, message.getUrl(), fileThumbnailImage, thumbnails.get(0).getUrl(), fileThumbnailImage.getDrawable());
+          } else {
+            ImageUtils.displayImageFromUrl(context, thumbnails.get(0).getUrl(), fileThumbnailImage, fileThumbnailImage.getDrawable());
+          }
+        } else {
+          if (message.getType().toLowerCase().contains("gif")) {
+            ImageUtils.displayGifImageFromUrl(context, message.getUrl(), fileThumbnailImage, (String) null, fileThumbnailImage.getDrawable());
+          } else {
+            ImageUtils.displayImageFromUrl(context, message.getUrl(), fileThumbnailImage, fileThumbnailImage.getDrawable());
+          }
+        }
+      }
+
+      if (listener != null) {
+        itemView.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            listener.onFileMessageItemClick(message);
+          }
+        });
+      }
+    }
   }
 
-  void bind(Context context, final FileMessage message, GroupChannel channel, boolean isNewDay, boolean isTempMessage, boolean isFailedMessage, Uri tempFileMessageUri, final OnItemClickListener listener) {
-    timeText.setText(DateUtils.formatTime(message.getCreatedAt()));
+  private class OtherImageFileMessageHolder extends RecyclerView.ViewHolder {
 
-    if (isFailedMessage) {
-      readReceiptText.setText(R.string.message_failed);
-      readReceiptText.setVisibility(View.VISIBLE);
+    TextView timeText, nicknameText, readReceiptText, dateText;
+    ImageView profileImage, fileThumbnailImage;
 
-      circleProgressBar.setVisibility(View.GONE);
-      mFileMessageMap.remove(message);
-    } else if (isTempMessage) {
-      readReceiptText.setText(R.string.message_sending);
-      readReceiptText.setVisibility(View.GONE);
+    public OtherImageFileMessageHolder(View itemView) {
+      super(itemView);
 
-      circleProgressBar.setVisibility(View.VISIBLE);
-      mFileMessageMap.put(message, circleProgressBar);
-    } else {
-      circleProgressBar.setVisibility(View.GONE);
-      mFileMessageMap.remove(message);
+      timeText = (TextView) itemView.findViewById(R.id.text_group_chat_time);
+      nicknameText = (TextView) itemView.findViewById(R.id.text_group_chat_nickname);
+      fileThumbnailImage = (ImageView) itemView.findViewById(R.id.image_group_chat_file_thumbnail);
+      profileImage = (ImageView) itemView.findViewById(R.id.image_group_chat_profile);
+      readReceiptText = (TextView) itemView.findViewById(R.id.text_group_chat_read_receipt);
+      dateText = (TextView) itemView.findViewById(R.id.text_group_chat_date);
+    }
+
+    void bind(Context context, final FileMessage message, GroupChannel channel, boolean isNewDay, boolean isContinuous, final OnItemClickListener listener) {
+      timeText.setText(DateUtils.formatTime(message.getCreatedAt()));
 
       // Since setChannel is set slightly after adapter is created, check if null.
       if (channel != null) {
@@ -224,19 +293,27 @@ private class MyImageFileMessageHolder extends RecyclerView.ViewHolder {
           readReceiptText.setVisibility(View.INVISIBLE);
         }
       }
-    }
 
-    // Show the date if the message was sent on a different date than the previous message.
-    if (isNewDay) {
-      dateText.setVisibility(View.VISIBLE);
-      dateText.setText(DateUtils.formatDate(message.getCreatedAt()));
-    } else {
-      dateText.setVisibility(View.GONE);
-    }
+      // Show the date if the message was sent on a different date than the previous message.
+      if (isNewDay) {
+        dateText.setVisibility(View.VISIBLE);
+        dateText.setText(DateUtils.formatDate(message.getCreatedAt()));
+      } else {
+        dateText.setVisibility(View.GONE);
+      }
 
-    if (isTempMessage && tempFileMessageUri != null) {
-      ImageUtils.displayImageFromUrl(context, tempFileMessageUri.toString(), fileThumbnailImage, null);
-    } else {
+      // Hide profile image and nickname if the previous message was also sent by current sender.
+      if (isContinuous) {
+        profileImage.setVisibility(View.INVISIBLE);
+        nicknameText.setVisibility(View.GONE);
+      } else {
+        profileImage.setVisibility(View.VISIBLE);
+        ImageUtils.displayRoundImageFromUrl(context, message.getSender().getProfileUrl(), profileImage);
+
+        nicknameText.setVisibility(View.VISIBLE);
+        nicknameText.setText(message.getSender().getNickname());
+      }
+
       // Get thumbnails from FileMessage
       ArrayList<FileMessage.Thumbnail> thumbnails = (ArrayList<FileMessage.Thumbnail>) message.getThumbnails();
 
@@ -254,136 +331,118 @@ private class MyImageFileMessageHolder extends RecyclerView.ViewHolder {
           ImageUtils.displayImageFromUrl(context, message.getUrl(), fileThumbnailImage, fileThumbnailImage.getDrawable());
         }
       }
-    }
 
-    if (listener != null) {
-      itemView.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          listener.onFileMessageItemClick(message);
-        }
-      });
+      if (listener != null) {
+        itemView.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            listener.onFileMessageItemClick(message);
+          }
+        });
+      }
     }
   }
-}
 
-private class OtherImageFileMessageHolder extends RecyclerView.ViewHolder {
+  /**
+   * A ViewHolder for file messages that are videos.
+   * Displays only the video thumbnail.
+   */
 
-  TextView timeText, nicknameText, readReceiptText, dateText;
-  ImageView profileImage, fileThumbnailImage;
+  private class MyVideoFileMessageHolder extends RecyclerView.ViewHolder {
+    TextView timeText, readReceiptText, dateText;
+    ImageView fileThumbnailImage;
+    CircleProgressBar circleProgressBar;
 
-  public OtherImageFileMessageHolder(View itemView) {
-    super(itemView);
+    public MyVideoFileMessageHolder(View itemView) {
+      super(itemView);
 
-    timeText = (TextView) itemView.findViewById(R.id.text_group_chat_time);
-    nicknameText = (TextView) itemView.findViewById(R.id.text_group_chat_nickname);
-    fileThumbnailImage = (ImageView) itemView.findViewById(R.id.image_group_chat_file_thumbnail);
-    profileImage = (ImageView) itemView.findViewById(R.id.image_group_chat_profile);
-    readReceiptText = (TextView) itemView.findViewById(R.id.text_group_chat_read_receipt);
-    dateText = (TextView) itemView.findViewById(R.id.text_group_chat_date);
-  }
+      timeText = (TextView) itemView.findViewById(R.id.text_group_chat_time);
+      fileThumbnailImage = (ImageView) itemView.findViewById(R.id.image_group_chat_file_thumbnail);
+      readReceiptText = (TextView) itemView.findViewById(R.id.text_group_chat_read_receipt);
+      circleProgressBar = (CircleProgressBar) itemView.findViewById(R.id.circle_progress);
+      dateText = (TextView) itemView.findViewById(R.id.text_group_chat_date);
+    }
 
-  void bind(Context context, final FileMessage message, GroupChannel channel, boolean isNewDay, boolean isContinuous, final OnItemClickListener listener) {
-    timeText.setText(DateUtils.formatTime(message.getCreatedAt()));
+    void bind(Context context, final FileMessage message, GroupChannel channel, boolean isNewDay, boolean isTempMessage, boolean isFailedMessage, Uri tempFileMessageUri, final OnItemClickListener listener) {
+      timeText.setText(DateUtils.formatTime(message.getCreatedAt()));
 
-    // Since setChannel is set slightly after adapter is created, check if null.
-    if (channel != null) {
-      int readReceipt = channel.getReadReceipt(message);
-      if (readReceipt > 0) {
+      if (isFailedMessage) {
+        readReceiptText.setText(R.string.message_failed);
         readReceiptText.setVisibility(View.VISIBLE);
-        readReceiptText.setText(String.valueOf(readReceipt));
+
+        circleProgressBar.setVisibility(View.GONE);
+        mFileMessageMap.remove(message);
+      } else if (isTempMessage) {
+        readReceiptText.setText(R.string.message_sending);
+        readReceiptText.setVisibility(View.GONE);
+
+        circleProgressBar.setVisibility(View.VISIBLE);
+        mFileMessageMap.put(message, circleProgressBar);
       } else {
-        readReceiptText.setVisibility(View.INVISIBLE);
-      }
-    }
+        circleProgressBar.setVisibility(View.GONE);
+        mFileMessageMap.remove(message);
 
-    // Show the date if the message was sent on a different date than the previous message.
-    if (isNewDay) {
-      dateText.setVisibility(View.VISIBLE);
-      dateText.setText(DateUtils.formatDate(message.getCreatedAt()));
-    } else {
-      dateText.setVisibility(View.GONE);
-    }
-
-    // Hide profile image and nickname if the previous message was also sent by current sender.
-    if (isContinuous) {
-      profileImage.setVisibility(View.INVISIBLE);
-      nicknameText.setVisibility(View.GONE);
-    } else {
-      profileImage.setVisibility(View.VISIBLE);
-      ImageUtils.displayRoundImageFromUrl(context, message.getSender().getProfileUrl(), profileImage);
-
-      nicknameText.setVisibility(View.VISIBLE);
-      nicknameText.setText(message.getSender().getNickname());
-    }
-
-    // Get thumbnails from FileMessage
-    ArrayList<FileMessage.Thumbnail> thumbnails = (ArrayList<FileMessage.Thumbnail>) message.getThumbnails();
-
-    // If thumbnails exist, get smallest (first) thumbnail and display it in the message
-    if (thumbnails.size() > 0) {
-      if (message.getType().toLowerCase().contains("gif")) {
-        ImageUtils.displayGifImageFromUrl(context, message.getUrl(), fileThumbnailImage, thumbnails.get(0).getUrl(), fileThumbnailImage.getDrawable());
-      } else {
-        ImageUtils.displayImageFromUrl(context, thumbnails.get(0).getUrl(), fileThumbnailImage, fileThumbnailImage.getDrawable());
-      }
-    } else {
-      if (message.getType().toLowerCase().contains("gif")) {
-        ImageUtils.displayGifImageFromUrl(context, message.getUrl(), fileThumbnailImage, (String) null, fileThumbnailImage.getDrawable());
-      } else {
-        ImageUtils.displayImageFromUrl(context, message.getUrl(), fileThumbnailImage, fileThumbnailImage.getDrawable());
-      }
-    }
-
-    if (listener != null) {
-      itemView.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          listener.onFileMessageItemClick(message);
+        // Since setChannel is set slightly after adapter is created, check if null.
+        if (channel != null) {
+          int readReceipt = channel.getReadReceipt(message);
+          if (readReceipt > 0) {
+            readReceiptText.setVisibility(View.VISIBLE);
+            readReceiptText.setText(String.valueOf(readReceipt));
+          } else {
+            readReceiptText.setVisibility(View.INVISIBLE);
+          }
         }
-      });
+      }
+
+      // Show the date if the message was sent on a different date than the previous message.
+      if (isNewDay) {
+        dateText.setVisibility(View.VISIBLE);
+        dateText.setText(DateUtils.formatDate(message.getCreatedAt()));
+      } else {
+        dateText.setVisibility(View.GONE);
+      }
+
+      if (isTempMessage && tempFileMessageUri != null) {
+        ImageUtils.displayImageFromUrl(context, tempFileMessageUri.toString(), fileThumbnailImage, null);
+      } else {
+        // Get thumbnails from FileMessage
+        ArrayList<FileMessage.Thumbnail> thumbnails = (ArrayList<FileMessage.Thumbnail>) message.getThumbnails();
+
+        // If thumbnails exist, get smallest (first) thumbnail and display it in the message
+        if (thumbnails.size() > 0) {
+          ImageUtils.displayImageFromUrl(context, thumbnails.get(0).getUrl(), fileThumbnailImage, fileThumbnailImage.getDrawable());
+        }
+      }
+
+      if (listener != null) {
+        itemView.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            listener.onFileMessageItemClick(message);
+          }
+        });
+      }
     }
   }
-}
 
-/**
- * A ViewHolder for file messages that are videos.
- * Displays only the video thumbnail.
- */
-/*
-private class MyVideoFileMessageHolder extends RecyclerView.ViewHolder {
-  TextView timeText, readReceiptText, dateText;
-  ImageView fileThumbnailImage;
-  CircleProgressBar circleProgressBar;
+  private class OtherVideoFileMessageHolder extends RecyclerView.ViewHolder {
 
-  public MyVideoFileMessageHolder(View itemView) {
-    super(itemView);
+    TextView timeText, nicknameText, readReceiptText, dateText;
+    ImageView profileImage, fileThumbnailImage;
 
-    timeText = (TextView) itemView.findViewById(R.id.text_group_chat_time);
-    fileThumbnailImage = (ImageView) itemView.findViewById(R.id.image_group_chat_file_thumbnail);
-    readReceiptText = (TextView) itemView.findViewById(R.id.text_group_chat_read_receipt);
-    circleProgressBar = (CircleProgressBar) itemView.findViewById(R.id.circle_progress);
-    dateText = (TextView) itemView.findViewById(R.id.text_group_chat_date);
-  }
+    public OtherVideoFileMessageHolder(View itemView) {
+      super(itemView);
 
-  void bind(Context context, final FileMessage message, GroupChannel channel, boolean isNewDay, boolean isTempMessage, boolean isFailedMessage, Uri tempFileMessageUri, final OnItemClickListener listener) {
-    timeText.setText(DateUtils.formatTime(message.getCreatedAt()));
+      timeText = (TextView) itemView.findViewById(R.id.text_group_chat_time);
+      nicknameText = (TextView) itemView.findViewById(R.id.text_group_chat_nickname);
+      fileThumbnailImage = (ImageView) itemView.findViewById(R.id.image_group_chat_file_thumbnail);
+      profileImage = (ImageView) itemView.findViewById(R.id.image_group_chat_profile);
+      readReceiptText = (TextView) itemView.findViewById(R.id.text_group_chat_read_receipt);
+      dateText = (TextView) itemView.findViewById(R.id.text_group_chat_date);
+    }
 
-    if (isFailedMessage) {
-      readReceiptText.setText(R.string.message_failed);
-      readReceiptText.setVisibility(View.VISIBLE);
-
-      circleProgressBar.setVisibility(View.GONE);
-      mFileMessageMap.remove(message);
-    } else if (isTempMessage) {
-      readReceiptText.setText(R.string.message_sending);
-      readReceiptText.setVisibility(View.GONE);
-
-      circleProgressBar.setVisibility(View.VISIBLE);
-      mFileMessageMap.put(message, circleProgressBar);
-    } else {
-      circleProgressBar.setVisibility(View.GONE);
-      mFileMessageMap.remove(message);
+    void bind(Context context, final FileMessage message, GroupChannel channel, boolean isNewDay, boolean isContinuous, final OnItemClickListener listener) {
+      timeText.setText(DateUtils.formatTime(message.getCreatedAt()));
 
       // Since setChannel is set slightly after adapter is created, check if null.
       if (channel != null) {
@@ -395,19 +454,27 @@ private class MyVideoFileMessageHolder extends RecyclerView.ViewHolder {
           readReceiptText.setVisibility(View.INVISIBLE);
         }
       }
-    }
 
-    // Show the date if the message was sent on a different date than the previous message.
-    if (isNewDay) {
-      dateText.setVisibility(View.VISIBLE);
-      dateText.setText(DateUtils.formatDate(message.getCreatedAt()));
-    } else {
-      dateText.setVisibility(View.GONE);
-    }
+      // Show the date if the message was sent on a different date than the previous message.
+      if (isNewDay) {
+        dateText.setVisibility(View.VISIBLE);
+        dateText.setText(DateUtils.formatDate(message.getCreatedAt()));
+      } else {
+        dateText.setVisibility(View.GONE);
+      }
 
-    if (isTempMessage && tempFileMessageUri != null) {
-      ImageUtils.displayImageFromUrl(context, tempFileMessageUri.toString(), fileThumbnailImage, null);
-    } else {
+      // Hide profile image and nickname if the previous message was also sent by current sender.
+      if (isContinuous) {
+        profileImage.setVisibility(View.INVISIBLE);
+        nicknameText.setVisibility(View.GONE);
+      } else {
+        profileImage.setVisibility(View.VISIBLE);
+        ImageUtils.displayRoundImageFromUrl(context, message.getSender().getProfileUrl(), profileImage);
+
+        nicknameText.setVisibility(View.VISIBLE);
+        nicknameText.setText(message.getSender().getNickname());
+      }
+
       // Get thumbnails from FileMessage
       ArrayList<FileMessage.Thumbnail> thumbnails = (ArrayList<FileMessage.Thumbnail>) message.getThumbnails();
 
@@ -415,88 +482,18 @@ private class MyVideoFileMessageHolder extends RecyclerView.ViewHolder {
       if (thumbnails.size() > 0) {
         ImageUtils.displayImageFromUrl(context, thumbnails.get(0).getUrl(), fileThumbnailImage, fileThumbnailImage.getDrawable());
       }
-    }
 
-    if (listener != null) {
-      itemView.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          listener.onFileMessageItemClick(message);
-        }
-      });
-    }
-  }
-}
-
-private class OtherVideoFileMessageHolder extends RecyclerView.ViewHolder {
-
-  TextView timeText, nicknameText, readReceiptText, dateText;
-  ImageView profileImage, fileThumbnailImage;
-
-  public OtherVideoFileMessageHolder(View itemView) {
-    super(itemView);
-
-    timeText = (TextView) itemView.findViewById(R.id.text_group_chat_time);
-    nicknameText = (TextView) itemView.findViewById(R.id.text_group_chat_nickname);
-    fileThumbnailImage = (ImageView) itemView.findViewById(R.id.image_group_chat_file_thumbnail);
-    profileImage = (ImageView) itemView.findViewById(R.id.image_group_chat_profile);
-    readReceiptText = (TextView) itemView.findViewById(R.id.text_group_chat_read_receipt);
-    dateText = (TextView) itemView.findViewById(R.id.text_group_chat_date);
-  }
-
-  void bind(Context context, final FileMessage message, GroupChannel channel, boolean isNewDay, boolean isContinuous, final OnItemClickListener listener) {
-    timeText.setText(DateUtils.formatTime(message.getCreatedAt()));
-
-    // Since setChannel is set slightly after adapter is created, check if null.
-    if (channel != null) {
-      int readReceipt = channel.getReadReceipt(message);
-      if (readReceipt > 0) {
-        readReceiptText.setVisibility(View.VISIBLE);
-        readReceiptText.setText(String.valueOf(readReceipt));
-      } else {
-        readReceiptText.setVisibility(View.INVISIBLE);
+      if (listener != null) {
+        itemView.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            listener.onFileMessageItemClick(message);
+          }
+        });
       }
     }
-
-    // Show the date if the message was sent on a different date than the previous message.
-    if (isNewDay) {
-      dateText.setVisibility(View.VISIBLE);
-      dateText.setText(DateUtils.formatDate(message.getCreatedAt()));
-    } else {
-      dateText.setVisibility(View.GONE);
-    }
-
-    // Hide profile image and nickname if the previous message was also sent by current sender.
-    if (isContinuous) {
-      profileImage.setVisibility(View.INVISIBLE);
-      nicknameText.setVisibility(View.GONE);
-    } else {
-      profileImage.setVisibility(View.VISIBLE);
-      ImageUtils.displayRoundImageFromUrl(context, message.getSender().getProfileUrl(), profileImage);
-
-      nicknameText.setVisibility(View.VISIBLE);
-      nicknameText.setText(message.getSender().getNickname());
-    }
-
-    // Get thumbnails from FileMessage
-    ArrayList<FileMessage.Thumbnail> thumbnails = (ArrayList<FileMessage.Thumbnail>) message.getThumbnails();
-
-    // If thumbnails exist, get smallest (first) thumbnail and display it in the message
-    if (thumbnails.size() > 0) {
-      ImageUtils.displayImageFromUrl(context, thumbnails.get(0).getUrl(), fileThumbnailImage, fileThumbnailImage.getDrawable());
-    }
-
-    if (listener != null) {
-      itemView.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          listener.onFileMessageItemClick(message);
-        }
-      });
-    }
   }
 }
-}
-*/
+
 
 
