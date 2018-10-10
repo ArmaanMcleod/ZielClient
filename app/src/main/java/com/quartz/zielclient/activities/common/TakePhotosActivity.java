@@ -3,14 +3,11 @@ package com.quartz.zielclient.activities.common;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -234,6 +231,10 @@ public class TakePhotosActivity extends AppCompatActivity {
       }
     });
 
+    Button galleryPhotoButton = findViewById(R.id.gallery_button);
+    galleryPhotoButton.setOnClickListener(v -> {
+
+    });
     requestStoragePermission();
   }
 
