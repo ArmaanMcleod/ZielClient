@@ -23,6 +23,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
@@ -175,6 +176,13 @@ public class MapsActivity extends AppCompatActivity
             Log.d(activity, "An error occurred: " + status);
           }
         });
+
+    // Restrict search results only to Australia
+    AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+        .setCountry("AU")
+        .build();
+
+    placeAutoComplete.setFilter(typeFilter);
 
     // Create fused location client to interact with API
     mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
