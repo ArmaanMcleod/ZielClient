@@ -234,6 +234,7 @@ public class TakePhotosActivity extends AppCompatActivity {
       Log.d(activity, Boolean.toString(canTakePicture));
       Log.d(activity, "Clicked photo button");
 
+      // Only proceed until permissions are granted
       if (!permissionGranted) {
         requestStoragePermission();
       } else {
@@ -251,6 +252,7 @@ public class TakePhotosActivity extends AppCompatActivity {
       pickImageGallery();
     });
 
+    // Request initial permissions
     requestStoragePermission();
   }
 
@@ -350,13 +352,7 @@ public class TakePhotosActivity extends AppCompatActivity {
       currentPhotoPath = imageFile.getAbsolutePath();
 
       // Write file to directory
-      try {
-        OutputStream fileOut = new FileOutputStream(imageFile);
-        image.compress(JPEG, 100, fileOut);
-        fileOut.close();
-      } catch(Exception e) {
-        Log.d(activity, e.toString());
-      }
+      writeImage(imageFile, image);
 
       // Add file to gallery
       addImageToGallery(getContentResolver(), "jpg", imageFile);
@@ -364,6 +360,24 @@ public class TakePhotosActivity extends AppCompatActivity {
       Toast.makeText(this,
           "Photo added to " + currentPhotoPath,
           Toast.LENGTH_LONG).show();
+    } else {
+      Log.d(activity, "Directory could not be created");
+    }
+  }
+
+  /**
+   * Writes image to device storage.
+   * @param imageFile The image file to process.
+   * @param image The bitmap picture.
+   */
+  private void writeImage(File imageFile, Bitmap image) {
+    // Write file to directory
+    try {
+      OutputStream fileOut = new FileOutputStream(imageFile);
+      image.compress(JPEG, 100, fileOut);
+      fileOut.close();
+    } catch(Exception e) {
+      Log.d(activity, e.toString());
     }
   }
 
@@ -385,6 +399,7 @@ public class TakePhotosActivity extends AppCompatActivity {
     values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
     values.put(MediaStore.Images.Media.DATA, filepath.toString());
 
+    // Insert properties into media store
     cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
   }
 
