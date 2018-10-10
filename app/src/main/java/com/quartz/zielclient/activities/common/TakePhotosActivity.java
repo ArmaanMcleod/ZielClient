@@ -55,7 +55,7 @@ public class TakePhotosActivity extends AppCompatActivity {
 
   private String currentPhotoPath;
 
-  private String packageName;
+  private File storageDir;
 
   /**
    * Camera event listener which listens for camera events.
@@ -186,7 +186,9 @@ public class TakePhotosActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.take_photos);
 
-    packageName = getApplicationContext().getPackageName();
+    String packageName = getApplicationContext().getPackageName();
+
+    storageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "/" + packageName);
 
     imageView = findViewById(R.id.photo);
 
@@ -222,9 +224,6 @@ public class TakePhotosActivity extends AppCompatActivity {
    * @throws IOException Throws exception if file cannot write out.
    */
   private void saveImageFile(Bitmap image) throws IOException {
-    File storageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "/"
-        + packageName);
-
     boolean success = true;
 
     // Create the directory if it doesn't exist
