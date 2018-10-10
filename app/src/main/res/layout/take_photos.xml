@@ -13,7 +13,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/camera_button"
         android:layout_width="76dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -25,8 +25,18 @@
 
     <ImageView
         android:id="@+id/photo"
-        android:layout_width="110dp"
-        android:layout_height="109dp"
+        android:layout_width="138dp"
+        android:layout_height="130dp"
         android:contentDescription="@string/picture" />
+
+    <Button
+        android:id="@+id/gallery_button"
+        android:layout_width="76dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="53dp"
+        android:layout_marginBottom="0dp"
+        android:drawableStart="@drawable/gallery_icon_scale" />
 
 </RelativeLayout>

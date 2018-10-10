@@ -206,7 +206,7 @@ public class TakePhotosActivity extends AppCompatActivity {
     cameraView.setJpegQuality(100);
 
     // button which captures photo
-    Button takePhotoButton = findViewById(R.id.button);
+    Button takePhotoButton = findViewById(R.id.camera_button);
     takePhotoButton.setOnClickListener(v -> {
       Log.d(activity, Boolean.toString(canTakePicture));
       Log.d(activity, "Clicked button");
