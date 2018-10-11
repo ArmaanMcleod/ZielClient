@@ -20,7 +20,9 @@ import com.quartz.zielclient.messages.Message;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -36,7 +38,8 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
   private Context mContext;
   private List<Message> messageList;
-  private Boolean isAssisted = false;
+  private Boolean isAssisted;
+  private Map<String, Uri> FileUriMap = new HashMap<>();
 
   // Constructor
   public MessageListAdapter(Context context, List<Message> messageList, Boolean isAssisted) {
@@ -80,6 +83,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
   @Override
   public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
     Message message = messageList.get(i);
+    Uri tempFileUri = null;
 
     if (viewHolder.getItemViewType() == VIEW_TYPE_MESSAGE_SENT) {
 
@@ -123,13 +127,29 @@ public class MessageListAdapter extends RecyclerView.Adapter {
   }
 
   /**
+   * Triple checks that the message is valid.
+   * @param message The message object being checked.
+   * @return Whether the message has failed or not.
+   */
+  public boolean isFailedMessage(Message message) {
+    // Check if message has a sent time and value
+    if((message.getMessageTime() > 0) && !message.getMessageValue().isEmpty()) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  /**
    * Holder class for the received messages
    */
   private class ReceivedMessageHolder extends RecyclerView.ViewHolder {
     // Message Attributes
     // TODO Implement Different Message Types
     // Message.MessageType messageType;
-    TextView messageText, timeStamp, userName;
+    TextView messageText;
+    TextView timeStamp;
+    TextView userName;
     ImageView profilePicture;
     String sender;
 
@@ -159,7 +179,6 @@ public class MessageListAdapter extends RecyclerView.Adapter {
       timeStamp.setText(timeString);
       userName.setText(sender);
       // TODO
-      // userName.setText(usernameMap.get(message.getUserName()));
       // ADD PROFILE PICTURE BIND HERE
     }
   }
@@ -171,7 +190,9 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     // Message Attributes
     // TODO Implement Different Message Types
     // Message.MessageType messageType;
-    TextView messageText, timeStamp, userName;
+    TextView messageText;
+    TextView timeStamp;
+    TextView userName;
 
     SentMessageHolder(View itemView) {
       super(itemView);
@@ -187,65 +208,41 @@ public class MessageListAdapter extends RecyclerView.Adapter {
       timeStamp.setText(timeString);
     }
   }
-}
+
   /**
    * A ViewHolder for file messages that are images.
    * Displays only the image thumbnail.
    */
-  /*
+
   private class SentImageHolder extends RecyclerView.ViewHolder {
-    TextView timeText;
+    TextView timeStamp;
     ImageView fileThumbnailImage;
     CircleProgressBar circleProgressBar;
 
     public SentImageHolder(View itemView) {
       super(itemView);
 
-      timeText = (TextView) itemView.findViewById(R.id.text_group_chat_time);
+      timeStamp = (TextView) itemView.findViewById(R.id.text_group_chat_time);
       fileThumbnailImage = (ImageView) itemView.findViewById(R.id.image_group_chat_file_thumbnail);
       circleProgressBar = (CircleProgressBar) itemView.findViewById(R.id.circle_progress);
     }
 
-    void bind(Context context, final FileMessage message, GroupChannel channel, boolean isNewDay, boolean isTempMessage, boolean isFailedMessage, Uri tempFileMessageUri, final OnItemClickListener listener) {
-      timeText.setText(DateUtils.formatTime(message.getCreatedAt()));
+    void bind(Message message){
 
-      if (isFailedMessage) {
-        readReceiptText.setText(R.string.message_failed);
-        readReceiptText.setVisibility(View.VISIBLE);
-
+      if (isFailedMessage(message)) {
+        // If the message has appeared to be a failed message
         circleProgressBar.setVisibility(View.GONE);
-        mFileMessageMap.remove(message);
-      } else if (isTempMessage) {
-        readReceiptText.setText(R.string.message_sending);
-        readReceiptText.setVisibility(View.GONE);
+        messageList.remove(message);
 
+      } else {
+        // If the message sends without problems
         circleProgressBar.setVisibility(View.VISIBLE);
-        mFileMessageMap.put(message, circleProgressBar);
-      } else {
-        circleProgressBar.setVisibility(View.GONE);
-        mFileMessageMap.remove(message);
-
-        // Since setChannel is set slightly after adapter is created, check if null.
-        if (channel != null) {
-          int readReceipt = channel.getReadReceipt(message);
-          if (readReceipt > 0) {
-            readReceiptText.setVisibility(View.VISIBLE);
-            readReceiptText.setText(String.valueOf(readReceipt));
-          } else {
-            readReceiptText.setVisibility(View.INVISIBLE);
-          }
-        }
+        String timeString = new SimpleDateFormat("h:mm a").format(message.getMessageTime());
+        timeStamp.setText(timeString);
       }
 
-      // Show the date if the message was sent on a different date than the previous message.
-      if (isNewDay) {
-        dateText.setVisibility(View.VISIBLE);
-        dateText.setText(DateUtils.formatDate(message.getCreatedAt()));
-      } else {
-        dateText.setVisibility(View.GONE);
-      }
-
-      if (isTempMessage && tempFileMessageUri != null) {
+      // Checking the Message URI
+      if (tempFileMessageUri != null) {
         ImageUtils.displayImageFromUrl(context, tempFileMessageUri.toString(), fileThumbnailImage, null);
       } else {
         // Get thumbnails from FileMessage
@@ -361,7 +358,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
    * A ViewHolder for file messages that are videos.
    * Displays only the video thumbnail.
    */
-  /*
+
   private class MyVideoFileMessageHolder extends RecyclerView.ViewHolder {
     TextView timeText, readReceiptText, dateText;
     ImageView fileThumbnailImage;
@@ -509,5 +506,6 @@ public class MessageListAdapter extends RecyclerView.Adapter {
   }
 }
 
-*/
+
+
 
