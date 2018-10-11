@@ -124,8 +124,8 @@ public class TakePhotosActivity extends AppCompatActivity {
       Bitmap bitmap = BitmapFactory.decodeByteArray(picture, 0, picture.length);
 
       // Run firebase ML recognition
-      runLandMarkRecognition(bitmap);
       imageView.setImageBitmap(bitmap);
+      runLandMarkRecognition(bitmap);
 
       // Save the file to photos path
       try {
@@ -145,51 +145,52 @@ public class TakePhotosActivity extends AppCompatActivity {
       Log.d(activity, "Taking video");
     }
 
-    /**
-     * Detects landmark in photo taken.
-     */
-    private void runLandMarkRecognition(Bitmap bitmap) {
-
-      // Use latest model options
-      FirebaseVisionCloudDetectorOptions options =
-          new FirebaseVisionCloudDetectorOptions.Builder()
-              .setModelType(FirebaseVisionCloudDetectorOptions.LATEST_MODEL)
-              .setMaxResults(15)
-              .build();
-
-      // Convert to firebase image
-      FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);
-
-      // Create landmark detector
-      FirebaseVisionCloudLandmarkDetector detector = FirebaseVision.getInstance()
-          .getVisionCloudLandmarkDetector(options);
-
-      // Check to see if it is a landmark
-      detector.detectInImage(image)
-          .addOnSuccessListener(firebaseVisionCloudLandmarks -> {
-            Log.d(activity, "Listener success");
-            Log.d(activity, Integer.toString(firebaseVisionCloudLandmarks.size()));
-
-            if (firebaseVisionCloudLandmarks.isEmpty()) {
-              Toast.makeText(TakePhotosActivity.this,
-                  "Landmark not recognised",
-                  Toast.LENGTH_LONG).show();
-            } else {
-
-              // Show the first landmark given
-              Toast.makeText(TakePhotosActivity.this,
-                  "Landmark: " + firebaseVisionCloudLandmarks.get(0).getLandmark(),
-                  Toast.LENGTH_LONG).show();
-            }
-          })
-          .addOnFailureListener(e -> {
-            Log.d(activity, "Listener failure");
-            Toast.makeText(TakePhotosActivity.this,
-                "Landmark recognition not operation currently",
-                Toast.LENGTH_LONG).show();
-          });
-    }
   };
+
+  /**
+   * Detects landmark in photo taken.
+   */
+  private void runLandMarkRecognition(Bitmap bitmap) {
+
+    // Use latest model options
+    FirebaseVisionCloudDetectorOptions options =
+        new FirebaseVisionCloudDetectorOptions.Builder()
+            .setModelType(FirebaseVisionCloudDetectorOptions.LATEST_MODEL)
+            .setMaxResults(15)
+            .build();
+
+    // Convert to firebase image
+    FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);
+
+    // Create landmark detector
+    FirebaseVisionCloudLandmarkDetector detector = FirebaseVision.getInstance()
+        .getVisionCloudLandmarkDetector(options);
+
+    // Check to see if it is a landmark
+    detector.detectInImage(image)
+        .addOnSuccessListener(firebaseVisionCloudLandmarks -> {
+          Log.d(activity, "Listener success");
+          Log.d(activity, Integer.toString(firebaseVisionCloudLandmarks.size()));
+
+          if (firebaseVisionCloudLandmarks.isEmpty()) {
+            Toast.makeText(TakePhotosActivity.this,
+                "Landmark not recognised",
+                Toast.LENGTH_LONG).show();
+          } else {
+
+            // Show the first landmark given
+            Toast.makeText(TakePhotosActivity.this,
+                "Landmark: " + firebaseVisionCloudLandmarks.get(0).getLandmark(),
+                Toast.LENGTH_LONG).show();
+          }
+        })
+        .addOnFailureListener(e -> {
+          Log.d(activity, "Listener failure");
+          Toast.makeText(TakePhotosActivity.this,
+              "Landmark recognition not operation currently",
+              Toast.LENGTH_LONG).show();
+        });
+  }
 
   /**
    * Called when the activity is first created.
@@ -285,6 +286,8 @@ public class TakePhotosActivity extends AppCompatActivity {
       try {
         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
         imageView.setImageBitmap(bitmap);
+        runLandMarkRecognition(bitmap);
+
       } catch (IOException e) {
         Log.d(activity, e.toString());
       }

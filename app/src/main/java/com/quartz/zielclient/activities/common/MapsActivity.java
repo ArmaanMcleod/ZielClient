@@ -24,7 +24,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -98,8 +97,6 @@ public class MapsActivity extends AppCompatActivity
 
   private AlertDialog alertDialog;
   private ChannelData channel;
-
-  private GeoDataClient mGeoDataClient;
 
   /**
    * Creates map along with its attributes.
