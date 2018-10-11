@@ -35,6 +35,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.assisted.AssistedHomePageActivity;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
@@ -82,6 +83,7 @@ public class MapsActivity extends AppCompatActivity
   private Button toVideoChatButton;
   private Button toTextChatButton;
   private Button toVoiceChatButton;
+  private Button endChannelButton;
   private LatLng source;
 
   private List<Marker> sourceDestinationMarkers = new ArrayList<>();
@@ -120,6 +122,7 @@ public class MapsActivity extends AppCompatActivity
     alertDialog = makeVideoAlert();
 
     // Create buttons and listeners below
+    endChannelButton = findViewById(R.id.endChannelButton);
 
     waitingMessage = findViewById(R.id.waitForCarerMessage);
     toVideoChatButton = findViewById(R.id.toVideoChatButton);
@@ -175,8 +178,10 @@ public class MapsActivity extends AppCompatActivity
     SupportMapFragment mapFrag =
         (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
+
     if (mapFrag != null) {
       mapFrag.getMapAsync(this);
+
     }
 
     // Allow user to see street view suggestion
@@ -261,6 +266,7 @@ public class MapsActivity extends AppCompatActivity
           return true;
         });
 
+
     // Setup location request and intervals between requests
     mLocationRequest = new LocationRequest();
     mLocationRequest.setInterval(UPDATE_INTERVAL); // two minute interval
@@ -321,6 +327,13 @@ public class MapsActivity extends AppCompatActivity
         alertDialog.cancel();
       }
 
+      if(channel.isChannelEnded()){
+        // this is set to null on purpose and will not cause an error.
+        if(!this.isFinishing()){
+        makeChannelEndedAlert(null);
+        }
+      }
+
       if (channel.getCarerStatus()) {
         Toast.makeText(this, "Carer Connected", Toast.LENGTH_SHORT);
         toTextChatButton.setVisibility(View.VISIBLE);
@@ -370,6 +383,7 @@ public class MapsActivity extends AppCompatActivity
   @Override
   public void onBackPressed() {
     VoiceActivity.endCall();
+    channel.endChannel();
     super.onBackPressed();
   }
 
@@ -392,6 +406,27 @@ public class MapsActivity extends AppCompatActivity
           getApplicationContext().startActivity(intentToVideo);
         });
     return alertDialog;
+  }
+
+
+  public void makeChannelEndedAlert(View v){
+    AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle("Channel has finished");
+    alertDialog.setMessage("This channel has been ended. Will now return to home page");
+    alertDialog.setButton(
+            AlertDialog.BUTTON_NEUTRAL,
+            "OK",
+            (dialog, which) -> {
+              channel.endChannel();
+              alertDialog.dismiss();
+              Intent intent = new Intent( getApplicationContext(), AssistedHomePageActivity.class );
+              intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
+              startActivity(intent);
+
+            });
+
+    alertDialog.show();
+
   }
 
   /**
