@@ -68,7 +68,7 @@ import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
 public class MapsActivity extends AppCompatActivity
     implements OnMapReadyCallback, ChannelListener, View.OnClickListener {
 
-  private static final int DEFAULT_ZOOM = 9;
+  private static final int DEFAULT_ZOOM = 13;
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
   private static final long UPDATE_INTERVAL = 10000;  /* 10 secs */
