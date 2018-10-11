@@ -109,9 +109,9 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   private boolean disconnectedFromOnDestroy;
   private ChannelData channelData;
 
-
   private String channelId;
   private ChannelData channel;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -130,7 +130,6 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
       channel = ChannelController.retrieveChannel(channelId, this);
     }
 
-
     /*
      * Get shared preferences to read settings
      */
@@ -145,8 +144,9 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
      * Needed for setting/abandoning audio focus during call
      */
     audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-    audioManager.setSpeakerphoneOn(true);
-
+    if (audioManager != null) {
+      audioManager.setSpeakerphoneOn(true);
+    }
     /*
      * Check camera and microphone permissions. Needed in Android M.
      */
@@ -162,7 +162,6 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
      */
     intializeUI();
     showConnectDialog();
-
   }
 
   @Override
@@ -613,7 +612,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
       @Override
       public void onConnected(Room room) {
         localParticipant = room.getLocalParticipant();
-        videoStatusTextView.setText("Connected to  Channel video Chat" );
+        videoStatusTextView.setText("Connected to  Channel video Chat");
         setTitle(room.getName());
         channel.setVideoCallStatus(true);
 
@@ -809,8 +808,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
           new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
               .setAudioAttributes(playbackAttributes)
               .setAcceptsDelayedFocusGain(true)
-              .setOnAudioFocusChangeListener(
-                      i -> {})
+              .setOnAudioFocusChangeListener(i -> {})
               .build();
       audioManager.requestAudioFocus(focusRequest);
     } else {
@@ -831,11 +829,12 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   public void dataChanged() {
     //
   }
+
   @Override
-  public void onBackPressed(){
+  public void onBackPressed() {
     if (channel != null) {
       channel.setVideoCallStatus(false);
-      }
+    }
     super.onBackPressed();
   }
 

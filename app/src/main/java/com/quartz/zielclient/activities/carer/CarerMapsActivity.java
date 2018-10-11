@@ -51,15 +51,11 @@ public class CarerMapsActivity extends AppCompatActivity
   AlertDialog alertDialog;
   private String channelId;
   private GoogleMap mGoogleMap;
-  private Button dropMarkers;
-  private Button clearMarkers;
   private String currentDestinationURL = "none";
   // default to melbourne uni
   // list of Assisted movements
   private Double[] latitude = {MELBOURNEUNILAT};
   private Double[] longitude = {MELBOURNEUNILONG};
-  private Button toTextChat;
-  private Button toVoiceChat;
   private String key;
   private List<Marker> markers;
   private Marker assistedMarker;
@@ -79,10 +75,10 @@ public class CarerMapsActivity extends AppCompatActivity
     setContentView(R.layout.activity_carer_maps);
     key = "&key=" + getApplicationContext().getString(R.string.google_api_key);
     markers = new ArrayList<>();
-    toTextChat = findViewById(R.id.toTextChat);
-    toVoiceChat = findViewById(R.id.toVoiceChat);
-    dropMarkers = findViewById(R.id.dropMarker);
-    clearMarkers = findViewById(R.id.clearMarker);
+    Button toTextChat = findViewById(R.id.toTextChat);
+    Button toVoiceChat = findViewById(R.id.toVoiceChat);
+    Button dropMarkers = findViewById(R.id.dropMarker);
+    Button clearMarkers = findViewById(R.id.clearMarker);
     Button toVideoChat = findViewById(R.id.toVideoActivity);
     dropMarkers.setOnClickListener(this);
     clearMarkers.setOnClickListener(this);
@@ -263,12 +259,11 @@ public class CarerMapsActivity extends AppCompatActivity
    * Creates a marker and shows it on the Google map.
    *
    * @param location The location of marker.
-   * @param colour The colour of marker.
    * @return Marker The marker object.
    */
-  private void placeMarker(LatLng location, float colour) {
+  private void placeMarker(LatLng location) {
     MarkerOptions markerOptions =
-        new MarkerOptions().position(location).icon(BitmapDescriptorFactory.defaultMarker(colour));
+        new MarkerOptions().position(location).icon(BitmapDescriptorFactory.defaultMarker((float) 255));
     Marker newMarker = mGoogleMap.addMarker(markerOptions);
     markers.add(newMarker);
   }
@@ -276,7 +271,7 @@ public class CarerMapsActivity extends AppCompatActivity
   @Override
   public void onMapClick(LatLng latLng) {
     channel.addMarker(latLng);
-    placeMarker(latLng, 255);
+    placeMarker(latLng);
     mGoogleMap.setOnMapClickListener(null);
   }
 

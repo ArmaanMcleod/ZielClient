@@ -34,6 +34,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <service android:name=".fcm.VoiceFirebaseInstanceIDService" />
 
         <activity
             android:name=".activities.common.VideoActivity"
@@ -75,6 +76,7 @@
            sign the APK for publishing.
            You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
+        <!--suppress AndroidDomInspection -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_api_key" />

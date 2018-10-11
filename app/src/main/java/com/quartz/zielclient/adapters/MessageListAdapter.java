@@ -127,7 +127,7 @@ public class MessageListAdapter extends RecyclerView.Adapter{
       messageText = itemView.findViewById(R.id.text_message_body);
       timeStamp = itemView.findViewById(R.id.text_message_time);
       userName = itemView.findViewById(R.id.text_message_name);
-      profilePicture = (ImageView) itemView.findViewById(R.id.image_message_profile);
+      profilePicture = itemView.findViewById(R.id.image_message_profile);
     }
 
     // Bind Method

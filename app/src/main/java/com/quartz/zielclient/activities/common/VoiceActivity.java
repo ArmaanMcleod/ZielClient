@@ -36,7 +36,6 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.channel.ChannelData;
@@ -117,7 +116,7 @@ public class VoiceActivity extends AppCompatActivity  {
 
     LayoutInflater li = LayoutInflater.from(context);
     View dialogView = li.inflate(R.layout.dialog_call, null);
-    final TextView contact = (TextView) dialogView.findViewById(R.id.contact);
+    final TextView contact = dialogView.findViewById(R.id.contact);
     contact.setVisibility(View.INVISIBLE);
     contact.setText(toCall);
     contact.setHint(R.string.callee);
@@ -169,8 +168,9 @@ public class VoiceActivity extends AppCompatActivity  {
      * Needed for setting/abandoning audio focus during a call
      */
     audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-    audioManager.setSpeakerphoneOn(true);
-
+    if (audioManager != null) {
+      audioManager.setSpeakerphoneOn(true);
+}
     /*
      * Enable changing the volume using the up/down keys during a conversation
      */
@@ -364,8 +364,10 @@ public class VoiceActivity extends AppCompatActivity  {
   private DialogInterface.OnClickListener callClickListener() {
     return (dialog, which) -> {
       // Place a call
-      TextView contact = (TextView) ((AlertDialog) dialog).findViewById(R.id.contact);
-      contact.setVisibility(View.INVISIBLE);
+      TextView contact = ((AlertDialog) dialog).findViewById(R.id.contact);
+      if (contact != null) {
+        contact.setVisibility(View.INVISIBLE);
+      }
       twiMLParams.put("to", contact.getText().toString());
       activeCall = Voice.call(VoiceActivity.this, accessToken, twiMLParams, callListener);
       setCallUI();
@@ -421,12 +423,7 @@ public class VoiceActivity extends AppCompatActivity  {
    * @return
    */
   private View.OnClickListener muteActionFabClickListener() {
-    return new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        mute();
-      }
-    };
+    return v -> mute();
   }
 
   /** Accept an incoming Call */
@@ -479,10 +476,7 @@ public class VoiceActivity extends AppCompatActivity  {
                   .setAudioAttributes(playbackAttributes)
                   .setAcceptsDelayedFocusGain(true)
                   .setOnAudioFocusChangeListener(
-                      new AudioManager.OnAudioFocusChangeListener() {
-                        @Override
-                        public void onAudioFocusChange(int i) {}
-                      })
+                          i -> {})
                   .build();
           audioManager.requestAudioFocus(focusRequest);
         } else {
@@ -572,22 +566,19 @@ public class VoiceActivity extends AppCompatActivity  {
         .load(TWILIO_ACCESS_TOKEN_SERVER_URL + "?identity=" + identity)
         .asString()
         .setCallback(
-            new FutureCallback<String>() {
-              @Override
-              public void onCompleted(Exception e, String accessToken) {
-                if (e == null) {
-                  Log.d(TAG, "Access token: " + accessToken);
-                  VoiceActivity.this.accessToken = accessToken;
-                  registerForCallInvites();
-                } else {
-                  Snackbar.make(
-                          coordinatorLayout,
-                          "Error retrieving access token. Unable to make calls",
-                          Snackbar.LENGTH_LONG)
-                      .show();
-                }
-              }
-            });
+                (e, accessToken) -> {
+                  if (e == null) {
+                    Log.d(TAG, "Access token: " + accessToken);
+                    VoiceActivity.this.accessToken = accessToken;
+                    registerForCallInvites();
+                  } else {
+                    Snackbar.make(
+                            coordinatorLayout,
+                            "Error retrieving access token. Unable to make calls",
+                            Snackbar.LENGTH_LONG)
+                        .show();
+                  }
+                });
   }
 
 
@@ -598,7 +589,7 @@ public class VoiceActivity extends AppCompatActivity  {
     @Override
     public void onReceive(Context context, Intent intent) {
       String action = intent.getAction();
-      if (action.equals(ACTION_INCOMING_CALL)) {
+      if (action!=null && action.equals(ACTION_INCOMING_CALL)) {
         /*
          * Handle the incoming call invite
          */

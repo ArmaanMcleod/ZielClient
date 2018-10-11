@@ -16,6 +16,7 @@
         android:layout_height="52dp"
         android:layout_marginTop="10dp"
         android:drawableLeft="@drawable/camera_icon_scale"
+        app:layout_constraintStart_toStartOf="@+id/map"
         app:layout_constraintTop_toBottomOf="@+id/place_autocomplete" />
 
     <fragment
@@ -32,7 +33,7 @@
         android:id="@+id/map"
         class="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="0dp"
-        android:layout_height="469dp"
+        android:layout_height="46dp"
 
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -67,8 +68,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:drawableTop="@drawable/ic_phone_message"
             android:drawablePadding="-15sp"
+            android:drawableTop="@drawable/ic_phone_message"
             android:scaleType="fitCenter"
             android:text="\nMessage"
             android:textAllCaps="false"
@@ -84,8 +85,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:drawableTop="@drawable/ic_phone_call"
             android:drawablePadding="-15sp"
+            android:drawableTop="@drawable/ic_phone_call"
             android:scaleType="fitCenter"
             android:text="\nCall"
             android:textAllCaps="false"
@@ -101,8 +102,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:drawableTop="@drawable/ic_phone_video"
             android:drawablePadding="-15sp"
+            android:drawableTop="@drawable/ic_phone_video"
             android:scaleType="fitCenter"
             android:text="\nVideo Call"
             android:textAllCaps="false"
