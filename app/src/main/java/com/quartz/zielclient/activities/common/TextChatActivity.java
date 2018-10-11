@@ -2,6 +2,7 @@ package com.quartz.zielclient.activities.common;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -63,6 +64,7 @@ public class TextChatActivity extends AppCompatActivity
   private Button mediaButton;
 
   private static final int INTENT_REQUEST_CHOOSE_MEDIA = 301;
+  private static final int GALLERY_PICK = 1;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +121,20 @@ public class TextChatActivity extends AppCompatActivity
     });
     
     // Set a listener on the media button to call requestMedia
-    mediaButton.setOnClickListener(v -> requestMedia());
+    mediaButton.setOnClickListener(new View.OnClickListener() {
+
+      @Override
+      public void onClick(View view){
+        // Request for permissions
+        requestMedia();
+
+        Intent galleryIntent = new Intent();
+        galleryIntent.setType("image/*");
+        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+
+        startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
+      }
+    });
 
     // Greet User
     String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
