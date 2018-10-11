@@ -150,7 +150,7 @@ public class CarerMapsActivity extends AppCompatActivity
     if (assistedMarker != null) {
       assistedMarker.setPosition(assistedLocation);
       mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(assistedLocation));
-      mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(assistedLocation, 13f));
+      mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(assistedLocation, 15));
     }
   }
 
