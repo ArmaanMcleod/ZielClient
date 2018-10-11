@@ -118,27 +118,27 @@ public class CarerMapsActivity extends AppCompatActivity
     assistedMarker = mGoogleMap.addMarker(assistedMarkerOptions);
     updateMapCoords();
     mGoogleMap.setOnMarkerClickListener(
-            marker -> {
-              marker.showInfoWindow();
+        marker -> {
+          marker.showInfoWindow();
 
-              // Prompt Street view
-              new AlertDialog.Builder(this)
-                      .setIcon(R.drawable.street_view_logo)
-                      .setTitle("Google Maps Street View")
-                      .setMessage("Show street view?")
+          // Prompt Street view
+          new AlertDialog.Builder(this)
+              .setIcon(R.drawable.street_view_logo)
+              .setTitle("Google Maps Street View")
+              .setMessage("Show street view?")
 
-                      // Start Street view activity when pressed
-                      .setPositiveButton("Yes", (dialog, which) -> {
-                        Intent intent = new Intent(CarerMapsActivity.this, StreetViewActivity.class);
-                        intent.putExtra("destination", marker.getPosition());
-                        startActivity(intent);
-                      })
-                      .setNegativeButton("No", (dialog, which) -> {
-
-                      })
-                      .show();
-              return true;
-            });
+              // Start Street view activity when pressed
+              .setPositiveButton(
+                  "Yes",
+                  (dialog, which) -> {
+                    Intent intent = new Intent(CarerMapsActivity.this, StreetViewActivity.class);
+                    intent.putExtra("destination", marker.getPosition());
+                    startActivity(intent);
+                  })
+              .setNegativeButton("No", (dialog, which) -> {})
+              .show();
+          return true;
+        });
   }
 
   /** Update the Coordinates based on the latest Assisted's location */
@@ -165,17 +165,27 @@ public class CarerMapsActivity extends AppCompatActivity
     if (channel != null) {
       channel.setCarerStatus(true);
       // if the assisted has entered a route then generate that same route
-      if ((channel.getDirectionsURL() != null) && !channel.getDirectionsURL().equals("none")) {
+      if ((channel.getDirectionsURL() != null)
+          && !channel.getDirectionsURL().equals("none")
+          && !channel.isChannelEnded()) {
         // if the route is already the current route then don't update
         if (!channel.getDirectionsURL().equals(currentDestinationURL)) {
           // update the route
-          mGoogleMap.clear();
-          mGoogleMap.addMarker(new MarkerOptions().position(channel.getAssistedLocation()));
+          if (mGoogleMap != null) {
+            mGoogleMap.clear();
+            mGoogleMap.addMarker(new MarkerOptions().position(channel.getAssistedLocation()));
 
-          Log.d("DIRECTIONS", channel.getDirectionsURL());
-          FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
-          fetchUrl.execute(channel.getDirectionsURL() + key);
-          currentDestinationURL = channel.getDirectionsURL();
+            Log.d("DIRECTIONS", channel.getDirectionsURL());
+            FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
+            fetchUrl.execute(channel.getDirectionsURL() + key);
+            currentDestinationURL = channel.getDirectionsURL();
+          }
+        }
+      }
+      if (channel.isChannelEnded()) {
+        if(!this.isFinishing())
+        {
+          makeChannelEndedAlert();
         }
       }
       if (channel.getVideoCallStatus()) {
@@ -223,7 +233,8 @@ public class CarerMapsActivity extends AppCompatActivity
   @Override
   public void onBackPressed() {
     VoiceActivity.endCall();
-    super.onBackPressed();
+
+    super.finish();
   }
 
   public AlertDialog makeVideoAlert() {
@@ -267,5 +278,24 @@ public class CarerMapsActivity extends AppCompatActivity
     channel.addMarker(latLng);
     placeMarker(latLng, 255);
     mGoogleMap.setOnMapClickListener(null);
+  }
+
+  public void makeChannelEndedAlert() {
+    AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle("Channel has finished");
+    alertDialog.setMessage("This channel has been ended. Will now return to home page");
+    alertDialog.setButton(
+        AlertDialog.BUTTON_NEUTRAL,
+        "OK",
+        (dialog, which) -> {
+          channel.endChannel();
+          alertDialog.dismiss();
+          Intent intent = new Intent(getApplicationContext(), CarerHomepageActivity.class);
+          intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+          startActivity(intent);
+
+        });
+
+    alertDialog.show();
   }
 }
