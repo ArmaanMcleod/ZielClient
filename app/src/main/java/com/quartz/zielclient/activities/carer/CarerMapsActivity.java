@@ -293,7 +293,7 @@ public class CarerMapsActivity extends AppCompatActivity
           Intent intent = new Intent(getApplicationContext(), CarerHomepageActivity.class);
           intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
           startActivity(intent);
-
+          finish();
         });
 
     alertDialog.show();

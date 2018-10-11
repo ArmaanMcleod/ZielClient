@@ -390,7 +390,6 @@ public class MapsActivity extends AppCompatActivity
         Intent intentToPhoto = new Intent(MapsActivity.this, TakePhotosActivity.class);
         startActivity(intentToPhoto);
         break;
-
       default:
         break;
     }
@@ -439,6 +438,7 @@ public class MapsActivity extends AppCompatActivity
               Intent intent = new Intent( getApplicationContext(), AssistedHomePageActivity.class );
               intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
               startActivity(intent);
+              finish();
 
             });
 
