@@ -150,7 +150,7 @@ public class CarerMapsActivity extends AppCompatActivity
     if (assistedMarker != null) {
       assistedMarker.setPosition(assistedLocation);
       mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(assistedLocation));
-      mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(assistedLocation, 13f));
+      mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(assistedLocation, 15));
     }
   }
 
@@ -293,7 +293,7 @@ public class CarerMapsActivity extends AppCompatActivity
           Intent intent = new Intent(getApplicationContext(), CarerHomepageActivity.class);
           intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
           startActivity(intent);
-
+          finish();
         });
 
     alertDialog.show();

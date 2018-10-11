@@ -68,7 +68,7 @@ import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
 public class MapsActivity extends AppCompatActivity
     implements OnMapReadyCallback, ChannelListener, View.OnClickListener {
 
-  private static final int DEFAULT_ZOOM = 13;
+  private static final int DEFAULT_ZOOM = 15;
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
   private static final long UPDATE_INTERVAL = 10000;  /* 10 secs */
@@ -390,7 +390,6 @@ public class MapsActivity extends AppCompatActivity
         Intent intentToPhoto = new Intent(MapsActivity.this, TakePhotosActivity.class);
         startActivity(intentToPhoto);
         break;
-
       default:
         break;
     }
@@ -439,6 +438,7 @@ public class MapsActivity extends AppCompatActivity
               Intent intent = new Intent( getApplicationContext(), AssistedHomePageActivity.class );
               intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
               startActivity(intent);
+              finish();
 
             });
 
