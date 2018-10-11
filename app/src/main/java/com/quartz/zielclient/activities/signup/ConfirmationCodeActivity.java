@@ -21,8 +21,8 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.user.AuthorisationController;
 
-import static com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks;
 import static com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken;
+import static com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks;
 
 public class ConfirmationCodeActivity extends AppCompatActivity implements View.OnClickListener, OnCompleteListener<AuthResult> {
 
@@ -90,6 +90,7 @@ public class ConfirmationCodeActivity extends AppCompatActivity implements View.
   public void onClick(View view) {
     switch (view.getId()) {
       case R.id.confirmCodeButton:
+
         verifyPhoneNumberWithCode();
         break;
       case R.id.resendButton:
@@ -122,7 +123,9 @@ public class ConfirmationCodeActivity extends AppCompatActivity implements View.
 
   private void verifyPhoneNumberWithCode() {
     String code = verificationField.getText().toString();
-    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
-    authController.signInWithPhoneAuthCredential(credential, this);
+    if (code.length() >1) {
+      PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
+      authController.signInWithPhoneAuthCredential(credential, this);
+    }
   }
 }

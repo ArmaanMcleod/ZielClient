@@ -14,7 +14,9 @@ import com.quartz.zielclient.R;
 
 
 /**
- * This class is responsible for showing a street view of a location
+ * This class is responsible for showing a street view of a location.
+ * This class uses the Street View API from https://developers.google.com/maps/documentation/
+ * android-sdk/streetview.
  *
  * @author Armaan McLeod
  * @version 1.0- 1

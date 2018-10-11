@@ -10,6 +10,14 @@
     android:windowTranslucentStatus="true"
     tools:context=".activities.common.MapsActivity">
 
+    <Button
+        android:id="@+id/toTakePhotoButton"
+        android:layout_width="73dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/camera_icon_scale"
+        app:layout_constraintTop_toBottomOf="@+id/place_autocomplete" />
+
     <fragment
         android:id="@+id/place_autocomplete"
         android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
@@ -29,17 +37,18 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/place_autocomplete" >
+        app:layout_constraintTop_toBottomOf="@+id/place_autocomplete">
+
         <Button
             android:id="@+id/endChannelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|top"
-            android:text="End Channel"
+            android:layout_marginTop="80dp"
+            android:onClick="makeChannelEndedAlert"
             android:padding="10dp"
-            android:layout_marginTop="20dp"
             android:paddingStart="10dp"
-            android:onClick="makeChannelEndedAlert"/>
+            android:text="End Channel" />
 
     </fragment>
 
@@ -58,8 +67,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:drawablePadding="-15sp"
             android:drawableTop="@drawable/ic_phone_message"
+            android:drawablePadding="-15sp"
             android:scaleType="fitCenter"
             android:text="\nMessage"
             android:textAllCaps="false"
@@ -75,8 +84,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:drawablePadding="-15sp"
             android:drawableTop="@drawable/ic_phone_call"
+            android:drawablePadding="-15sp"
             android:scaleType="fitCenter"
             android:text="\nCall"
             android:textAllCaps="false"
@@ -92,8 +101,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:drawablePadding="-15sp"
             android:drawableTop="@drawable/ic_phone_video"
+            android:drawablePadding="-15sp"
             android:scaleType="fitCenter"
             android:text="\nVideo Call"
             android:textAllCaps="false"
@@ -117,6 +126,4 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.507" />
     </android.support.constraint.ConstraintLayout>
-
-
 </android.support.constraint.ConstraintLayout>

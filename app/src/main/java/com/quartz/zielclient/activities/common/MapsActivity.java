@@ -23,6 +23,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -67,7 +68,7 @@ import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
 public class MapsActivity extends AppCompatActivity
     implements OnMapReadyCallback, ChannelListener, View.OnClickListener {
 
-  private static final int DEFAULT_ZOOM = 8;
+  private static final int DEFAULT_ZOOM = 13;
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
   private static final long UPDATE_INTERVAL = 10000;  /* 10 secs */
@@ -80,10 +81,12 @@ public class MapsActivity extends AppCompatActivity
 
   private LocationRequest mLocationRequest;
   private FusedLocationProviderClient mFusedLocationClient;
+
   private Button toVideoChatButton;
   private Button toTextChatButton;
   private Button toVoiceChatButton;
   private Button endChannelButton;
+
   private LatLng source;
 
   private List<Marker> sourceDestinationMarkers = new ArrayList<>();
@@ -136,6 +139,9 @@ public class MapsActivity extends AppCompatActivity
     toVoiceChatButton.setVisibility(View.INVISIBLE);
     toVoiceChatButton.setOnClickListener(this);
 
+    Button toTakePhotoButton = findViewById(R.id.toTakePhotoButton);
+    toTakePhotoButton.setOnClickListener(this);
+
     // Get bundle of arguments passed from Home Page Activity
     Bundle bundle = getIntent().getExtras();
     if (bundle != null) {
@@ -170,6 +176,13 @@ public class MapsActivity extends AppCompatActivity
             Log.d(activity, "An error occurred: " + status);
           }
         });
+
+    // Restrict search results only to Australia
+    AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+        .setCountry("AU")
+        .build();
+
+    placeAutoComplete.setFilter(typeFilter);
 
     // Create fused location client to interact with API
     mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -327,15 +340,13 @@ public class MapsActivity extends AppCompatActivity
         alertDialog.cancel();
       }
 
-      if(channel.isChannelEnded()){
+      if(channel.isChannelEnded() && !this.isFinishing()){
         // this is set to null on purpose and will not cause an error.
-        if(!this.isFinishing()){
         makeChannelEndedAlert(null);
-        }
       }
 
       if (channel.getCarerStatus()) {
-        Toast.makeText(this, "Carer Connected", Toast.LENGTH_SHORT);
+        Toast.makeText(this, "Carer Connected", Toast.LENGTH_SHORT).show();
         toTextChatButton.setVisibility(View.VISIBLE);
         toVideoChatButton.setVisibility(View.VISIBLE);
         toVoiceChatButton.setVisibility(View.VISIBLE);
@@ -375,6 +386,11 @@ public class MapsActivity extends AppCompatActivity
         startActivity(intentToVideo);
         break;
 
+      case R.id.toTakePhotoButton:
+        Intent intentToPhoto = new Intent(MapsActivity.this, TakePhotosActivity.class);
+        startActivity(intentToPhoto);
+        break;
+
       default:
         break;
     }
@@ -384,7 +400,8 @@ public class MapsActivity extends AppCompatActivity
   public void onBackPressed() {
     VoiceActivity.endCall();
     channel.endChannel();
-    super.onBackPressed();
+    // purposely null will not cause an error.
+    makeChannelEndedAlert(null);
   }
 
   /**
@@ -410,7 +427,7 @@ public class MapsActivity extends AppCompatActivity
 
 
   public void makeChannelEndedAlert(View v){
-    AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle("Channel has finished");
     alertDialog.setMessage("This channel has been ended. Will now return to home page");
     alertDialog.setButton(

@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -64,6 +65,13 @@ public class AssistedHomePageActivity extends AppCompatActivity {
             Log.d(activity, "An error occurred: " + status);
           }
         });
+
+    // Restrict search results only to Australia
+    AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+        .setCountry("AU")
+        .build();
+
+    placeAutoComplete.setFilter(typeFilter);
 
     // Check if direction button has been pressed
     Button directMeButton = findViewById(R.id.directMeButton);
