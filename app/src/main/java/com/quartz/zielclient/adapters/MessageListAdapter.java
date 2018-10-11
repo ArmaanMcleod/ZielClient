@@ -35,6 +35,10 @@ public class MessageListAdapter extends RecyclerView.Adapter {
   // Constant for the flags used in the overridden method onCreateViewHolder
   private static final int VIEW_TYPE_MESSAGE_SENT = 1;
   private static final int VIEW_TYPE_MESSAGE_RECEIVED = 0;
+  private static final int VIEW_TYPE_IMAGE_SENT = 11;
+  private static final int VIEW_TYPE_IMAGE_RECEIVED = 10;
+  private static final int VIEW_TYPE_VIDEO_SENT = 21;
+  private static final int VIEW_TYPE_VIDEO_RECEIVED = 20;
 
   private Context mContext;
   private List<Message> messageList;
@@ -73,7 +77,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             (R.layout.message_received, viewGroup, false);
         return new ReceivedMessageHolder(view);
 
-        
+
       // TODO Make this not null or use an exception
       default: return null;
     }
