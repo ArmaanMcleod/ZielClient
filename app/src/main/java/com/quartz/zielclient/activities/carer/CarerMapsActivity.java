@@ -285,6 +285,7 @@ public class CarerMapsActivity extends AppCompatActivity
         (dialog, which) -> {
           channel.endChannel();
           alertDialog.dismiss();
+          VoiceActivity.endCall();
           Intent intent = new Intent(getApplicationContext(), CarerHomepageActivity.class);
           intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
           startActivity(intent);
