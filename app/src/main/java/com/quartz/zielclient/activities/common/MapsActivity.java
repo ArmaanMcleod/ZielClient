@@ -340,11 +340,9 @@ public class MapsActivity extends AppCompatActivity
         alertDialog.cancel();
       }
 
-      if(channel.isChannelEnded()){
+      if(channel.isChannelEnded() && !this.isFinishing()){
         // this is set to null on purpose and will not cause an error.
-        if(!this.isFinishing()){
         makeChannelEndedAlert(null);
-        }
       }
 
       if (channel.getCarerStatus()) {
@@ -428,7 +426,7 @@ public class MapsActivity extends AppCompatActivity
 
 
   public void makeChannelEndedAlert(View v){
-    AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle("Channel has finished");
     alertDialog.setMessage("This channel has been ended. Will now return to home page");
     alertDialog.setButton(
