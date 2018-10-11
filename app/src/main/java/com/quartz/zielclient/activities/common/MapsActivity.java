@@ -400,7 +400,8 @@ public class MapsActivity extends AppCompatActivity
   public void onBackPressed() {
     VoiceActivity.endCall();
     channel.endChannel();
-    super.onBackPressed();
+    // purposely null will not cause an error.
+    makeChannelEndedAlert(null);
   }
 
   /**
