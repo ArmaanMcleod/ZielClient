@@ -60,23 +60,23 @@ public class MessageListAdapter extends RecyclerView.Adapter {
   public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
     View view;
 
-    // If message is the one sent by the user
-    if (viewType == VIEW_TYPE_MESSAGE_SENT) {
-      view = LayoutInflater.from(viewGroup.getContext()).inflate
-          (R.layout.message_sent, viewGroup, false);
+    switch (viewType) {
+      case VIEW_TYPE_MESSAGE_SENT:
+        // If message a text message sent by the user
+        view = LayoutInflater.from(viewGroup.getContext()).inflate
+            (R.layout.message_sent, viewGroup, false);
+        return new SentMessageHolder(view);
 
-      return new SentMessageHolder(view);
-    } else if (viewType == VIEW_TYPE_MESSAGE_RECEIVED) {
+      case VIEW_TYPE_MESSAGE_RECEIVED:
+        // If message is the one received by the user
+        view = LayoutInflater.from(viewGroup.getContext()).inflate
+            (R.layout.message_received, viewGroup, false);
+        return new ReceivedMessageHolder(view);
 
-      // If message is the one received by the user
-      view = LayoutInflater.from(viewGroup.getContext()).inflate
-          (R.layout.message_received, viewGroup, false);
-
-      return new ReceivedMessageHolder(view);
+        
+      // TODO Make this not null or use an exception
+      default: return null;
     }
-
-    // TODO Make this not null or use an exception
-    return null;
   }
 
   // Binding the contents from the server to the front-end
