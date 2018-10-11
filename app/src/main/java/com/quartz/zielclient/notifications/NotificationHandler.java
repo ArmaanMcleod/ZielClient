@@ -116,6 +116,7 @@ public class NotificationHandler {
       Intent intent = new Intent(context, CarerMapsActivity.class);
       intent.putExtra(
           context.getResources().getString(R.string.channel_key), channelRequest.getChannelId());
+      intent.putExtra("isAssisted",false);
       context.startActivity(intent);
       stopVibratingDevice();
     };

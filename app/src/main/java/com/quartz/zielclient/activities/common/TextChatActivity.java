@@ -49,6 +49,7 @@ public class TextChatActivity extends AppCompatActivity
 
   private User thisUser;
   private User otherUser;
+  private Boolean isAssisted;
 
   // Recycler Views and Adapter for the text chat
   private RecyclerView mMessageRecycler;
@@ -68,25 +69,20 @@ public class TextChatActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_text_chat_message_list);
 
+    // Checking whether currentUser is either assisted or carer
+    isAssisted = getIntent().getBooleanExtra("isAssisted",false);
+
     // Fetching channel using handler
     String channelKey = getIntent().getStringExtra(getApplicationContext()
         .getString(R.string.channel_key));
 
     channel = ChannelController.retrieveChannel(channelKey, this);
 
-    // Fetch the pre-existing messages from the database first
-    // Convert Map of messages to List of messages
-    /*
-    Map<String, Message> messagesMap = channel.getMessages();
-    List<Message> messages = new ArrayList<Message>(messagesMap.values());
-    prepareData(messages);
-    */
-
     // Chat using RecyclerView
     mMessageRecycler = findViewById(R.id.message_recyclerview);
     mLayoutManager = new LinearLayoutManager(this);
     mMessageRecycler.setLayoutManager(mLayoutManager);
-    mMessageRecycler.setAdapter(new MessageListAdapter(this, new ArrayList<>()));
+    mMessageRecycler.setAdapter(new MessageListAdapter(this, new ArrayList<>(), false));
 
     // Getting the current user's username
     currentUser = FirebaseAuth.getInstance().getUid();
@@ -146,7 +142,7 @@ public class TextChatActivity extends AppCompatActivity
     Collections.sort(messagesInChat);
     messageList = messagesInChat;
     // Creating a new Adapter to render the messages
-    mMessageListAdapter = new MessageListAdapter(this, messageList);
+    mMessageListAdapter = new MessageListAdapter(this, messageList, isAssisted);
     mMessageRecycler.setAdapter(mMessageListAdapter);
   }
 
@@ -208,6 +204,14 @@ public class TextChatActivity extends AppCompatActivity
     int storage = ContextCompat.checkSelfPermission(this,
         Manifest.permission.WRITE_EXTERNAL_STORAGE);
     return storage == PackageManager.PERMISSION_GRANTED;
+  }
+
+  /**
+   * Getter to indicate if the current user is Carer or Assisted
+   * @return Boolean value if the user is assisted or not
+   */
+  public Boolean getAssisted() {
+    return isAssisted;
   }
 
   // TODO

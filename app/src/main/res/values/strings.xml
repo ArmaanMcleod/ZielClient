@@ -52,4 +52,5 @@
     <string name="settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
     <string name="vp8_simulcast">VP8 Simulcast</string>
+    <string name="text_chat">Text Chat</string>
 </resources>

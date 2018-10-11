@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.dinuscxj.progressbar.CircleProgressBar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.common.TextChatActivity;
 import com.quartz.zielclient.messages.Message;
 
 import java.text.SimpleDateFormat;
@@ -27,7 +28,7 @@ import java.util.List;
  *
  * @author Wei How Ng
  */
-public class MessageListAdapter extends RecyclerView.Adapter{
+public class MessageListAdapter extends RecyclerView.Adapter {
 
   // Constant for the flags used in the overridden method onCreateViewHolder
   private static final int VIEW_TYPE_MESSAGE_SENT = 1;
@@ -35,17 +36,20 @@ public class MessageListAdapter extends RecyclerView.Adapter{
 
   private Context mContext;
   private List<Message> messageList;
+  private Boolean isAssisted = false;
 
   // Constructor
-  public MessageListAdapter(Context context, List<Message> messageList) {
+  public MessageListAdapter(Context context, List<Message> messageList, Boolean isAssisted) {
     mContext = context;
     this.messageList = messageList;
+    this.isAssisted = isAssisted;
   }
 
   /**
    * Overridden method to inflate the right message to the respective view.
+   *
    * @param viewGroup Parent
-   * @param viewType The type of message loaded
+   * @param viewType  The type of message loaded
    * @return ViewHolder for the respective message type
    */
   @NonNull
@@ -63,7 +67,7 @@ public class MessageListAdapter extends RecyclerView.Adapter{
 
       // If message is the one received by the user
       view = LayoutInflater.from(viewGroup.getContext()).inflate
-          (R.layout.message_received,viewGroup,false);
+          (R.layout.message_received, viewGroup, false);
 
       return new ReceivedMessageHolder(view);
     }
@@ -90,6 +94,7 @@ public class MessageListAdapter extends RecyclerView.Adapter{
 
   /**
    * Getting count of current number of messagess
+   *
    * @return Size of messageList as an int
    */
   @Override
@@ -99,11 +104,12 @@ public class MessageListAdapter extends RecyclerView.Adapter{
 
   /**
    * Check if the message is one that is being sent by the current user.
+   *
    * @param position The position of the message being sent currently
    * @return The type of message being sent in int
    */
   @Override
-  public int getItemViewType (int position) {
+  public int getItemViewType(int position) {
     Message message = messageList.get(position);
 
     // Checking current message's sender's ID against current user's ID
@@ -133,8 +139,16 @@ public class MessageListAdapter extends RecyclerView.Adapter{
       timeStamp = itemView.findViewById(R.id.text_message_time);
       userName = itemView.findViewById(R.id.text_message_name);
       profilePicture = (ImageView) itemView.findViewById(R.id.image_message_profile);
+
       // TODO Fix this lmao
-      sender = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+
+
+      // Checking whether the received message belongs to the carer or assisted
+      if(isAssisted) {
+        sender = "Carer";
+      } else {
+        sender = "Assisted";
+      }
     }
 
     // Bind Method
@@ -173,12 +187,12 @@ public class MessageListAdapter extends RecyclerView.Adapter{
       timeStamp.setText(timeString);
     }
   }
-
+}
   /**
    * A ViewHolder for file messages that are images.
    * Displays only the image thumbnail.
    */
-
+  /*
   private class SentImageHolder extends RecyclerView.ViewHolder {
     TextView timeText;
     ImageView fileThumbnailImage;
@@ -347,7 +361,7 @@ public class MessageListAdapter extends RecyclerView.Adapter{
    * A ViewHolder for file messages that are videos.
    * Displays only the video thumbnail.
    */
-
+  /*
   private class MyVideoFileMessageHolder extends RecyclerView.ViewHolder {
     TextView timeText, readReceiptText, dateText;
     ImageView fileThumbnailImage;
@@ -495,5 +509,5 @@ public class MessageListAdapter extends RecyclerView.Adapter{
   }
 }
 
-
+*/
 

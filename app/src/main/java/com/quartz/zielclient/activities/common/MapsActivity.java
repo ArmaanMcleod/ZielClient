@@ -83,6 +83,7 @@ public class MapsActivity extends AppCompatActivity
   private Button toTextChatButton;
   private Button toVoiceChatButton;
   private LatLng source;
+  private boolean isAssisted;
 
   private List<Marker> sourceDestinationMarkers = new ArrayList<>();
   private List<Marker> dropMarkers = new ArrayList<>();
@@ -116,6 +117,8 @@ public class MapsActivity extends AppCompatActivity
 
     Intent intentVoice = new Intent(MapsActivity.this, VoiceActivity.class);
     intentVoice.putExtra("initiate", 1);
+
+    isAssisted = getIntent().getBooleanExtra("isAssisted",false);
     startActivity(intentVoice);
     alertDialog = makeVideoAlert();
 
@@ -343,6 +346,7 @@ public class MapsActivity extends AppCompatActivity
       case R.id.toTextChat:
         Intent intentToTextChat = new Intent(MapsActivity.this, TextChatActivity.class);
         intentToTextChat.putExtra(getResources().getString(R.string.channel_key), channelId);
+        intentToTextChat.putExtra("isAssisted",isAssisted);
         startActivity(intentToTextChat);
         break;
 

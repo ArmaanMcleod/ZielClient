@@ -105,6 +105,7 @@ public class CarerSelectListAdapter
 
       // start intent to open maps
       intentToMaps = new Intent(activity, MapsActivity.class);
+      intentToMaps.putExtra("isAssisted",true);
       intentToMaps.putExtra(activity.getString(R.string.channel_key), channelData.getChannelKey());
       Bundle bundle = activity.getIntent().getExtras();
 
