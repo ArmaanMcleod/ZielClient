@@ -37,15 +37,15 @@
         <service android:name=".fcm.VoiceFirebaseInstanceIDService" />
 
         <activity
-            android:name=".activities.common.VideoActivity"
+            android:name=".activities.channel.VideoActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name=".activities.common.util.SettingsActivity"
+            android:name=".activities.common.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".activities.common.VideoActivity">
+            android:parentActivityName=".activities.channel.VideoActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.quartz.zielclient.activities.common.VideoActivity" />
+                android:value="com.quartz.zielclient.activities.channel.VideoActivity" />
         </activity>
         <activity
             android:name=".activities.common.SplashScreenActivity"
@@ -85,7 +85,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".activities.common.MapsActivity"
+            android:name=".activities.channel.MapsActivity"
             android:label="@string/title_activity_maps" />
 
         <uses-library
@@ -93,7 +93,7 @@
             android:required="false" />
 
         <activity
-            android:name=".activities.common.TextChatActivity"
+            android:name=".activities.channel.TextChatActivity"
             android:label="@string/title_activity_maps" />
 
         <uses-library
@@ -103,15 +103,15 @@
         <activity
             android:name=".activities.carer.CarerMapsActivity"
             android:label="@string/title_activity_carer_maps" />
-        <activity android:name=".activities.common.StreetViewActivity" />
+        <activity android:name=".activities.channel.StreetViewActivity" />
         <activity android:name=".activities.assisted.AddCarerActivity" />
         <activity android:name=".activities.assisted.AssistedSelectCarerActivity" />
-        <activity android:name=".activities.common.VoiceActivity" />
+        <activity android:name=".activities.channel.VoiceActivity" />
         <activity android:name=".activities.onboarding.OnboardingActivity" />
         <activity android:name=".activities.onboarding.SecondOnboardingActivity" />
         <activity android:name=".activities.onboarding.FinalOnboardingActivity" />
         <activity
-            android:name=".activities.common.TakePhotosActivity"
+            android:name=".activities.channel.TakePhotosActivity"
             android:label="@string/title_activity_take_photos" />
     </application>
 

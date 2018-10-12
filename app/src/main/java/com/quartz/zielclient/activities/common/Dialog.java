@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities.common.dialogue;
+package com.quartz.zielclient.activities.common;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

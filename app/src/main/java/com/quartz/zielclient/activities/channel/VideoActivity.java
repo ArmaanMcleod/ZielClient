@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities.common;
+package com.quartz.zielclient.activities.channel;
 
 import android.Manifest;
 import android.content.Context;
@@ -29,9 +29,9 @@ import android.widget.Toast;
 
 import com.koushikdutta.ion.Ion;
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.activities.common.dialogue.Dialog;
-import com.quartz.zielclient.activities.common.util.CameraCapturerCompat;
-import com.quartz.zielclient.activities.common.util.SettingsActivity;
+import com.quartz.zielclient.activities.common.Dialog;
+import com.quartz.zielclient.voip.CameraCapturerCompat;
+import com.quartz.zielclient.activities.common.SettingsActivity;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
@@ -176,7 +176,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     switch (item.getItemId()) {
       case R.id.menu_settings:
         startActivity(
-            new Intent(this, com.quartz.zielclient.activities.common.util.SettingsActivity.class));
+            new Intent(this, SettingsActivity.class));
         return true;
       case R.id.speaker_menu_item:
         if (audioManager.isSpeakerphoneOn()) {
@@ -220,12 +220,12 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
      */
     audioCodec =
         getAudioCodecPreference(
-            com.quartz.zielclient.activities.common.util.SettingsActivity.PREF_AUDIO_CODEC,
-            com.quartz.zielclient.activities.common.util.SettingsActivity.PREF_AUDIO_CODEC_DEFAULT);
+            SettingsActivity.PREF_AUDIO_CODEC,
+            SettingsActivity.PREF_AUDIO_CODEC_DEFAULT);
     videoCodec =
         getVideoCodecPreference(
-            com.quartz.zielclient.activities.common.util.SettingsActivity.PREF_VIDEO_CODEC,
-            com.quartz.zielclient.activities.common.util.SettingsActivity.PREF_VIDEO_CODEC_DEFAULT);
+            SettingsActivity.PREF_VIDEO_CODEC,
+            SettingsActivity.PREF_VIDEO_CODEC_DEFAULT);
 
     /*
      * Get latest encoding parameters
@@ -439,8 +439,8 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
       case Vp8Codec.NAME:
         boolean simulcast =
             preferences.getBoolean(
-                com.quartz.zielclient.activities.common.util.SettingsActivity.PREF_VP8_SIMULCAST,
-                com.quartz.zielclient.activities.common.util.SettingsActivity
+                SettingsActivity.PREF_VP8_SIMULCAST,
+                SettingsActivity
                     .PREF_VP8_SIMULCAST_DEFAULT);
         return new Vp8Codec(simulcast);
       case H264Codec.NAME:
@@ -456,14 +456,14 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     final int maxAudioBitrate =
         Integer.parseInt(
             preferences.getString(
-                com.quartz.zielclient.activities.common.util.SettingsActivity
+                SettingsActivity
                     .PREF_SENDER_MAX_AUDIO_BITRATE,
-                com.quartz.zielclient.activities.common.util.SettingsActivity
+                SettingsActivity
                     .PREF_SENDER_MAX_AUDIO_BITRATE_DEFAULT));
     final int maxVideoBitrate =
         Integer.parseInt(
             preferences.getString(
-                com.quartz.zielclient.activities.common.util.SettingsActivity
+                SettingsActivity
                     .PREF_SENDER_MAX_VIDEO_BITRATE,
                 SettingsActivity.PREF_SENDER_MAX_VIDEO_BITRATE_DEFAULT));
 

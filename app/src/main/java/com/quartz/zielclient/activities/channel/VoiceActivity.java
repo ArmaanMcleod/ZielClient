@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities.common;
+package com.quartz.zielclient.activities.channel;
 
 import android.Manifest;
 import android.app.NotificationManager;
@@ -39,6 +39,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.koushikdutta.ion.Ion;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.channel.ChannelData;
+import com.quartz.zielclient.voip.SoundPoolManager;
 import com.twilio.voice.Call;
 import com.twilio.voice.CallException;
 import com.twilio.voice.CallInvite;

@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities.common;
+package com.quartz.zielclient.voip;
 
 import android.content.Context;
 import android.media.AudioManager;

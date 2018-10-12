@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.view.View;
 
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.activities.common.VideoActivity;
+import com.quartz.zielclient.activities.channel.VideoActivity;
 
 public class SendToVideoListener implements View.OnClickListener{
 

@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities.common.util;
+package com.quartz.zielclient.activities.common;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -117,7 +117,7 @@ public class SettingsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
       int id = item.getItemId();
       if (id == android.R.id.home) {
-        startActivity(new Intent(getActivity(), com.quartz.zielclient.activities.common.util.SettingsActivity.class));
+        startActivity(new Intent(getActivity(), SettingsActivity.class));
         return true;
       }
       return super.onOptionsItemSelected(item);

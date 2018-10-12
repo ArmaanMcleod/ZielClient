@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities.common;
+package com.quartz.zielclient.activities.channel;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

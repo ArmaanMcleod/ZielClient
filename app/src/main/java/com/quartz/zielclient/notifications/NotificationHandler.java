@@ -16,7 +16,7 @@ import android.support.v7.app.AlertDialog;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.carer.CarerHomepageActivity;
 import com.quartz.zielclient.activities.carer.CarerMapsActivity;
-import com.quartz.zielclient.activities.common.SoundPoolManager;
+import com.quartz.zielclient.voip.SoundPoolManager;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.models.ChannelRequest;
