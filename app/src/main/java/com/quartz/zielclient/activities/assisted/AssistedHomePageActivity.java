@@ -139,7 +139,13 @@ public class AssistedHomePageActivity extends AppCompatActivity {
     }
   }
 
-  // prevent going back on home page
+  /**
+   * Called when the activity has detected the user's press of the back key.
+   * The default implementation simply finishes the current activity,
+   * but you can override this to do whatever you want.
+   *
+   * Documentation: https://developer.android.com/reference/android/app/Activity.html#onBackPressed()
+   */
   @Override
   public void onBackPressed(){
 

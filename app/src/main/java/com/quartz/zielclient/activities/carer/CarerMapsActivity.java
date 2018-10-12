@@ -31,16 +31,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This activity Reads coordinate and route information from a channel and displays a Map accordigly
+ * This activity Reads coordinate and route information from a channel and displays a Map accordingly
  * THis allows a carer to have upto date locative information from the assisted
  *
  * @author Bilal Shehata
  */
 public class CarerMapsActivity extends AppCompatActivity
     implements OnMapReadyCallback,
-        ChannelListener,
-        View.OnClickListener,
-        GoogleMap.OnMapClickListener {
+    ChannelListener,
+    View.OnClickListener,
+    GoogleMap.OnMapClickListener {
 
   // These constants are displayed until map syncronizes (only momentarily)
   // This prevents the default usage of  0,0
@@ -62,10 +62,14 @@ public class CarerMapsActivity extends AppCompatActivity
 
   // debug channel to be replaced with the current channel that was handled by a previous activity.
   private ChannelData channel;
+
   /**
-   * Initizialise the activity
+   * Creates map along with its attributes.
    *
-   * @param savedInstanceState
+   * <p>Documentation : https://developer.android.com/reference/android/app/
+   * Activity.html#onCreate(android.os.Bundle)
+   *
+   * @param savedInstanceState This is responsible for saving state of map activities.
    */
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -75,17 +79,23 @@ public class CarerMapsActivity extends AppCompatActivity
     setContentView(R.layout.activity_carer_maps);
     key = "&key=" + getApplicationContext().getString(R.string.google_api_key);
     markers = new ArrayList<>();
+
+    // Create buttons
     Button toTextChat = findViewById(R.id.toTextChat);
     Button toVoiceChat = findViewById(R.id.toVoiceChat);
     Button dropMarkers = findViewById(R.id.dropMarker);
     Button clearMarkers = findViewById(R.id.clearMarker);
     Button toVideoChat = findViewById(R.id.toVideoActivity);
+
+    // Setup listeners
     dropMarkers.setOnClickListener(this);
     clearMarkers.setOnClickListener(this);
     toVideoChat.setOnClickListener(this);
     toVoiceChat.setOnClickListener(this);
     alertDialog = makeVideoAlert();
     toTextChat.setOnClickListener(this);
+
+    // Extract the channel id from the bundle
     channelId = getIntent().getStringExtra(getApplicationContext().getString(R.string.channel_key));
     if (channelId != null) {
       channel = ChannelController.retrieveChannel(channelId, this);
@@ -131,26 +141,33 @@ public class CarerMapsActivity extends AppCompatActivity
                     intent.putExtra("destination", marker.getPosition());
                     startActivity(intent);
                   })
-              .setNegativeButton("No", (dialog, which) -> {})
+              .setNegativeButton("No", (dialog, which) -> {
+              })
               .show();
           return true;
         });
   }
 
-  /** Update the Coordinates based on the latest Assisted's location */
+  /**
+   * Update the Coordinates based on the latest Assisted's location
+   */
   public void updateMapCoords() {
     LatLng assistedLocation = new LatLng(latitude[0], longitude[0]);
     // Safety check
     // Asynchronous map may lead to error this ensures that the database call
     // does update if map is not ready
     if (assistedMarker != null) {
-      assistedMarker.setPosition(assistedLocation);
+      assistedMarker.remove();
+      assistedMarkerOptions.position(assistedLocation);
+      mGoogleMap.addMarker(assistedMarkerOptions);
       mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(assistedLocation));
       mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(assistedLocation, 15));
     }
   }
 
-  /** THis listens to changes in the channel Once a change occurs update the long/lat values */
+  /**
+   * THis listens to changes in the channel Once a change occurs update the long/lat values
+   */
   @Override
   public void dataChanged() {
     // Update location
@@ -179,8 +196,7 @@ public class CarerMapsActivity extends AppCompatActivity
         }
       }
       if (channel.isChannelEnded()) {
-        if(!this.isFinishing())
-        {
+        if (!this.isFinishing()) {
           makeChannelEndedAlert();
         }
       }
@@ -192,6 +208,14 @@ public class CarerMapsActivity extends AppCompatActivity
     }
   }
 
+  /**
+   * Listens for click events for the buttons.
+   * <p>
+   * Documentation: https://developer.android.com/reference/android/view/
+   * View.OnClickListener#onClick(android.view.View)
+   *
+   * @param view The view that was clicked.
+   */
   @Override
   public void onClick(View view) {
     switch (view.getId()) {
@@ -226,6 +250,9 @@ public class CarerMapsActivity extends AppCompatActivity
     }
   }
 
+  /**
+   * Handle back presses from user.
+   */
   @Override
   public void onBackPressed() {
     VoiceActivity.endCall();
@@ -233,6 +260,11 @@ public class CarerMapsActivity extends AppCompatActivity
     super.finish();
   }
 
+  /**
+   * Create a video alert when video activity starts.
+   *
+   * @return AlertDialog The dialog to show up on the screen.
+   */
   public AlertDialog makeVideoAlert() {
     alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle("Video Share?");
@@ -249,6 +281,9 @@ public class CarerMapsActivity extends AppCompatActivity
     return alertDialog;
   }
 
+  /**
+   * all markers from map and list.
+   */
   private void deleteMarkers() {
     markers.forEach(Marker::remove);
     markers.clear();
@@ -259,7 +294,6 @@ public class CarerMapsActivity extends AppCompatActivity
    * Creates a marker and shows it on the Google map.
    *
    * @param location The location of marker.
-   * @return Marker The marker object.
    */
   private void placeMarker(LatLng location) {
     MarkerOptions markerOptions =
@@ -268,6 +302,11 @@ public class CarerMapsActivity extends AppCompatActivity
     markers.add(newMarker);
   }
 
+  /**
+   * Handle map clicks for markers.
+   *
+   * @param latLng The coordinate of the marker.
+   */
   @Override
   public void onMapClick(LatLng latLng) {
     channel.addMarker(latLng);
@@ -275,8 +314,11 @@ public class CarerMapsActivity extends AppCompatActivity
     mGoogleMap.setOnMapClickListener(null);
   }
 
+  /**
+   * Alerts user when the channel is ended.
+   */
   public void makeChannelEndedAlert() {
-    AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle("Channel has finished");
     alertDialog.setMessage("This channel has been ended. Will now return to home page");
     alertDialog.setButton(

@@ -3,7 +3,6 @@ package com.quartz.zielclient.activities.common;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.os.Build;
 
 import com.quartz.zielclient.R;
 
@@ -14,34 +13,31 @@ public class SoundPoolManager {
   private boolean playing = false;
   private boolean loaded = false;
   private boolean playingCalled = false;
-  private float actualVolume;
-  private float maxVolume;
   private float volume;
-  private AudioManager audioManager;
   private SoundPool soundPool;
   private int ringingSoundId;
   private int ringingStreamId;
   private int disconnectSoundId;
   private static SoundPoolManager instance;
 
+  /**
+   * Manages sound pool for voice recording.
+   * @param context The current context.
+   */
   private SoundPoolManager(Context context) {
     // AudioManager audio settings for adjusting the volume
-    audioManager = (AudioManager) context.getSystemService(AUDIO_SERVICE);
-    if(audioManager!=null){
-    actualVolume = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-    maxVolume = (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+    AudioManager audioManager = (AudioManager) context.getSystemService(AUDIO_SERVICE);
+    if(audioManager !=null){
+      float actualVolume = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+      float maxVolume = (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
     volume = actualVolume / maxVolume;
     }
 
     // Load the sounds
     int maxStreams = 1;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      soundPool = new SoundPool.Builder()
-              .setMaxStreams(maxStreams)
-              .build();
-    } else {
-      soundPool = new SoundPool(maxStreams, AudioManager.STREAM_MUSIC, 0);
-    }
+    soundPool = new SoundPool.Builder()
+            .setMaxStreams(maxStreams)
+            .build();
 
     soundPool.setOnLoadCompleteListener((soundPool, sampleId, status) -> {
       loaded = true;
@@ -54,6 +50,11 @@ public class SoundPoolManager {
     disconnectSoundId = soundPool.load(context, R.raw.disconnect, 1);
   }
 
+  /**
+   * Returns instance of sound pool manager.
+   * @param context The current context of the app.
+   * @return SoundPoolManager Return the sound pool manager.
+   */
   public static SoundPoolManager getInstance(Context context) {
     if (instance == null) {
       instance = new SoundPoolManager(context);
@@ -61,6 +62,9 @@ public class SoundPoolManager {
     return instance;
   }
 
+  /**
+   * Rings the user for the video stream.
+   */
   public void playRinging() {
     if (loaded && !playing) {
       if (soundPool != null) {
@@ -72,6 +76,9 @@ public class SoundPoolManager {
     }
   }
 
+  /**
+   * Stops the video in ringing mode.
+   */
   public void stopRinging() {
     if (playing) {
       if (soundPool != null) {
@@ -81,6 +88,9 @@ public class SoundPoolManager {
     }
   }
 
+  /**
+   * Plays the video stream.
+   */
   public void playDisconnect() {
     if (loaded && !playing) {
       soundPool.play(disconnectSoundId, volume, volume, 1, 0, 1f);
@@ -88,6 +98,9 @@ public class SoundPoolManager {
     }
   }
 
+  /**
+   * Release the video stream and tear down all variables.
+   */
   public void release() {
     if (soundPool != null) {
       soundPool.unload(ringingSoundId);
