@@ -132,7 +132,7 @@ public class TakePhotosActivity extends AppCompatActivity {
         saveImageFile(bitmap);
         Log.d(activity, "Saving file to " + currentPhotoPath);
       } catch (IOException e) {
-        Log.d(activity, e.toString());
+        Log.e(activity, "Error saving file", e);
       }
     }
 
@@ -153,8 +153,7 @@ public class TakePhotosActivity extends AppCompatActivity {
   private void runLandMarkRecognition(Bitmap bitmap) {
 
     // Use latest model options
-    FirebaseVisionCloudDetectorOptions options =
-        new FirebaseVisionCloudDetectorOptions.Builder()
+    FirebaseVisionCloudDetectorOptions options = new FirebaseVisionCloudDetectorOptions.Builder()
             .setModelType(FirebaseVisionCloudDetectorOptions.LATEST_MODEL)
             .setMaxResults(15)
             .build();

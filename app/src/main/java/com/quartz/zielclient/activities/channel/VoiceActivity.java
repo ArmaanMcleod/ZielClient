@@ -61,16 +61,18 @@ public class VoiceActivity extends AppCompatActivity {
       "http://35.189.54.26:3000/accessToken";
   private static final int MIC_PERMISSION_REQUEST_CODE = 1;
   private static final int SNACKBAR_DURATION = 4000;
-  private String identity = "alice";
   private static Call activeCall;
-  private String toCall;
 
   // Empty HashMap, never populated for the Quickstart
   private HashMap<String, String> twiMLParams = new HashMap<>();
+  private String identity = "alice";
+  private String toCall;
   private String accessToken;
+
   private AudioManager audioManager;
   private int savedAudioMode = AudioManager.MODE_INVALID;
   private boolean isReceiverRegistered = false;
+
   private VoiceBroadcastReceiver voiceBroadcastReceiver;
   private CoordinatorLayout coordinatorLayout;
   private RegistrationListener registrationListener = registrationListener();

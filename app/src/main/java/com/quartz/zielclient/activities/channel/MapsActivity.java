@@ -191,10 +191,8 @@ public class MapsActivity extends AppCompatActivity
     SupportMapFragment mapFrag =
         (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
-
     if (mapFrag != null) {
       mapFrag.getMapAsync(this);
-
     }
 
     // Allow user to see street view suggestion
@@ -233,12 +231,11 @@ public class MapsActivity extends AppCompatActivity
     // Create address geo coder
     Geocoder geocoder = new Geocoder(this, Locale.getDefault());
     try {
-
       // Only retrieve the rop result
       List<Address> addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1);
       address = addresses.get(0).getAddressLine(0);
     } catch (IOException e) {
-      Log.d(activity, "getAddress: Cannot fetch address");
+      Log.e(activity, "getAddress: Cannot fetch address", e);
     }
 
     return address;
@@ -482,7 +479,6 @@ public class MapsActivity extends AppCompatActivity
         .position(location)
         .title(getAddress(location))
         .icon(BitmapDescriptorFactory.defaultMarker(colour));
-
     return mGoogleMap.addMarker(markerOptions);
   }
 
