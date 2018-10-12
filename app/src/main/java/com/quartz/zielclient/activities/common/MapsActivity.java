@@ -435,6 +435,7 @@ public class MapsActivity extends AppCompatActivity
             (dialog, which) -> {
               channel.endChannel();
               alertDialog.dismiss();
+              VoiceActivity.endCall();
               Intent intent = new Intent( getApplicationContext(), AssistedHomePageActivity.class );
               intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
               startActivity(intent);

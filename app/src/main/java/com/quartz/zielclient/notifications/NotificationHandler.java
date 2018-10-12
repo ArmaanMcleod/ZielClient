@@ -48,8 +48,7 @@ public class NotificationHandler {
     Intent notificationIntent = new Intent(context, CarerHomepageActivity.class);
     notificationIntent.setAction(Intent.ACTION_MAIN);
     notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-    PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
-    return intent;
+    return PendingIntent.getActivity(context, 0, notificationIntent, 0);
   }
 
   public void createNotificationChannel() {

@@ -27,9 +27,11 @@ public class SoundPoolManager {
   private SoundPoolManager(Context context) {
     // AudioManager audio settings for adjusting the volume
     audioManager = (AudioManager) context.getSystemService(AUDIO_SERVICE);
+    if(audioManager!=null){
     actualVolume = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
     maxVolume = (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
     volume = actualVolume / maxVolume;
+    }
 
     // Load the sounds
     int maxStreams = 1;
@@ -41,16 +43,12 @@ public class SoundPoolManager {
       soundPool = new SoundPool(maxStreams, AudioManager.STREAM_MUSIC, 0);
     }
 
-    soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-      @Override
-      public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-        loaded = true;
-        if (playingCalled) {
-          playRinging();
-          playingCalled = false;
-        }
+    soundPool.setOnLoadCompleteListener((soundPool, sampleId, status) -> {
+      loaded = true;
+      if (playingCalled) {
+        playRinging();
+        playingCalled = false;
       }
-
     });
     ringingSoundId = soundPool.load(context, R.raw.incoming, 1);
     disconnectSoundId = soundPool.load(context, R.raw.disconnect, 1);

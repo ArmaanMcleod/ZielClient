@@ -106,9 +106,13 @@ public class ConfirmationCodeActivity extends AppCompatActivity implements View.
     if (task.isSuccessful()) {
       // Sign in success, update UI with the signed-in user's information
       Log.d(TAG, "signInWithCredential:success");
-      FirebaseUser user = task.getResult().getUser();
-      Toast toast = Toast.makeText(this, "user signed in: " + user.getPhoneNumber(), Toast.LENGTH_SHORT);
-      toast.show();
+      if (task.getResult() != null) {
+        FirebaseUser user = task.getResult().getUser();
+
+        Toast toast =
+            Toast.makeText(this, "user signed in: " + user.getPhoneNumber(), Toast.LENGTH_SHORT);
+        toast.show();
+      }
       Intent intent = new Intent(this, AccountCreationActivity.class);
       startActivity(intent);
       finish();
