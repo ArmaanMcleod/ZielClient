@@ -48,7 +48,10 @@ import com.twilio.voice.Voice;
 
 import java.util.HashMap;
 
-public class VoiceActivity extends AppCompatActivity  {
+/**
+ * This class is responsible for handling voice activities within the app.
+ */
+public class VoiceActivity extends AppCompatActivity {
 
   public static final String INCOMING_CALL_INVITE = "INCOMING_CALL_INVITE";
   public static final String INCOMING_CALL_NOTIFICATION_ID = "INCOMING_CALL_NOTIFICATION_ID";
@@ -88,6 +91,15 @@ public class VoiceActivity extends AppCompatActivity  {
 
   private String channelId;
 
+  /**
+   * Creates an incoming call dialog.
+   *
+   * @param context                 The current context of the activity
+   * @param callInvite              The call invite.
+   * @param answerCallClickListener The answer to call back.
+   * @param cancelClickListener     Checks if the cancel button was clicked.
+   * @return AlertDialog The dialog to be created.
+   */
   public static AlertDialog createIncomingCallDialog(
       Context context,
       CallInvite callInvite,
@@ -102,6 +114,14 @@ public class VoiceActivity extends AppCompatActivity  {
     return alertDialogBuilder.create();
   }
 
+  /**
+   * Create a call dialog.
+   *
+   * @param callClickListener   Checks if the call button was clicked.
+   * @param cancelClickListener Checks if the cancel button was clicked.
+   * @param context             current context of the activity
+   * @return AlertDialog The dialog to be created.
+   */
   public static AlertDialog createCallDialog(
       final DialogInterface.OnClickListener callClickListener,
       final DialogInterface.OnClickListener cancelClickListener,
@@ -125,12 +145,23 @@ public class VoiceActivity extends AppCompatActivity  {
     return alertDialogBuilder.create();
   }
 
+  /**
+   * Ends voice call.
+   */
   public static void endCall() {
     if (activeCall != null) {
       activeCall.disconnect();
     }
   }
 
+  /**
+   * Called when the activity is starting.
+   * <p>
+   * Documentation: https://developer.android.com/reference/android/app/
+   * Activity.html#onCreate(android.os.Bundle)
+   *
+   * @param savedInstanceState The saved state of the activity.
+   */
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -170,7 +201,7 @@ public class VoiceActivity extends AppCompatActivity  {
     audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
     if (audioManager != null) {
       audioManager.setSpeakerphoneOn(true);
-}
+    }
     /*
      * Enable changing the volume using the up/down keys during a conversation
      */
@@ -206,6 +237,11 @@ public class VoiceActivity extends AppCompatActivity  {
     }
   }
 
+  /**
+   * Handles incoming calls for new intents.
+   *
+   * @param intent The new intent.
+   */
   @Override
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
@@ -243,6 +279,15 @@ public class VoiceActivity extends AppCompatActivity  {
         resetUI();
       }
 
+      /**
+       * After calling connect(), this method will be invoked asynchronously when the connect
+       * request has successfully completed.
+       *
+       * Documentation: https://developers.google.com/android/reference/com/google/android/
+       * gms/common/api/GoogleApiClient.ConnectionCallbacks.html#onConnected(android.os.Bundle)
+       *
+       * @param call The call object.
+       */
       @Override
       public void onConnected(Call call) {
         setAudioFocus(true);
@@ -250,6 +295,15 @@ public class VoiceActivity extends AppCompatActivity  {
         activeCall = call;
       }
 
+      /**
+       * The method called when a camera device is no longer available for use.
+       *
+       * Documentation: https://developer.android.com/reference/android/hardware/camera2/
+       * CameraDevice.StateCallback.html#onDisconnected(android.hardware.camera2.CameraDevice)
+       *
+       * @param call The call object.
+       * @param error The error returned from the connection.
+       */
       @Override
       public void onDisconnected(Call call, CallException error) {
         setAudioFocus(false);
@@ -290,24 +344,44 @@ public class VoiceActivity extends AppCompatActivity  {
     chronometer.stop();
   }
 
+  /**
+   * Handles resuming of the activity.
+   * <p>
+   * Documentation: https://developer.android.com/reference/android/app/Activity.html#onResume()
+   */
   @Override
   protected void onResume() {
     super.onResume();
     registerReceiver();
   }
 
+  /**
+   * Handles pausing of the activity.
+   * <p>
+   * Documentation: https://developer.android.com/reference/android/app/Activity.html#onPause()
+   */
   @Override
   protected void onPause() {
     super.onPause();
     unregisterReceiver();
   }
 
+  /**
+   * Perform any final cleanup before an activity is destroyed.
+   * <p>
+   * Documentation: https://developer.android.com/reference/android/app/Activity.html#onDestroy()
+   */
   @Override
   public void onDestroy() {
     soundPoolManager.release();
     super.onDestroy();
   }
 
+  /**
+   * Handle incoming call intent into the application.
+   *
+   * @param intent The intent coming in.
+   */
   private void handleIncomingCallIntent(Intent intent) {
     if (intent != null && intent.getAction() != null) {
       if (intent.getAction().equals(ACTION_INCOMING_CALL)) {
@@ -334,6 +408,9 @@ public class VoiceActivity extends AppCompatActivity  {
     }
   }
 
+  /**
+   * Registers a receiver to the voice call.
+   */
   private void registerReceiver() {
     if (!isReceiverRegistered) {
       IntentFilter intentFilter = new IntentFilter();
@@ -345,6 +422,9 @@ public class VoiceActivity extends AppCompatActivity  {
     }
   }
 
+  /**
+   * Unregisters a receiver from the app.
+   */
   private void unregisterReceiver() {
     if (isReceiverRegistered) {
       LocalBroadcastManager.getInstance(this).unregisterReceiver(voiceBroadcastReceiver);
@@ -386,7 +466,9 @@ public class VoiceActivity extends AppCompatActivity  {
     };
   }
 
-  /** Register for Call invites on the Cloud messaging serevr */
+  /**
+   * Register for Call invites on the Cloud messaging serevr
+   */
   private void registerForCallInvites() {
     final String fcmToken = FirebaseInstanceId.getInstance().getToken();
     if (fcmToken != null) {
@@ -426,13 +508,17 @@ public class VoiceActivity extends AppCompatActivity  {
     return v -> mute();
   }
 
-  /** Accept an incoming Call */
+  /**
+   * Accept an incoming Call
+   */
   private void answer() {
     activeCallInvite.accept(this, callListener);
     notificationManager.cancel(activeCallNotificationId);
   }
 
-  /** Disconnect from Call */
+  /**
+   * Disconnect from Call
+   */
   private void disconnect() {
     if (activeCall != null) {
       activeCall.disconnect();
@@ -440,7 +526,9 @@ public class VoiceActivity extends AppCompatActivity  {
     }
   }
 
-  /** Mute current call */
+  /**
+   * Mute current call
+   */
   private void mute() {
     if (activeCall != null) {
       boolean mute = !activeCall.isMuted();
@@ -476,7 +564,8 @@ public class VoiceActivity extends AppCompatActivity  {
                   .setAudioAttributes(playbackAttributes)
                   .setAcceptsDelayedFocusGain(true)
                   .setOnAudioFocusChangeListener(
-                          i -> {})
+                      i -> {
+                      })
                   .build();
           audioManager.requestAudioFocus(focusRequest);
         } else {
@@ -493,29 +582,44 @@ public class VoiceActivity extends AppCompatActivity  {
   }
 
   /**
-   * Check the MicroPhone Permissions
+   * Check the MicroPhone Permissions.
    *
-   * @return
+   * @return Whether the permission for the microphone was granted.
    */
   private boolean checkPermissionForMicrophone() {
     int resultMic = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
     return resultMic == PackageManager.PERMISSION_GRANTED;
   }
 
+  /**
+   * Requests permission for the microphone.
+   */
   private void requestPermissionForMicrophone() {
     if (ActivityCompat.shouldShowRequestPermissionRationale(
         this, Manifest.permission.RECORD_AUDIO)) {
       Snackbar.make(
-              coordinatorLayout,
-              "Microphone permissions needed. Please allow in your application settings.",
-              SNACKBAR_DURATION)
+          coordinatorLayout,
+          "Microphone permissions needed. Please allow in your application settings.",
+          SNACKBAR_DURATION)
           .show();
     } else {
       ActivityCompat.requestPermissions(
-          this, new String[] {Manifest.permission.RECORD_AUDIO}, MIC_PERMISSION_REQUEST_CODE);
+          this, new String[]{Manifest.permission.RECORD_AUDIO}, MIC_PERMISSION_REQUEST_CODE);
     }
   }
 
+  /**
+   * Callback for the result from requesting permissions.
+   * <p>
+   * Documentation: https://developer.android.com/reference/android/support/v4/app/
+   * ActivityCompat.OnRequestPermissionsResultCallback.html#
+   * onRequestPermissionsResult(int,%20java.lang.String[],%20int[])
+   *
+   * @param requestCode  The request code passed in requestPermissions()
+   * @param permissions  The requested permissions. Never null.
+   * @param grantResults The grant results for the corresponding permissions which is either
+   *                     PERMISSION_GRANTED or PERMISSION_DENIED. Never null.
+   */
   @Override
   public void onRequestPermissionsResult(
       int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -525,9 +629,9 @@ public class VoiceActivity extends AppCompatActivity  {
     if (requestCode == MIC_PERMISSION_REQUEST_CODE && permissions.length > 0) {
       if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
         Snackbar.make(
-                coordinatorLayout,
-                "Microphone permissions needed. Please allow in your application settings.",
-                SNACKBAR_DURATION)
+            coordinatorLayout,
+            "Microphone permissions needed. Please allow in your application settings.",
+            SNACKBAR_DURATION)
             .show();
       } else {
         retrieveAccessToken();
@@ -535,6 +639,16 @@ public class VoiceActivity extends AppCompatActivity  {
     }
   }
 
+  /**
+   * Initialize the contents of the Activity's standard options menu.
+   * <p>
+   * Documentation: https://developer.android.com/reference/android/app/
+   * Activity#onCreateOptionsMenu(android.view.Menu)
+   *
+   * @param menu The menu items
+   * @return You must return true for the menu to be displayed.
+   * if you return false it will not be shown.
+   */
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater = getMenuInflater();
@@ -542,54 +656,64 @@ public class VoiceActivity extends AppCompatActivity  {
     return true;
   }
 
+  /**
+   * This hook is called whenever an item in your options menu is selected.
+   * <p>
+   * Documentation: https://developer.android.com/reference/android/app/Activity.html
+   * #onOptionsItemSelected(android.view.MenuItem)
+   *
+   * @param item The item selected from the menu.
+   * @return boolean Return false to allow normal menu processing to proceed,
+   * true to consume it here.
+   */
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.speaker_menu_item:
-        if (audioManager.isSpeakerphoneOn()) {
-          audioManager.setSpeakerphoneOn(false);
-          item.setIcon(R.drawable.ic_phonelink_ring_white_24dp);
-        } else {
-          audioManager.setSpeakerphoneOn(true);
-          item.setIcon(R.drawable.ic_volume_up_white_24dp);
-        }
-        break;
+    int i = item.getItemId();
+    if (i == R.id.speaker_menu_item) {
+      if (audioManager.isSpeakerphoneOn()) {
+        audioManager.setSpeakerphoneOn(false);
+        item.setIcon(R.drawable.ic_phonelink_ring_white_24dp);
+      } else {
+        audioManager.setSpeakerphoneOn(true);
+        item.setIcon(R.drawable.ic_volume_up_white_24dp);
+      }
+
     }
     return true;
   }
 
   /*
-   * Get an access token from your Twilio access token server
+   * Get an access token from your Twillio access token server
    */
   private void retrieveAccessToken() {
     Ion.with(this)
         .load(TWILIO_ACCESS_TOKEN_SERVER_URL + "?identity=" + identity)
         .asString()
         .setCallback(
-                (e, accessToken) -> {
-                  if (e == null) {
-                    Log.d(TAG, "Access token: " + accessToken);
-                    VoiceActivity.this.accessToken = accessToken;
-                    registerForCallInvites();
-                  } else {
-                    Snackbar.make(
-                            coordinatorLayout,
-                            "Error retrieving access token. Unable to make calls",
-                            Snackbar.LENGTH_LONG)
-                        .show();
-                  }
-                });
+            (e, accessToken) -> {
+              if (e == null) {
+                Log.d(TAG, "Access token: " + accessToken);
+                VoiceActivity.this.accessToken = accessToken;
+                registerForCallInvites();
+              } else {
+                Snackbar.make(
+                    coordinatorLayout,
+                    "Error retrieving access token. Unable to make calls",
+                    Snackbar.LENGTH_LONG)
+                    .show();
+              }
+            });
   }
 
-
-
-
+  /**
+   * Handles video broadcast from receiver.
+   */
   private class VoiceBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
       String action = intent.getAction();
-      if (action!=null && action.equals(ACTION_INCOMING_CALL)) {
+      if (action != null && action.equals(ACTION_INCOMING_CALL)) {
         /*
          * Handle the incoming call invite
          */
