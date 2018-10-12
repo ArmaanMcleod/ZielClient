@@ -157,7 +157,9 @@ public class CarerMapsActivity extends AppCompatActivity
     // Asynchronous map may lead to error this ensures that the database call
     // does update if map is not ready
     if (assistedMarker != null) {
-      assistedMarker.setPosition(assistedLocation);
+      assistedMarker.remove();
+      assistedMarkerOptions.position(assistedLocation);
+      mGoogleMap.addMarker(assistedMarkerOptions);
       mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(assistedLocation));
       mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(assistedLocation, 15));
     }

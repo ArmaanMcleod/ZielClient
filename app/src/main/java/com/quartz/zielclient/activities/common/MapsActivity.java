@@ -236,7 +236,9 @@ public class MapsActivity extends AppCompatActivity
 
       // Only retrieve the rop result
       List<Address> addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1);
-      address = addresses.get(0).getAddressLine(0);
+      if (!addresses.isEmpty()) {
+        address = addresses.get(0).getAddressLine(0);
+      }
     } catch (IOException e) {
       Log.d(activity, "getAddress: Cannot fetch address");
     }
