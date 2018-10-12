@@ -64,8 +64,8 @@ public class VoiceActivity extends AppCompatActivity {
   private static final int SNACKBAR_DURATION = 4000;
   private static String identity = "alice";
   private static Call activeCall;
-  private static String toCall;
-  
+  private String toCall;
+
   // Empty HashMap, never populated for the Quickstart
   private HashMap<String, String> twiMLParams = new HashMap<>();
   private String accessToken;
@@ -100,7 +100,7 @@ public class VoiceActivity extends AppCompatActivity {
     return alertDialogBuilder.create();
   }
 
-  public static AlertDialog createCallDialog(
+  public AlertDialog createCallDialog(
       final DialogInterface.OnClickListener callClickListener,
       final DialogInterface.OnClickListener cancelClickListener,
       final Context context) {

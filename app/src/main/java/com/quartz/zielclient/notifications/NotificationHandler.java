@@ -84,7 +84,7 @@ public class NotificationHandler {
     alertUser = alertDialogBuilder.create();
     alertUser.show();
 
-    vibrator.vibrate(VibrationEffect.createWaveform(new long[] {1000, 1000, 1000, 1000, 1000}, 0));
+    vibrator.vibrate(VibrationEffect.createWaveform(new long[]{1000, 1000, 1000, 1000, 1000}, 0));
     if (soundPoolManager != null) {
       soundPoolManager.playRinging();
     }
@@ -99,7 +99,7 @@ public class NotificationHandler {
             .setContentIntent(newLauncherIntent(context))
             .setContentText("Please open App")
             .setWhen(System.currentTimeMillis())
-            .setVibrate(new long[] {1000, 1000, 1000, 1000, 1000})
+            .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
             .setLights(Color.RED, 3000, 3000)
             .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
     notificationManager.notify(1, notificationBuilder.build());
@@ -127,7 +127,7 @@ public class NotificationHandler {
 
       ChannelData channel = ChannelController.retrieveChannel(channelRequest.getChannelId(), () -> {
       });
-      if(channel!=null){
+      if (channel != null) {
         channel.endChannel();
       }
       stopVibratingDevice();
