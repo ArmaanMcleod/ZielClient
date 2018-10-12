@@ -49,7 +49,7 @@ import com.twilio.voice.Voice;
 
 import java.util.HashMap;
 
-public class VoiceActivity extends AppCompatActivity  {
+public class VoiceActivity extends AppCompatActivity {
 
   public static final String INCOMING_CALL_INVITE = "INCOMING_CALL_INVITE";
   public static final String INCOMING_CALL_NOTIFICATION_ID = "INCOMING_CALL_NOTIFICATION_ID";
@@ -65,29 +65,26 @@ public class VoiceActivity extends AppCompatActivity  {
   private static String identity = "alice";
   private static Call activeCall;
   private static String toCall;
+  
   // Empty HashMap, never populated for the Quickstart
-  HashMap<String, String> twiMLParams = new HashMap<>();
+  private HashMap<String, String> twiMLParams = new HashMap<>();
   private String accessToken;
   private AudioManager audioManager;
   private int savedAudioMode = AudioManager.MODE_INVALID;
   private boolean isReceiverRegistered = false;
   private VoiceBroadcastReceiver voiceBroadcastReceiver;
   private CoordinatorLayout coordinatorLayout;
-  RegistrationListener registrationListener = registrationListener();
+  private RegistrationListener registrationListener = registrationListener();
   private FloatingActionButton callActionFab;
   private FloatingActionButton hangupActionFab;
   private FloatingActionButton muteActionFab;
   private Chronometer chronometer;
-  Call.Listener callListener = callListener();
+  private Call.Listener callListener = callListener();
   private SoundPoolManager soundPoolManager;
   private NotificationManager notificationManager;
   private AlertDialog alertDialog;
   private CallInvite activeCallInvite;
   private int activeCallNotificationId;
-  private ChannelData channelData;
-
-
-  private String channelId;
 
   public static AlertDialog createIncomingCallDialog(
       Context context,
@@ -107,13 +104,12 @@ public class VoiceActivity extends AppCompatActivity  {
       final DialogInterface.OnClickListener callClickListener,
       final DialogInterface.OnClickListener cancelClickListener,
       final Context context) {
-    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-
-    alertDialogBuilder.setIcon(R.drawable.ic_call_black_24dp);
-    alertDialogBuilder.setTitle("Call");
-    alertDialogBuilder.setPositiveButton("Call", callClickListener);
-    alertDialogBuilder.setNegativeButton("Cancel", cancelClickListener);
-    alertDialogBuilder.setCancelable(false);
+    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
+        .setIcon(R.drawable.ic_call_black_24dp)
+        .setTitle("Call")
+        .setPositiveButton("Call", callClickListener)
+        .setNegativeButton("Cancel", cancelClickListener)
+        .setCancelable(false);
 
     LayoutInflater li = LayoutInflater.from(context);
     View dialogView = li.inflate(R.layout.dialog_call, null);
@@ -171,7 +167,7 @@ public class VoiceActivity extends AppCompatActivity  {
     audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
     if (audioManager != null) {
       audioManager.setSpeakerphoneOn(true);
-}
+    }
     /*
      * Enable changing the volume using the up/down keys during a conversation
      */
@@ -305,7 +301,7 @@ public class VoiceActivity extends AppCompatActivity  {
 
   @Override
   public void onDestroy() {
-    soundPoolManager.release();
+    SoundPoolManager.release();
     super.onDestroy();
   }
 
@@ -387,7 +383,9 @@ public class VoiceActivity extends AppCompatActivity  {
     };
   }
 
-  /** Register for Call invites on the Cloud messaging serevr */
+  /**
+   * Register for Call invites on the Cloud messaging serevr
+   */
   private void registerForCallInvites() {
     final String fcmToken = FirebaseInstanceId.getInstance().getToken();
     if (fcmToken != null) {
@@ -427,13 +425,17 @@ public class VoiceActivity extends AppCompatActivity  {
     return v -> mute();
   }
 
-  /** Accept an incoming Call */
+  /**
+   * Accept an incoming Call
+   */
   private void answer() {
     activeCallInvite.accept(this, callListener);
     notificationManager.cancel(activeCallNotificationId);
   }
 
-  /** Disconnect from Call */
+  /**
+   * Disconnect from Call
+   */
   private void disconnect() {
     if (activeCall != null) {
       activeCall.disconnect();
@@ -441,7 +443,9 @@ public class VoiceActivity extends AppCompatActivity  {
     }
   }
 
-  /** Mute current call */
+  /**
+   * Mute current call
+   */
   private void mute() {
     if (activeCall != null) {
       boolean mute = !activeCall.isMuted();
@@ -477,7 +481,8 @@ public class VoiceActivity extends AppCompatActivity  {
                   .setAudioAttributes(playbackAttributes)
                   .setAcceptsDelayedFocusGain(true)
                   .setOnAudioFocusChangeListener(
-                          i -> {})
+                      i -> {
+                      })
                   .build();
           audioManager.requestAudioFocus(focusRequest);
         } else {
@@ -507,13 +512,13 @@ public class VoiceActivity extends AppCompatActivity  {
     if (ActivityCompat.shouldShowRequestPermissionRationale(
         this, Manifest.permission.RECORD_AUDIO)) {
       Snackbar.make(
-              coordinatorLayout,
-              "Microphone permissions needed. Please allow in your application settings.",
-              SNACKBAR_DURATION)
+          coordinatorLayout,
+          "Microphone permissions needed. Please allow in your application settings.",
+          SNACKBAR_DURATION)
           .show();
     } else {
       ActivityCompat.requestPermissions(
-          this, new String[] {Manifest.permission.RECORD_AUDIO}, MIC_PERMISSION_REQUEST_CODE);
+          this, new String[]{Manifest.permission.RECORD_AUDIO}, MIC_PERMISSION_REQUEST_CODE);
     }
   }
 
@@ -526,9 +531,9 @@ public class VoiceActivity extends AppCompatActivity  {
     if (requestCode == MIC_PERMISSION_REQUEST_CODE && permissions.length > 0) {
       if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
         Snackbar.make(
-                coordinatorLayout,
-                "Microphone permissions needed. Please allow in your application settings.",
-                SNACKBAR_DURATION)
+            coordinatorLayout,
+            "Microphone permissions needed. Please allow in your application settings.",
+            SNACKBAR_DURATION)
             .show();
       } else {
         retrieveAccessToken();
@@ -567,22 +572,20 @@ public class VoiceActivity extends AppCompatActivity  {
         .load(TWILIO_ACCESS_TOKEN_SERVER_URL + "?identity=" + identity)
         .asString()
         .setCallback(
-                (e, accessToken) -> {
-                  if (e == null) {
-                    Log.d(TAG, "Access token: " + accessToken);
-                    VoiceActivity.this.accessToken = accessToken;
-                    registerForCallInvites();
-                  } else {
-                    Snackbar.make(
-                            coordinatorLayout,
-                            "Error retrieving access token. Unable to make calls",
-                            Snackbar.LENGTH_LONG)
-                        .show();
-                  }
-                });
+            (e, accessToken) -> {
+              if (e == null) {
+                Log.d(TAG, "Access token: " + accessToken);
+                VoiceActivity.this.accessToken = accessToken;
+                registerForCallInvites();
+              } else {
+                Snackbar.make(
+                    coordinatorLayout,
+                    "Error retrieving access token. Unable to make calls",
+                    Snackbar.LENGTH_LONG)
+                    .show();
+              }
+            });
   }
-
-
 
 
   private class VoiceBroadcastReceiver extends BroadcastReceiver {
@@ -590,7 +593,7 @@ public class VoiceActivity extends AppCompatActivity  {
     @Override
     public void onReceive(Context context, Intent intent) {
       String action = intent.getAction();
-      if (action!=null && action.equals(ACTION_INCOMING_CALL)) {
+      if (action != null && action.equals(ACTION_INCOMING_CALL)) {
         /*
          * Handle the incoming call invite
          */

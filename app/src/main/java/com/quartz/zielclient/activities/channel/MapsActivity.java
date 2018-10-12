@@ -340,7 +340,7 @@ public class MapsActivity extends AppCompatActivity
         alertDialog.cancel();
       }
 
-      if(channel.isChannelEnded() && !this.isFinishing()){
+      if (channel.isChannelEnded() && !this.isFinishing()) {
         // this is set to null on purpose and will not cause an error.
         makeChannelEndedAlert(null);
       }
@@ -425,23 +425,23 @@ public class MapsActivity extends AppCompatActivity
   }
 
 
-  public void makeChannelEndedAlert(View v){
+  public void makeChannelEndedAlert(View v) {
     alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle("Channel has finished");
     alertDialog.setMessage("This channel has been ended. Will now return to home page");
     alertDialog.setButton(
-            AlertDialog.BUTTON_NEUTRAL,
-            "OK",
-            (dialog, which) -> {
-              channel.endChannel();
-              alertDialog.dismiss();
-              VoiceActivity.endCall();
-              Intent intent = new Intent( getApplicationContext(), AssistedHomePageActivity.class );
-              intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
-              startActivity(intent);
-              finish();
+        AlertDialog.BUTTON_NEUTRAL,
+        "OK",
+        (dialog, which) -> {
+          channel.endChannel();
+          alertDialog.dismiss();
+          VoiceActivity.endCall();
+          Intent intent = new Intent(getApplicationContext(), AssistedHomePageActivity.class);
+          intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+          startActivity(intent);
+          finish();
 
-            });
+        });
 
     alertDialog.show();
 
@@ -455,8 +455,8 @@ public class MapsActivity extends AppCompatActivity
   private void drawMarkers(List<LatLng> coordinates) {
     dropMarkers.addAll(
         coordinates.stream()
-        .map(coord -> createMarker(coord, HUE_CYAN))
-        .collect(Collectors.toList())
+            .map(coord -> createMarker(coord, HUE_CYAN))
+            .collect(Collectors.toList())
     );
   }
 
