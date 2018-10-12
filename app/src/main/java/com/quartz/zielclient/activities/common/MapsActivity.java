@@ -348,7 +348,6 @@ public class MapsActivity extends AppCompatActivity
       }
 
       if (channel.getCarerStatus()) {
-        Toast.makeText(this, "Carer Connected", Toast.LENGTH_SHORT).show();
         toTextChatButton.setVisibility(View.VISIBLE);
         toVideoChatButton.setVisibility(View.VISIBLE);
         toVoiceChatButton.setVisibility(View.VISIBLE);

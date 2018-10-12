@@ -159,7 +159,7 @@ public class CarerMapsActivity extends AppCompatActivity
     if (assistedMarker != null) {
       assistedMarker.remove();
       assistedMarkerOptions.position(assistedLocation);
-      mGoogleMap.addMarker(assistedMarkerOptions);
+     assistedMarker =  mGoogleMap.addMarker(assistedMarkerOptions);
       mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(assistedLocation));
       mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(assistedLocation, 15));
     }
@@ -186,7 +186,8 @@ public class CarerMapsActivity extends AppCompatActivity
           // update the route
           if (mGoogleMap != null) {
             mGoogleMap.clear();
-            mGoogleMap.addMarker(new MarkerOptions().position(channel.getAssistedLocation()));
+            deleteMarkers();
+            updateMapCoords();
 
             Log.d("DIRECTIONS", channel.getDirectionsURL());
             FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
