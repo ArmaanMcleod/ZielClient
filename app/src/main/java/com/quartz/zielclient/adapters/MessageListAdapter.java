@@ -79,7 +79,8 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
 
       // TODO Make this not null or use an exception
-      default: return null;
+      default:
+        return null;
     }
   }
 
@@ -132,12 +133,13 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
   /**
    * Triple checks that the message is valid.
+   *
    * @param message The message object being checked.
    * @return Whether the message has failed or not.
    */
   public boolean isFailedMessage(Message message) {
     // Check if message has a sent time and value
-    if((message.getMessageTime() > 0) && !message.getMessageValue().isEmpty()) {
+    if ((message.getMessageTime() > 0) && !message.getMessageValue().isEmpty()) {
       return false;
     } else {
       return true;
@@ -168,7 +170,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
 
       // Checking whether the received message belongs to the carer or assisted
-      if(isAssisted) {
+      if (isAssisted) {
         sender = "Carer";
       } else {
         sender = "Assisted";
@@ -212,12 +214,12 @@ public class MessageListAdapter extends RecyclerView.Adapter {
       timeStamp.setText(timeString);
     }
   }
-
+}
   /**
    * A ViewHolder for file messages that are images.
    * Displays only the image thumbnail.
    */
-
+/*
   private class SentImageHolder extends RecyclerView.ViewHolder {
     TextView timeStamp;
     ImageView fileThumbnailImage;
@@ -362,7 +364,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
    * A ViewHolder for file messages that are videos.
    * Displays only the video thumbnail.
    */
-
+/*
   private class MyVideoFileMessageHolder extends RecyclerView.ViewHolder {
     TextView timeText, readReceiptText, dateText;
     ImageView fileThumbnailImage;
@@ -510,6 +512,6 @@ public class MessageListAdapter extends RecyclerView.Adapter {
   }
 }
 
-
+*/
 
 
