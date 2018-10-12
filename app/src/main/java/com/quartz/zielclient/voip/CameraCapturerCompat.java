@@ -11,7 +11,7 @@ import com.twilio.video.VideoCapturer;
 
 import org.webrtc.Camera2Enumerator;
 
-/*
+/**
  * Simple wrapper class that uses Camera2Capturer with supported devices.
  */
 public class CameraCapturerCompat {
@@ -21,30 +21,31 @@ public class CameraCapturerCompat {
   private Camera2Capturer camera2Capturer;
   private Pair<CameraCapturer.CameraSource, String> frontCameraPair;
   private Pair<CameraCapturer.CameraSource, String> backCameraPair;
-  private final Camera2Capturer.Listener camera2Listener = new Camera2Capturer.Listener() {
-    @Override
-    public void onFirstFrameAvailable() {
-      Log.i(TAG, "onFirstFrameAvailable");
-    }
-
-    @Override
-    public void onCameraSwitched(String newCameraId) {
-      Log.i(TAG, "onCameraSwitched: newCameraId = " + newCameraId);
-    }
-
-    @Override
-    public void onError(Camera2Capturer.Exception camera2CapturerException) {
-      Log.e(TAG, camera2CapturerException.getMessage());
-    }
-  };
 
   public CameraCapturerCompat(Context context,
                               CameraCapturer.CameraSource cameraSource) {
     if (Camera2Capturer.isSupported(context)) {
       setCameraPairs(context);
+      Camera2Capturer.Listener camera2Listener = new Camera2Capturer.Listener() {
+        @Override
+        public void onFirstFrameAvailable() {
+          Log.i(TAG, "onFirstFrameAvailable");
+        }
+
+        @Override
+        public void onCameraSwitched(String newCameraId) {
+          Log.i(TAG, "onCameraSwitched: newCameraId = " + newCameraId);
+        }
+
+        @Override
+        public void onError(Camera2Capturer.Exception camera2CapturerException) {
+          Log.e(TAG, camera2CapturerException.getMessage());
+        }
+      };
+
       camera2Capturer = new Camera2Capturer(context,
               getCameraId(cameraSource),
-              camera2Listener);
+          camera2Listener);
     } else {
       camera1Capturer = new CameraCapturer(context, cameraSource);
     }
@@ -62,9 +63,7 @@ public class CameraCapturerCompat {
     if (usingCamera1()) {
       camera1Capturer.switchCamera();
     } else {
-      CameraCapturer.CameraSource cameraSource = getCameraSource(camera2Capturer
-              .getCameraId());
-
+      CameraCapturer.CameraSource cameraSource = getCameraSource(camera2Capturer.getCameraId());
       if (cameraSource == CameraCapturer.CameraSource.FRONT_CAMERA) {
         camera2Capturer.switchCamera(backCameraPair.second);
       } else {
@@ -73,9 +72,11 @@ public class CameraCapturerCompat {
     }
   }
 
-  /*
+  /**
    * This method is required because this class is not an implementation of VideoCapturer due to
    * a shortcoming in the Video Android SDK.
+   *
+   * @return The video capturer being used.
    */
   public VideoCapturer getVideoCapturer() {
     if (usingCamera1()) {
@@ -95,6 +96,7 @@ public class CameraCapturerCompat {
       if (camera2Enumerator.isFrontFacing(cameraId)) {
         frontCameraPair = new Pair<>(CameraCapturer.CameraSource.FRONT_CAMERA, cameraId);
       }
+
       if (camera2Enumerator.isBackFacing(cameraId)) {
         backCameraPair = new Pair<>(CameraCapturer.CameraSource.BACK_CAMERA, cameraId);
       }
