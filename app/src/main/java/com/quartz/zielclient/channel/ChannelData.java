@@ -27,19 +27,18 @@ import java.util.UUID;
 public class ChannelData implements ValueEventListener {
 
   // contains current channel values in database
-  private Map<String, Object> channelValues;
+  private Map<String, Object> channelValues = new HashMap<>();
 
   private DatabaseReference channelReference;
 
   // the object that wants to listen to this channel
   private ChannelListener channelListener;
   private String channelKey;
-  private static final String USER_DATABASE_PATH = "users";
 
   /**
    * @param channelReference Location in database where channel exists.
    * @param channelListener  The object that wants to listen to the channel.
-   * @param channelKey UUID of this channel.
+   * @param channelKey       UUID of this channel.
    */
   public ChannelData(
       DatabaseReference channelReference,
@@ -95,10 +94,6 @@ public class ChannelData implements ValueEventListener {
     }
 
     return new HashMap<>();
-  }
-
-  public void setMessages(Map<String, String> messages) {
-    channelReference.child("messages").setValue(messages);
   }
 
   /**
@@ -172,27 +167,21 @@ public class ChannelData implements ValueEventListener {
     return channelKey;
   }
 
-  public void setChannelKey(String channelKey) {
-    this.channelKey = channelKey;
-  }
-
   public List<LatLng> getCarerMarkerList() {
-    Object carerMarkers = null;
-    if (channelValues != null) {
-      carerMarkers = channelValues.get("carerMarkerList");
-    }
+    Object carerMarkers = channelValues.get("carerMarkerList");
     return CoordinateService.deserialiseCarerMarkers(carerMarkers);
   }
-  public void endChannel(){
+
+  public void endChannel() {
     channelReference.child("channelEnded").setValue(true);
   }
-  public void startChannel(){
+
+  public void startChannel() {
     channelReference.child("channelEnded").setValue(false);
   }
 
-  public boolean isChannelEnded(){
+  public boolean isChannelEnded() {
     return channelValues.get("channelEnded").equals(true);
-
   }
 
   public void addMarker(LatLng coordinate) {
@@ -216,6 +205,4 @@ public class ChannelData implements ValueEventListener {
         .child("carerMarkerList")
         .setValue(null);
   }
-
-
 }
