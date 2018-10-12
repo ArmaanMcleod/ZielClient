@@ -1,11 +1,14 @@
 package com.quartz.zielclient.activities.common;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -22,6 +25,7 @@ import android.widget.EditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.adapters.MessageListAdapter;
@@ -35,6 +39,7 @@ import com.quartz.zielclient.user.UserFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -47,10 +52,8 @@ public class TextChatActivity extends AppCompatActivity
 
   private ChannelData channel;
   private String currentUser;
-
-  private User thisUser;
-  private User otherUser;
   private Boolean isAssisted;
+  private DatabaseReference mRootRef;
 
   // Recycler Views and Adapter for the text chat
   private RecyclerView mMessageRecycler;
@@ -219,6 +222,38 @@ public class TextChatActivity extends AppCompatActivity
     int storage = ContextCompat.checkSelfPermission(this,
         Manifest.permission.WRITE_EXTERNAL_STORAGE);
     return storage == PackageManager.PERMISSION_GRANTED;
+  }
+
+  /**
+   * Getting Image URIs
+   * @param requestCode Request Code of the image request
+   * @param resultCode Result Code of the image
+   * @param data The intent being passed in
+   */
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    if(requestCode == GALLERY_PICK && resultCode ==Activity.RESULT_OK) {
+      Uri imageURL = data.getData();
+
+      sendMediaMessageWithThumbnail(imageURL);
+
+    }
+  }
+
+  /**
+   * Send the message with specified thex`
+   */
+  private void sendMediaMessageWithThumbnail(Uri uri) {
+
+    // Declaring the directories to store the files of the users
+    final String currentUserReference = "messages/" + currentUser + "/" + isAssisted.toString();
+    Boolean otherUser = !isAssisted;
+    final String otherUserReference = "messages/" + currentUser + "/" + (otherUser.toString());
+
+    DatabaseReference userMessagePush = mRootRef.child("messages")
+        .child(currentUser).child(isAssisted.toString());
   }
 
   /**
