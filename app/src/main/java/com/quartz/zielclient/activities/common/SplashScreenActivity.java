@@ -18,10 +18,21 @@ import com.quartz.zielclient.user.User;
 import com.quartz.zielclient.user.UserController;
 import com.quartz.zielclient.user.UserFactory;
 
+/**
+ * Activity shows Splash Screen when authorising user into the app.
+ */
 public class SplashScreenActivity extends AppCompatActivity implements ValueEventListener {
 
   private static final String TAG = SplashScreenActivity.class.getSimpleName();
 
+  /**
+   * Creates splash screen along with its attributes.
+   *
+   * <p>Documentation : https://developer.android.com/reference/android/app/
+   * Activity.html#onCreate(android.os.Bundle)
+   *
+   * @param savedInstanceState This is responsible for saving state of the splash screen.
+   */
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -36,6 +47,15 @@ public class SplashScreenActivity extends AppCompatActivity implements ValueEven
     }
   }
 
+  /**
+   * This method will be called with a snapshot of the data at this location.
+   * It will also be called each time that data changes.
+   * <p>
+   * Documentation: https://www.firebase.com/docs/java-api/javadoc/com/firebase/client/
+   * \ValueEventListener.html
+   *
+   * @param dataSnapshot The current data at the location
+   */
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
     User user = UserFactory.getUser(dataSnapshot);
