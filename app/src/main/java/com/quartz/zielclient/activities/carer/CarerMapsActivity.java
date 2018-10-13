@@ -255,6 +255,7 @@ public class CarerMapsActivity extends AppCompatActivity
       case R.id.toVoiceChat:
         Intent intentVoice = new Intent(CarerMapsActivity.this, VoiceActivity.class);
         if (channel != null) {
+          intentVoice.putExtra(getResources().getString(R.string.channel_key), channelId);
           intentVoice.putExtra("initiate", 0);
           intentVoice.putExtra("CallId", channel.getAssisted());
         }
