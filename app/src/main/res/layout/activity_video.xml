@@ -29,7 +29,7 @@
             app:layout_constraintEnd_toStartOf="@+id/local_video_action_fab"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:maxImageSize="40dp" />
+            app:maxImageSize="35dp" />
 
         <TextView
             android:id="@+id/textView7"
@@ -80,7 +80,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/connect_action_fab"
             app:layout_constraintTop_toTopOf="parent"
-            app:maxImageSize="40dp" />
+            app:maxImageSize="35dp" />
 
         <TextView
             android:id="@+id/textView9"
