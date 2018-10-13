@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.assisted.AssistedHomePageActivity;
 import com.quartz.zielclient.channel.ChannelController;
@@ -66,7 +70,7 @@ import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
  * @version 1.1 19/09/2018
  */
 public class MapsActivity extends AppCompatActivity
-    implements OnMapReadyCallback, ChannelListener, View.OnClickListener {
+    implements OnMapReadyCallback, ChannelListener, View.OnClickListener, ValueEventListener {
 
   private static final int DEFAULT_ZOOM = 15;
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
@@ -86,7 +90,7 @@ public class MapsActivity extends AppCompatActivity
   private Button toTextChatButton;
   private Button toVoiceChatButton;
   private Button endChannelButton;
-
+  private ImageView newMessageIcon;
   private LatLng source;
 
   private List<Marker> sourceDestinationMarkers = new ArrayList<>();
@@ -99,6 +103,8 @@ public class MapsActivity extends AppCompatActivity
 
   private AlertDialog alertDialog;
   private ChannelData channel;
+  private static Boolean previousActivityWasTextChat = false;
+
 
   /**
    * Creates map along with its attributes.
@@ -138,7 +144,8 @@ public class MapsActivity extends AppCompatActivity
     toVoiceChatButton = findViewById(R.id.toVoiceChat);
     toVoiceChatButton.setVisibility(View.INVISIBLE);
     toVoiceChatButton.setOnClickListener(this);
-
+    newMessageIcon = findViewById(R.id.newMessage);
+    readMessages();
     Button toTakePhotoButton = findViewById(R.id.toTakePhotoButton);
     toTakePhotoButton.setOnClickListener(this);
 
@@ -202,6 +209,15 @@ public class MapsActivity extends AppCompatActivity
         "Click on a marker to see street view", Toast.LENGTH_LONG);
     streetviewSuggestion.setGravity(Gravity.BOTTOM, 0, 250);
     streetviewSuggestion.show();
+  }
+
+  @Override
+  public void onStart(){
+    if (previousActivityWasTextChat) {
+      readMessages();
+      previousActivityWasTextChat = false;
+    }
+    super.onStart();
   }
 
   /**
@@ -346,7 +362,10 @@ public class MapsActivity extends AppCompatActivity
         // this is set to null on purpose and will not cause an error.
         makeChannelEndedAlert(null);
       }
+      if(!channel.getMessages().isEmpty()){
+        channel.getChannelReference().child("messages").addValueEventListener(this);
 
+      }
       if (channel.getCarerStatus()) {
         toTextChatButton.setVisibility(View.VISIBLE);
         toVideoChatButton.setVisibility(View.VISIBLE);
@@ -368,6 +387,7 @@ public class MapsActivity extends AppCompatActivity
       case R.id.toTextChat:
         Intent intentToTextChat = new Intent(MapsActivity.this, TextChatActivity.class);
         intentToTextChat.putExtra(getResources().getString(R.string.channel_key), channelId);
+        readMessages();
         startActivity(intentToTextChat);
         break;
 
@@ -436,6 +456,7 @@ public class MapsActivity extends AppCompatActivity
             (dialog, which) -> {
               channel.endChannel();
               alertDialog.dismiss();
+              setPreviousActivityWasTextChat(false);
               VoiceActivity.endCall();
               Intent intent = new Intent( getApplicationContext(), AssistedHomePageActivity.class );
               intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
@@ -546,5 +567,39 @@ public class MapsActivity extends AppCompatActivity
       }
 
     };
+  }
+
+
+  /**
+   * Update when there is a new message
+   * @param dataSnapshot
+   */
+  @Override
+  public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+    unReadMessages();
+  }
+
+  @Override
+  public void onCancelled(@NonNull DatabaseError databaseError) {
+
+  }
+
+  /**
+   * indicates that messages have been read
+   */
+  public void readMessages(){
+    newMessageIcon.setVisibility(View.INVISIBLE);
+  }
+
+  /**
+   * New Messages have arrived
+   */
+  public  void unReadMessages(){
+    newMessageIcon.setVisibility(View.VISIBLE);
+
+  }
+
+  public static void setPreviousActivityWasTextChat(Boolean previousActivityWasTextChat) {
+    MapsActivity.previousActivityWasTextChat = previousActivityWasTextChat;
   }
 }

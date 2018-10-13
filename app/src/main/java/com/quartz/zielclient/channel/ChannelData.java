@@ -217,5 +217,7 @@ public class ChannelData implements ValueEventListener {
         .setValue(null);
   }
 
-
+  public DatabaseReference getChannelReference() {
+    return channelReference;
+  }
 }
