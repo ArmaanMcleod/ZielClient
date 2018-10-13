@@ -111,7 +111,7 @@ public class VoiceActivity extends AppCompatActivity {
     alertDialogBuilder.setTitle("Incoming Call");
     alertDialogBuilder.setPositiveButton("Accept", answerCallClickListener);
     alertDialogBuilder.setNegativeButton("Reject", cancelClickListener);
-    alertDialogBuilder.setMessage(callInvite.getFrom() + " is calling.");
+    alertDialogBuilder.setMessage("Call will be established");
     return alertDialogBuilder.create();
   }
 
