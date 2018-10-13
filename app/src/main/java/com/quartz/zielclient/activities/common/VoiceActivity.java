@@ -42,6 +42,7 @@ import com.quartz.zielclient.channel.ChannelData;
 import com.twilio.voice.Call;
 import com.twilio.voice.CallException;
 import com.twilio.voice.CallInvite;
+import com.twilio.voice.CallState;
 import com.twilio.voice.RegistrationException;
 import com.twilio.voice.RegistrationListener;
 import com.twilio.voice.Voice;
@@ -237,6 +238,20 @@ public class VoiceActivity extends AppCompatActivity {
     }
   }
 
+  @Override
+  protected void onStart() {
+    super.onStart();
+    if (activeCall != null ) {
+
+      setCallUI();
+      if(activeCall.getState().compareTo(CallState.DISCONNECTED) == 0){
+      resetUI();
+      activeCall = null;
+      }
+    } else {
+      resetUI();
+    }
+  }
   /**
    * Handles incoming calls for new intents.
    *

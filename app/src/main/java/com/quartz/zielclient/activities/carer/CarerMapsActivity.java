@@ -48,7 +48,8 @@ public class CarerMapsActivity extends AppCompatActivity
   private final double MELBOURNEUNILONG = 144.9612;
   // initialize assisted location marker
   private final MarkerOptions assistedMarkerOptions = new MarkerOptions();
-  AlertDialog alertDialog;
+  private AlertDialog alertDialog;
+  private AlertDialog endChannelAlertDialog;
   private String channelId;
   private GoogleMap mGoogleMap;
   private String currentDestinationURL = "none";
@@ -197,6 +198,7 @@ public class CarerMapsActivity extends AppCompatActivity
         }
       }
       if (channel.isChannelEnded()) {
+        Log.d("ENDED","CHANNEL ENDED");
         if (!this.isFinishing()) {
           makeChannelEndedAlert();
         }
@@ -319,15 +321,16 @@ public class CarerMapsActivity extends AppCompatActivity
    * Alerts user when the channel is ended.
    */
   public void makeChannelEndedAlert() {
-    alertDialog = new AlertDialog.Builder(this).create();
-    alertDialog.setTitle("Channel has finished");
-    alertDialog.setMessage("This channel has been ended. Will now return to home page");
-    alertDialog.setButton(
+    Log.d("CREATING DIALOG","DIALOG BUILD");
+    endChannelAlertDialog = new AlertDialog.Builder(CarerMapsActivity.this).create();
+    endChannelAlertDialog.setTitle("Channel has finished");
+    endChannelAlertDialog.setMessage("This channel has been ended. Will now return to home page");
+    endChannelAlertDialog.setButton(
         AlertDialog.BUTTON_NEUTRAL,
         "OK",
         (dialog, which) -> {
           channel.endChannel();
-          alertDialog.dismiss();
+          endChannelAlertDialog.dismiss();
           VoiceActivity.endCall();
           Intent intent = new Intent(getApplicationContext(), CarerHomepageActivity.class);
           intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -335,6 +338,6 @@ public class CarerMapsActivity extends AppCompatActivity
           finish();
         });
 
-    alertDialog.show();
+    endChannelAlertDialog.show();
   }
 }
