@@ -4,41 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/Theme.AppCompat.Light"
     tools:context=".activities.assisted.AssistedHomePageActivity"
-    android:theme="@style/Theme.AppCompat.Light">
+    tools:layout_editor_absoluteY="25dp">
 
     <fragment
         android:id="@+id/editText"
         android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-        android:layout_width="300dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="228dp"
-        android:layout_marginEnd="138dp"
-        android:layout_marginStart="138dp"
-        android:layout_marginTop="234dp"
+        android:layout_width="0dp"
+        android:layout_height="66dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="42dp"
+        android:layout_marginStart="42dp"
         android:ems="10"
         android:fontFamily="@font/allerta"
         android:inputType="textPersonName"
         android:textAppearance="@android:style/TextAppearance"
-        android:textColor="#ffffff"
+        android:textColor="#000000"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintBottom_toTopOf="@+id/directMeButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="spread_inside" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        android:text="@string/where_to"/>
 
-    <!--android:text="@string/where_to"-->
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="164dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="48dp"
+        app:layout_constraintBottom_toTopOf="@+id/editText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/HomePage"
+        app:srcCompat="@drawable/home_page" />
+
 
     <TextView
         android:id="@+id/HomePage"
         android:layout_width="174dp"
-        android:layout_height="49dp"
-        android:layout_marginBottom="100dp"
-        android:layout_marginEnd="138dp"
-        android:layout_marginStart="138dp"
-        android:layout_marginTop="234dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="92dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:textAlignment="center"
@@ -46,26 +54,25 @@
         android:textColor="#ffffff"
         android:textSize="35sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/editText"
+        app:layout_constraintBottom_toTopOf="@+id/imageView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        tools:text="Where To?" />
-        <!--android:fontFamily="@font/allerta"-->
+        tools:text="Where To?"
+        android:text="@string/where_to"/>
+    <!--android:fontFamily="@font/allerta"-->
     <!--android:text="@string/where_to"-->
 
 
     <Button
         android:id="@+id/directMeButton"
-        android:layout_width="209dp"
-        android:layout_height="58dp"
-        android:layout_marginEnd="83dp"
-        android:layout_marginStart="84dp"
-        android:layout_marginTop="148dp"
+        android:layout_width="204dp"
+        android:layout_height="49dp"
+        android:layout_marginBottom="120dp"
         android:background="@drawable/whitebutton"
         android:text="@string/direct_me_there"
         android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText" />
