@@ -2,11 +2,13 @@ package com.quartz.zielclient.activities.carer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -17,6 +19,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.common.StreetViewActivity;
 import com.quartz.zielclient.activities.common.TextChatActivity;
@@ -40,7 +45,7 @@ public class CarerMapsActivity extends AppCompatActivity
     implements OnMapReadyCallback,
     ChannelListener,
     View.OnClickListener,
-    GoogleMap.OnMapClickListener {
+    GoogleMap.OnMapClickListener,ValueEventListener {
 
   // These constants are displayed until map syncronizes (only momentarily)
   // This prevents the default usage of  0,0
@@ -53,6 +58,7 @@ public class CarerMapsActivity extends AppCompatActivity
   private String channelId;
   private GoogleMap mGoogleMap;
   private String currentDestinationURL = "none";
+  private ImageView newMessageIcon;
   // default to melbourne uni
   // list of Assisted movements
   private Double[] latitude = {MELBOURNEUNILAT};
@@ -87,7 +93,8 @@ public class CarerMapsActivity extends AppCompatActivity
     Button dropMarkers = findViewById(R.id.dropMarker);
     Button clearMarkers = findViewById(R.id.clearMarker);
     Button toVideoChat = findViewById(R.id.toVideoActivity);
-
+    newMessageIcon =  findViewById(R.id.newMessageIcon);
+    readMessages();
     // Setup listeners
     dropMarkers.setOnClickListener(this);
     clearMarkers.setOnClickListener(this);
@@ -197,6 +204,10 @@ public class CarerMapsActivity extends AppCompatActivity
           }
         }
       }
+      if(!channel.getMessages().isEmpty()){
+        channel.getChannelReference().child("messages").addValueEventListener(this);
+
+      }
       if (channel.isChannelEnded()) {
         Log.d("ENDED","CHANNEL ENDED");
         if (!this.isFinishing()) {
@@ -224,6 +235,7 @@ public class CarerMapsActivity extends AppCompatActivity
     switch (view.getId()) {
       case R.id.toTextChat:
         Intent intentToTextChat = new Intent(CarerMapsActivity.this, TextChatActivity.class);
+        readMessages();
         intentToTextChat.putExtra(
             getApplicationContext().getString(R.string.channel_key), channelId);
         startActivity(intentToTextChat);
@@ -339,5 +351,33 @@ public class CarerMapsActivity extends AppCompatActivity
         });
 
     endChannelAlertDialog.show();
+  }
+
+  /**
+   * Update when there is a new message
+   * @param dataSnapshot
+   */
+  @Override
+  public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+    unReadMessages();
+  }
+
+  @Override
+  public void onCancelled(@NonNull DatabaseError databaseError) {
+
+  }
+
+  /**
+   * All messages have been read
+   */
+  public void readMessages(){
+    newMessageIcon.setVisibility(View.INVISIBLE);
+  }
+
+  /**
+   * new Messages have arrived
+   */
+  public  void unReadMessages(){
+    newMessageIcon.setVisibility(View.VISIBLE);
   }
 }

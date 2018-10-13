@@ -30,6 +30,7 @@
         android:fitsSystemWindows="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/dropMarker"
+        app:layout_constraintHorizontal_bias="0.539"
         app:layout_constraintStart_toEndOf="@+id/dropMarker"
         app:layout_constraintTop_toBottomOf="@+id/map">
 
@@ -48,7 +49,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/toVoiceChat"
             app:layout_constraintEnd_toStartOf="@+id/toVoiceChat"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/toVoiceChat" />
+            app:layout_constraintTop_toTopOf="@+id/toVoiceChat"
+            app:layout_constraintVertical_bias="0.0" />
 
         <Button
             android:id="@+id/toVoiceChat"
@@ -83,6 +85,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/toVoiceChat"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/newMessageIcon"
+            android:layout_width="36dp"
+            android:layout_height="39dp"
+            android:layout_marginEnd="28dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/exclamation_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/toVoiceChat"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
     </android.support.constraint.ConstraintLayout>
 
     <Button
