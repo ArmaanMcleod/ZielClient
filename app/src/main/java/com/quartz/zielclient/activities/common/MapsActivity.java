@@ -103,6 +103,8 @@ public class MapsActivity extends AppCompatActivity
 
   private AlertDialog alertDialog;
   private ChannelData channel;
+  private static Boolean previousActivityWasTextChat = false;
+
 
   /**
    * Creates map along with its attributes.
@@ -207,6 +209,15 @@ public class MapsActivity extends AppCompatActivity
         "Click on a marker to see street view", Toast.LENGTH_LONG);
     streetviewSuggestion.setGravity(Gravity.BOTTOM, 0, 250);
     streetviewSuggestion.show();
+  }
+
+  @Override
+  public void onStart(){
+    if (previousActivityWasTextChat) {
+      readMessages();
+      previousActivityWasTextChat = false;
+    }
+    super.onStart();
   }
 
   /**
@@ -445,6 +456,7 @@ public class MapsActivity extends AppCompatActivity
             (dialog, which) -> {
               channel.endChannel();
               alertDialog.dismiss();
+              setPreviousActivityWasTextChat(false);
               VoiceActivity.endCall();
               Intent intent = new Intent( getApplicationContext(), AssistedHomePageActivity.class );
               intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
@@ -584,5 +596,10 @@ public class MapsActivity extends AppCompatActivity
    */
   public  void unReadMessages(){
     newMessageIcon.setVisibility(View.VISIBLE);
+
+  }
+
+  public static void setPreviousActivityWasTextChat(Boolean previousActivityWasTextChat) {
+    MapsActivity.previousActivityWasTextChat = previousActivityWasTextChat;
   }
 }

@@ -19,6 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.carer.CarerMapsActivity;
 import com.quartz.zielclient.adapters.MessageListAdapter;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
@@ -215,6 +216,15 @@ public class TextChatActivity extends AppCompatActivity
    */
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+  }
+
+  @Override
+  public void onBackPressed(){
+    // User could have come from either of these activities.
+  MapsActivity.setPreviousActivityWasTextChat(true);
+  CarerMapsActivity.setPreviousActivityWasTextChat(true);
+  super.onBackPressed();
 
   }
 }

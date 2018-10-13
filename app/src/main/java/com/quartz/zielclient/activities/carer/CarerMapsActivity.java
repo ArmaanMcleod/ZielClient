@@ -70,6 +70,9 @@ public class CarerMapsActivity extends AppCompatActivity
   // debug channel to be replaced with the current channel that was handled by a previous activity.
   private ChannelData channel;
 
+
+  private static boolean previousActivityWasTextChat;
+
   /**
    * Creates map along with its attributes.
    *
@@ -118,6 +121,15 @@ public class CarerMapsActivity extends AppCompatActivity
       mapFragment.getMapAsync(this);
     }
   }
+  @Override
+  public void onStart(){
+    if (previousActivityWasTextChat) {
+      readMessages();
+      previousActivityWasTextChat = false;
+    }
+    super.onStart();
+  }
+
 
   /**
    * Manipulates the map once available. Once map is ready add a temporary marker (once again The
@@ -343,6 +355,7 @@ public class CarerMapsActivity extends AppCompatActivity
         (dialog, which) -> {
           channel.endChannel();
           endChannelAlertDialog.dismiss();
+          setPreviousActivityWasTextChat(false);
           VoiceActivity.endCall();
           Intent intent = new Intent(getApplicationContext(), CarerHomepageActivity.class);
           intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -380,4 +393,13 @@ public class CarerMapsActivity extends AppCompatActivity
   public  void unReadMessages(){
     newMessageIcon.setVisibility(View.VISIBLE);
   }
+
+  /**
+   * setter useful in order to not register new messages if they have already been opened.
+   * @param previousActivityWasTextChat
+   */
+  public static void setPreviousActivityWasTextChat(boolean previousActivityWasTextChat) {
+    CarerMapsActivity.previousActivityWasTextChat = previousActivityWasTextChat;
+  }
+
 }
