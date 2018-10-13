@@ -17,7 +17,8 @@ import java.util.UUID;
 public final class ChannelController {
 
   private static final String TAG = ChannelController.class.getSimpleName();
-  private static DatabaseReference channelsReference = FirebaseDatabase.getInstance().getReference("channels/");
+  private static DatabaseReference channelsReference =
+      FirebaseDatabase.getInstance().getReference("channels/");
 
   private ChannelController() {
     // Intentionally empty
@@ -30,17 +31,14 @@ public final class ChannelController {
    * @return A new channel.
    */
   public static ChannelData createChannel(
-      ChannelListener listener,
-      String carerId,
-      String assistedId) {
+      ChannelListener listener, String carerId, String assistedId) {
     final String channelKey = UUID.randomUUID().toString();
     ChannelData channelData =
         new ChannelData(channelsReference.child(channelKey), listener, channelKey);
     Location initialLocation = new Location("");
-
     initialLocation.setLongitude(0);
     initialLocation.setLongitude(0);
-
+    channelData.startChannel();
     channelData.setVideoCallStatus(false);
     channelData.setAssistedLocation(initialLocation);
     channelData.setAssisted(assistedId);
@@ -57,18 +55,17 @@ public final class ChannelController {
    * Use this if you dont want to create a channel but you want to retrieve an already created
    * channel
    *
-   * @param channelId       ID of the channel.
+   * @param channelId ID of the channel.
    * @param channelListener Callback that listens on the channel's database entry.
    * @return The existing channel
    */
   public static ChannelData retrieveChannel(String channelId, ChannelListener channelListener) {
     Log.i(TAG, String.format("Retrieving channel %s", channelId));
-    try{
-    return new ChannelData(channelsReference.child(channelId), channelListener, channelId);
-    }catch (IllegalStateException e){
+    try {
+      return new ChannelData(channelsReference.child(channelId), channelListener, channelId);
+    } catch (IllegalStateException e) {
       e.printStackTrace();
       return null;
     }
-
   }
 }

@@ -15,14 +15,14 @@ public class AddCarerRequestHandlerTest {
   public void setUp() {}
 
   @Test
-  public void testAddCarer() throws Exception {
+  public void testAddCarer() {
     AddCarerRequestHandler addCarerRequestHandler = Mockito.mock(AddCarerRequestHandler.class);
     Looper.prepare();
     //todo
   }
 
   @Test
-  public void testOnDataChange() throws Exception {
+  public void testOnDataChange() {
     AddCarerRequestHandler addCarerRequestHandler = Mockito.mock(AddCarerRequestHandler.class);
     Looper.prepare();
     addCarerRequestHandler.onDataChange(null);
@@ -30,7 +30,7 @@ public class AddCarerRequestHandlerTest {
   }
 
   @Test
-  public void testOnCancelled() throws Exception {
+  public void testOnCancelled() {
     AddCarerRequestHandler addCarerRequestHandler = Mockito.mock(AddCarerRequestHandler.class);
     Looper.prepare();
     addCarerRequestHandler.onCancelled(null);

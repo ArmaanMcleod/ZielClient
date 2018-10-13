@@ -19,6 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.carer.CarerMapsActivity;
 import com.quartz.zielclient.adapters.MessageListAdapter;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
@@ -32,8 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Chat activity allows users to communicate with eachother through messaging
- * This activity is currently unstyled.
+ * Chat activity allows users to communicate with each other through messaging.
  */
 public class TextChatActivity extends AppCompatActivity
     implements View.OnClickListener, ValueEventListener, ChannelListener {
@@ -126,6 +126,14 @@ public class TextChatActivity extends AppCompatActivity
 
   }
 
+  /**
+   * Called to have the fragment instantiate its user interface view.
+   * @param parent
+   * @param name
+   * @param context
+   * @param attrs
+   * @return
+   */
   @Override
   public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
     return super.onCreateView(parent, name, context, attrs);
@@ -184,15 +192,39 @@ public class TextChatActivity extends AppCompatActivity
 
   }
 
-  // TODO
+  /**
+   * This method will be triggered in the event that this listener either failed at the server,
+   * or is removed as a result of the security and Firebase rules.
+   *
+   * Documentation:  https://www.firebase.com/docs/java-api/javadoc/com/firebase/client/
+   * ValueEventListener.html
+   *
+   * @param databaseError A description of the error that occurred
+   */
   @Override
   public void onCancelled(@NonNull DatabaseError databaseError) {
 
   }
 
-  // TODO
+  /**
+   * This method will be called with a snapshot of the data at this location.
+   * <p>
+   * Documentation:  https://www.firebase.com/docs/java-api/javadoc/com/firebase/client/
+   * ValueEventListener.html
+   *
+   * @param dataSnapshot The current data at the location
+   */
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+  }
+
+  @Override
+  public void onBackPressed(){
+    // User could have come from either of these activities.
+  MapsActivity.setPreviousActivityWasTextChat(true);
+  CarerMapsActivity.setPreviousActivityWasTextChat(true);
+  super.onBackPressed();
 
   }
 }

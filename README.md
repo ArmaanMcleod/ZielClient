@@ -35,14 +35,18 @@ Since account creation is based on phone numbers. Feel free to use these numbers
 
 
 ## Current Features
-* Feature 1: Account  creation using phone numbers
+Numbered as per requirements documents.
+* Feature 1: Account  creation using phone numbers and phone verification
 * Feature 2: Display Route and location  to Assisted
 * Feature 3:  Link permanent Carers to Assisted 
 * Feature 4: Request Assistance from Carer by sending notification
 * Feature 5:  Location and Route shared from Assisted to Carer
 * Feature 6: Audio and Video Call Functions 
 * Feature 7: Text Chat 
-* Feature 8: Carer’s home page- Carer can view their assisted list 
+* Feature 8: Carer’s home page- Carer can view their assisted list
+* Feature 9: User Status
+* Feature 10: Settings (partially)
+* Feature 13: Landmark Recognition
 
 ## Setting up Google API keys
 

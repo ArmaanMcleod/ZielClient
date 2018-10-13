@@ -12,7 +12,7 @@ import com.quartz.zielclient.request.AddCarerRequestHandler;
 import com.quartz.zielclient.request.CarerRequestListener;
 
 /**
- * Activity allows user to add a permanent carer
+ * Activity allows user to add a permanent carer.
  *
  * @author Bilal Shehata
  */
@@ -36,17 +36,14 @@ public class AddCarerActivity extends AppCompatActivity
 
   /**
    * when the button is clicked a request is sent based on the input number
-   * @param view
+   * @param view This is the view being clicked
    */
   @Override
   public void onClick(View view) {
-    switch (view.getId()) {
-      case (R.id.sendRequestButton):
-        // Pass this as an argument to allow for callback to be made
-        addCarerRequestHandler.addCarer(inputNumber.getText().toString(), this);
-        break;
-      default:
-        break;
+    int i = view.getId();
+    if (i == R.id.sendRequestButton) {// Pass this as an argument to allow for callback to be made
+      addCarerRequestHandler.addCarer(inputNumber.getText().toString(), this);
+
     }
   }
 

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.wonderkiln.camerakit.CameraView android:id="@+id/camera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        xmlns:android="http://schemas.android.com/apk/res/android" />
+
+    <Button
+        android:id="@+id/camera_button"
+        android:layout_width="76dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="100dp"
+        android:layout_marginBottom="0dp"
+        android:drawableStart="@drawable/camera_icon_scale"
+        tools:layout_editor_absoluteX="135dp"
+        tools:layout_editor_absoluteY="492dp" />
+
+    <ImageView
+        android:id="@+id/photo"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:contentDescription="@string/picture"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"/>
+
+    <Button
+        android:id="@+id/gallery_button"
+        android:layout_width="76dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="99dp"
+        android:layout_marginBottom="0dp"
+        android:drawableStart="@drawable/gallery_icon_scale" />
+
+</RelativeLayout>
