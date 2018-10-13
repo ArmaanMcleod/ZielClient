@@ -22,11 +22,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.adapters.MessageListAdapter;
 import com.quartz.zielclient.channel.ChannelController;
@@ -54,6 +58,7 @@ public class TextChatActivity extends AppCompatActivity
   private String currentUser;
   private Boolean isAssisted;
   private DatabaseReference mRootRef;
+  private StorageReference mImageStorage;
 
   // Recycler Views and Adapter for the text chat
   private RecyclerView mMessageRecycler;
@@ -252,8 +257,25 @@ public class TextChatActivity extends AppCompatActivity
     Boolean otherUser = !isAssisted;
     final String otherUserReference = "messages/" + currentUser + "/" + (otherUser.toString());
 
+    // Database reference to store the image path
     DatabaseReference userMessagePush = mRootRef.child("messages")
         .child(currentUser).child(isAssisted.toString());
+    String pushID = userMessagePush.getKey();
+
+    // Adding the reference in which the image files are going to be pushed into Firebase
+    StorageReference imageFilePath = mImageStorage.child(pushID + ".jpg");
+
+    imageFilePath.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+      @Override
+      public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+        if(task.isSuccessful()){
+
+          String downloadURL = task.getResult().getStorage().getDownloadUrl().toString();
+        }
+      }
+    });
+
+
   }
 
   /**
