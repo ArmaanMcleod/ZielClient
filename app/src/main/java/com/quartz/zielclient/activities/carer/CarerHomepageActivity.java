@@ -29,18 +29,17 @@ import java.util.Optional;
 /**
  * Activity to display a carer's home page.
  *
- * @author wei how ng
+ * @author Wei How Ng
  */
 public class CarerHomepageActivity extends AppCompatActivity implements ValueEventListener {
 
   private RecyclerView mRecyclerView;
-  private RecyclerView.Adapter mAdapter;
-  private RecyclerView.LayoutManager mLayoutManager;
-  private List<ChannelRequest> listItems;
-  private DatabaseReference requestsReference;
-  private String userID;
-  private Boolean initialisedList = false;
+  private Boolean initialisedList;
   private NotificationHandler notificationHandler;
+
+  public CarerHomepageActivity() {
+    initialisedList = false;
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +52,7 @@ public class CarerHomepageActivity extends AppCompatActivity implements ValueEve
             | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     Optional<String> maybeId = UserController.retrieveUid();
+    String userID;
     if (maybeId.isPresent()) {
       userID = maybeId.get();
     } else {
@@ -63,7 +63,7 @@ public class CarerHomepageActivity extends AppCompatActivity implements ValueEve
     notificationHandler = new NotificationHandler(this);
     notificationHandler.createNotificationChannel();
     // Getting requestsReference from FireBase
-    requestsReference = FirebaseDatabase.getInstance().getReference("channelRequests/" + userID);
+    DatabaseReference requestsReference = FirebaseDatabase.getInstance().getReference("channelRequests/" + userID);
     requestsReference.addValueEventListener(this);
 
     // Initialising RecyclerView
@@ -73,7 +73,7 @@ public class CarerHomepageActivity extends AppCompatActivity implements ValueEve
     mRecyclerView.setHasFixedSize(true);
 
     // Use a linear layout manager
-    mLayoutManager = new LinearLayoutManager(this);
+    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
     mRecyclerView.setLayoutManager(mLayoutManager);
   }
 
@@ -90,10 +90,8 @@ public class CarerHomepageActivity extends AppCompatActivity implements ValueEve
       notificationHandler.notifyUserToOpenApp(channelRequestsData.get(0));
     }
 
-    listItems = channelRequestsData;
-
     // Using the Adapter to convert the data into the recycler view
-    mAdapter = new RequestListAdapter(listItems, this);
+    RecyclerView.Adapter mAdapter = new RequestListAdapter(channelRequestsData, this);
     mRecyclerView.setAdapter(mAdapter);
   }
 
@@ -109,7 +107,6 @@ public class CarerHomepageActivity extends AppCompatActivity implements ValueEve
     }
   }
 
-  // TODO
   @Override
   public void onCancelled(@NonNull DatabaseError databaseError) {}
 

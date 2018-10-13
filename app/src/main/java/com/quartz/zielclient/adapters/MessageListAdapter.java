@@ -175,6 +175,8 @@ public class MessageListAdapter extends RecyclerView.Adapter {
       } else {
         sender = "Assisted";
       }
+
+      profilePicture = itemView.findViewById(R.id.image_message_profile);
     }
 
     // Bind Method

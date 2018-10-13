@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -34,7 +36,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.assisted.AssistedHomePageActivity;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
@@ -64,9 +70,9 @@ import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
  * @version 1.1 19/09/2018
  */
 public class MapsActivity extends AppCompatActivity
-    implements OnMapReadyCallback, ChannelListener, View.OnClickListener {
+    implements OnMapReadyCallback, ChannelListener, View.OnClickListener, ValueEventListener {
 
-  private static final int DEFAULT_ZOOM = 8;
+  private static final int DEFAULT_ZOOM = 15;
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
   private static final long UPDATE_INTERVAL = 10000;  /* 10 secs */
@@ -79,9 +85,12 @@ public class MapsActivity extends AppCompatActivity
 
   private LocationRequest mLocationRequest;
   private FusedLocationProviderClient mFusedLocationClient;
+
   private Button toVideoChatButton;
   private Button toTextChatButton;
   private Button toVoiceChatButton;
+  private Button endChannelButton;
+  private ImageView newMessageIcon;
   private LatLng source;
   private boolean isAssisted;
 
@@ -95,6 +104,8 @@ public class MapsActivity extends AppCompatActivity
 
   private AlertDialog alertDialog;
   private ChannelData channel;
+  private static Boolean previousActivityWasTextChat = false;
+
 
   /**
    * Creates map along with its attributes.
@@ -123,6 +134,7 @@ public class MapsActivity extends AppCompatActivity
     alertDialog = makeVideoAlert();
 
     // Create buttons and listeners below
+    endChannelButton = findViewById(R.id.endChannelButton);
 
     waitingMessage = findViewById(R.id.waitForCarerMessage);
     toVideoChatButton = findViewById(R.id.toVideoChatButton);
@@ -135,6 +147,10 @@ public class MapsActivity extends AppCompatActivity
     toVoiceChatButton = findViewById(R.id.toVoiceChat);
     toVoiceChatButton.setVisibility(View.INVISIBLE);
     toVoiceChatButton.setOnClickListener(this);
+    newMessageIcon = findViewById(R.id.newMessage);
+    readMessages();
+    Button toTakePhotoButton = findViewById(R.id.toTakePhotoButton);
+    toTakePhotoButton.setOnClickListener(this);
 
     // Get bundle of arguments passed from Home Page Activity
     Bundle bundle = getIntent().getExtras();
@@ -171,6 +187,13 @@ public class MapsActivity extends AppCompatActivity
           }
         });
 
+    // Restrict search results only to Australia
+    AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+        .setCountry("AU")
+        .build();
+
+    placeAutoComplete.setFilter(typeFilter);
+
     // Create fused location client to interact with API
     mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -178,8 +201,10 @@ public class MapsActivity extends AppCompatActivity
     SupportMapFragment mapFrag =
         (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
+
     if (mapFrag != null) {
       mapFrag.getMapAsync(this);
+
     }
 
     // Allow user to see street view suggestion
@@ -187,6 +212,15 @@ public class MapsActivity extends AppCompatActivity
         "Click on a marker to see street view", Toast.LENGTH_LONG);
     streetviewSuggestion.setGravity(Gravity.BOTTOM, 0, 250);
     streetviewSuggestion.show();
+  }
+
+  @Override
+  public void onStart(){
+    if (previousActivityWasTextChat) {
+      readMessages();
+      previousActivityWasTextChat = false;
+    }
+    super.onStart();
   }
 
   /**
@@ -221,7 +255,9 @@ public class MapsActivity extends AppCompatActivity
 
       // Only retrieve the rop result
       List<Address> addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1);
-      address = addresses.get(0).getAddressLine(0);
+      if (!addresses.isEmpty()) {
+        address = addresses.get(0).getAddressLine(0);
+      }
     } catch (IOException e) {
       Log.d(activity, "getAddress: Cannot fetch address");
     }
@@ -263,6 +299,7 @@ public class MapsActivity extends AppCompatActivity
               .show();
           return true;
         });
+
 
     // Setup location request and intervals between requests
     mLocationRequest = new LocationRequest();
@@ -324,8 +361,15 @@ public class MapsActivity extends AppCompatActivity
         alertDialog.cancel();
       }
 
+      if(channel.isChannelEnded() && !this.isFinishing()){
+        // this is set to null on purpose and will not cause an error.
+        makeChannelEndedAlert(null);
+      }
+      if(!channel.getMessages().isEmpty()){
+        channel.getChannelReference().child("messages").addValueEventListener(this);
+
+      }
       if (channel.getCarerStatus()) {
-        Toast.makeText(this, "Carer Connected", Toast.LENGTH_SHORT);
         toTextChatButton.setVisibility(View.VISIBLE);
         toVideoChatButton.setVisibility(View.VISIBLE);
         toVoiceChatButton.setVisibility(View.VISIBLE);
@@ -347,6 +391,7 @@ public class MapsActivity extends AppCompatActivity
         Intent intentToTextChat = new Intent(MapsActivity.this, TextChatActivity.class);
         intentToTextChat.putExtra(getResources().getString(R.string.channel_key), channelId);
         intentToTextChat.putExtra("isAssisted",isAssisted);
+        readMessages();
         startActivity(intentToTextChat);
         break;
 
@@ -366,6 +411,10 @@ public class MapsActivity extends AppCompatActivity
         startActivity(intentToVideo);
         break;
 
+      case R.id.toTakePhotoButton:
+        Intent intentToPhoto = new Intent(MapsActivity.this, TakePhotosActivity.class);
+        startActivity(intentToPhoto);
+        break;
       default:
         break;
     }
@@ -374,7 +423,9 @@ public class MapsActivity extends AppCompatActivity
   @Override
   public void onBackPressed() {
     VoiceActivity.endCall();
-    super.onBackPressed();
+    channel.endChannel();
+    // purposely null will not cause an error.
+    makeChannelEndedAlert(null);
   }
 
   /**
@@ -396,6 +447,30 @@ public class MapsActivity extends AppCompatActivity
           getApplicationContext().startActivity(intentToVideo);
         });
     return alertDialog;
+  }
+
+
+  public void makeChannelEndedAlert(View v){
+    alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle("Channel has finished");
+    alertDialog.setMessage("This channel has been ended. Will now return to home page");
+    alertDialog.setButton(
+            AlertDialog.BUTTON_NEUTRAL,
+            "OK",
+            (dialog, which) -> {
+              channel.endChannel();
+              alertDialog.dismiss();
+              setPreviousActivityWasTextChat(false);
+              VoiceActivity.endCall();
+              Intent intent = new Intent( getApplicationContext(), AssistedHomePageActivity.class );
+              intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
+              startActivity(intent);
+              finish();
+
+            });
+
+    alertDialog.show();
+
   }
 
   /**
@@ -496,5 +571,39 @@ public class MapsActivity extends AppCompatActivity
       }
 
     };
+  }
+
+
+  /**
+   * Update when there is a new message
+   * @param dataSnapshot
+   */
+  @Override
+  public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+    unReadMessages();
+  }
+
+  @Override
+  public void onCancelled(@NonNull DatabaseError databaseError) {
+
+  }
+
+  /**
+   * indicates that messages have been read
+   */
+  public void readMessages(){
+    newMessageIcon.setVisibility(View.INVISIBLE);
+  }
+
+  /**
+   * New Messages have arrived
+   */
+  public  void unReadMessages(){
+    newMessageIcon.setVisibility(View.VISIBLE);
+
+  }
+
+  public static void setPreviousActivityWasTextChat(Boolean previousActivityWasTextChat) {
+    MapsActivity.previousActivityWasTextChat = previousActivityWasTextChat;
   }
 }

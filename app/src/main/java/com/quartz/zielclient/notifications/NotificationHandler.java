@@ -17,6 +17,8 @@ import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.carer.CarerHomepageActivity;
 import com.quartz.zielclient.activities.carer.CarerMapsActivity;
 import com.quartz.zielclient.activities.common.SoundPoolManager;
+import com.quartz.zielclient.channel.ChannelController;
+import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.models.ChannelRequest;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
@@ -46,8 +48,7 @@ public class NotificationHandler {
     Intent notificationIntent = new Intent(context, CarerHomepageActivity.class);
     notificationIntent.setAction(Intent.ACTION_MAIN);
     notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-    PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
-    return intent;
+    return PendingIntent.getActivity(context, 0, notificationIntent, 0);
   }
 
   public void createNotificationChannel() {
@@ -124,6 +125,12 @@ public class NotificationHandler {
 
   private DialogInterface.OnClickListener declineHelpToListener() {
     return (dialog, which) -> {
+
+      ChannelData channel = ChannelController.retrieveChannel(channelRequest.getChannelId(), () -> {
+      });
+      if(channel!=null){
+        channel.endChannel();
+      }
       stopVibratingDevice();
     };
   }

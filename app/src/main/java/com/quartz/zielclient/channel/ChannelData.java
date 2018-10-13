@@ -177,8 +177,22 @@ public class ChannelData implements ValueEventListener {
   }
 
   public List<LatLng> getCarerMarkerList() {
-    Object carerMarkers = channelValues.get("carerMarkerList");
+    Object carerMarkers = null;
+    if (channelValues != null) {
+      carerMarkers = channelValues.get("carerMarkerList");
+    }
     return CoordinateService.deserialiseCarerMarkers(carerMarkers);
+  }
+  public void endChannel(){
+    channelReference.child("channelEnded").setValue(true);
+  }
+  public void startChannel(){
+    channelReference.child("channelEnded").setValue(false);
+  }
+
+  public boolean isChannelEnded(){
+    return channelValues.get("channelEnded").equals(true);
+
   }
 
   public void addMarker(LatLng coordinate) {
@@ -203,5 +217,7 @@ public class ChannelData implements ValueEventListener {
         .setValue(null);
   }
 
-
+  public DatabaseReference getChannelReference() {
+    return channelReference;
+  }
 }
