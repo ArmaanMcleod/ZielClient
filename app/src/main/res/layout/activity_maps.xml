@@ -130,7 +130,7 @@
             android:id="@+id/newMessage"
             android:layout_width="33dp"
             android:layout_height="36dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="48dp"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toStartOf="@+id/waitForCarerMessage"
             app:layout_constraintTop_toTopOf="parent"
