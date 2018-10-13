@@ -30,63 +30,95 @@
         android:padding="0dp"
         android:scaleType="fitXY"
         android:src="@drawable/ic_call_white_24dp"
-        android:visibility="invisible"
         app:backgroundTint="#58b303"
         app:borderWidth="0dp"
         app:fabSize="normal"
+        android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/mute_action_fab"
         app:layout_constraintStart_toEndOf="@+id/hangup_action_fab"
         app:layout_constraintTop_toTopOf="@+id/hangup_action_fab"
         app:useCompatPadding="true" />
 
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="15dp"
+        android:text="Call"
+        android:textColor="#949494"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/textView9"
+        app:layout_constraintStart_toEndOf="@+id/textView7" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/mute_action_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="54dp"
         android:padding="0dp"
         android:scaleType="fitXY"
         android:src="@drawable/ic_mute"
-        android:visibility="invisible"
         app:backgroundTint="#10b7ff"
         app:borderWidth="0dp"
         app:fabSize="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/call_action_fab"
-        app:layout_constraintTop_toBottomOf="@+id/imageView7"
+        app:layout_constraintTop_toTopOf="@+id/call_action_fab"
         app:useCompatPadding="true" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="11dp"
+        android:text="Mute"
+        android:textColor="#949494"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView8" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/hangup_action_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="54dp"
         android:padding="0dp"
         android:scaleType="fitXY"
         android:src="@drawable/ic_call_end_white_24dp"
-        android:visibility="invisible"
         app:backgroundTint="#d91507"
         app:borderWidth="0dp"
         app:fabSize="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/textView7"
         app:layout_constraintEnd_toStartOf="@+id/call_action_fab"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chronometer"
         app:useCompatPadding="true" />
 
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="7dp"
+        android:text="Hang up"
+        android:textColor="#949494"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/textView8"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <ImageView
         android:id="@+id/imageView7"
         android:layout_width="240dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="111dp"
         android:layout_marginTop="77dp"
-        app:layout_constraintBottom_toTopOf="@+id/mute_action_fab"
+        app:layout_constraintBottom_toTopOf="@+id/chronometer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/calling" />
+        app:srcCompat="@drawable/callinggrey" />
 
 
 </android.support.constraint.ConstraintLayout>

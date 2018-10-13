@@ -10,46 +10,116 @@
 
     <include layout="@layout/content_video" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:orientation="vertical" >
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="397dp"
+        android:layout_height="111dp"
+        android:layout_gravity="bottom|end">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/switch_camera_action_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="13dp"
+            android:src="@drawable/ic_switch_camera"
+            app:backgroundTint="#10b7ff"
             app:fabSize="mini"
-            android:layout_marginBottom="@dimen/fab_margin"
-            android:src="@drawable/ic_switch_camera_white_24dp" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/local_video_action_fab"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:maxImageSize="40dp" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="7dp"
+            android:layout_marginStart="12dp"
+            android:layout_toBottomOf="@+id/switch_camera_action_fab"
+            android:text="Switch"
+            android:textColor="#ffffff"
+            app:layout_constraintEnd_toStartOf="@+id/textView8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/switch_camera_action_fab" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/local_video_action_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_gravity="center"
-            app:fabSize="mini"
-            android:src="@drawable/ic_videocam_white_24dp" />
+            android:layout_marginEnd="9dp"
+            android:src="@drawable/ic_user"
+            app:backgroundTint="#316005"
+            app:fabSize="normal"
+            app:layout_constraintEnd_toStartOf="@+id/connect_action_fab"
+            app:layout_constraintStart_toEndOf="@+id/switch_camera_action_fab"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_toBottomOf="@+id/local_video_action_fab"
+            android:text="See Contact"
+            android:textColor="#ffffff"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/textView10"
+            app:layout_constraintStart_toEndOf="@+id/textView7" />
+
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/mute_action_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="@drawable/ic_mute"
+            app:backgroundTint="#10b7ff"
             app:fabSize="mini"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_mic_white_24dp" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/connect_action_fab"
+            app:layout_constraintTop_toTopOf="parent"
+            app:maxImageSize="40dp" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_toBottomOf="@+id/mute_action_fab"
+            android:text="Mute"
+            android:textColor="#ffffff"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView10"
+            app:layout_constraintTop_toBottomOf="@+id/mute_action_fab" />
+
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/connect_action_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fab_margin"
+            android:layout_marginEnd="1dp"
+            android:src="@drawable/ic_call_white"
+            app:backgroundTint="#58b303"
             app:fabSize="normal"
-            android:src="@drawable/ic_video_call_white_24dp" />
+            app:layout_constraintEnd_toStartOf="@+id/mute_action_fab"
+            app:layout_constraintStart_toEndOf="@+id/local_video_action_fab"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="6dp"
+            android:layout_toBottomOf="@+id/connect_action_fab"
+            android:text="Call Contact"
+            android:textColor="#ffffff"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/textView9"
+            app:layout_constraintStart_toEndOf="@+id/textView8" />
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.design.widget.CoordinatorLayout>
