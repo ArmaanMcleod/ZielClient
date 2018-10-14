@@ -34,16 +34,6 @@
         app:borderWidth="0dp"
         app:fabSize="normal"
         app:useCompatPadding="true" />
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Call"
-        android:textAlignment="center"
-        android:layout_gravity="bottom|center"
-        android:textColor="#949494"
-        app:layout_anchor="@+id/call_action_fab"
-        app:layout_anchorGravity="bottom|center_horizontal"/>
 
 
     <android.support.design.widget.FloatingActionButton
@@ -55,7 +45,7 @@
         android:layout_marginRight="30dp"
         android:padding="0dp"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_mute"
+        android:src="@drawable/ic_mic_white_24dp"
         android:visibility="invisible"
         app:backgroundTint="#10b7ff"
         app:borderWidth="0dp"
@@ -108,6 +98,8 @@
         android:layout_marginTop="60dp"
         app:layout_anchor="@+id/chronometer"
         android:layout_gravity="top|center"
+        android:visibility="visible"
+        app:srcCompat="@drawable/callinggrey"
         app:layout_anchorGravity="top|center_horizontal"/>
 </android.support.design.widget.CoordinatorLayout>
 

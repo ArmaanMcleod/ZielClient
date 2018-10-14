@@ -12,28 +12,33 @@
 
     <Button
         android:id="@+id/endChannelButton"
-        android:layout_width="wrap_content"
+        android:layout_width="158dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
-        android:drawableRight="@drawable/ic_close"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/ic_close"
         android:onClick="makeChannelEndedAlert"
-        android:text="End Connection"
+        android:text=" End Connection"
         android:textAllCaps="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/place_autocomplete" />
+        app:layout_constraintTop_toBottomOf="@+id/place_autocomplete"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteX="16dp" />
 
     <Button
         android:id="@+id/toTakePhotoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:background="@android:color/transparent"
-        android:drawableRight="@drawable/ic_landmark"
-        android:text="Landmark Recognition "
+        android:drawableLeft="@drawable/ic_landmark"
+        android:text=" Landmark Recognition "
+        android:layout_marginTop="10dp"
         android:textAllCaps="false"
-        app:layout_constraintEnd_toEndOf="@+id/endChannelButton"
+        android:layout_marginLeft="10dp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="85dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/endChannelButton" />
 
     <fragment
@@ -123,27 +128,26 @@
 
         <Button
             android:id="@+id/waitForCarerMessage"
-            android:layout_width="217dp"
-            android:layout_height="75dp"
-            android:drawableLeft="@drawable/ic_wait"
-            android:text="Please wait for carer to repond in order to use the calling features"
-            android:textAllCaps="false"
+            android:layout_width="254dp"
+            android:layout_height="90dp"
             android:background="#f1ecec"
+            android:drawableLeft="@drawable/ic_wait"
+            android:text="Please wait for carer to repond in order to use the calling features."
+            android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.888"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.507" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <ImageView
             android:id="@+id/newMessage"
-            android:layout_width="33dp"
-            android:layout_height="36dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginTop="10dp"
-
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/red_round_button"
             app:layout_constraintEnd_toStartOf="@+id/waitForCarerMessage"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/exclamation_icon" />
