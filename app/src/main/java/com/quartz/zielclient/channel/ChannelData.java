@@ -120,6 +120,37 @@ public class ChannelData implements ValueEventListener {
     // todo
   }
 
+  public String getChannelKey() {
+    return channelKey;
+  }
+
+  public List<LatLng> getCarerMarkerList() {
+    Object carerMarkers = channelValues.get("carerMarkerList");
+    return CoordinateService.deserialiseCarerMarkers(carerMarkers);
+  }
+
+  public void addMarker(LatLng coordinate) {
+    String coordinateId = UUID.randomUUID().toString();
+    // set x coordinate for marker
+    channelReference
+        .child("carerMarkerList")
+        .child(coordinateId)
+        .child("xCoord")
+        .setValue(String.valueOf(coordinate.latitude));
+    // set y coordinate for marker
+    channelReference
+        .child("carerMarkerList")
+        .child(coordinateId)
+        .child("yCoord")
+        .setValue(String.valueOf(coordinate.longitude));
+  }
+
+  public void clearMarkers() {
+    channelReference
+        .child("carerMarkerList")
+        .setValue(null);
+  }
+
   public String getDirectionsURL() {
     return channelValues.get("directionsURL").toString();
   }
@@ -152,6 +183,22 @@ public class ChannelData implements ValueEventListener {
     this.channelReference.child("carer").setValue(carer);
   }
 
+  public String getCarerName() {
+    return channelValues.get("carerName").toString();
+  }
+
+  public void setCarerName(String carerName) {
+    this.channelReference.child("carerName").setValue(carerName);
+  }
+
+  public String getAssistedName() {
+    return channelValues.get("assistedName").toString();
+  }
+
+  public void setAssistedName(String assistedName) {
+    this.channelReference.child("assistedName").setValue(assistedName);
+  }
+
   public boolean getCarerStatus() {
     return channelValues.get("carerStatus").equals(true);
   }
@@ -167,41 +214,4 @@ public class ChannelData implements ValueEventListener {
   public void setVideoCallStatus(Boolean active) {
     channelReference.child("videoCallStatus").setValue(active);
   }
-
-  public String getChannelKey() {
-    return channelKey;
-  }
-
-  public void setChannelKey(String channelKey) {
-    this.channelKey = channelKey;
-  }
-
-  public List<LatLng> getCarerMarkerList() {
-    Object carerMarkers = channelValues.get("carerMarkerList");
-    return CoordinateService.deserialiseCarerMarkers(carerMarkers);
-  }
-
-  public void addMarker(LatLng coordinate) {
-    String coordinateId = UUID.randomUUID().toString();
-    // set x coordinate for marker
-    channelReference
-        .child("carerMarkerList")
-        .child(coordinateId)
-        .child("xCoord")
-        .setValue(String.valueOf(coordinate.latitude));
-    // set y coordinate for marker
-    channelReference
-        .child("carerMarkerList")
-        .child(coordinateId)
-        .child("yCoord")
-        .setValue(String.valueOf(coordinate.longitude));
-  }
-
-  public void clearMarkers() {
-    channelReference
-        .child("carerMarkerList")
-        .setValue(null);
-  }
-
-
 }

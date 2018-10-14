@@ -99,9 +99,6 @@ public class CarerSelectListAdapter
     // when user is selected make a channel request to them
     @Override
     public void onClick(View v) {
-      channelData =
-          ChannelController.createChannel(
-              () -> {}, textViewId.getText().toString(), FirebaseAuth.getInstance().getUid());
 
       // start intent to open maps
       intentToMaps = new Intent(activity, MapsActivity.class);
@@ -123,6 +120,14 @@ public class CarerSelectListAdapter
 
     @Override
     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+      String carerNameStr = carerName.getText().toString();
+      channelData = ChannelController.createChannel(
+              () -> {},
+          textViewId.getText().toString(),
+          FirebaseAuth.getInstance().getUid(),
+          carerNameStr,
+          assisted.fullName());
+
       assisted = UserFactory.getUser(dataSnapshot);
       carerId = textViewId.getText().toString();
       ChannelRequestController.createRequest(assisted, carerId, channelData.getChannelKey(), "");

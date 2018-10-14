@@ -32,14 +32,16 @@ public final class ChannelController {
   public static ChannelData createChannel(
       ChannelListener listener,
       String carerId,
-      String assistedId) {
+      String assistedId,
+      String carerName,
+      String assistedName) {
     final String channelKey = UUID.randomUUID().toString();
     ChannelData channelData =
         new ChannelData(channelsReference.child(channelKey), listener, channelKey);
     Location initialLocation = new Location("");
 
     initialLocation.setLongitude(0);
-    initialLocation.setLongitude(0);
+    initialLocation.setLatitude(0);
 
     channelData.setVideoCallStatus(false);
     channelData.setAssistedLocation(initialLocation);
@@ -48,6 +50,10 @@ public final class ChannelController {
     channelData.setAssistedStatus(true);
     channelData.setCarerStatus(false);
     channelData.setDirectionsURL("none");
+
+    // Put the string representations of the two users in the channel
+    channelData.setAssistedName(assistedName);
+    channelData.setCarerName(carerName);
 
     Log.i("ChannelController", String.format("Creating new channel %s", channelKey));
     return channelData;
@@ -63,12 +69,6 @@ public final class ChannelController {
    */
   public static ChannelData retrieveChannel(String channelId, ChannelListener channelListener) {
     Log.i(TAG, String.format("Retrieving channel %s", channelId));
-    try{
     return new ChannelData(channelsReference.child(channelId), channelListener, channelId);
-    }catch (IllegalStateException e){
-      e.printStackTrace();
-      return null;
-    }
-
   }
 }

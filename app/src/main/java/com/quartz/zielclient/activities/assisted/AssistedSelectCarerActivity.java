@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  */
 public class AssistedSelectCarerActivity extends AppCompatActivity implements ValueEventListener {
 
-  private FirebaseAuth firebaseAuth = initFirebaseAuth();
+  private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
   private RecyclerView mRecyclerView;
 
   @Override
@@ -92,14 +92,5 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
 
   @Override
   public void onCancelled(@NonNull DatabaseError databaseError) {
-  }
-
-  private FirebaseAuth initFirebaseAuth(){
-    try{
-      return FirebaseAuth.getInstance();
-    }catch (IllegalStateException e){
-      e.printStackTrace();
-      return null;
-    }
   }
 }
