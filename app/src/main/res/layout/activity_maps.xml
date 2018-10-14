@@ -132,7 +132,7 @@
             android:layout_height="90dp"
             android:background="#f1ecec"
             android:drawableLeft="@drawable/ic_wait"
-            android:text="Please wait for carer to repond in order to use the calling features."
+            android:text="Please wait for carer to respond in order to use the calling features."
             android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
