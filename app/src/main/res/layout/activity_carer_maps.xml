@@ -11,27 +11,51 @@
     tools:context="activities.carer.CarerMapsActivity"
     tools:layout_editor_absoluteY="25dp">
 
+    <Button
+        android:id="@+id/dropMarker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
+        android:drawableLeft="@drawable/ic_dropmarkerpurple"
+        android:text="  Drop marker"
+        android:textAllCaps="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/clearMarker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="14dp"
+        android:background="@android:color/transparent"
+        android:drawableLeft="@drawable/ic_remove_markerpurple"
+        android:text="  Clear Markers"
+        android:textAllCaps="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dropMarker" />
+
 
     <fragment
         android:id="@+id/map"
         class="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="384dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="45dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-        app:layout_constraintEnd_toEndOf="@+id/dropMarker"
-        app:layout_constraintStart_toEndOf="@+id/dropMarker"
+        android:layout_width="0dp"
+        android:layout_height="497dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="384dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/dropMarker"
-        app:layout_constraintHorizontal_bias="0.539"
-        app:layout_constraintStart_toEndOf="@+id/dropMarker"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/map">
 
         <Button
@@ -88,33 +112,17 @@
 
         <ImageView
             android:id="@+id/newMessageIcon"
-            android:layout_width="36dp"
-            android:layout_height="39dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginEnd="28dp"
             android:layout_marginTop="8dp"
+            android:background="@drawable/red_round_button"
             android:src="@drawable/exclamation_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/toVoiceChat"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
     </android.support.constraint.ConstraintLayout>
-
-    <Button
-        android:id="@+id/dropMarker"
-        android:layout_width="191dp"
-        android:layout_height="wrap_content"
-        android:text="drop marker"
-        app:layout_constraintBaseline_toBaselineOf="@+id/clearMarker"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/clearMarker"
-        android:layout_width="188dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="7dp"
-        android:text="Clear markers"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>
