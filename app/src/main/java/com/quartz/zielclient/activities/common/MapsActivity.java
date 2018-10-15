@@ -90,6 +90,7 @@ public class MapsActivity extends AppCompatActivity
   private Button toTextChatButton;
   private Button toVoiceChatButton;
   private Button endChannelButton;
+  private Button toRedrawRouteButton;
   private ImageView newMessageIcon;
   private LatLng source;
 
@@ -132,6 +133,9 @@ public class MapsActivity extends AppCompatActivity
 
     // Create buttons and listeners below
     endChannelButton = findViewById(R.id.endChannelButton);
+
+    toRedrawRouteButton = findViewById(R.id.toRedrawRouteButton);
+    toRedrawRouteButton.setOnClickListener(this);
 
     waitingMessage = findViewById(R.id.waitForCarerMessage);
     toVideoChatButton = findViewById(R.id.toVideoChatButton);
@@ -411,6 +415,11 @@ public class MapsActivity extends AppCompatActivity
         Intent intentToPhoto = new Intent(MapsActivity.this, TakePhotosActivity.class);
         startActivity(intentToPhoto);
         break;
+
+      case R.id.toRedrawRouteButton:
+        mGoogleMap.clear();
+        currentDestination = null;
+        break;
       default:
         break;
     }
@@ -462,7 +471,6 @@ public class MapsActivity extends AppCompatActivity
               intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
               startActivity(intent);
               finish();
-
             });
 
     alertDialog.show();
