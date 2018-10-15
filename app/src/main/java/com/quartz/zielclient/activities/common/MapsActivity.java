@@ -331,10 +331,11 @@ public class MapsActivity extends AppCompatActivity
     String strDestination = "destination=" + destination.latitude + "," + destination.longitude;
 
     // Sensor initialisation
+    String travelMode = "mode=walking";
     String sensor = "sensor=false";
     String key = "&key=" + getBaseContext().getString(R.string.google_api_key);
     // Building the parameters to the web service
-    String parameters = strSource + "&" + strDestination + "&" + sensor + key;
+    String parameters = strSource + "&" + strDestination + "&" + sensor + '&' + travelMode + key;
 
     // Add parameters to api url
     String apiRequest = API_URL + parameters;
