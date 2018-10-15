@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Transition;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -55,7 +56,7 @@ public class SettingsActivity extends AppCompatActivity
     ActionBar actionBar = getSupportActionBar();
     if (actionBar != null) {
       actionBar.setTitle("Account Settings");
-//      actionBar.setDisplayHomeAsUpEnabled(true);
+      actionBar.setDisplayHomeAsUpEnabled(true);
     }
   }
 
@@ -77,23 +78,18 @@ public class SettingsActivity extends AppCompatActivity
 
     Button confirmButton = findViewById(R.id.settingsConfirm);
     confirmButton.setOnClickListener(this);
-
-    Button cancelButton = findViewById(R.id.settingsCancel);
-    cancelButton.setOnClickListener(this);
   }
 
-//  @Override
-//  public boolean onSupportNavigateUp() {
-//    Intent intent = new Intent();
-//    if (updating) {
-//      return false;
-//    }
-//
-//    if (user.isAssisted())
-//    //code it to launch an intent to the activity you want
-//    finish();
-//    return true;
-//  }
+  @Override
+  public boolean onSupportNavigateUp() {
+    if (updating) {
+      return false;
+    }
+
+    startActivity(goHomeIntent());
+    finish();
+    return true;
+  }
 
   /**
    * Updates the database with the current UI values.
@@ -109,27 +105,16 @@ public class SettingsActivity extends AppCompatActivity
   }
 
   /**
-   * Ignore changes, and go back to the home screen.
-   */
-  private void cancel() {
-    if (updating) {
-      cancelledChanges = true;
-      Toast.makeText(this, "Cancelled changes.", Toast.LENGTH_SHORT).show();
-    } else if (!cancelledChanges && !cancellingChanges) {
-      goHome();
-    }
-  }
-
-  /**
    * Go back to the appropriate home page.
    */
-  private void goHome() {
+  private Intent goHomeIntent() {
     Class<? extends AppCompatActivity> homePage = user.isAssisted()
         ? AssistedHomePageActivity.class
         : CarerHomepageActivity.class;
     Intent intent = new Intent(this, homePage);
-    startActivity(intent);
-    finish();
+    intent.putExtra("user", user.toBundle());
+    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    return intent;
   }
 
   @Override
@@ -138,9 +123,6 @@ public class SettingsActivity extends AppCompatActivity
       case R.id.settingsConfirm:
         confirmChanges();
         break;
-      case R.id.settingsCancel:
-        cancel();
-        break;
       default:
         break;
     }
@@ -148,8 +130,9 @@ public class SettingsActivity extends AppCompatActivity
 
   /**
    * Updates the text next to the role switch.
+   *
    * @param buttonView The role switch view.
-   * @param isChecked Whether or not the switch has been checked.
+   * @param isChecked  Whether or not the switch has been checked.
    */
   @Override
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -171,7 +154,7 @@ public class SettingsActivity extends AppCompatActivity
     } else if (cancellingChanges) {
       user = UserFactory.getUser(dataSnapshot);
       cancellingChanges = false;
-      goHome();
+      goHomeIntent();
     } else {
       user = UserFactory.getUser(dataSnapshot);
       updating = false;
@@ -183,5 +166,15 @@ public class SettingsActivity extends AppCompatActivity
   @Override
   public void onCancelled(@NonNull DatabaseError databaseError) {
     // TODO
+  }
+
+  @Override
+  public Intent getSupportParentActivityIntent() {
+    return goHomeIntent();
+  }
+
+  @Override
+  public Intent getParentActivityIntent() {
+    return goHomeIntent();
   }
 }

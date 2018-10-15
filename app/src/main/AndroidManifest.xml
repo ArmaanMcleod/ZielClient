@@ -42,11 +42,7 @@
         <activity
             android:name=".activities.common.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".activities.channel.VideoActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.quartz.zielclient.activities.channel.VideoActivity" />
-        </activity>
+            android:parentActivityName=".activities.assisted.AssistedHomePageActivity"/>
         <activity
             android:name=".activities.common.SplashScreenActivity"
             android:exported="true"
