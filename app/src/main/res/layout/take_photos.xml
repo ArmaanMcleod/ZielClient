@@ -14,14 +14,16 @@
 
     <Button
         android:id="@+id/camera_button"
-        android:layout_width="118dp"
-        android:layout_height="101dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginStart="60dp"
+        android:layout_marginBottom="11dp"
+        android:layout_marginStart="65dp"
         android:background="@android:color/transparent"
         android:drawableTop="@drawable/ic_camera"
+        android:text="Take photo"
+        android:textAllCaps="false"
         tools:layout_editor_absoluteX="135dp"
         tools:layout_editor_absoluteY="492dp" />
 
@@ -35,13 +37,15 @@
 
     <Button
         android:id="@+id/gallery_button"
-        android:layout_width="118dp"
-        android:layout_height="101dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/camera_button"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="11dp"
+        android:layout_marginEnd="65dp"
+        android:textAllCaps="false"
         android:background="@android:color/transparent"
-        android:drawableTop="@drawable/ic_gallery" />
+        android:drawableTop="@drawable/ic_gallery"
+        android:text="Gallery"/>
 
 </RelativeLayout>

@@ -548,6 +548,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   private void setDisconnectAction() {
     connectActionFab.setImageDrawable(
         ContextCompat.getDrawable(this, R.drawable.ic_call_end_white_24px));
+    //    connectActionFab.setBackgroundColor(0xfa091d);
     connectActionFab.show();
     connectActionFab.setOnClickListener(disconnectClickListener());
   }
