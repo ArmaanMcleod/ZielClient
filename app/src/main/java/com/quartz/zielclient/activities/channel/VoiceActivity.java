@@ -189,7 +189,6 @@ public class VoiceActivity extends AppCompatActivity {
       identity = FirebaseAuth.getInstance().getUid();
       onBackPressed();
     } else {
-
       toCall = getIntent().getStringExtra("CallId");
     }
   }
