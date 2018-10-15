@@ -40,7 +40,7 @@
         android:layout_marginStart="71dp"
         android:text="Be able to search your desired location and connect with a carer to receive immediate help"
         android:textAlignment="center"
-        android:textSize="16sp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/signup2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
