@@ -224,7 +224,7 @@ public class TextChatActivity extends AppCompatActivity
     // User could have come from either of these activities.
   MapsActivity.setPreviousActivityWasTextChat(true);
   CarerMapsActivity.setPreviousActivityWasTextChat(true);
-  super.onBackPressed();
+  finish();
 
   }
 }
