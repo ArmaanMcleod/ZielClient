@@ -92,6 +92,15 @@ public final class UserController {
     fetchUser(firebaseUser.getUid(), listener);
   }
 
+  public static void updateSelf(final User user, ValueEventListener listener) {
+    Optional<String> userId = retrieveUid();
+    userId.ifPresent(id -> {
+      DatabaseReference ref = firebaseDatabase.getReference(USER_DATABASE_PATH).child(id);
+      ref.addListenerForSingleValueEvent(listener);
+      ref.setValue(user);
+    });
+  }
+
   private static String userIdPath(String userId) {
     return USER_DATABASE_PATH + "/" + userId;
   }

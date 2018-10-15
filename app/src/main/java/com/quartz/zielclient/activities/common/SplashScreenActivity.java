@@ -55,11 +55,12 @@ public class SplashScreenActivity extends AppCompatActivity implements ValueEven
   }
 
   private void redirect(User user) {
-    if (user.isAssisted()) {
-      startActivity(new Intent(this, AssistedHomePageActivity.class));
-    } else {
-      startActivity(new Intent(this, CarerHomepageActivity.class));
-    }
+    Class<? extends AppCompatActivity> homePage = user.isAssisted()
+        ? AssistedHomePageActivity.class
+        : CarerHomepageActivity.class;
+    Intent intent = new Intent(this, homePage);
+    intent.putExtra("user", user.toBundle());
+    startActivity(intent);
     finish();
   }
 }

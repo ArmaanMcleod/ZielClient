@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
@@ -17,6 +18,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.common.SettingsActivity;
 
 import java.util.Objects;
 
@@ -44,6 +46,14 @@ public class AssistedHomePageActivity extends AppCompatActivity {
     setTheme(R.style.HomeTheme);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home_page);
+
+    ImageButton settingsPageButton = findViewById(R.id.settingsPageButton);
+    settingsPageButton.setOnClickListener(v -> {
+      Intent intent = new Intent(AssistedHomePageActivity.this, SettingsActivity.class);
+      intent.putExtra("user", getIntent().getBundleExtra("user"));
+      startActivity(intent);
+      finish();
+    });
 
     // Create autocomplete bar
     PlaceAutocompleteFragment placeAutoComplete =
