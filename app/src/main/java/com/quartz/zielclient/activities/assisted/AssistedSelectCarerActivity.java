@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
  */
 public class AssistedSelectCarerActivity extends AppCompatActivity implements ValueEventListener {
 
-  private FirebaseAuth firebaseAuth = initFirebaseAuth();
+  private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
   private RecyclerView mRecyclerView;
 
   private final String activity = this.getClass().getSimpleName();
@@ -104,19 +104,5 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
    */
   @Override
   public void onCancelled(@NonNull DatabaseError databaseError) {
-  }
-
-  /**
-   * Initialises firebase authentication for the user logged in.
-   *
-   * @return The firebase auth object strored in the database.
-   */
-  private FirebaseAuth initFirebaseAuth() {
-    try {
-      return FirebaseAuth.getInstance();
-    } catch (IllegalStateException e) {
-      Log.d(activity, e.toString());
-      return null;
-    }
   }
 }
