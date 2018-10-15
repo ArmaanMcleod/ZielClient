@@ -93,7 +93,7 @@ public class CarerSelectListAdapter
       textViewId = itemView.findViewById(R.id.DisplayID);
 
       Button connectButton = itemView.findViewById(R.id.createChannelButton);
-      connectButton.setOnClickListener(this);
+      connectButton.setOnClickListener(this );
     }
 
     // when user is selected make a channel request to them
