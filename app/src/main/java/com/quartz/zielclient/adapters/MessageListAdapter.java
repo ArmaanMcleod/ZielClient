@@ -44,12 +44,17 @@ public class MessageListAdapter extends RecyclerView.Adapter {
   private List<Message> messageList;
   private Boolean isAssisted;
   private Map<String, Uri> FileUriMap = new HashMap<>();
+  private String carerName;
+  private String assistedName;
 
   // Constructor
-  public MessageListAdapter(Context context, List<Message> messageList, Boolean isAssisted) {
+  public MessageListAdapter(Context context, List<Message> messageList, Boolean isAssisted,
+                            String carerName, String assistedName) {
     mContext = context;
     this.messageList = messageList;
     this.isAssisted = isAssisted;
+    this.carerName = carerName;
+    this.assistedName = assistedName;
   }
 
   /**
@@ -166,14 +171,16 @@ public class MessageListAdapter extends RecyclerView.Adapter {
       userName = itemView.findViewById(R.id.text_message_name);
       profilePicture = (ImageView) itemView.findViewById(R.id.image_message_profile);
 
-      // TODO Fix this lmao
-
-
+      // TODO Refactor this ugly code
       // Checking whether the received message belongs to the carer or assisted
       if (isAssisted) {
-        sender = "Carer";
+
+        // Null Checks and assign name of carer
+        sender = (carerName.isEmpty()) ? "Carer" :  carerName;
       } else {
-        sender = "Assisted";
+
+        // Null Checks and assign name of assisted
+        sender = (assistedName.isEmpty()) ? "Assisted" : assistedName;
       }
 
       profilePicture = itemView.findViewById(R.id.image_message_profile);

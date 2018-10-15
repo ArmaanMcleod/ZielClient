@@ -44,6 +44,7 @@ import com.quartz.zielclient.user.UserFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +58,8 @@ public class TextChatActivity extends AppCompatActivity
   private ChannelData channel;
   private String currentUser;
   private Boolean isAssisted;
+  private String carerName;
+  private String assistedName;
   private DatabaseReference mRootRef;
   private StorageReference mImageStorage;
 
@@ -82,17 +85,22 @@ public class TextChatActivity extends AppCompatActivity
     // Checking whether currentUser is either assisted or carer
     isAssisted = getIntent().getBooleanExtra("isAssisted",false);
 
+
     // Fetching channel using handler
     String channelKey = getIntent().getStringExtra(getApplicationContext()
         .getString(R.string.channel_key));
 
     channel = ChannelController.retrieveChannel(channelKey, this);
 
+    // Fetch the names of the users in the channel
+    carerName = channel.getCarerName();
+    assistedName = channel.getAssistedName();
+
     // Chat using RecyclerView
     mMessageRecycler = findViewById(R.id.message_recyclerview);
     mLayoutManager = new LinearLayoutManager(this);
     mMessageRecycler.setLayoutManager(mLayoutManager);
-    mMessageRecycler.setAdapter(new MessageListAdapter(this, new ArrayList<>(), false));
+    mMessageRecycler.setAdapter(new MessageListAdapter(this, new ArrayList<>(), false, "", ""));
 
     // Getting the current user's username
     currentUser = FirebaseAuth.getInstance().getUid();
@@ -173,7 +181,8 @@ public class TextChatActivity extends AppCompatActivity
     Collections.sort(messagesInChat);
     messageList = messagesInChat;
     // Creating a new Adapter to render the messages
-    mMessageListAdapter = new MessageListAdapter(this, messageList, isAssisted);
+    mMessageListAdapter = new MessageListAdapter(this, messageList,
+        isAssisted, carerName, assistedName);
     mMessageRecycler.setAdapter(mMessageListAdapter);
   }
 
