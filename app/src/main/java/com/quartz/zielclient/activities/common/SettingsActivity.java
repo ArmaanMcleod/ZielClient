@@ -27,15 +27,10 @@ import com.quartz.zielclient.user.UserFactory;
 public class SettingsActivity extends AppCompatActivity
     implements ValueEventListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
-  private boolean cancellingChanges = false;
-  private boolean cancelledChanges = false;
   private boolean updating = false;
 
   // Current user state
   private User user;
-
-  // User when they first opened the page
-  private User initialUser;
 
   private TextView firstNameEntry;
   private TextView lastNameEntry;
@@ -48,9 +43,7 @@ public class SettingsActivity extends AppCompatActivity
     setContentView(R.layout.settings_activity);
 
     Bundle userBundle = getIntent().getBundleExtra("user");
-    User thisUser = UserFactory.getUser(userBundle);
-    user = thisUser;
-    initialUser = thisUser;
+    user = UserFactory.getUser(userBundle);
     populateUi();
 
     ActionBar actionBar = getSupportActionBar();
@@ -145,22 +138,10 @@ public class SettingsActivity extends AppCompatActivity
 
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-    if (cancelledChanges) {
-      // todo set user back to initialuser
-      cancelledChanges = false;
-      cancellingChanges = true;
-      updating = false;
-      UserController.updateSelf(initialUser, this);
-    } else if (cancellingChanges) {
-      user = UserFactory.getUser(dataSnapshot);
-      cancellingChanges = false;
-      goHomeIntent();
-    } else {
-      user = UserFactory.getUser(dataSnapshot);
-      updating = false;
-      populateUi();
-      Toast.makeText(this, "Updated account settings.", Toast.LENGTH_SHORT).show();
-    }
+    user = UserFactory.getUser(dataSnapshot);
+    updating = false;
+    populateUi();
+    Toast.makeText(this, "Updated account settings.", Toast.LENGTH_SHORT).show();
   }
 
   @Override
