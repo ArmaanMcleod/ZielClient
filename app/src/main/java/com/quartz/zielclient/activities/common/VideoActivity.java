@@ -967,7 +967,6 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
   @Override
   public void dataChanged() {
-    //
   }
 
   /**
@@ -980,7 +979,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     if (channel != null) {
       channel.setVideoCallStatus(false);
     }
-    super.onBackPressed();
+    finish();
   }
 
   public String getChannelId() {
