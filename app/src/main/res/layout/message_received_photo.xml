@@ -18,7 +18,7 @@
 
     <TextView
         android:text="Daniel Silberschatz"
-        android:id="@+id/text_group_chat_nickname"
+        android:id="@+id/text_group_chat_name"
         android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
         android:id="@+id/card_group_chat_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/text_group_chat_nickname"
+        android:layout_below="@id/text_group_chat_name"
         android:layout_toRightOf="@id/image_group_chat_profile"
         app:cardBackgroundColor="@color/cardview_light_background"
         app:cardPreventCornerOverlap="false"

@@ -13,9 +13,11 @@ import android.widget.TextView;
 
 import com.dinuscxj.progressbar.CircleProgressBar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.messaging.MessagingAnalytics;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.common.TextChatActivity;
 import com.quartz.zielclient.messages.Message;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -82,6 +84,16 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             (R.layout.message_received, viewGroup, false);
         return new ReceivedMessageHolder(view);
 
+      case VIEW_TYPE_IMAGE_SENT:
+        // If image is the one sent by the user
+        view = LayoutInflater.from(viewGroup.getContext()).inflate
+            (R.layout.message_sent_photo, viewGroup, false);
+        return new SentImageHolder(view);
+      case VIEW_TYPE_IMAGE_RECEIVED:
+        // If image is the one received by the user
+        view = LayoutInflater.from(viewGroup.getContext()).inflate
+            (R.layout.message_received_photo, viewGroup, false);
+        return  new ReceivedMessageHolder(view);
 
       // TODO Make this not null or use an exception
       default:
@@ -94,15 +106,34 @@ public class MessageListAdapter extends RecyclerView.Adapter {
   public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
     Message message = messageList.get(i);
     Uri tempFileUri = null;
+    int viewType = viewHolder.getItemViewType();
 
-    if (viewHolder.getItemViewType() == VIEW_TYPE_MESSAGE_SENT) {
+//    if (viewHolder.getItemViewType() == VIEW_TYPE_MESSAGE_SENT) {
+//
+//      // Bind sent message
+//      ((SentMessageHolder) viewHolder).bind(message);
+//    } else if (viewHolder.getItemViewType() == VIEW_TYPE_MESSAGE_RECEIVED) {
+//
+//      // Bind received message
+//      ((ReceivedMessageHolder) viewHolder).bind(message);
+//    }
 
-      // Bind sent message
-      ((SentMessageHolder) viewHolder).bind(message);
-    } else if (viewHolder.getItemViewType() == VIEW_TYPE_MESSAGE_RECEIVED) {
-
-      // Bind received message
-      ((ReceivedMessageHolder) viewHolder).bind(message);
+    switch (viewType) {
+      case VIEW_TYPE_MESSAGE_SENT:
+        ((SentMessageHolder) viewHolder).bind(message);
+        break;
+      case VIEW_TYPE_MESSAGE_RECEIVED:
+        ((ReceivedMessageHolder) viewHolder).bind(message);
+        break;
+      case VIEW_TYPE_IMAGE_SENT:
+        ((SentImageHolder) viewHolder).bind(message);
+        break;
+      case VIEW_TYPE_IMAGE_RECEIVED:
+        ((ReceivedImageHolder) viewHolder).bind(message);
+        break;
+      default:
+        ((SentMessageHolder) viewHolder).bind(message);
+        break;
     }
   }
 
@@ -126,13 +157,38 @@ public class MessageListAdapter extends RecyclerView.Adapter {
   public int getItemViewType(int position) {
     Message message = messageList.get(position);
 
-    // Checking current message's sender's ID against current user's ID
-    if (message.getUserName().equals(FirebaseAuth.getInstance().getUid())) {
-      // If current user is the sender of message
-      return VIEW_TYPE_MESSAGE_SENT;
+    // TODO Fix this mess with switch once carer and assisted names are out(?)
+    // If message is type of text
+    if (message.getType().equals(Message.MessageType.TEXT)) {
+      // Checking current message's sender's ID against current user's ID
+      if (message.getUserName().equals(FirebaseAuth.getInstance().getUid())) {
+        // If current user is the sender of message
+        return VIEW_TYPE_MESSAGE_SENT;
+      } else {
+        // Another user sent the message
+        return VIEW_TYPE_MESSAGE_RECEIVED;
+      }
+    } else if (message.getType().equals(Message.MessageType.IMAGE)) {
+      // Checking current message's sender's ID against current user's ID
+      if (message.getUserName().equals(FirebaseAuth.getInstance().getUid())) {
+        // If current user is the sender of image message
+        return VIEW_TYPE_IMAGE_SENT;
+      } else {
+        // Another user sent the image message
+        return VIEW_TYPE_IMAGE_RECEIVED;
+      }
+    } else if (message.getType().equals(Message.MessageType.VIDEO)) {
+      // Checking current message's sender's ID against current user's ID
+      if (message.getUserName().equals(FirebaseAuth.getInstance().getUid())) {
+        // If current user is the sender of video message
+        return VIEW_TYPE_VIDEO_SENT;
+      } else {
+        // Another user sent the video message
+        return VIEW_TYPE_VIDEO_RECEIVED;
+      }
     } else {
-      // Another user sent the message
-      return VIEW_TYPE_MESSAGE_RECEIVED;
+      // TODO Handle errors
+      return VIEW_TYPE_MESSAGE_SENT;
     }
   }
 
@@ -176,7 +232,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
       if (isAssisted) {
 
         // Null Checks and assign name of carer
-        sender = (carerName.isEmpty()) ? "Carer" :  carerName;
+        sender = (carerName.isEmpty()) ? "Carer" : carerName;
       } else {
 
         // Null Checks and assign name of assisted
@@ -223,12 +279,12 @@ public class MessageListAdapter extends RecyclerView.Adapter {
       timeStamp.setText(timeString);
     }
   }
-}
+
   /**
    * A ViewHolder for file messages that are images.
    * Displays only the image thumbnail.
    */
-/*
+
   private class SentImageHolder extends RecyclerView.ViewHolder {
     TextView timeStamp;
     ImageView fileThumbnailImage;
@@ -244,10 +300,11 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
     /**
      * Binding the image and other elements to the graphical aspect of the message
+     *
      * @param message The message object
      */
-/*
-    void bind(Message message){
+
+    void bind(Message message) {
 
       // Checking the status of the message delivery
       if (isFailedMessage(message)) {
@@ -262,104 +319,81 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         timeStamp.setText(timeString);
       }
 
-      // Checking the Message URI
+      // Checking the Message URI and binding it
       if (message.getMessageValue() != null) {
-        ImageUtils.displayImageFromUrl(context, tempFileMessageUri.toString(), fileThumbnailImage, null);
+        Picasso.get().load(message.getMessageValue()).into(fileThumbnailImage);
       }
 
-      if (listener != null) {
-        itemView.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            listener.onFileMessageItemClick(message);
-          }
-        });
-      }
+//      // Set listener
+//      if (listener != null) {
+//        itemView.setOnClickListener(new View.OnClickListener() {
+//          @Override
+//          public void onClick(View v) {
+//            listener.onFileMessageItemClick(message);
+//          }
+//        });
+//      }
 
-      // Binding
-      Picasso
+
     }
   }
-/*
-  private class OtherImageFileMessageHolder extends RecyclerView.ViewHolder {
 
-    TextView timeText, nicknameText, readReceiptText, dateText;
-    ImageView profileImage, fileThumbnailImage;
 
-    public OtherImageFileMessageHolder(View itemView) {
+  private class ReceivedImageHolder extends RecyclerView.ViewHolder {
+
+    TextView timeStamp;
+    TextView userName;
+    ImageView profileImage;
+    ImageView fileThumbnailImage;
+    String sender;
+
+    public ReceivedImageHolder(View itemView) {
       super(itemView);
 
-      timeText = (TextView) itemView.findViewById(R.id.text_group_chat_time);
-      nicknameText = (TextView) itemView.findViewById(R.id.text_group_chat_nickname);
-      fileThumbnailImage = (ImageView) itemView.findViewById(R.id.image_group_chat_file_thumbnail);
+      userName = (TextView) itemView.findViewById(R.id.text_group_chat_name);
+      timeStamp = (TextView) itemView.findViewById(R.id.text_group_chat_time);
       profileImage = (ImageView) itemView.findViewById(R.id.image_group_chat_profile);
-      readReceiptText = (TextView) itemView.findViewById(R.id.text_group_chat_read_receipt);
-      dateText = (TextView) itemView.findViewById(R.id.text_group_chat_date);
+      fileThumbnailImage = (ImageView) itemView.findViewById(R.id.image_group_chat_file_thumbnail);
+
+      // TODO Refactor this ugly code
+      // Checking whether the received message belongs to the carer or assisted
+      if (isAssisted) {
+
+        // Null Checks and assign name of carer
+        sender = (carerName.isEmpty()) ? "Carer" : carerName;
+      } else {
+
+        // Null Checks and assign name of assisted
+        sender = (assistedName.isEmpty()) ? "Assisted" : assistedName;
+      }
     }
 
-    void bind(Context context, final FileMessage message, GroupChannel channel, boolean isNewDay, boolean isContinuous, final OnItemClickListener listener) {
-      timeText.setText(DateUtils.formatTime(message.getCreatedAt()));
+    /**
+     * Binding the image and other elements to the graphical aspect of the received message
+     *
+     * @param message The message object received
+     */
+    void bind(Message message) {
+      String timeString = new SimpleDateFormat("h:mm a").format(message.getMessageTime());
+      timeStamp.setText(timeString);
+      userName.setText(sender);
 
-      // Since setChannel is set slightly after adapter is created, check if null.
-      if (channel != null) {
-        int readReceipt = channel.getReadReceipt(message);
-        if (readReceipt > 0) {
-          readReceiptText.setVisibility(View.VISIBLE);
-          readReceiptText.setText(String.valueOf(readReceipt));
-        } else {
-          readReceiptText.setVisibility(View.INVISIBLE);
-        }
+      // Checking the Message URI and binding it
+      if (message.getMessageValue() != null) {
+        Picasso.get().load(message.getMessageValue()).into(fileThumbnailImage);
       }
 
-      // Show the date if the message was sent on a different date than the previous message.
-      if (isNewDay) {
-        dateText.setVisibility(View.VISIBLE);
-        dateText.setText(DateUtils.formatDate(message.getCreatedAt()));
-      } else {
-        dateText.setVisibility(View.GONE);
-      }
-
-      // Hide profile image and nickname if the previous message was also sent by current sender.
-      if (isContinuous) {
-        profileImage.setVisibility(View.INVISIBLE);
-        nicknameText.setVisibility(View.GONE);
-      } else {
-        profileImage.setVisibility(View.VISIBLE);
-        ImageUtils.displayRoundImageFromUrl(context, message.getSender().getProfileUrl(), profileImage);
-
-        nicknameText.setVisibility(View.VISIBLE);
-        nicknameText.setText(message.getSender().getNickname());
-      }
-
-      // Get thumbnails from FileMessage
-      ArrayList<FileMessage.Thumbnail> thumbnails = (ArrayList<FileMessage.Thumbnail>) message.getThumbnails();
-
-      // If thumbnails exist, get smallest (first) thumbnail and display it in the message
-      if (thumbnails.size() > 0) {
-        if (message.getType().toLowerCase().contains("gif")) {
-          ImageUtils.displayGifImageFromUrl(context, message.getUrl(), fileThumbnailImage, thumbnails.get(0).getUrl(), fileThumbnailImage.getDrawable());
-        } else {
-          ImageUtils.displayImageFromUrl(context, thumbnails.get(0).getUrl(), fileThumbnailImage, fileThumbnailImage.getDrawable());
-        }
-      } else {
-        if (message.getType().toLowerCase().contains("gif")) {
-          ImageUtils.displayGifImageFromUrl(context, message.getUrl(), fileThumbnailImage, (String) null, fileThumbnailImage.getDrawable());
-        } else {
-          ImageUtils.displayImageFromUrl(context, message.getUrl(), fileThumbnailImage, fileThumbnailImage.getDrawable());
-        }
-      }
-
-      if (listener != null) {
-        itemView.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            listener.onFileMessageItemClick(message);
-          }
-        });
-      }
+//      if (listener != null) {
+//        itemView.setOnClickListener(new View.OnClickListener() {
+//          @Override
+//          public void onClick(View v) {
+//            listener.onFileMessageItemClick(message);
+//          }
+//        });
+//      }
     }
   }
-
+}
   /**
    * A ViewHolder for file messages that are videos.
    * Displays only the video thumbnail.
