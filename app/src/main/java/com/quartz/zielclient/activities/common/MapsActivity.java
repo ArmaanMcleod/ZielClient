@@ -563,7 +563,6 @@ public class MapsActivity extends AppCompatActivity
           sourceDestinationMarkers.add(destinationMarker);
 
           Log.d("DESTINATION CHANGE", destination.toString());
-
           if (!destination.equals(currentDestination)) {
             currentDestination = destination;
             drawRoute();
