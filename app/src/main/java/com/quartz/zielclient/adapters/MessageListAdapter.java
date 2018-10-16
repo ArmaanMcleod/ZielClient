@@ -315,13 +315,15 @@ public class MessageListAdapter extends RecyclerView.Adapter {
       } else {
         // If the message sends without problems
         circleProgressBar.setVisibility(View.VISIBLE);
-        String timeString = new SimpleDateFormat("h:mm a").format(message.getMessageTime());
-        timeStamp.setText(timeString);
+
       }
 
       // Checking the Message URI and binding it
       if (message.getMessageValue() != null) {
-        Picasso.get().load(message.getMessageValue()).into(fileThumbnailImage);
+        Uri uri = Uri.parse(message.getMessageValue());
+        Picasso.get().load(uri).into(fileThumbnailImage);
+        String timeString = new SimpleDateFormat("h:mm a").format(message.getMessageTime());
+        timeStamp.setText(timeString);
       }
 
 //      // Set listener

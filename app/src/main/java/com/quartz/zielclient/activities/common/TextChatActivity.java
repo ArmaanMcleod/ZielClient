@@ -153,7 +153,7 @@ public class TextChatActivity extends AppCompatActivity
         requestMedia();
 
         Intent galleryIntent = new Intent();
-        galleryIntent.setType("image/*");
+        galleryIntent.setType("image/* video/*");
         galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
 
         startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
@@ -268,7 +268,6 @@ public class TextChatActivity extends AppCompatActivity
       Uri imageURL = data.getData();
 
       sendMediaMessageWithThumbnail(imageURL);
-
     }
   }
 
