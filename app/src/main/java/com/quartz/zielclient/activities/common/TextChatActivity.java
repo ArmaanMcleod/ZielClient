@@ -287,7 +287,7 @@ public class TextChatActivity extends AppCompatActivity
     String pushID = userMessagePush.getKey();
 
     // Adding the reference in which the image files are going to be pushed into Firebase
-    StorageReference imageFilePath = mImageStorage.child(pushID + ".jpg");
+    StorageReference imageFilePath = mImageStorage.child("messages/"+pushID + ".jpg");
 
     imageFilePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
       @Override
