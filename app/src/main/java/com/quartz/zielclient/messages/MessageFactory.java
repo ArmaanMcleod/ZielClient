@@ -40,6 +40,17 @@ public final class MessageFactory {
     return new Message(Message.MessageType.TEXT, text, userName, timestamp);
   }
 
+  /**
+   * Create image message when generating the image message
+   * @param url The URL of the image file
+   * @param userName The userName of the sender of this message
+   * @return The newly generated image message
+   */
+  @NonNull
+  public static Message makeImageMessage(String url, String userName) {
+    return new Message(Message.MessageType.IMAGE, url, userName);
+  }
+
   public static Message makeMessage(@NonNull Map<String, Object> messageData) {
     String messageText = (String) messageData.get("messageValue");
     String messageSender = (String) messageData.get("userName");

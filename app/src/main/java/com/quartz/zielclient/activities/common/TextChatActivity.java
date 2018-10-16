@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -285,12 +286,16 @@ public class TextChatActivity extends AppCompatActivity
     // Adding the reference in which the image files are going to be pushed into Firebase
     StorageReference imageFilePath = mImageStorage.child(pushID + ".jpg");
 
-    imageFilePath.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+    imageFilePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
       @Override
-      public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-        if(task.isSuccessful()){
+      public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+        String downloadURL = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
 
-          String downloadURL = task.getResult().getStorage().getDownloadUrl().toString();
+        // Performing null checks
+        if(downloadURL != null) {
+          // Send the image message
+          Message messageToSend = MessageFactory.makeImageMessage(downloadURL, currentUser);
+          channel.sendMessage(messageToSend);
         }
       }
     });

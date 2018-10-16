@@ -242,8 +242,14 @@ public class MessageListAdapter extends RecyclerView.Adapter {
       circleProgressBar = (CircleProgressBar) itemView.findViewById(R.id.circle_progress);
     }
 
+    /**
+     * Binding the image and other elements to the graphical aspect of the message
+     * @param message The message object
+     */
+/*
     void bind(Message message){
 
+      // Checking the status of the message delivery
       if (isFailedMessage(message)) {
         // If the message has appeared to be a failed message
         circleProgressBar.setVisibility(View.GONE);
@@ -257,26 +263,8 @@ public class MessageListAdapter extends RecyclerView.Adapter {
       }
 
       // Checking the Message URI
-      if (tempFileMessageUri != null) {
+      if (message.getMessageValue() != null) {
         ImageUtils.displayImageFromUrl(context, tempFileMessageUri.toString(), fileThumbnailImage, null);
-      } else {
-        // Get thumbnails from FileMessage
-        ArrayList<FileMessage.Thumbnail> thumbnails = (ArrayList<FileMessage.Thumbnail>) message.getThumbnails();
-
-        // If thumbnails exist, get smallest (first) thumbnail and display it in the message
-        if (thumbnails.size() > 0) {
-          if (message.getType().toLowerCase().contains("gif")) {
-            ImageUtils.displayGifImageFromUrl(context, message.getUrl(), fileThumbnailImage, thumbnails.get(0).getUrl(), fileThumbnailImage.getDrawable());
-          } else {
-            ImageUtils.displayImageFromUrl(context, thumbnails.get(0).getUrl(), fileThumbnailImage, fileThumbnailImage.getDrawable());
-          }
-        } else {
-          if (message.getType().toLowerCase().contains("gif")) {
-            ImageUtils.displayGifImageFromUrl(context, message.getUrl(), fileThumbnailImage, (String) null, fileThumbnailImage.getDrawable());
-          } else {
-            ImageUtils.displayImageFromUrl(context, message.getUrl(), fileThumbnailImage, fileThumbnailImage.getDrawable());
-          }
-        }
       }
 
       if (listener != null) {
@@ -287,9 +275,12 @@ public class MessageListAdapter extends RecyclerView.Adapter {
           }
         });
       }
+
+      // Binding
+      Picasso
     }
   }
-
+/*
   private class OtherImageFileMessageHolder extends RecyclerView.ViewHolder {
 
     TextView timeText, nicknameText, readReceiptText, dateText;
