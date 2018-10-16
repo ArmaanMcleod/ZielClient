@@ -23,9 +23,7 @@ import com.quartz.zielclient.activities.signup.SignUpActivity;
 import com.quartz.zielclient.adapters.RequestListAdapter;
 import com.quartz.zielclient.models.ChannelRequest;
 import com.quartz.zielclient.notifications.NotificationHandler;
-import com.quartz.zielclient.user.User;
 import com.quartz.zielclient.user.UserController;
-import com.quartz.zielclient.user.UserFactory;
 
 import java.util.Collections;
 import java.util.List;

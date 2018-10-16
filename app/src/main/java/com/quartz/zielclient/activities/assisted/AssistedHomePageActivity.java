@@ -87,7 +87,6 @@ public class AssistedHomePageActivity extends AppCompatActivity {
     Button directMeButton = findViewById(R.id.directMeButton);
     directMeButton.setOnClickListener(
         v -> {
-
           // First make sure permission is granted before continuing
           if (!permissionGranted) {
             requestLocationPermission();
@@ -96,7 +95,6 @@ public class AssistedHomePageActivity extends AppCompatActivity {
             if (destination != null) {
               Intent intent = new Intent(AssistedHomePageActivity.this,
                   AssistedSelectCarerActivity.class);
-
               intent.putExtra("destination", destination);
               startActivity(intent);
             } else {
@@ -137,12 +135,11 @@ public class AssistedHomePageActivity extends AppCompatActivity {
   @AfterPermissionGranted(REQUEST_LOCATION_PERMISSION)
   public void requestLocationPermission() {
     String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
-    if(EasyPermissions.hasPermissions(this, perms)) {
+    if (EasyPermissions.hasPermissions(this, perms)) {
       Toast.makeText(this, "Location Permission already granted",
           Toast.LENGTH_SHORT).show();
       permissionGranted = true;
-    }
-    else {
+    } else {
       EasyPermissions.requestPermissions(this,
           "Please grant the location permission", REQUEST_LOCATION_PERMISSION, perms);
       permissionGranted = false;
@@ -151,7 +148,7 @@ public class AssistedHomePageActivity extends AppCompatActivity {
 
   // prevent going back on home page
   @Override
-  public void onBackPressed(){
+  public void onBackPressed() {
 
   }
 }

@@ -1,5 +1,7 @@
 package com.quartz.zielclient.activities.common;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,6 +28,11 @@ import com.quartz.zielclient.user.User;
 import com.quartz.zielclient.user.UserController;
 import com.quartz.zielclient.user.UserFactory;
 
+/**
+ * Activity to update account details.
+ *
+ * @author alexvosnakis
+ */
 public class SettingsActivity extends AppCompatActivity
     implements ValueEventListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
@@ -65,12 +72,18 @@ public class SettingsActivity extends AppCompatActivity
     }
   }
 
+  /**
+   * Send the user back to sign up if they aren't logged in.
+   */
   private void sendHome() {
     Toast.makeText(this, "Use signed out", Toast.LENGTH_LONG).show();
     startActivity(new Intent(this, SignUpActivity.class));
     finish();
   }
 
+  /**
+   * Set up the action bar.
+   */
   private void activateBar() {
     ActionBar actionBar = getSupportActionBar();
     if (actionBar != null) {
@@ -136,11 +149,26 @@ public class SettingsActivity extends AppCompatActivity
     return intent;
   }
 
+  /**
+   * @return A dialog that confirms that the user wants to change their account details.
+   */
+  private Dialog buildConfirmationPrompt() {
+    return new AlertDialog.Builder(this)
+        .setTitle("Confirm your changes")
+        .setMessage("Are you sure you want to update your account details?")
+        .setPositiveButton(android.R.string.yes, ((dialog, which) -> {
+          confirmChanges();
+          dialog.dismiss();
+        }))
+        .setNegativeButton(android.R.string.no, (dialog, which) -> dialog.dismiss())
+        .create();
+  }
+
   @Override
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.settingsConfirm:
-        confirmChanges();
+        buildConfirmationPrompt().show();
         break;
       default:
         break;
@@ -180,7 +208,8 @@ public class SettingsActivity extends AppCompatActivity
 
   @Override
   public void onCancelled(@NonNull DatabaseError databaseError) {
-    // TODO
+    Log.e(TAG, "Database error", databaseError.toException());
+    Toast.makeText(this, "Error updating account", Toast.LENGTH_LONG).show();
   }
 
   @Override
