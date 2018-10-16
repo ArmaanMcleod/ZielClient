@@ -6,8 +6,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -16,11 +18,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.common.SettingsActivity;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
 import com.quartz.zielclient.adapters.RequestListAdapter;
 import com.quartz.zielclient.models.ChannelRequest;
 import com.quartz.zielclient.notifications.NotificationHandler;
+import com.quartz.zielclient.user.User;
 import com.quartz.zielclient.user.UserController;
+import com.quartz.zielclient.user.UserFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,16 +36,13 @@ import java.util.Optional;
  *
  * @author wei how ng
  */
-public class CarerHomepageActivity extends AppCompatActivity implements ValueEventListener {
+public class CarerHomepageActivity extends AppCompatActivity
+    implements ValueEventListener, View.OnClickListener {
 
   private RecyclerView mRecyclerView;
-  private RecyclerView.Adapter mAdapter;
-  private RecyclerView.LayoutManager mLayoutManager;
-  private List<ChannelRequest> listItems;
-  private DatabaseReference requestsReference;
-  private String userID;
-  private Boolean initialisedList = false;
   private NotificationHandler notificationHandler;
+
+  private boolean initialisedList = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class CarerHomepageActivity extends AppCompatActivity implements ValueEve
             | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     Optional<String> maybeId = UserController.retrieveUid();
+    String userID;
     if (maybeId.isPresent()) {
       userID = maybeId.get();
     } else {
@@ -60,10 +63,14 @@ public class CarerHomepageActivity extends AppCompatActivity implements ValueEve
       finish();
       return;
     }
+
+    ImageButton settingsButton = findViewById(R.id.carerSettingsButton);
+    settingsButton.setOnClickListener(this);
+
     notificationHandler = new NotificationHandler(this);
     notificationHandler.createNotificationChannel();
     // Getting requestsReference from FireBase
-    requestsReference = FirebaseDatabase.getInstance().getReference("channelRequests/" + userID);
+    DatabaseReference requestsReference = FirebaseDatabase.getInstance().getReference("channelRequests/" + userID);
     requestsReference.addValueEventListener(this);
 
     // Initialising RecyclerView
@@ -73,7 +80,7 @@ public class CarerHomepageActivity extends AppCompatActivity implements ValueEve
     mRecyclerView.setHasFixedSize(true);
 
     // Use a linear layout manager
-    mLayoutManager = new LinearLayoutManager(this);
+    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
     mRecyclerView.setLayoutManager(mLayoutManager);
   }
 
@@ -90,10 +97,8 @@ public class CarerHomepageActivity extends AppCompatActivity implements ValueEve
       notificationHandler.notifyUserToOpenApp(channelRequestsData.get(0));
     }
 
-    listItems = channelRequestsData;
-
     // Using the Adapter to convert the data into the recycler view
-    mAdapter = new RequestListAdapter(listItems, this);
+    RecyclerView.Adapter mAdapter = new RequestListAdapter(channelRequestsData, this);
     mRecyclerView.setAdapter(mAdapter);
   }
 
@@ -102,20 +107,30 @@ public class CarerHomepageActivity extends AppCompatActivity implements ValueEve
     // Getting the channel data and calling the rendering method on it
     // Nasty generic types needed unfortunately
     GenericTypeIndicator<List<ChannelRequest>> t =
-        new GenericTypeIndicator<List<ChannelRequest>>() {};
+        new GenericTypeIndicator<List<ChannelRequest>>() {
+        };
     List<ChannelRequest> channelRequestsData = dataSnapshot.getValue(t);
     if (channelRequestsData != null) {
       initData(channelRequestsData);
     }
   }
 
+  @Override
+  public void onClick(View v) {
+    Intent intent = new Intent(this, SettingsActivity.class);
+    intent.putExtra("user", getIntent().getBundleExtra("user"));
+    startActivity(intent);
+    finish();
+  }
+
   // TODO
   @Override
-  public void onCancelled(@NonNull DatabaseError databaseError) {}
+  public void onCancelled(@NonNull DatabaseError databaseError) {
+  }
 
   // prevent going back on home page
   @Override
-  public void onBackPressed(){
+  public void onBackPressed() {
 
   }
 }

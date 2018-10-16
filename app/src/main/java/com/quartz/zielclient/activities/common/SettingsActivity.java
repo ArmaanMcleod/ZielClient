@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.transition.Transition;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -20,6 +20,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.assisted.AssistedHomePageActivity;
 import com.quartz.zielclient.activities.carer.CarerHomepageActivity;
+import com.quartz.zielclient.activities.signup.SignUpActivity;
+import com.quartz.zielclient.exceptions.AuthorisationException;
 import com.quartz.zielclient.user.User;
 import com.quartz.zielclient.user.UserController;
 import com.quartz.zielclient.user.UserFactory;
@@ -27,6 +29,9 @@ import com.quartz.zielclient.user.UserFactory;
 public class SettingsActivity extends AppCompatActivity
     implements ValueEventListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
+  private static final String TAG = SettingsActivity.class.getSimpleName();
+
+  private boolean nullSetup = false;
   private boolean updating = false;
 
   // Current user state
@@ -43,9 +48,30 @@ public class SettingsActivity extends AppCompatActivity
     setContentView(R.layout.settings_activity);
 
     Bundle userBundle = getIntent().getBundleExtra("user");
-    user = UserFactory.getUser(userBundle);
-    populateUi();
+    if (userBundle == null) {
+      // if we don't receive a bundle, fetch the user from the DB
+      updating = true;
+      nullSetup = true;
+      try {
+        UserController.fetchThisUser(this);
+      } catch (AuthorisationException e) {
+        Log.e(TAG, "User not signed in", e);
+        sendHome();
+      }
+    } else {
+      user = UserFactory.getUser(userBundle);
+      populateUi();
+      activateBar();
+    }
+  }
 
+  private void sendHome() {
+    Toast.makeText(this, "Use signed out", Toast.LENGTH_LONG).show();
+    startActivity(new Intent(this, SignUpActivity.class));
+    finish();
+  }
+
+  private void activateBar() {
     ActionBar actionBar = getSupportActionBar();
     if (actionBar != null) {
       actionBar.setTitle("Account Settings");
@@ -140,8 +166,16 @@ public class SettingsActivity extends AppCompatActivity
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
     user = UserFactory.getUser(dataSnapshot);
     updating = false;
+    activateBar();
     populateUi();
-    Toast.makeText(this, "Updated account settings.", Toast.LENGTH_SHORT).show();
+
+    if (!nullSetup) {
+      Toast.makeText(this, "Updated account settings.", Toast.LENGTH_SHORT).show();
+    } else {
+      nullSetup = false;
+      populateUi();
+      activateBar();
+    }
   }
 
   @Override
