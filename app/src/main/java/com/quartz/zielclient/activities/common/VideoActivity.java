@@ -626,8 +626,10 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   private void moveLocalVideoToThumbnailView() {
     if (thumbnailVideoView.getVisibility() == View.GONE) {
       thumbnailVideoView.setVisibility(View.VISIBLE);
-      localVideoTrack.removeRenderer(primaryVideoView);
-      localVideoTrack.addRenderer(thumbnailVideoView);
+      if (localVideoTrack != null) {
+        localVideoTrack.removeRenderer(primaryVideoView);
+        localVideoTrack.addRenderer(thumbnailVideoView);
+      }
       localVideoView = thumbnailVideoView;
       thumbnailVideoView.setMirror(
           cameraCapturerCompat.getCameraSource() == CameraSource.FRONT_CAMERA);

@@ -213,6 +213,7 @@ public class CarerMapsActivity extends AppCompatActivity
             FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
             fetchUrl.execute(channel.getDirectionsURL() + key);
             currentDestinationURL = channel.getDirectionsURL();
+
           }
         }
       }

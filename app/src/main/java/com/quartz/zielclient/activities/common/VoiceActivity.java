@@ -62,7 +62,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
 
   // Server for access token
   private static final String TWILIO_ACCESS_TOKEN_SERVER_URL =
-          "http://35.189.54.26:3000/accessToken";
+      "http://35.189.54.26:3000/accessToken";
   private static final int MIC_PERMISSION_REQUEST_CODE = 1;
   private static final int SNACKBAR_DURATION = 4000;
   private static String identity = "alice";
@@ -101,10 +101,10 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
    * @return AlertDialog The dialog to be created.
    */
   public static AlertDialog createIncomingCallDialog(
-          Context context,
-          CallInvite callInvite,
-          DialogInterface.OnClickListener answerCallClickListener,
-          DialogInterface.OnClickListener cancelClickListener) {
+      Context context,
+      CallInvite callInvite,
+      DialogInterface.OnClickListener answerCallClickListener,
+      DialogInterface.OnClickListener cancelClickListener) {
     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
     alertDialogBuilder.setIcon(R.drawable.ic_call_black_24dp);
     alertDialogBuilder.setTitle("Incoming Call");
@@ -123,9 +123,9 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
    * @return AlertDialog The dialog to be created.
    */
   public static AlertDialog createCallDialog(
-          final DialogInterface.OnClickListener callClickListener,
-          final DialogInterface.OnClickListener cancelClickListener,
-          final Context context) {
+      final DialogInterface.OnClickListener callClickListener,
+      final DialogInterface.OnClickListener cancelClickListener,
+      final Context context) {
     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
     alertDialogBuilder.setIcon(R.drawable.ic_call_black_24dp);
@@ -168,9 +168,9 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     // These flags ensure that the activity can be launched when the screen is locked.
     Window window = getWindow();
     window.addFlags(
-            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                    | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-                    | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+            | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+            | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     coordinatorLayout = findViewById(R.id.coordinator_layout);
     callActionFab = findViewById(R.id.call_action_fab);
@@ -246,7 +246,8 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     if (activeCall != null) {
 
       setCallUI();
-      if (activeCall.getState().compareTo(CallState.DISCONNECTED) == 0) {
+      CallState callState = activeCall.getState();
+      if (callState.compareTo(CallState.DISCONNECTED) == 0) {
         resetUI();
         activeCall = null;
       }
@@ -275,7 +276,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
       @Override
       public void onError(RegistrationException error, String accessToken, String fcmToken) {
         String message =
-                String.format("Registration Error: %d, %s", error.getErrorCode(), error.getMessage());
+            String.format("Registration Error: %d, %s", error.getErrorCode(), error.getMessage());
         Log.e(TAG, message);
         Snackbar.make(coordinatorLayout, message, SNACKBAR_DURATION).show();
       }
@@ -289,7 +290,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
         setAudioFocus(false);
         Log.d(TAG, "Connect failure");
         String message =
-                String.format("Call Error: %d, %s", error.getErrorCode(), error.getMessage());
+            String.format("Call Error: %d, %s", error.getErrorCode(), error.getMessage());
         Log.e(TAG, message);
         Snackbar.make(coordinatorLayout, message, SNACKBAR_DURATION).show();
         resetUI();
@@ -326,7 +327,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
         Log.d(TAG, "Disconnected");
         if (error != null) {
           String message =
-                  String.format("Call Error: %d, %s", error.getErrorCode(), error.getMessage());
+              String.format("Call Error: %d, %s", error.getErrorCode(), error.getMessage());
           Log.e(TAG, message);
           Snackbar.make(coordinatorLayout, message, SNACKBAR_DURATION).show();
         }
@@ -353,7 +354,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
   private void resetUI() {
     callActionFab.show();
     muteActionFab.setImageDrawable(
-            ContextCompat.getDrawable(VoiceActivity.this, R.drawable.ic_mic_white_24dp));
+        ContextCompat.getDrawable(VoiceActivity.this, R.drawable.ic_mic_white_24dp));
     muteActionFab.hide();
     hangupActionFab.hide();
     chronometer.setVisibility(View.INVISIBLE);
@@ -405,11 +406,11 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
         if (activeCallInvite != null && (activeCallInvite.getState() == CallInvite.State.PENDING)) {
           soundPoolManager.playRinging();
           alertDialog =
-                  createIncomingCallDialog(
-                          VoiceActivity.this,
-                          activeCallInvite,
-                          answerCallClickListener(),
-                          cancelCallClickListener());
+              createIncomingCallDialog(
+                  VoiceActivity.this,
+                  activeCallInvite,
+                  answerCallClickListener(),
+                  cancelCallClickListener());
           alertDialog.show();
           activeCallNotificationId = intent.getIntExtra(INCOMING_CALL_NOTIFICATION_ID, 0);
         } else {
@@ -431,7 +432,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
       intentFilter.addAction(ACTION_INCOMING_CALL);
       intentFilter.addAction(ACTION_FCM_TOKEN);
       LocalBroadcastManager.getInstance(this)
-              .registerReceiver(voiceBroadcastReceiver, intentFilter);
+          .registerReceiver(voiceBroadcastReceiver, intentFilter);
       isReceiverRegistered = true;
     }
   }
@@ -484,7 +485,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     if (fcmToken != null) {
       Log.i(TAG, "Registering with FCM");
       Voice.register(
-              this, accessToken, Voice.RegistrationChannel.FCM, fcmToken, registrationListener);
+          this, accessToken, Voice.RegistrationChannel.FCM, fcmToken, registrationListener);
     }
   }
 
@@ -496,7 +497,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
   private View.OnClickListener callActionFabClickListener() {
     return v -> {
       alertDialog =
-              createCallDialog(callClickListener(), cancelCallClickListener(), VoiceActivity.this);
+          createCallDialog(callClickListener(), cancelCallClickListener(), VoiceActivity.this);
       alertDialog.show();
     };
   }
@@ -539,10 +540,10 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
       activeCall.mute(mute);
       if (mute) {
         muteActionFab.setImageDrawable(
-                ContextCompat.getDrawable(VoiceActivity.this, R.drawable.ic_mic_white_off_24dp));
+            ContextCompat.getDrawable(VoiceActivity.this, R.drawable.ic_mic_white_off_24dp));
       } else {
         muteActionFab.setImageDrawable(
-                ContextCompat.getDrawable(VoiceActivity.this, R.drawable.ic_mic_white_24dp));
+            ContextCompat.getDrawable(VoiceActivity.this, R.drawable.ic_mic_white_24dp));
       }
     }
   }
@@ -559,20 +560,20 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
         // Request audio focus before making any device switch.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
           AudioAttributes playbackAttributes =
-                  new AudioAttributes.Builder()
-                          .setUsage(AudioAttributes.USAGE_VOICE_COMMUNICATION)
-                          .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-                          .build();
+              new AudioAttributes.Builder()
+                  .setUsage(AudioAttributes.USAGE_VOICE_COMMUNICATION)
+                  .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                  .build();
           AudioFocusRequest focusRequest =
-                  new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
-                          .setAudioAttributes(playbackAttributes)
-                          .setAcceptsDelayedFocusGain(true)
-                          .setOnAudioFocusChangeListener(i -> {})
-                          .build();
+              new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
+                  .setAudioAttributes(playbackAttributes)
+                  .setAcceptsDelayedFocusGain(true)
+                  .setOnAudioFocusChangeListener(i -> {})
+                  .build();
           audioManager.requestAudioFocus(focusRequest);
         } else {
           audioManager.requestAudioFocus(
-                  null, AudioManager.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+              null, AudioManager.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
         }
         // set the mode the speaker by default
         audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
@@ -596,15 +597,15 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
   /** Requests permission for the microphone. */
   private void requestPermissionForMicrophone() {
     if (ActivityCompat.shouldShowRequestPermissionRationale(
-            this, Manifest.permission.RECORD_AUDIO)) {
+        this, Manifest.permission.RECORD_AUDIO)) {
       Snackbar.make(
               coordinatorLayout,
               "Microphone permissions needed. Please allow in your application settings.",
               SNACKBAR_DURATION)
-              .show();
+          .show();
     } else {
       ActivityCompat.requestPermissions(
-              this, new String[] {Manifest.permission.RECORD_AUDIO}, MIC_PERMISSION_REQUEST_CODE);
+          this, new String[] {Manifest.permission.RECORD_AUDIO}, MIC_PERMISSION_REQUEST_CODE);
     }
   }
 
@@ -622,7 +623,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
    */
   @Override
   public void onRequestPermissionsResult(
-          int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     /*
      * Check if microphone permissions is granted
      */
@@ -632,7 +633,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
                 coordinatorLayout,
                 "Microphone permissions needed. Please allow in your application settings.",
                 SNACKBAR_DURATION)
-                .show();
+            .show();
       } else {
         retrieveAccessToken();
       }
@@ -686,22 +687,22 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
    */
   private void retrieveAccessToken() {
     Ion.with(this)
-            .load(TWILIO_ACCESS_TOKEN_SERVER_URL + "?identity=" + identity)
-            .asString()
-            .setCallback(
-                    (e, accessToken) -> {
-                      if (e == null) {
-                        Log.d(TAG, "Access token: " + accessToken);
-                        VoiceActivity.this.accessToken = accessToken;
-                        registerForCallInvites();
-                      } else {
-                        Snackbar.make(
-                                coordinatorLayout,
-                                "Error retrieving access token. Unable to make calls",
-                                Snackbar.LENGTH_LONG)
-                                .show();
-                      }
-                    });
+        .load(TWILIO_ACCESS_TOKEN_SERVER_URL + "?identity=" + identity)
+        .asString()
+        .setCallback(
+            (e, accessToken) -> {
+              if (e == null) {
+                Log.d(TAG, "Access token: " + accessToken);
+                VoiceActivity.this.accessToken = accessToken;
+                registerForCallInvites();
+              } else {
+                Snackbar.make(
+                        coordinatorLayout,
+                        "Error retrieving access token. Unable to make calls",
+                        Snackbar.LENGTH_LONG)
+                    .show();
+              }
+            });
   }
 
   @Override
