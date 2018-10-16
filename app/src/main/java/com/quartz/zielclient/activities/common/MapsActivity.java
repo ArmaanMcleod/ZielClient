@@ -392,12 +392,13 @@ public class MapsActivity extends AppCompatActivity
 
       case R.id.toVoiceChat:
         Intent intentVoice = new Intent(MapsActivity.this, VoiceActivity.class);
-        intentVoice.putExtra("initiate", 0);
-        if (channel != null) {
+        if (channel != null && channel.getCarer()!=null) {
           intentVoice.putExtra(getResources().getString(R.string.channel_key), channelId);
+          intentVoice.putExtra("initiate", 0);
           intentVoice.putExtra("CallId", channel.getCarer());
+          startActivity(intentVoice);
         }
-        startActivity(intentVoice);
+
         break;
 
       case R.id.toVideoChatButton:
@@ -436,10 +437,10 @@ public class MapsActivity extends AppCompatActivity
         AlertDialog.BUTTON_NEUTRAL,
         "OK",
         (dialog, which) -> {
-          Intent intentToVideo = new Intent(getApplicationContext(), VideoActivity.class);
+          Intent intentToVideo = new Intent(MapsActivity.this, VideoActivity.class);
           intentToVideo.putExtra(
               getApplicationContext().getResources().getString(R.string.channel_key), channelId);
-          getApplicationContext().startActivity(intentToVideo);
+          startActivity(intentToVideo);
         });
     return alertDialog;
   }
