@@ -93,14 +93,17 @@ public class TextChatActivity extends AppCompatActivity
     channel = ChannelController.retrieveChannel(channelKey, this);
 
     // Fetch the names of the users in the channel
-    carerName = channel.getCarerName();
-    assistedName = channel.getAssistedName();
+    //carerName = channel.getCarerName();
+    //assistedName = channel.getAssistedName();
+    carerName = "Thanos";
+    assistedName = "Despacito";
 
     // Chat using RecyclerView
     mMessageRecycler = findViewById(R.id.message_recyclerview);
     mLayoutManager = new LinearLayoutManager(this);
     mMessageRecycler.setLayoutManager(mLayoutManager);
-    mMessageRecycler.setAdapter(new MessageListAdapter(this, new ArrayList<>(), false, "", ""));
+    mMessageRecycler.setAdapter(new MessageListAdapter(this, new ArrayList<>(),
+        false, "Carer", "Assisted"));
 
     // Getting the current user's username
     currentUser = FirebaseAuth.getInstance().getUid();
