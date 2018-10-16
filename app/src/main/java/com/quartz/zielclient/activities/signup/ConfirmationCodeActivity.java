@@ -3,6 +3,7 @@ package com.quartz.zielclient.activities.signup;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +25,9 @@ import com.quartz.zielclient.user.AuthorisationController;
 import static com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken;
 import static com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks;
 
+/**
+ * This class is responsible for confirming sign up for the user.
+ */
 public class ConfirmationCodeActivity extends AppCompatActivity implements View.OnClickListener, OnCompleteListener<AuthResult> {
 
   private static final String TAG = "ConfirmationCodeActivity";
@@ -67,8 +71,18 @@ public class ConfirmationCodeActivity extends AppCompatActivity implements View.
     }
   };
 
+  /**
+   * Called when the activity is starting.
+   * <p>
+   * Documentation: https://developer.android.com/reference/android/app/Activity.html#
+   * onCreate(android.os.Bundle)
+   *
+   * @param savedInstanceState If the activity is being re-initialized after previously being shut
+   *                           down then this Bundle contains the data it most recently
+   *                           supplied in onSaveInstanceState(Bundle)
+   */
   @Override
-  public void onCreate(Bundle savedInstanceState) {
+  public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_confirmation_code);
     verificationField = findViewById(R.id.confirmationCodeEntry);
@@ -86,6 +100,14 @@ public class ConfirmationCodeActivity extends AppCompatActivity implements View.
     authController.sendConfirmationCode(callbacks);
   }
 
+  /**
+   * Called when a view has been clicked.
+   * <p>
+   * Documentation: https://developer.android.com/reference/android/view/V
+   * iew.OnClickListener.html#onClick(android.view.View)
+   *
+   * @param view The view that was clicked.
+   */
   @Override
   public void onClick(View view) {
     switch (view.getId()) {
@@ -125,6 +147,9 @@ public class ConfirmationCodeActivity extends AppCompatActivity implements View.
     }
   }
 
+  /**
+   * Verifies credientials of phone number with code.
+   */
   private void verifyPhoneNumberWithCode() {
     String code = verificationField.getText().toString();
     if (code.length() >1) {

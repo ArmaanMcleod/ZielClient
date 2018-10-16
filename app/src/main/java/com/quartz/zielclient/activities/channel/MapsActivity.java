@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,12 +82,12 @@ public class MapsActivity extends AppCompatActivity
 
   private LocationRequest mLocationRequest;
   private FusedLocationProviderClient mFusedLocationClient;
-
+  private int seenMessages = 0;
   private Button toVideoChatButton;
   private Button toTextChatButton;
   private Button toVoiceChatButton;
   private Button endChannelButton;
-
+  private ImageView newMessageIcon;
   private LatLng source;
 
   private List<Marker> sourceDestinationMarkers = new ArrayList<>();
@@ -99,6 +100,8 @@ public class MapsActivity extends AppCompatActivity
 
   private AlertDialog alertDialog;
   private ChannelData channel;
+  private static Boolean previousActivityWasTextChat = false;
+
 
   /**
    * Creates map along with its attributes.
@@ -138,7 +141,8 @@ public class MapsActivity extends AppCompatActivity
     toVoiceChatButton = findViewById(R.id.toVoiceChat);
     toVoiceChatButton.setVisibility(View.INVISIBLE);
     toVoiceChatButton.setOnClickListener(this);
-
+    newMessageIcon = findViewById(R.id.newMessage);
+    readMessages();
     Button toTakePhotoButton = findViewById(R.id.toTakePhotoButton);
     toTakePhotoButton.setOnClickListener(this);
 
@@ -202,6 +206,18 @@ public class MapsActivity extends AppCompatActivity
     streetviewSuggestion.show();
   }
 
+  @Override
+  public void onStart() {
+    if (previousActivityWasTextChat) {
+      readMessages();
+      if (channel != null) {
+        seenMessages = channel.getMessages().size();
+      }
+      previousActivityWasTextChat = false;
+    }
+    super.onStart();
+  }
+
   /**
    * Draws route between two points on the map
    */
@@ -233,7 +249,9 @@ public class MapsActivity extends AppCompatActivity
     try {
       // Only retrieve the rop result
       List<Address> addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1);
-      address = addresses.get(0).getAddressLine(0);
+      if (!addresses.isEmpty()) {
+        address = addresses.get(0).getAddressLine(0);
+      }
     } catch (IOException e) {
       Log.e(activity, "getAddress: Cannot fetch address", e);
     }
@@ -310,10 +328,11 @@ public class MapsActivity extends AppCompatActivity
     String strDestination = "destination=" + destination.latitude + "," + destination.longitude;
 
     // Sensor initialisation
+    String travelMode = "mode=walking";
     String sensor = "sensor=false";
     String key = "&key=" + getBaseContext().getString(R.string.google_api_key);
     // Building the parameters to the web service
-    String parameters = strSource + "&" + strDestination + "&" + sensor + key;
+    String parameters = strSource + "&" + strDestination + "&" + sensor + '&' + travelMode + key;
 
     // Add parameters to api url
     String apiRequest = API_URL + parameters;
@@ -341,9 +360,10 @@ public class MapsActivity extends AppCompatActivity
         // this is set to null on purpose and will not cause an error.
         makeChannelEndedAlert(null);
       }
-
+      if (seenMessages < channel.getMessages().size()) {
+        unReadMessages();
+      }
       if (channel.getCarerStatus()) {
-        Toast.makeText(this, "Carer Connected", Toast.LENGTH_SHORT).show();
         toTextChatButton.setVisibility(View.VISIBLE);
         toVideoChatButton.setVisibility(View.VISIBLE);
         toVoiceChatButton.setVisibility(View.VISIBLE);
@@ -364,17 +384,19 @@ public class MapsActivity extends AppCompatActivity
       case R.id.toTextChat:
         Intent intentToTextChat = new Intent(MapsActivity.this, TextChatActivity.class);
         intentToTextChat.putExtra(getResources().getString(R.string.channel_key), channelId);
+        readMessages();
         startActivity(intentToTextChat);
         break;
 
       case R.id.toVoiceChat:
         Intent intentVoice = new Intent(MapsActivity.this, VoiceActivity.class);
-        intentVoice.putExtra("initiate", 0);
-        if (channel != null) {
+        if (channel != null && channel.getCarer() != null) {
           intentVoice.putExtra(getResources().getString(R.string.channel_key), channelId);
+          intentVoice.putExtra("initiate", 0);
           intentVoice.putExtra("CallId", channel.getCarer());
+          startActivity(intentVoice);
         }
-        startActivity(intentVoice);
+
         break;
 
       case R.id.toVideoChatButton:
@@ -413,10 +435,10 @@ public class MapsActivity extends AppCompatActivity
         AlertDialog.BUTTON_NEUTRAL,
         "OK",
         (dialog, which) -> {
-          Intent intentToVideo = new Intent(getApplicationContext(), VideoActivity.class);
+          Intent intentToVideo = new Intent(MapsActivity.this, VideoActivity.class);
           intentToVideo.putExtra(
               getApplicationContext().getResources().getString(R.string.channel_key), channelId);
-          getApplicationContext().startActivity(intentToVideo);
+          startActivity(intentToVideo);
         });
     return alertDialog;
   }
@@ -541,5 +563,25 @@ public class MapsActivity extends AppCompatActivity
       }
 
     };
+  }
+
+
+  /**
+   * indicates that messages have been read
+   */
+  public void readMessages() {
+    newMessageIcon.setVisibility(View.INVISIBLE);
+  }
+
+  /**
+   * New Messages have arrived
+   */
+  public void unReadMessages() {
+    newMessageIcon.setVisibility(View.VISIBLE);
+
+  }
+
+  public static void setPreviousActivityWasTextChat(Boolean previousActivityWasTextChat) {
+    MapsActivity.previousActivityWasTextChat = previousActivityWasTextChat;
   }
 }

@@ -32,7 +32,7 @@ import java.util.Optional;
 /**
  * Activity to display a carer's home page.
  *
- * @author wei how ng
+ * @author Wei How Ng
  */
 public class CarerHomepageActivity extends AppCompatActivity
     implements ValueEventListener, View.OnClickListener {
@@ -121,7 +121,6 @@ public class CarerHomepageActivity extends AppCompatActivity
     finish();
   }
 
-  // TODO
   @Override
   public void onCancelled(@NonNull DatabaseError databaseError) {
   }

@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,7 +25,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * This activity allows the user to select another user to estabish a channel with
+ * This activity allows the user to select another user to establish a channel with
  *
  * @author Bilal
  */
@@ -32,6 +33,8 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
 
   private FirebaseAuth firebaseAuth = initFirebaseAuth();
   private RecyclerView mRecyclerView;
+
+  private final String activity = this.getClass().getSimpleName();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +61,9 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
   }
 
   /**
-   * Initialise the recycler view with some elements
+   * Initialise the recycler view with some elements.
    *
-   * @param items
+   * @param items This is the carer selection items
    */
   private void initData(Map<String, CarerSelectionItem> items) {
     List<CarerSelectionItem> list = items.entrySet()
@@ -75,9 +78,13 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
   }
 
   /**
-   * update the recycler view with user data
+   * This method will be called with a snapshot of the data at this location.
+   * It will also be called each time that data changes.
+   * <p>
+   * Documentation: https://www.firebase.com/docs/java-api/javadoc/com/firebase/client/
+   * ValueEventListener.html
    *
-   * @param dataSnapshot
+   * @param dataSnapshot The data snapshot.
    */
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -90,15 +97,25 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
     }
   }
 
+  /**
+   * This method will be triggered in the event that this listener either failed at the server,
+   * or is removed as a result of the security and Firebase rules.
+   * @param databaseError A description of the error that occurred
+   */
   @Override
   public void onCancelled(@NonNull DatabaseError databaseError) {
   }
 
-  private FirebaseAuth initFirebaseAuth(){
-    try{
+  /**
+   * Initialises firebase authentication for the user logged in.
+   *
+   * @return The firebase auth object strored in the database.
+   */
+  private FirebaseAuth initFirebaseAuth() {
+    try {
       return FirebaseAuth.getInstance();
-    }catch (IllegalStateException e){
-      e.printStackTrace();
+    } catch (IllegalStateException e) {
+      Log.d(activity, e.toString());
       return null;
     }
   }

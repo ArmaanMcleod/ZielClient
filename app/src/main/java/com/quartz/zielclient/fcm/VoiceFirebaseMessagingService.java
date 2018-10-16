@@ -104,14 +104,14 @@ public class VoiceFirebaseMessagingService extends FirebaseMessagingService {
         notificationManager.createNotificationChannel(callInviteChannel);
 
         notification =
-            buildNotification(callInvite.getFrom() + " is calling.", pendingIntent, extras);
+            buildNotification("Call incoming", pendingIntent, extras);
         notificationManager.notify(notificationId, notification);
       } else {
         NotificationCompat.Builder notificationBuilder =
             new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_call_end_white_24dp)
                 .setContentTitle(getString(R.string.app_name))
-                .setContentText(callInvite.getFrom() + " is calling.")
+                .setContentText("Call incoming")
                 .setAutoCancel(true)
                 .setExtras(extras)
                 .setContentIntent(pendingIntent)

@@ -20,7 +20,7 @@ import java.util.UUID;
 
 /**
  * This Object abstracts away the communication with the database Channels It requires a
- * Chanlelistener to be able to pass updates to the user.
+ * ChannelListener to be able to pass updates to the user.
  *
  * @author Bilal Shehata
  */
