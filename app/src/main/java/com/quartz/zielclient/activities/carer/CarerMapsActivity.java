@@ -191,11 +191,10 @@ public class CarerMapsActivity extends AppCompatActivity
   @Override
   public void dataChanged() {
     // Update location
-    latitude[0] = channel.getAssistedLocation().latitude;
-    longitude[0] = channel.getAssistedLocation().longitude;
-    updateMapCoords();
-
     if (channel != null) {
+      latitude[0] = channel.getAssistedLocation().latitude;
+      longitude[0] = channel.getAssistedLocation().longitude;
+      updateMapCoords();
       channel.setCarerStatus(true);
       // if the assisted has entered a route then generate that same route
       if ((channel.getDirectionsURL() != null)
@@ -228,10 +227,8 @@ public class CarerMapsActivity extends AppCompatActivity
         }
       }
       if (channel.getVideoCallStatus()) {
-        alertDialog = makeVideoAlert();
         alertDialog.show();
       } else {
-        alertDialog = makeVideoAlert();
         alertDialog.cancel();
       }
     }
@@ -290,8 +287,10 @@ public class CarerMapsActivity extends AppCompatActivity
   @Override
   public void onBackPressed() {
     VoiceActivity.endCall();
+    alertDialog.dismiss();
+    channel = null;
+    finish();
 
-    super.finish();
   }
 
   /**

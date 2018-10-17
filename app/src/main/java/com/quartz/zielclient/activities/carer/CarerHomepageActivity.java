@@ -39,6 +39,7 @@ public class CarerHomepageActivity extends AppCompatActivity
 
   private RecyclerView mRecyclerView;
   private NotificationHandler notificationHandler;
+  private DatabaseReference requestsReference;
 
   private boolean initialisedList = false;
 
@@ -68,7 +69,7 @@ public class CarerHomepageActivity extends AppCompatActivity
     notificationHandler = new NotificationHandler(CarerHomepageActivity.this);
     notificationHandler.createNotificationChannel();
     // Getting requestsReference from FireBase
-    DatabaseReference requestsReference = FirebaseDatabase.getInstance().getReference("channelRequests/" + userID);
+    requestsReference = FirebaseDatabase.getInstance().getReference("channelRequests/" + userID);
     requestsReference.addValueEventListener(this);
 
     // Initialising RecyclerView
@@ -118,6 +119,7 @@ public class CarerHomepageActivity extends AppCompatActivity
     Intent intent = new Intent(this, SettingsActivity.class);
     intent.putExtra("user", getIntent().getBundleExtra("user"));
     startActivity(intent);
+    requestsReference.removeEventListener(this);
     finish();
   }
 
