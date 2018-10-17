@@ -4,14 +4,12 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -554,11 +552,14 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
         videoStatusTextView.setText("Connected to  Channel video Chat");
         setTitle(room.getName());
         channel.setVideoCallStatus(true);
-        addRemoteParticipant(room.getRemoteParticipants().get(0));
+        if (!room.getRemoteParticipants().isEmpty()) {
+          addRemoteParticipant(room.getRemoteParticipants().get(0));
+        }
       }
 
       /**
        * Called when a room has succeeded.
+       *
        * @param room The room to connect to.
        * @param e The twillio exception triggered.
        */
@@ -571,6 +572,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
       /**
        * Called when room is disconnected.
+       *
        * @param room The room to connect to.
        * @param e The twillio exception triggered.
        */
@@ -590,7 +592,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
       /**
        * Called when a room has been disconnected from.
        *
-       * Documentation: https://media.twiliocdn.com/sdk/android/video/releases/1.0.0-beta6/docs/
+       * <p>Documentation: https://media.twiliocdn.com/sdk/android/video/releases/1.0.0-beta6/docs/
        * com/twilio/video/Room.Listener.html#
        * onParticipantConnected-com.twilio.video.Room-com.twilio.video.Participant-
        *
@@ -605,7 +607,8 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
       /**
        * Called when a participant has disconnected from a room.
        *
-       * Documentation: Called when a participant has disconnected from a room.
+       * <p>Documentation: Called when a participant has disconnected from a room.
+       *
        * @param room The room to disconnect from.
        * @param remoteParticipant The remote participant to connect with.
        */
@@ -617,7 +620,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
       /**
        * Called when the media being shared to a Room is being recorded.
        *
-       * Documentation: https://media.twiliocdn.com/sdk/android/video/releases/1.0.0-beta17/
+       * <p>Documentation: https://media.twiliocdn.com/sdk/android/video/releases/1.0.0-beta17/
        * docs/com/twilio/video/Room.Listener.html#onRecordingStarted-com.twilio.video.Room-
        *
        * @param room The room to connect to.
