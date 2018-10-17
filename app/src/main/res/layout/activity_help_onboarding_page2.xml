@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/helponboarding2" />
+        app:srcCompat="@drawable/two_marker" />
 
     <TextView
         android:id="@+id/onboarding_title"
@@ -40,7 +40,7 @@
         android:layout_marginStart="71dp"
         android:text="Be able to search your desired location and connect with a carer to receive immediate help"
         android:textAlignment="center"
-        android:textSize="15dp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/signup2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

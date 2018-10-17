@@ -2,7 +2,6 @@ package com.quartz.zielclient.activities.carer;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,9 +18,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.common.StreetViewActivity;
 import com.quartz.zielclient.activities.common.TextChatActivity;
@@ -45,7 +41,7 @@ public class CarerMapsActivity extends AppCompatActivity
     implements OnMapReadyCallback,
     ChannelListener,
     View.OnClickListener,
-    GoogleMap.OnMapClickListener,ValueEventListener {
+    GoogleMap.OnMapClickListener {
 
   // These constants are displayed until map syncronizes (only momentarily)
   // This prevents the default usage of  0,0
@@ -59,6 +55,7 @@ public class CarerMapsActivity extends AppCompatActivity
   private GoogleMap mGoogleMap;
   private String currentDestinationURL = "none";
   private ImageView newMessageIcon;
+  private int seenMessages = 0;
   // default to melbourne uni
   // list of Assisted movements
   private Double[] latitude = {MELBOURNEUNILAT};
@@ -125,6 +122,9 @@ public class CarerMapsActivity extends AppCompatActivity
   public void onStart(){
     if (previousActivityWasTextChat) {
       readMessages();
+      if (channel != null) {
+        seenMessages = channel.getMessages().size();
+        }
       previousActivityWasTextChat = false;
     }
     super.onStart();
@@ -213,11 +213,12 @@ public class CarerMapsActivity extends AppCompatActivity
             FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
             fetchUrl.execute(channel.getDirectionsURL() + key);
             currentDestinationURL = channel.getDirectionsURL();
+
           }
         }
       }
-      if(!channel.getMessages().isEmpty()){
-        channel.getChannelReference().child("messages").addValueEventListener(this);
+      if(seenMessages < channel.getMessages().size()){
+        unReadMessages();
 
       }
       if (channel.isChannelEnded()) {
@@ -254,12 +255,15 @@ public class CarerMapsActivity extends AppCompatActivity
         break;
       case R.id.toVoiceChat:
         Intent intentVoice = new Intent(CarerMapsActivity.this, VoiceActivity.class);
-        if (channel != null) {
-          intentVoice.putExtra(getResources().getString(R.string.channel_key), channelId);
-          intentVoice.putExtra("initiate", 0);
-          intentVoice.putExtra("CallId", channel.getAssisted());
+        if (channel != null && channel.getAssisted()!=null) {
+
+            intentVoice.putExtra(getResources().getString(R.string.channel_key), channelId);
+            intentVoice.putExtra("initiate", 0);
+            intentVoice.putExtra("CallId", channel.getAssisted());
+             startActivity(intentVoice);
+
         }
-        startActivity(intentVoice);
+
         break;
       case R.id.toVideoActivity:
         Intent intentToVideo = new Intent(CarerMapsActivity.this, VideoActivity.class);
@@ -301,7 +305,7 @@ public class CarerMapsActivity extends AppCompatActivity
         AlertDialog.BUTTON_NEUTRAL,
         "OK",
         (dialog, which) -> {
-          Intent intentToVideo = new Intent(getApplicationContext(), VideoActivity.class);
+          Intent intentToVideo = new Intent(CarerMapsActivity.this, VideoActivity.class);
           intentToVideo.putExtra(
               getApplicationContext().getResources().getString(R.string.channel_key), channelId);
           getApplicationContext().startActivity(intentToVideo);
@@ -358,7 +362,7 @@ public class CarerMapsActivity extends AppCompatActivity
           endChannelAlertDialog.dismiss();
           setPreviousActivityWasTextChat(false);
           VoiceActivity.endCall();
-          Intent intent = new Intent(getApplicationContext(), CarerHomepageActivity.class);
+          Intent intent = new Intent(CarerMapsActivity.this, CarerHomepageActivity.class);
           intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
           startActivity(intent);
           finish();
@@ -367,19 +371,6 @@ public class CarerMapsActivity extends AppCompatActivity
     endChannelAlertDialog.show();
   }
 
-  /**
-   * Update when there is a new message
-   * @param dataSnapshot
-   */
-  @Override
-  public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-    unReadMessages();
-  }
-
-  @Override
-  public void onCancelled(@NonNull DatabaseError databaseError) {
-
-  }
 
   /**
    * All messages have been read

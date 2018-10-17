@@ -36,9 +36,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.assisted.AssistedHomePageActivity;
 import com.quartz.zielclient.channel.ChannelController;
@@ -70,7 +67,7 @@ import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
  * @version 1.1 19/09/2018
  */
 public class MapsActivity extends AppCompatActivity
-    implements OnMapReadyCallback, ChannelListener, View.OnClickListener, ValueEventListener {
+    implements OnMapReadyCallback, ChannelListener, View.OnClickListener {
 
   private static final int DEFAULT_ZOOM = 15;
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
@@ -85,7 +82,7 @@ public class MapsActivity extends AppCompatActivity
 
   private LocationRequest mLocationRequest;
   private FusedLocationProviderClient mFusedLocationClient;
-
+  private int seenMessages =0;
   private Button toVideoChatButton;
   private Button toTextChatButton;
   private Button toVoiceChatButton;
@@ -218,11 +215,13 @@ public class MapsActivity extends AppCompatActivity
   public void onStart(){
     if (previousActivityWasTextChat) {
       readMessages();
+      if (channel != null) {
+        seenMessages = channel.getMessages().size();
+      }
       previousActivityWasTextChat = false;
     }
     super.onStart();
   }
-
   /**
    * Draws route between two points on the map
    */
@@ -334,10 +333,11 @@ public class MapsActivity extends AppCompatActivity
     String strDestination = "destination=" + destination.latitude + "," + destination.longitude;
 
     // Sensor initialisation
+    String travelMode = "mode=walking";
     String sensor = "sensor=false";
     String key = "&key=" + getBaseContext().getString(R.string.google_api_key);
     // Building the parameters to the web service
-    String parameters = strSource + "&" + strDestination + "&" + sensor + key;
+    String parameters = strSource + "&" + strDestination + "&" + sensor + '&' + travelMode + key;
 
     // Add parameters to api url
     String apiRequest = API_URL + parameters;
@@ -365,9 +365,8 @@ public class MapsActivity extends AppCompatActivity
         // this is set to null on purpose and will not cause an error.
         makeChannelEndedAlert(null);
       }
-      if(!channel.getMessages().isEmpty()){
-        channel.getChannelReference().child("messages").addValueEventListener(this);
-
+      if(seenMessages < channel.getMessages().size()){
+        unReadMessages();
       }
       if (channel.getCarerStatus()) {
         toTextChatButton.setVisibility(View.VISIBLE);
@@ -397,12 +396,13 @@ public class MapsActivity extends AppCompatActivity
 
       case R.id.toVoiceChat:
         Intent intentVoice = new Intent(MapsActivity.this, VoiceActivity.class);
-        intentVoice.putExtra("initiate", 0);
-        if (channel != null) {
+        if (channel != null && channel.getCarer()!=null) {
           intentVoice.putExtra(getResources().getString(R.string.channel_key), channelId);
+          intentVoice.putExtra("initiate", 0);
           intentVoice.putExtra("CallId", channel.getCarer());
+          startActivity(intentVoice);
         }
-        startActivity(intentVoice);
+
         break;
 
       case R.id.toVideoChatButton:
@@ -441,10 +441,10 @@ public class MapsActivity extends AppCompatActivity
         AlertDialog.BUTTON_NEUTRAL,
         "OK",
         (dialog, which) -> {
-          Intent intentToVideo = new Intent(getApplicationContext(), VideoActivity.class);
+          Intent intentToVideo = new Intent(MapsActivity.this, VideoActivity.class);
           intentToVideo.putExtra(
               getApplicationContext().getResources().getString(R.string.channel_key), channelId);
-          getApplicationContext().startActivity(intentToVideo);
+          startActivity(intentToVideo);
         });
     return alertDialog;
   }
@@ -574,19 +574,7 @@ public class MapsActivity extends AppCompatActivity
   }
 
 
-  /**
-   * Update when there is a new message
-   * @param dataSnapshot
-   */
-  @Override
-  public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-    unReadMessages();
-  }
 
-  @Override
-  public void onCancelled(@NonNull DatabaseError databaseError) {
-
-  }
 
   /**
    * indicates that messages have been read

@@ -10,7 +10,7 @@
         android:id="@+id/channelIdEntry1"
         android:layout_width="266dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="19dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="52dp"
         android:text="Create Profile"
@@ -99,7 +99,7 @@
     <Button
         android:id="@+id/completeAccountCreation"
         android:layout_width="133dp"
-        android:layout_height="0dp"
+        android:layout_height="55dp"
         android:layout_marginBottom="46dp"
         android:background="@drawable/whitebutton"
         android:text="@string/confirm"

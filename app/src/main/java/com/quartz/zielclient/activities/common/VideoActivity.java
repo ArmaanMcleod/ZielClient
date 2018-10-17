@@ -548,6 +548,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   private void setDisconnectAction() {
     connectActionFab.setImageDrawable(
         ContextCompat.getDrawable(this, R.drawable.ic_call_end_white_24px));
+    //    connectActionFab.setBackgroundColor(0xfa091d);
     connectActionFab.show();
     connectActionFab.setOnClickListener(disconnectClickListener());
   }
@@ -625,8 +626,10 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   private void moveLocalVideoToThumbnailView() {
     if (thumbnailVideoView.getVisibility() == View.GONE) {
       thumbnailVideoView.setVisibility(View.VISIBLE);
-      localVideoTrack.removeRenderer(primaryVideoView);
-      localVideoTrack.addRenderer(thumbnailVideoView);
+      if (localVideoTrack != null) {
+        localVideoTrack.removeRenderer(primaryVideoView);
+        localVideoTrack.addRenderer(thumbnailVideoView);
+      }
       localVideoView = thumbnailVideoView;
       thumbnailVideoView.setMirror(
           cameraCapturerCompat.getCameraSource() == CameraSource.FRONT_CAMERA);
@@ -964,7 +967,6 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
   @Override
   public void dataChanged() {
-    //
   }
 
   /**
@@ -977,7 +979,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     if (channel != null) {
       channel.setVideoCallStatus(false);
     }
-    super.onBackPressed();
+    finish();
   }
 
   public String getChannelId() {
