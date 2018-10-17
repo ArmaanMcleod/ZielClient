@@ -231,4 +231,9 @@ public class SettingsActivity extends AppCompatActivity
   public Intent getParentActivityIntent() {
     return goHomeIntent();
   }
+
+  @Override
+  public void onBackPressed(){
+    startActivity(goHomeIntent());
+  }
 }
