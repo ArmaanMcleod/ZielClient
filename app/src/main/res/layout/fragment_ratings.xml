@@ -13,10 +13,10 @@
         android:id="@+id/linearLayout4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/reviewBox"
-        app:layout_constraintEnd_toEndOf="@+id/reviewBox"
-        app:layout_constraintStart_toStartOf="@+id/reviewBox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8">
 
         <CheckBox
@@ -63,27 +63,24 @@
 
     <EditText
         android:id="@+id/reviewBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="65dp"
-        android:layout_marginEnd="65dp"
+        android:layout_width="216dp"
+        android:layout_height="116dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginBottom="40dp"
         android:ems="10"
+        android:hint="Write your review here!"
         android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@+id/submitReview"
+        app:layout_constraintBottom_toBottomOf="@+id/submitReview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
+        app:layout_constraintTop_toTopOf="@+id/linearLayout4" />
 
     <TextView
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="19dp"
-        android:layout_marginBottom="32dp"
-        android:text="Leave a reviewText"
+        android:text="Leave a review"
         android:textSize="26sp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -91,10 +88,10 @@
         android:id="@+id/submitReview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="330dp"
+        android:layout_marginTop="211dp"
         android:text="Submit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reviewBox" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
