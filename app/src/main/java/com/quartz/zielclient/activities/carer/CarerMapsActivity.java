@@ -6,6 +6,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -302,6 +303,8 @@ public class CarerMapsActivity extends AppCompatActivity
     alertDialog = new AlertDialog.Builder(CarerMapsActivity.this).create();
     alertDialog.setTitle("Video Share?");
     alertDialog.setMessage("Carer wants to share video with you  please also join the channel");
+    alertDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
     alertDialog.setButton(
         AlertDialog.BUTTON_NEUTRAL,
         "OK",
@@ -355,6 +358,8 @@ public class CarerMapsActivity extends AppCompatActivity
     endChannelAlertDialog = new AlertDialog.Builder(CarerMapsActivity.this).create();
     endChannelAlertDialog.setTitle("Channel has finished");
     endChannelAlertDialog.setMessage("This channel has been ended. Will now return to home page");
+    endChannelAlertDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
     endChannelAlertDialog.setButton(
         AlertDialog.BUTTON_NEUTRAL,
         "OK",
