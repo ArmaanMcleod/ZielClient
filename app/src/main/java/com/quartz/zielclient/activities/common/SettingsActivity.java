@@ -3,6 +3,7 @@ package com.quartz.zielclient.activities.common;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
@@ -28,13 +29,17 @@ import com.quartz.zielclient.user.User;
 import com.quartz.zielclient.user.UserController;
 import com.quartz.zielclient.user.UserFactory;
 
+import static android.view.View.OnClickListener;
+import static android.widget.CompoundButton.OnCheckedChangeListener;
+import static com.quartz.zielclient.activities.common.RatingsFragment.OnFragmentInteractionListener;
+
 /**
  * Activity to update account details.
  *
  * @author alexvosnakis
  */
 public class SettingsActivity extends AppCompatActivity
-    implements ValueEventListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+    implements ValueEventListener, OnClickListener, OnCheckedChangeListener, OnFragmentInteractionListener {
 
   private static final String TAG = SettingsActivity.class.getSimpleName();
 
@@ -162,6 +167,11 @@ public class SettingsActivity extends AppCompatActivity
         }))
         .setNegativeButton(android.R.string.no, (dialog, which) -> dialog.dismiss())
         .create();
+  }
+
+  @Override
+  public void onFragmentInteraction(Uri uri) {
+
   }
 
   @Override

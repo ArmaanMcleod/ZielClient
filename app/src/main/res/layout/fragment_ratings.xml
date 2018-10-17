@@ -9,70 +9,81 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <CheckBox
-        android:id="@+id/starCheckBox"
+    <LinearLayout
+        android:id="@+id/linearLayout4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:button="@drawable/star_checkbox"
-        app:layout_constraintBaseline_toBaselineOf="@+id/starCheckBox2"
-        app:layout_constraintEnd_toEndOf="@+id/textView8"
-        app:layout_constraintStart_toStartOf="@+id/textView8" />
-
-    <CheckBox
-        android:id="@+id/starCheckBox2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:button="@drawable/star_checkbox"
-        app:layout_constraintStart_toEndOf="@+id/starCheckBox"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
-
-    <CheckBox
-        android:id="@+id/starCheckBox3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:button="@drawable/star_checkbox"
-        app:layout_constraintBaseline_toBaselineOf="@+id/starCheckBox2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <CheckBox
-        android:id="@+id/starCheckBox4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:button="@drawable/star_checkbox"
-        app:layout_constraintBaseline_toBaselineOf="@+id/starCheckBox5"
-        app:layout_constraintStart_toEndOf="@+id/starCheckBox3" />
-
-    <CheckBox
-        android:id="@+id/starCheckBox5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="19dp"
-        android:button="@drawable/star_checkbox"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/reviewBox"
-        app:layout_constraintStart_toEndOf="@+id/starCheckBox4" />
+        app:layout_constraintEnd_toEndOf="@+id/reviewBox"
+        app:layout_constraintStart_toStartOf="@+id/reviewBox"
+        app:layout_constraintTop_toBottomOf="@+id/textView8">
+
+        <CheckBox
+            android:id="@+id/starCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/star_checkbox"
+            tools:layout_editor_absoluteX="53dp"
+            tools:layout_editor_absoluteY="71dp" />
+
+        <CheckBox
+            android:id="@+id/starCheckBox2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/star_checkbox"
+            tools:layout_editor_absoluteX="101dp"
+            tools:layout_editor_absoluteY="71dp" />
+
+        <CheckBox
+            android:id="@+id/starCheckBox3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/star_checkbox"
+            tools:layout_editor_absoluteX="148dp"
+            tools:layout_editor_absoluteY="71dp" />
+
+        <CheckBox
+            android:id="@+id/starCheckBox4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/star_checkbox"
+            tools:layout_editor_absoluteX="217dp"
+            tools:layout_editor_absoluteY="71dp" />
+
+        <CheckBox
+            android:id="@+id/starCheckBox5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/star_checkbox"
+            tools:layout_editor_absoluteX="265dp"
+            tools:layout_editor_absoluteY="71dp" />
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/reviewBox"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="19dp"
+        android:layout_marginStart="65dp"
+        android:layout_marginEnd="65dp"
         android:ems="10"
         android:inputType="textMultiLine"
-        app:layout_constraintStart_toStartOf="@+id/starCheckBox"
-        app:layout_constraintTop_toBottomOf="@+id/starCheckBox" />
+        app:layout_constraintBottom_toTopOf="@+id/submitReview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
 
     <TextView
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="19dp"
+        android:layout_marginBottom="32dp"
         android:text="Leave a review"
         android:textSize="26sp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -80,8 +91,10 @@
         android:id="@+id/submitReview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="330dp"
         android:text="Submit"
-        tools:layout_editor_absoluteX="147dp"
-        tools:layout_editor_absoluteY="184dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reviewBox" />
 
 </android.support.constraint.ConstraintLayout>
