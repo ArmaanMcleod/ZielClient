@@ -45,6 +45,7 @@ public class SettingsActivity extends AppCompatActivity
 
   private boolean nullSetup = false;
   private boolean updating = false;
+  private boolean reviewUpdating = false;
 
   // Current user state
   private User user;
@@ -119,12 +120,11 @@ public class SettingsActivity extends AppCompatActivity
 
   @Override
   public boolean onSupportNavigateUp() {
-    if (updating) {
+    if (updating || reviewUpdating) {
       return false;
     }
 
     startActivity(goHomeIntent());
-    finish();
     return true;
   }
 
@@ -171,7 +171,7 @@ public class SettingsActivity extends AppCompatActivity
 
   @Override
   public void onFragmentInteraction(Uri uri) {
-
+    reviewUpdating = !reviewUpdating;
   }
 
   @Override

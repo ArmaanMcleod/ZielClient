@@ -1,5 +1,7 @@
 package com.quartz.zielclient.review;
 
+import android.util.Log;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -11,6 +13,7 @@ import java.util.Optional;
  * Controller for reviews.
  */
 public class ReviewController {
+  private static final String TAG = ReviewController.class.getSimpleName();
 
   private static final String REVIEWS_PATH = "reviews";
   private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -27,25 +30,13 @@ public class ReviewController {
    * @param listener   The listener waiting for an update.
    */
   public static void uploadReview(int stars, String reviewText, ValueEventListener listener) {
+    Log.i(TAG, "Uploading review.");
     Review review = new Review(stars, reviewText);
     Optional<String> maybeId = UserController.retrieveUid();
     maybeId.ifPresent(userId -> {
       DatabaseReference ref = database.getReference(REVIEWS_PATH);
       ref.addListenerForSingleValueEvent(listener);
       ref.child(userId).push().setValue(review);
-    });
-  }
-
-  /**
-   * Fetches a user's reviews and passes it to a listener.
-   *
-   * @param listener The listener to receive the review.
-   */
-  public static void fetchReviews(ValueEventListener listener) {
-    Optional<String> maybeId = UserController.retrieveUid();
-    maybeId.ifPresent(userId -> {
-      DatabaseReference ref = database.getReference(REVIEWS_PATH);
-      ref.addListenerForSingleValueEvent(listener);
     });
   }
 }
