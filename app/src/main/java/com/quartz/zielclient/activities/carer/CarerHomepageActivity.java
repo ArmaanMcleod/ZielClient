@@ -65,7 +65,7 @@ public class CarerHomepageActivity extends AppCompatActivity
     ImageButton settingsButton = findViewById(R.id.carerSettingsButton);
     settingsButton.setOnClickListener(this);
 
-    notificationHandler = new NotificationHandler(this);
+    notificationHandler = new NotificationHandler(CarerHomepageActivity.this);
     notificationHandler.createNotificationChannel();
     // Getting requestsReference from FireBase
     DatabaseReference requestsReference = FirebaseDatabase.getInstance().getReference("channelRequests/" + userID);

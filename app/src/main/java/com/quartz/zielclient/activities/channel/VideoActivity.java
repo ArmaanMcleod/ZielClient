@@ -3,7 +3,6 @@ package com.quartz.zielclient.activities.channel;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
@@ -28,7 +27,6 @@ import android.widget.Toast;
 import com.koushikdutta.ion.Ion;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.common.Dialog;
-import com.quartz.zielclient.activities.common.SettingsActivity;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
@@ -179,10 +177,6 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.menu_settings:
-        startActivity(
-            new Intent(this, SettingsActivity.class));
-        return true;
       case R.id.speaker_menu_item:
         if (audioManager.isSpeakerphoneOn()) {
           audioManager.setSpeakerphoneOn(false);

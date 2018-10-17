@@ -228,8 +228,10 @@ public class CarerMapsActivity extends AppCompatActivity
         }
       }
       if (channel.getVideoCallStatus()) {
+        alertDialog = makeVideoAlert();
         alertDialog.show();
       } else {
+        alertDialog = makeVideoAlert();
         alertDialog.cancel();
       }
     }
@@ -298,7 +300,7 @@ public class CarerMapsActivity extends AppCompatActivity
    * @return AlertDialog The dialog to show up on the screen.
    */
   public AlertDialog makeVideoAlert() {
-    alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog = new AlertDialog.Builder(CarerMapsActivity.this).create();
     alertDialog.setTitle("Video Share?");
     alertDialog.setMessage("Carer wants to share video with you  please also join the channel");
     alertDialog.setButton(
@@ -308,7 +310,7 @@ public class CarerMapsActivity extends AppCompatActivity
           Intent intentToVideo = new Intent(CarerMapsActivity.this, VideoActivity.class);
           intentToVideo.putExtra(
               getApplicationContext().getResources().getString(R.string.channel_key), channelId);
-          getApplicationContext().startActivity(intentToVideo);
+          startActivity(intentToVideo);
         });
     return alertDialog;
   }
