@@ -147,6 +147,7 @@ public class RatingsFragment extends Fragment implements View.OnClickListener, V
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
     Log.i(TAG, "Successfully submitted review.");
     Toast.makeText(getContext(), "Review submitted!", Toast.LENGTH_LONG).show();
+    onButtonPressed(Uri.EMPTY);
   }
 
   @Override
