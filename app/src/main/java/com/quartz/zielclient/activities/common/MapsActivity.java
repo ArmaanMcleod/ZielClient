@@ -583,6 +583,7 @@ public class MapsActivity extends AppCompatActivity
    * New Messages have arrived
    */
   public  void unReadMessages(){
+    newMessageIcon.bringToFront();
     newMessageIcon.setVisibility(View.VISIBLE);
 
   }
