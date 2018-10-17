@@ -6,6 +6,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -19,10 +20,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.activities.common.StreetViewActivity;
-import com.quartz.zielclient.activities.common.TextChatActivity;
-import com.quartz.zielclient.activities.common.VideoActivity;
-import com.quartz.zielclient.activities.common.VoiceActivity;
+import com.quartz.zielclient.activities.channel.StreetViewActivity;
+import com.quartz.zielclient.activities.channel.TextChatActivity;
+import com.quartz.zielclient.activities.channel.VideoActivity;
+import com.quartz.zielclient.activities.channel.VoiceActivity;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
@@ -191,11 +192,10 @@ public class CarerMapsActivity extends AppCompatActivity
   @Override
   public void dataChanged() {
     // Update location
-    latitude[0] = channel.getAssistedLocation().latitude;
-    longitude[0] = channel.getAssistedLocation().longitude;
-    updateMapCoords();
-
     if (channel != null) {
+      latitude[0] = channel.getAssistedLocation().latitude;
+      longitude[0] = channel.getAssistedLocation().longitude;
+      updateMapCoords();
       channel.setCarerStatus(true);
       // if the assisted has entered a route then generate that same route
       if ((channel.getDirectionsURL() != null)
@@ -288,8 +288,10 @@ public class CarerMapsActivity extends AppCompatActivity
   @Override
   public void onBackPressed() {
     VoiceActivity.endCall();
+    alertDialog.dismiss();
+    channel = null;
+    finish();
 
-    super.finish();
   }
 
   /**
@@ -298,9 +300,11 @@ public class CarerMapsActivity extends AppCompatActivity
    * @return AlertDialog The dialog to show up on the screen.
    */
   public AlertDialog makeVideoAlert() {
-    alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog = new AlertDialog.Builder(CarerMapsActivity.this).create();
     alertDialog.setTitle("Video Share?");
     alertDialog.setMessage("Carer wants to share video with you  please also join the channel");
+    alertDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
     alertDialog.setButton(
         AlertDialog.BUTTON_NEUTRAL,
         "OK",
@@ -308,7 +312,7 @@ public class CarerMapsActivity extends AppCompatActivity
           Intent intentToVideo = new Intent(CarerMapsActivity.this, VideoActivity.class);
           intentToVideo.putExtra(
               getApplicationContext().getResources().getString(R.string.channel_key), channelId);
-          getApplicationContext().startActivity(intentToVideo);
+          startActivity(intentToVideo);
         });
     return alertDialog;
   }
@@ -354,6 +358,8 @@ public class CarerMapsActivity extends AppCompatActivity
     endChannelAlertDialog = new AlertDialog.Builder(CarerMapsActivity.this).create();
     endChannelAlertDialog.setTitle("Channel has finished");
     endChannelAlertDialog.setMessage("This channel has been ended. Will now return to home page");
+    endChannelAlertDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
     endChannelAlertDialog.setButton(
         AlertDialog.BUTTON_NEUTRAL,
         "OK",

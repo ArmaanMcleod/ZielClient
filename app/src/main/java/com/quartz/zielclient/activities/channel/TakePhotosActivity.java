@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities.common;
+package com.quartz.zielclient.activities.channel;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -63,20 +63,20 @@ import static android.graphics.Bitmap.CompressFormat.JPEG;
  * 9/10/2018
  */
 public class TakePhotosActivity extends AppCompatActivity {
+
+  private static final int REQUEST_WRITE_PERMISSION = 1;
+  private static final int PICK_IMAGE = 1;
+  private final String activity = this.getClass().getSimpleName();
+
+
   private CameraView cameraView;
 
   private boolean canTakePicture;
-
-  private final String activity = this.getClass().getSimpleName();
-
   private ImageView imageView;
 
   private String currentPhotoPath;
 
   private File storageDir;
-
-  private static final int REQUEST_WRITE_PERMISSION = 1;
-  private static final int PICK_IMAGE = 1;
 
   private boolean permissionGranted;
 
@@ -132,7 +132,7 @@ public class TakePhotosActivity extends AppCompatActivity {
         saveImageFile(bitmap);
         Log.d(activity, "Saving file to " + currentPhotoPath);
       } catch (IOException e) {
-        Log.d(activity, e.toString());
+        Log.e(activity, "Error saving file", e);
       }
     }
 
@@ -153,11 +153,10 @@ public class TakePhotosActivity extends AppCompatActivity {
   private void runLandMarkRecognition(Bitmap bitmap) {
 
     // Use latest model options
-    FirebaseVisionCloudDetectorOptions options =
-        new FirebaseVisionCloudDetectorOptions.Builder()
-            .setModelType(FirebaseVisionCloudDetectorOptions.LATEST_MODEL)
-            .setMaxResults(15)
-            .build();
+    FirebaseVisionCloudDetectorOptions options = new FirebaseVisionCloudDetectorOptions.Builder()
+        .setModelType(FirebaseVisionCloudDetectorOptions.LATEST_MODEL)
+        .setMaxResults(15)
+        .build();
 
     // Convert to firebase image
     FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);
@@ -270,9 +269,10 @@ public class TakePhotosActivity extends AppCompatActivity {
 
   /**
    * Notifies when image has been selected from gallery
+   *
    * @param requestCode This is the request code passed through to verify activity.
-   * @param resultCode This is the result code is the activity was created.
-   * @param data The data extracted from activity
+   * @param resultCode  This is the result code is the activity was created.
+   * @param data        The data extracted from activity
    */
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -320,12 +320,11 @@ public class TakePhotosActivity extends AppCompatActivity {
   @AfterPermissionGranted(REQUEST_WRITE_PERMISSION)
   public void requestStoragePermission() {
     String[] perms = {WRITE_EXTERNAL_STORAGE};
-    if(EasyPermissions.hasPermissions(this, perms)) {
+    if (EasyPermissions.hasPermissions(this, perms)) {
       Toast.makeText(this, "Storage Permission already granted",
           Toast.LENGTH_SHORT).show();
       permissionGranted = true;
-    }
-    else {
+    } else {
       EasyPermissions.requestPermissions(this,
           "Please grant the storage permission", REQUEST_WRITE_PERMISSION, perms);
       permissionGranted = false;
@@ -334,6 +333,7 @@ public class TakePhotosActivity extends AppCompatActivity {
 
   /**
    * Saves an image in storage location.
+   *
    * @param image The image to save.
    * @throws IOException Throws exception if file cannot write out.
    */
@@ -374,8 +374,9 @@ public class TakePhotosActivity extends AppCompatActivity {
 
   /**
    * Writes image to device storage.
+   *
    * @param imageFile The image file to process.
-   * @param image The bitmap picture.
+   * @param image     The bitmap picture.
    */
   private void writeImage(File imageFile, Bitmap image) {
     // Write file to directory
@@ -383,15 +384,16 @@ public class TakePhotosActivity extends AppCompatActivity {
       OutputStream fileOut = new FileOutputStream(imageFile);
       image.compress(JPEG, 100, fileOut);
       fileOut.close();
-    } catch(Exception e) {
+    } catch (Exception e) {
       Log.d(activity, e.toString());
     }
   }
 
   /**
    * Adds image to media store to be visible by gallery.
-   * @param cr THe content resolver manager which manages media files.
-   * @param imgType The image extension to set the mime type.
+   *
+   * @param cr       THe content resolver manager which manages media files.
+   * @param imgType  The image extension to set the mime type.
    * @param filepath The filepath of the image stored on the device.
    */
   public void addImageToGallery(ContentResolver cr, String imgType, File filepath) {

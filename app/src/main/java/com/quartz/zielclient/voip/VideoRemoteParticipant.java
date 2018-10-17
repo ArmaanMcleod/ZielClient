@@ -3,7 +3,7 @@ package com.quartz.zielclient.voip;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 
-import com.quartz.zielclient.activities.common.VideoActivity;
+import com.quartz.zielclient.activities.channel.VideoActivity;
 import com.twilio.video.RemoteAudioTrack;
 import com.twilio.video.RemoteAudioTrackPublication;
 import com.twilio.video.RemoteDataTrack;

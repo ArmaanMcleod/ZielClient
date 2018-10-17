@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities.common;
+package com.quartz.zielclient.activities.channel;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -82,7 +83,7 @@ public class MapsActivity extends AppCompatActivity
 
   private LocationRequest mLocationRequest;
   private FusedLocationProviderClient mFusedLocationClient;
-  private int seenMessages =0;
+  private int seenMessages = 0;
   private Button toVideoChatButton;
   private Button toTextChatButton;
   private Button toVoiceChatButton;
@@ -195,10 +196,8 @@ public class MapsActivity extends AppCompatActivity
     SupportMapFragment mapFrag =
         (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
-
     if (mapFrag != null) {
       mapFrag.getMapAsync(this);
-
     }
 
     // Allow user to see street view suggestion
@@ -209,7 +208,7 @@ public class MapsActivity extends AppCompatActivity
   }
 
   @Override
-  public void onStart(){
+  public void onStart() {
     if (previousActivityWasTextChat) {
       readMessages();
       if (channel != null) {
@@ -219,6 +218,7 @@ public class MapsActivity extends AppCompatActivity
     }
     super.onStart();
   }
+
   /**
    * Draws route between two points on the map
    */
@@ -248,14 +248,13 @@ public class MapsActivity extends AppCompatActivity
     // Create address geo coder
     Geocoder geocoder = new Geocoder(this, Locale.getDefault());
     try {
-
       // Only retrieve the rop result
       List<Address> addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1);
       if (!addresses.isEmpty()) {
         address = addresses.get(0).getAddressLine(0);
       }
     } catch (IOException e) {
-      Log.d(activity, "getAddress: Cannot fetch address");
+      Log.e(activity, "getAddress: Cannot fetch address", e);
     }
 
     return address;
@@ -358,11 +357,11 @@ public class MapsActivity extends AppCompatActivity
         alertDialog.cancel();
       }
 
-      if(channel.isChannelEnded() && !this.isFinishing()){
+      if (channel.isChannelEnded() && !this.isFinishing()) {
         // this is set to null on purpose and will not cause an error.
         makeChannelEndedAlert(null);
       }
-      if(seenMessages < channel.getMessages().size()){
+      if (seenMessages < channel.getMessages().size()) {
         unReadMessages();
       }
       if (channel.getCarerStatus()) {
@@ -392,7 +391,7 @@ public class MapsActivity extends AppCompatActivity
 
       case R.id.toVoiceChat:
         Intent intentVoice = new Intent(MapsActivity.this, VoiceActivity.class);
-        if (channel != null && channel.getCarer()!=null) {
+        if (channel != null && channel.getCarer() != null) {
           intentVoice.putExtra(getResources().getString(R.string.channel_key), channelId);
           intentVoice.putExtra("initiate", 0);
           intentVoice.putExtra("CallId", channel.getCarer());
@@ -433,6 +432,8 @@ public class MapsActivity extends AppCompatActivity
     alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle("Video Share?");
     alertDialog.setMessage("Carer wants to share video with you  please also join the channel");
+    alertDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
     alertDialog.setButton(
         AlertDialog.BUTTON_NEUTRAL,
         "OK",
@@ -446,24 +447,25 @@ public class MapsActivity extends AppCompatActivity
   }
 
 
-  public void makeChannelEndedAlert(View v){
+  public void makeChannelEndedAlert(View v) {
     alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle("Channel has finished");
     alertDialog.setMessage("This channel has been ended. Will now return to home page");
+    alertDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
     alertDialog.setButton(
-            AlertDialog.BUTTON_NEUTRAL,
-            "OK",
-            (dialog, which) -> {
-              channel.endChannel();
-              alertDialog.dismiss();
-              setPreviousActivityWasTextChat(false);
-              VoiceActivity.endCall();
-              Intent intent = new Intent( getApplicationContext(), AssistedHomePageActivity.class );
-              intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
-              startActivity(intent);
-              finish();
+        AlertDialog.BUTTON_NEUTRAL,
+        "OK",
+        (dialog, which) -> {
+          channel.endChannel();
+          alertDialog.dismiss();
+          VoiceActivity.endCall();
+          Intent intent = new Intent(getApplicationContext(), AssistedHomePageActivity.class);
+          intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+          startActivity(intent);
+          finish();
 
-            });
+        });
 
     alertDialog.show();
 
@@ -477,8 +479,8 @@ public class MapsActivity extends AppCompatActivity
   private void drawMarkers(List<LatLng> coordinates) {
     dropMarkers.addAll(
         coordinates.stream()
-        .map(coord -> createMarker(coord, HUE_CYAN))
-        .collect(Collectors.toList())
+            .map(coord -> createMarker(coord, HUE_CYAN))
+            .collect(Collectors.toList())
     );
   }
 
@@ -504,7 +506,6 @@ public class MapsActivity extends AppCompatActivity
         .position(location)
         .title(getAddress(location))
         .icon(BitmapDescriptorFactory.defaultMarker(colour));
-
     return mGoogleMap.addMarker(markerOptions);
   }
 
@@ -570,12 +571,10 @@ public class MapsActivity extends AppCompatActivity
   }
 
 
-
-
   /**
    * indicates that messages have been read
    */
-  public void readMessages(){
+  public void readMessages() {
     newMessageIcon.setVisibility(View.INVISIBLE);
   }
 

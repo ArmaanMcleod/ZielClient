@@ -14,15 +14,12 @@
         android:id="@+id/box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="17dp"
-        android:layout_marginEnd="48dp"
-        android:layout_marginStart="48dp"
+        android:layout_marginBottom="166dp"
         android:background="@drawable/shadow"
         android:elevation="5dp"
-        app:layout_constraintBottom_toTopOf="@+id/directMeButton"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2">
+        app:layout_constraintStart_toStartOf="parent">
 
         <fragment
             android:id="@+id/editText"
@@ -49,12 +46,12 @@
         android:id="@+id/imageView2"
         android:layout_width="210dp"
         android:layout_height="160dp"
-        android:layout_marginBottom="32dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/box"
+        android:layout_marginTop="92dp"
+        android:layout_marginBottom="93dp"
+        app:layout_constraintBottom_toBottomOf="@+id/box"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/HomePage"
+        app:layout_constraintTop_toBottomOf="@+id/settingsPageButton"
         app:srcCompat="@drawable/helponboarding2" />
 
 
@@ -62,8 +59,7 @@
         android:id="@+id/HomePage"
         android:layout_width="218dp"
         android:layout_height="49dp"
-        android:layout_marginTop="89dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="15dp"
         android:inputType="textPersonName"
         android:text="@string/where_to"
         android:textAlignment="center"
@@ -73,7 +69,6 @@
         app:layout_constraintBottom_toTopOf="@+id/imageView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:text="Where To?" />
     <!--android:fontFamily="@font/allerta"-->
     <!--android:text="@string/where_to"-->
@@ -83,14 +78,24 @@
         android:id="@+id/directMeButton"
         android:layout_width="179dp"
         android:layout_height="53dp"
-        android:layout_marginBottom="107dp"
+        android:layout_marginTop="40dp"
         android:background="@drawable/whitebutton"
         android:text="@string/direct_me_there"
         android:textSize="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/box" />
+
+    <ImageButton
+        android:id="@+id/settingsPageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_margin="10dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_setting1_50" />
 
 
 </android.support.constraint.ConstraintLayout>

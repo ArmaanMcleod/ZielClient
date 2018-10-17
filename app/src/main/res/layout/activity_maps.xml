@@ -8,7 +8,7 @@
     android:weightSum="1"
     android:windowTranslucentNavigation="true"
     android:windowTranslucentStatus="true"
-    tools:context=".activities.common.MapsActivity">
+    tools:context=".activities.channel.MapsActivity">
 
     <Button
         android:id="@+id/endChannelButton"
