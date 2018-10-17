@@ -13,7 +13,7 @@ import com.quartz.zielclient.activities.assisted.AssistedHomePageActivity;
 import com.quartz.zielclient.activities.carer.CarerHomepageActivity;
 import com.quartz.zielclient.activities.onboarding.OnboardingActivity;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
-import com.quartz.zielclient.exceptions.AuthorisationException;
+import com.quartz.zielclient.user.AuthorisationException;
 import com.quartz.zielclient.user.User;
 import com.quartz.zielclient.user.UserController;
 import com.quartz.zielclient.user.UserFactory;

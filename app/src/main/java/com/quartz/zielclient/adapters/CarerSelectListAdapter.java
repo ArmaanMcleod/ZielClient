@@ -21,7 +21,7 @@ import com.quartz.zielclient.activities.channel.MapsActivity;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelRequestController;
-import com.quartz.zielclient.exceptions.AuthorisationException;
+import com.quartz.zielclient.user.AuthorisationException;
 import com.quartz.zielclient.models.CarerSelectionItem;
 import com.quartz.zielclient.user.User;
 import com.quartz.zielclient.user.UserController;

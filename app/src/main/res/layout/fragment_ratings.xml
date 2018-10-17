@@ -81,7 +81,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="19dp"
         android:layout_marginBottom="32dp"
-        android:text="Leave a review"
+        android:text="Leave a reviewText"
         android:textSize="26sp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
         app:layout_constraintStart_toStartOf="parent"

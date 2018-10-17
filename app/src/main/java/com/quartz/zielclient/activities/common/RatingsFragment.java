@@ -4,11 +4,23 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.review.ReviewController;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,7 +30,7 @@ import com.quartz.zielclient.R;
  * Use the {@link RatingsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RatingsFragment extends Fragment {
+public class RatingsFragment extends Fragment implements View.OnClickListener, ValueEventListener {
   // TODO: Rename parameter arguments, choose names that match
   // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
   private static final String ARG_PARAM1 = "param1";
@@ -27,6 +39,8 @@ public class RatingsFragment extends Fragment {
   // TODO: Rename and change types of parameters
   private String mParam1;
   private String mParam2;
+
+  private List<CheckBox> stars = new ArrayList<>();
 
   private OnFragmentInteractionListener mListener;
 
@@ -65,13 +79,60 @@ public class RatingsFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.fragment_ratings, container, false);
+    View view = inflater.inflate(R.layout.fragment_ratings, container, false);
+
+    // Add all the star checkboxes to the above list. Ordering is essential so the list is made
+    // unmodifiable after creation
+    List<CheckBox> tempStars = new ArrayList<>();
+    tempStars.add(view.findViewById(R.id.starCheckBox));
+    tempStars.add(view.findViewById(R.id.starCheckBox2));
+    tempStars.add(view.findViewById(R.id.starCheckBox3));
+    tempStars.add(view.findViewById(R.id.starCheckBox4));
+    tempStars.add(view.findViewById(R.id.starCheckBox5));
+
+    stars = Collections.unmodifiableList(tempStars);
+    stars.forEach(star -> star.setOnClickListener(RatingsFragment.this));
+    return view;
   }
 
   // TODO: Rename method, update argument and hook method into UI event
   public void onButtonPressed(Uri uri) {
     if (mListener != null) {
       mListener.onFragmentInteraction(uri);
+    }
+  }
+
+  private void attemptSubmit() {
+    long starsPressed = stars.stream()
+        .filter(CompoundButton::isChecked)
+        .count();
+    if (starsPressed == 0) {
+      // Can't submit with 0, have error
+      return;
+    }
+
+    // v should never be null, as this is run after onCreateView
+    View v = getView();
+    if (v != null) {
+      TextView reviewBox = v.findViewById(R.id.reviewBox);
+      String reviewText = reviewBox.getText().toString();
+      ReviewController.uploadReview((int) starsPressed, reviewText, this);
+    }
+  }
+
+  @Override
+  public void onClick(View v) {
+    if (v.getId() == R.id.submitReview) {
+      attemptSubmit();
+      return;
+    }
+
+    stars.forEach(star -> star.setChecked(false));
+    for (CompoundButton starButton : stars) {
+      starButton.setChecked(true);
+      if (starButton.getId() == v.getId()) {
+        break;
+      }
     }
   }
 
@@ -90,6 +151,16 @@ public class RatingsFragment extends Fragment {
   public void onDetach() {
     super.onDetach();
     mListener = null;
+  }
+
+  @Override
+  public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+  }
+
+  @Override
+  public void onCancelled(@NonNull DatabaseError databaseError) {
+
   }
 
   /**
