@@ -51,11 +51,34 @@ public final class MessageFactory {
     return new Message(Message.MessageType.IMAGE, url, userName);
   }
 
+  /**
+   * Create image message when generating the image message
+   * @param url The URL of the image file
+   * @param userName The userName of the sender of this message
+   * @param timestamp The recorded timestamp of the stored message
+   * @return The newly generated image message
+   */
+  @NonNull
+  public static Message makeImageMessage(String url, String userName, long timestamp) {
+    return new Message(Message.MessageType.IMAGE, url, userName, timestamp);
+  }
+
   public static Message makeMessage(@NonNull Map<String, Object> messageData) {
     String messageText = (String) messageData.get("messageValue");
     String messageSender = (String) messageData.get("userName");
     // Box it to avoid null pointer exceptions
     Long messageTime = (Long) messageData.get("messageTime");
-    return makeTextMessage(messageText, messageSender, messageTime);
+    //Check Message type
+    String type =  (String) messageData.get("type");
+
+    switch (type) {
+      case "TEXT":
+        return makeTextMessage(messageText, messageSender, messageTime);
+      case "IMAGE":
+        return makeImageMessage(messageText, messageSender, messageTime);
+      default:
+        return makeTextMessage(messageText, messageSender, messageTime);
+    }
+
   }
 }

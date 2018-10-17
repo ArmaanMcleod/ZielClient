@@ -160,6 +160,8 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     // TODO Fix this mess with switch once carer and assisted names are out(?)
     // If message is type of text
     if (message.getType().equals(Message.MessageType.TEXT)) {
+      System.out.println(message.getType().toString());
+      System.out.println("CCCCCCCCCCCCCCCCCCCCCC");
       // Checking current message's sender's ID against current user's ID
       if (message.getUserName().equals(FirebaseAuth.getInstance().getUid())) {
         // If current user is the sender of message
@@ -169,6 +171,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         return VIEW_TYPE_MESSAGE_RECEIVED;
       }
     } else if (message.getType().equals(Message.MessageType.IMAGE)) {
+      System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBB");
       // Checking current message's sender's ID against current user's ID
       if (message.getUserName().equals(FirebaseAuth.getInstance().getUid())) {
         // If current user is the sender of image message
@@ -188,6 +191,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
       }
     } else {
       // TODO Handle errors
+      System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAA");
       return VIEW_TYPE_MESSAGE_SENT;
     }
   }
