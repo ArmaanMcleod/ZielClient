@@ -281,13 +281,18 @@ public class TextChatActivity extends AppCompatActivity
     Boolean otherUser = !isAssisted;
     final String otherUserReference = "messages/" + currentUser + "/" + (otherUser.toString());
 
+    String channelID = channel.getChannelKey();
+
     // Database reference to store the image path
     DatabaseReference userMessagePush = mRootRef.child("messages")
         .child(currentUser).child(isAssisted.toString());
-    String pushID = userMessagePush.getKey();
+    //String pushID = userMessagePush.getKey();
+
+    //String directory = (isAssisted) ? isAssisted.toString(): otherUser.toString();
 
     // Adding the reference in which the image files are going to be pushed into Firebase
-    StorageReference imageFilePath = mImageStorage.child("messages/"+pushID + ".jpg");
+    StorageReference imageFilePath = mImageStorage.child("messages/" + channelID
+        + messageList.size() + ".jpg");
 
     imageFilePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
       @Override
