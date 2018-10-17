@@ -80,7 +80,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".activities.common.MapsActivity"
+            android:name=".activities.channel.MapsActivity"
             android:launchMode="singleTop"
             android:label="@string/title_activity_maps" />
 
