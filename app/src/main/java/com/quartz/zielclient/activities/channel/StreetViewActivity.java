@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities.common;
+package com.quartz.zielclient.activities.channel;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,11 +24,10 @@ import com.quartz.zielclient.R;
  */
 public class StreetViewActivity extends AppCompatActivity implements OnStreetViewPanoramaReadyCallback {
 
-  private LatLng destination;
-
   private static final int DURATION = 2000;
-
   private final String activity = this.getClass().getSimpleName();
+
+  private LatLng destination;
 
   /**
    * Creates a street view of a map location.

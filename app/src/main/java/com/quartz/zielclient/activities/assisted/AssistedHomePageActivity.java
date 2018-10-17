@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
@@ -17,6 +18,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.common.SettingsActivity;
 
 import java.util.Objects;
 
@@ -44,6 +46,14 @@ public class AssistedHomePageActivity extends AppCompatActivity {
     setTheme(R.style.HomeTheme);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home_page);
+
+    ImageButton settingsPageButton = findViewById(R.id.settingsPageButton);
+    settingsPageButton.setOnClickListener(v -> {
+      Intent intent = new Intent(AssistedHomePageActivity.this, SettingsActivity.class);
+      intent.putExtra("user", getIntent().getBundleExtra("user"));
+      startActivity(intent);
+      finish();
+    });
 
     // Create autocomplete bar
     PlaceAutocompleteFragment placeAutoComplete =
@@ -77,7 +87,6 @@ public class AssistedHomePageActivity extends AppCompatActivity {
     Button directMeButton = findViewById(R.id.directMeButton);
     directMeButton.setOnClickListener(
         v -> {
-
           // First make sure permission is granted before continuing
           if (!permissionGranted) {
             requestLocationPermission();
@@ -86,7 +95,6 @@ public class AssistedHomePageActivity extends AppCompatActivity {
             if (destination != null) {
               Intent intent = new Intent(AssistedHomePageActivity.this,
                   AssistedSelectCarerActivity.class);
-
               intent.putExtra("destination", destination);
               startActivity(intent);
             } else {
@@ -127,12 +135,11 @@ public class AssistedHomePageActivity extends AppCompatActivity {
   @AfterPermissionGranted(REQUEST_LOCATION_PERMISSION)
   public void requestLocationPermission() {
     String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
-    if(EasyPermissions.hasPermissions(this, perms)) {
+    if (EasyPermissions.hasPermissions(this, perms)) {
       Toast.makeText(this, "Location Permission already granted",
           Toast.LENGTH_SHORT).show();
       permissionGranted = true;
-    }
-    else {
+    } else {
       EasyPermissions.requestPermissions(this,
           "Please grant the location permission", REQUEST_LOCATION_PERMISSION, perms);
       permissionGranted = false;
@@ -147,7 +154,7 @@ public class AssistedHomePageActivity extends AppCompatActivity {
    * Documentation: https://developer.android.com/reference/android/app/Activity.html#onBackPressed()
    */
   @Override
-  public void onBackPressed(){
+  public void onBackPressed() {
 
   }
 }

@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities.common;
+package com.quartz.zielclient.activities.channel;
 
 import android.content.Context;
 import android.os.Bundle;

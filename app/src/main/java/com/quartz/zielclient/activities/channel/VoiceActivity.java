@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities.common;
+package com.quartz.zielclient.activities.channel;
 
 import android.Manifest;
 import android.app.NotificationManager;
@@ -41,6 +41,7 @@ import com.quartz.zielclient.R;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
+import com.quartz.zielclient.voip.SoundPoolManager;
 import com.twilio.voice.Call;
 import com.twilio.voice.CallException;
 import com.twilio.voice.CallInvite;
@@ -51,7 +52,9 @@ import com.twilio.voice.Voice;
 
 import java.util.HashMap;
 
-/** This class is responsible for handling voice activities within the app. */
+/**
+ * This class is responsible for handling voice activities within the app.
+ */
 public class VoiceActivity extends AppCompatActivity implements ChannelListener {
 
   public static final String INCOMING_CALL_INVITE = "INCOMING_CALL_INVITE";
@@ -65,25 +68,25 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
       "http://35.189.54.26:3000/accessToken";
   private static final int MIC_PERMISSION_REQUEST_CODE = 1;
   private static final int SNACKBAR_DURATION = 4000;
-  private  int initialize;
+  private int initialize;
   private boolean firstRegistration = false;
   private static String identity = "alice";
   private static Call activeCall;
   private static String toCall;
   // Empty HashMap, never populated for the Quickstart
-  HashMap<String, String> twiMLParams = new HashMap<>();
+  private HashMap<String, String> twiMLParams = new HashMap<>();
   private String accessToken;
   private AudioManager audioManager;
   private int savedAudioMode = AudioManager.MODE_INVALID;
   private boolean isReceiverRegistered = false;
   private VoiceBroadcastReceiver voiceBroadcastReceiver;
   private CoordinatorLayout coordinatorLayout;
-  RegistrationListener registrationListener = registrationListener();
+  private RegistrationListener registrationListener = registrationListener();
   private FloatingActionButton callActionFab;
   private FloatingActionButton hangupActionFab;
   private FloatingActionButton muteActionFab;
   private Chronometer chronometer;
-  Call.Listener callListener = callListener();
+  private Call.Listener callListener = callListener();
   private SoundPoolManager soundPoolManager;
   private NotificationManager notificationManager;
   private AlertDialog alertDialog;
@@ -91,15 +94,13 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
   private int activeCallNotificationId;
   private ChannelData channelData;
 
-  private String channelId;
-
   /**
    * Creates an incoming call dialog.
    *
-   * @param context The current context of the activity
-   * @param callInvite The call invite.
+   * @param context                 The current context of the activity
+   * @param callInvite              The call invite.
    * @param answerCallClickListener The answer to call back.
-   * @param cancelClickListener Checks if the cancel button was clicked.
+   * @param cancelClickListener     Checks if the cancel button was clicked.
    * @return AlertDialog The dialog to be created.
    */
   public static AlertDialog createIncomingCallDialog(
@@ -119,9 +120,9 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
   /**
    * Create a call dialog.
    *
-   * @param callClickListener Checks if the call button was clicked.
+   * @param callClickListener   Checks if the call button was clicked.
    * @param cancelClickListener Checks if the cancel button was clicked.
-   * @param context current context of the activity
+   * @param context             current context of the activity
    * @return AlertDialog The dialog to be created.
    */
   public static AlertDialog createCallDialog(
@@ -147,10 +148,13 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     return alertDialogBuilder.create();
   }
 
-  /** Ends voice call. */
+  /**
+   * Ends voice call.
+   */
   public static void endCall() {
     if (activeCall != null) {
       activeCall.disconnect();
+      activeCall = null;
     }
   }
 
@@ -187,53 +191,38 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
     soundPoolManager = SoundPoolManager.getInstance(this);
-
-    /*
-     * Setup the broadcast receiver to be notified of FCM Token updates
-     * or incoming call invite in this Activity.
-     */
+    // Setup the broadcast receiver to be notified of FCM Token updates
+    // or incoming call invite in this Activity.
     voiceBroadcastReceiver = new VoiceBroadcastReceiver();
     registerReceiver();
 
-
-    /*
-     * Needed for setting/abandoning audio focus during a call
-     */
+    // Needed for setting/abandoning audio focus during a call
     audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
     if (audioManager != null) {
       audioManager.setSpeakerphoneOn(true);
     }
-    /*
-     * Enable changing the volume using the up/down keys during a conversation
-     */
     setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 
-    /*
-     * Setup the UI
-     */
     if (activeCall != null) {
       setCallUI();
     } else {
       resetUI();
     }
-    /*
-     * Displays a call dialog if the intent contains a call invite
-     */
+    // Displays a call dialog if the intent contains a call invite
     handleIncomingCallIntent(getIntent());
 
-    int initialize = getIntent().getIntExtra("initiate", 0);
-    /*
-     * Ensure the microphone permission is enabled
-     */
+    int init = getIntent().getIntExtra("initiate", 0);
+
+    // Ensure the microphone permission is enabled
     if (!checkPermissionForMicrophone()) {
       requestPermissionForMicrophone();
-      initialize = 0;
+      init = 0;
       firstRegistration = true;
-
     } else {
       retrieveAccessToken();
-  }
-    if (initialize == 1) {
+    }
+
+    if (init == 1) {
       identity = FirebaseAuth.getInstance().getUid();
       onBackPressed();
     } else {
@@ -245,13 +234,12 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
   @Override
   protected void onStart() {
     super.onStart();
-    channelId = getIntent().getStringExtra(getResources().getString(R.string.channel_key));
+    String channelId = getIntent().getStringExtra(getResources().getString(R.string.channel_key));
     if (channelId != null) {
       channelData = ChannelController.retrieveChannel(channelId, this);
     }
 
     if (activeCall != null) {
-
       setCallUI();
       CallState callState = activeCall.getState();
       if (callState.compareTo(CallState.DISCONNECTED) == 0) {
@@ -262,6 +250,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
       resetUI();
     }
   }
+
   /**
    * Handles incoming calls for new intents.
    *
@@ -343,7 +332,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     };
   }
 
-  /*
+  /**
    * The UI state when there is an active call
    */
   private void setCallUI() {
@@ -355,7 +344,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     chronometer.start();
   }
 
-  /*
+  /**
    * Reset UI elements
    */
   private void resetUI() {
@@ -397,7 +386,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
    */
   @Override
   public void onDestroy() {
-    soundPoolManager.release();
+    SoundPoolManager.release();
     super.onDestroy();
   }
 
@@ -432,7 +421,9 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     }
   }
 
-  /** Registers a receiver to the voice call. */
+  /**
+   * Registers a receiver to the voice call.
+   */
   private void registerReceiver() {
     if (!isReceiverRegistered) {
       IntentFilter intentFilter = new IntentFilter();
@@ -444,7 +435,9 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     }
   }
 
-  /** Unregisters a receiver from the app. */
+  /**
+   * Unregisters a receiver from the app.
+   */
   private void unregisterReceiver() {
     if (isReceiverRegistered) {
       LocalBroadcastManager.getInstance(this).unregisterReceiver(voiceBroadcastReceiver);
@@ -467,11 +460,11 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
       TextView contact = ((AlertDialog) dialog).findViewById(R.id.contact);
       if (contact != null) {
         contact.setVisibility(View.INVISIBLE);
+        twiMLParams.put("to", contact.getText().toString());
+        activeCall = Voice.call(VoiceActivity.this, accessToken, twiMLParams, callListener);
+        setCallUI();
+        alertDialog.dismiss();
       }
-      twiMLParams.put("to", contact.getText().toString());
-      activeCall = Voice.call(VoiceActivity.this, accessToken, twiMLParams, callListener);
-      setCallUI();
-      alertDialog.dismiss();
     };
   }
 
@@ -486,25 +479,24 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     };
   }
 
-  /** Register for Call invites on the Cloud messaging serevr */
+  /**
+   * Register for Call invites on the Cloud messaging serevr
+   */
   private void registerForCallInvites() {
     final String fcmToken = FirebaseInstanceId.getInstance().getToken();
     if (fcmToken != null) {
       Log.i(TAG, "Registering with FCM");
       Voice.register(
           this, accessToken, Voice.RegistrationChannel.FCM, fcmToken, registrationListener);
-      if(firstRegistration){
-        firstRegistration=false;
+      if (firstRegistration) {
+        firstRegistration = false;
         onBackPressed();
       }
-
     }
   }
 
   /**
-   * Button to allow for calls
-   *
-   * @return
+   * @return Button to allow for calls
    */
   private View.OnClickListener callActionFabClickListener() {
     return v -> {
@@ -518,34 +510,28 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     return v -> {
       soundPoolManager.playDisconnect();
       resetUI();
-      disconnect();
+      endCall();
     };
   }
 
   /**
-   * Mute the current call
-   *
-   * @return
+   * @return Mute the current call
    */
   private View.OnClickListener muteActionFabClickListener() {
     return v -> mute();
   }
 
-  /** Accept an incoming Call */
+  /**
+   * Accept an incoming Call
+   */
   private void answer() {
     activeCallInvite.accept(this, callListener);
     notificationManager.cancel(activeCallNotificationId);
   }
 
-  /** Disconnect from Call */
-  private void disconnect() {
-    if (activeCall != null) {
-      activeCall.disconnect();
-      activeCall = null;
-    }
-  }
-
-  /** Mute current call */
+  /**
+   * Mute current call
+   */
   private void mute() {
     if (activeCall != null) {
       boolean mute = !activeCall.isMuted();
@@ -563,7 +549,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
   /**
    * Allows from switching between loud and quiet speaker
    *
-   * @param setFocus
+   * @param setFocus Whether or not to set the audio focus.
    */
   private void setAudioFocus(boolean setFocus) {
     if (audioManager != null) {
@@ -580,7 +566,8 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
               new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
                   .setAudioAttributes(playbackAttributes)
                   .setAcceptsDelayedFocusGain(true)
-                  .setOnAudioFocusChangeListener(i -> {})
+                  .setOnAudioFocusChangeListener(i -> {
+                  })
                   .build();
           audioManager.requestAudioFocus(focusRequest);
         } else {
@@ -606,18 +593,20 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     return resultMic == PackageManager.PERMISSION_GRANTED;
   }
 
-  /** Requests permission for the microphone. */
+  /**
+   * Requests permission for the microphone.
+   */
   private void requestPermissionForMicrophone() {
     if (ActivityCompat.shouldShowRequestPermissionRationale(
         this, Manifest.permission.RECORD_AUDIO)) {
       Snackbar.make(
-              coordinatorLayout,
-              "Microphone permissions needed. Please allow in your application settings.",
-              SNACKBAR_DURATION)
+          coordinatorLayout,
+          "Microphone permissions needed. Please allow in your application settings.",
+          SNACKBAR_DURATION)
           .show();
     } else {
       ActivityCompat.requestPermissions(
-          this, new String[] {Manifest.permission.RECORD_AUDIO}, MIC_PERMISSION_REQUEST_CODE);
+          this, new String[]{Manifest.permission.RECORD_AUDIO}, MIC_PERMISSION_REQUEST_CODE);
     }
   }
 
@@ -628,29 +617,23 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
    * ActivityCompat.OnRequestPermissionsResultCallback.html#
    * onRequestPermissionsResult(int,%20java.lang.String[],%20int[])
    *
-   * @param requestCode The request code passed in requestPermissions()
-   * @param permissions The requested permissions. Never null.
+   * @param requestCode  The request code passed in requestPermissions()
+   * @param permissions  The requested permissions. Never null.
    * @param grantResults The grant results for the corresponding permissions which is either
-   *     PERMISSION_GRANTED or PERMISSION_DENIED. Never null.
+   *                     PERMISSION_GRANTED or PERMISSION_DENIED. Never null.
    */
   @Override
   public void onRequestPermissionsResult(
       int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    /*
-     * Check if microphone permissions is granted
-     */
     if (requestCode == MIC_PERMISSION_REQUEST_CODE && permissions.length > 0) {
       if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
         Snackbar.make(
-                coordinatorLayout,
-                "Microphone permissions needed. Please allow in your application settings.",
-                SNACKBAR_DURATION)
+            coordinatorLayout,
+            "Microphone permissions needed. Please allow in your application settings.",
+            SNACKBAR_DURATION)
             .show();
       } else {
-
         retrieveAccessToken();
-
-
       }
     }
   }
@@ -663,7 +646,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
    *
    * @param menu The menu items
    * @return You must return true for the menu to be displayed. if you return false it will not be
-   *     shown.
+   * shown.
    */
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -680,7 +663,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
    *
    * @param item The item selected from the menu.
    * @return boolean Return false to allow normal menu processing to proceed, true to consume it
-   *     here.
+   * here.
    */
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
@@ -697,7 +680,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     return true;
   }
 
-  /*
+  /**
    * Get an access token from your Twillio access token server
    */
   private void retrieveAccessToken() {
@@ -705,16 +688,16 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
         .load(TWILIO_ACCESS_TOKEN_SERVER_URL + "?identity=" + identity)
         .asString()
         .setCallback(
-            (e, accessToken) -> {
+            (e, token) -> {
               if (e == null) {
-                Log.d(TAG, "Access token: " + accessToken);
-                VoiceActivity.this.accessToken = accessToken;
+                Log.d(TAG, "Access token: " + token);
+                VoiceActivity.this.accessToken = token;
                 registerForCallInvites();
               } else {
                 Snackbar.make(
-                        coordinatorLayout,
-                        "Error retrieving access token. Unable to make calls",
-                        Snackbar.LENGTH_LONG)
+                    coordinatorLayout,
+                    "Error retrieving access token. Unable to make calls",
+                    Snackbar.LENGTH_LONG)
                     .show();
               }
             });
@@ -729,19 +712,16 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     }
   }
 
-  /** Handles video broadcast from receiver. */
+  /**
+   * Handles video broadcast from receiver.
+   */
   private class VoiceBroadcastReceiver extends BroadcastReceiver {
-
     @Override
     public void onReceive(Context context, Intent intent) {
       String action = intent.getAction();
       if (action != null && action.equals(ACTION_INCOMING_CALL)) {
-        /*
-         * Handle the incoming call invite
-         */
         handleIncomingCallIntent(intent);
       }
     }
   }
-
 }

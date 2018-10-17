@@ -1,4 +1,4 @@
-package com.quartz.zielclient.activities.common;
+package com.quartz.zielclient.voip;
 
 import android.content.Context;
 import android.media.AudioManager;
@@ -22,24 +22,25 @@ public class SoundPoolManager {
 
   /**
    * Manages sound pool for voice recording.
+   *
    * @param context The current context.
    */
   private SoundPoolManager(Context context) {
     // AudioManager audio settings for adjusting the volume
     AudioManager audioManager = (AudioManager) context.getSystemService(AUDIO_SERVICE);
-    if(audioManager !=null){
+    if (audioManager != null) {
       float actualVolume = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
       float maxVolume = (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-    volume = actualVolume / maxVolume;
+      volume = actualVolume / maxVolume;
     }
 
     // Load the sounds
     int maxStreams = 1;
     soundPool = new SoundPool.Builder()
-            .setMaxStreams(maxStreams)
-            .build();
+        .setMaxStreams(maxStreams)
+        .build();
 
-    soundPool.setOnLoadCompleteListener((soundPool, sampleId, status) -> {
+    soundPool.setOnLoadCompleteListener((pool, sampleId, status) -> {
       loaded = true;
       if (playingCalled) {
         playRinging();
@@ -52,6 +53,7 @@ public class SoundPoolManager {
 
   /**
    * Returns instance of sound pool manager.
+   *
    * @param context The current context of the app.
    * @return SoundPoolManager Return the sound pool manager.
    */
@@ -101,14 +103,15 @@ public class SoundPoolManager {
   /**
    * Release the video stream and tear down all variables.
    */
-  public void release() {
-    if (soundPool != null) {
-      soundPool.unload(ringingSoundId);
-      soundPool.unload(disconnectSoundId);
-      soundPool.release();
-      soundPool = null;
+  public static void release() {
+    SoundPool pool = instance.soundPool;
+    if (pool != null) {
+      pool.unload(instance.ringingSoundId);
+      pool.unload(instance.disconnectSoundId);
+      pool.release();
+      instance.soundPool = null;
     }
+
     instance = null;
   }
-
 }
