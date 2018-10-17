@@ -255,12 +255,15 @@ public class CarerMapsActivity extends AppCompatActivity
         break;
       case R.id.toVoiceChat:
         Intent intentVoice = new Intent(CarerMapsActivity.this, VoiceActivity.class);
-        if (channel != null) {
-          intentVoice.putExtra(getResources().getString(R.string.channel_key), channelId);
-          intentVoice.putExtra("initiate", 0);
-          intentVoice.putExtra("CallId", channel.getAssisted());
+        if (channel != null && channel.getAssisted()!=null) {
+
+            intentVoice.putExtra(getResources().getString(R.string.channel_key), channelId);
+            intentVoice.putExtra("initiate", 0);
+            intentVoice.putExtra("CallId", channel.getAssisted());
+             startActivity(intentVoice);
+
         }
-        startActivity(intentVoice);
+
         break;
       case R.id.toVideoActivity:
         Intent intentToVideo = new Intent(CarerMapsActivity.this, VideoActivity.class);
@@ -302,7 +305,7 @@ public class CarerMapsActivity extends AppCompatActivity
         AlertDialog.BUTTON_NEUTRAL,
         "OK",
         (dialog, which) -> {
-          Intent intentToVideo = new Intent(getApplicationContext(), VideoActivity.class);
+          Intent intentToVideo = new Intent(CarerMapsActivity.this, VideoActivity.class);
           intentToVideo.putExtra(
               getApplicationContext().getResources().getString(R.string.channel_key), channelId);
           getApplicationContext().startActivity(intentToVideo);
@@ -359,7 +362,7 @@ public class CarerMapsActivity extends AppCompatActivity
           endChannelAlertDialog.dismiss();
           setPreviousActivityWasTextChat(false);
           VoiceActivity.endCall();
-          Intent intent = new Intent(getApplicationContext(), CarerHomepageActivity.class);
+          Intent intent = new Intent(CarerMapsActivity.this, CarerHomepageActivity.class);
           intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
           startActivity(intent);
           finish();

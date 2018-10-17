@@ -65,6 +65,8 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
       "http://35.189.54.26:3000/accessToken";
   private static final int MIC_PERMISSION_REQUEST_CODE = 1;
   private static final int SNACKBAR_DURATION = 4000;
+  private  int initialize;
+  private boolean firstRegistration = false;
   private static String identity = "alice";
   private static Call activeCall;
   private static String toCall;
@@ -193,6 +195,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     voiceBroadcastReceiver = new VoiceBroadcastReceiver();
     registerReceiver();
 
+
     /*
      * Needed for setting/abandoning audio focus during a call
      */
@@ -218,19 +221,23 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
      */
     handleIncomingCallIntent(getIntent());
 
+    int initialize = getIntent().getIntExtra("initiate", 0);
     /*
      * Ensure the microphone permission is enabled
      */
     if (!checkPermissionForMicrophone()) {
       requestPermissionForMicrophone();
+      initialize = 0;
+      firstRegistration = true;
+
     } else {
       retrieveAccessToken();
-    }
-    if (getIntent().getIntExtra("initiate", 0) == 1) {
+  }
+    if (initialize == 1) {
       identity = FirebaseAuth.getInstance().getUid();
       onBackPressed();
     } else {
-
+      identity = FirebaseAuth.getInstance().getUid();
       toCall = getIntent().getStringExtra("CallId");
     }
   }
@@ -486,6 +493,11 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
       Log.i(TAG, "Registering with FCM");
       Voice.register(
           this, accessToken, Voice.RegistrationChannel.FCM, fcmToken, registrationListener);
+      if(firstRegistration){
+        firstRegistration=false;
+        onBackPressed();
+      }
+
     }
   }
 
@@ -635,7 +647,10 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
                 SNACKBAR_DURATION)
             .show();
       } else {
+
         retrieveAccessToken();
+
+
       }
     }
   }
@@ -728,4 +743,5 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
       }
     }
   }
+
 }
