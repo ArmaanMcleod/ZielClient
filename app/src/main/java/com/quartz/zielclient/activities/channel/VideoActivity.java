@@ -59,9 +59,7 @@ import java.util.UUID;
 import static com.quartz.zielclient.R.drawable.ic_phonelink_ring_white_24dp;
 import static com.quartz.zielclient.R.drawable.ic_volume_up_white_24dp;
 
-/**
- * This activity is responsible for handling video activity.
- */
+/** This activity is responsible for handling video activity. */
 public class VideoActivity extends AppCompatActivity implements ChannelListener {
   private static final int CAMERA_MIC_PERMISSION_REQUEST_CODE = 1;
   private static final String TAG = "VideoActivity";
@@ -70,6 +68,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   private static final String ACCESS_TOKEN_SERVER = "http://35.189.54.26:3001/token";
   private String accessToken;
   private Room room;
+  private boolean inChannel;
   private LocalParticipant localParticipant;
 
   private AudioCodec audioCodec;
@@ -104,8 +103,8 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
   /**
    * Called when the activity is starting.
-   * <p>
-   * Documentation: https://developer.android.com/reference/android/app/
+   *
+   * <p>Documentation: https://developer.android.com/reference/android/app/
    * Activity.html#onCreate(android.os.Bundle)
    *
    * @param savedInstanceState The saved state of the activity.
@@ -113,6 +112,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    inChannel = true;
     setContentView(R.layout.activity_video);
 
     primaryVideoView = findViewById(R.id.primary_video_view);
@@ -151,8 +151,8 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
   /**
    * Initialize the contents of the Activity's standard options menu
-   * <p>
-   * Documentation: https://developer.android.com/reference/android/app/
+   *
+   * <p>Documentation: https://developer.android.com/reference/android/app/
    * Fragment#onCreateOptionsMenu(android.view.Menu,%20android.view.MenuInflater)
    *
    * @param menu The options menu in which you place your items.
@@ -167,12 +167,13 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
   /**
    * This hook is called whenever an item in your options menu is selected.
-   * <p>
-   * Documentation: https://developer.android.com/reference/android/app/
+   *
+   * <p>Documentation: https://developer.android.com/reference/android/app/
    * Fragment.html#onOptionsItemSelected(android.view.MenuItem)
    *
    * @param item The item in the menu selected.
-   * @return boolean Return false to allow normal menu processing to proceed, true to consume it here.
+   * @return boolean Return false to allow normal menu processing to proceed, true to consume it
+   *     here.
    */
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
@@ -193,22 +194,23 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
   /**
    * Callback for the result from requesting permissions.
-   * <p>
-   * Documentation: https://developer.android.com/reference/android/support/v4/app/
+   *
+   * <p>Documentation: https://developer.android.com/reference/android/support/v4/app/
    * ActivityCompat.OnRequestPermissionsResultCallback.html#
    * onRequestPermissionsResult(int,%20java.lang.String[],%20int[])
    *
-   * @param requestCode  The request code passed in requestPermissions.
-   * @param permissions  The requested permissions. Never null.
+   * @param requestCode The request code passed in requestPermissions.
+   * @param permissions The requested permissions. Never null.
    * @param grantResults The grant results for the corresponding permissions which is either
-   *                     PERMISSION_GRANTED or PERMISSION_DENIED
+   *     PERMISSION_GRANTED or PERMISSION_DENIED
    */
   @Override
   public void onRequestPermissionsResult(
       int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (requestCode == CAMERA_MIC_PERMISSION_REQUEST_CODE) {
-      boolean cameraAndMicPermissionGranted = Arrays.stream(grantResults)
-          .allMatch(grantResult -> grantResult == PackageManager.PERMISSION_GRANTED);
+      boolean cameraAndMicPermissionGranted =
+          Arrays.stream(grantResults)
+              .allMatch(grantResult -> grantResult == PackageManager.PERMISSION_GRANTED);
 
       if (cameraAndMicPermissionGranted) {
         createAudioAndVideoTracks();
@@ -221,8 +223,8 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
   /**
    * Handles button back press in activity.
-   * <p>
-   * Documentation: https://developer.android.com/reference/android/app/Activity.html#onResume()
+   *
+   * <p>Documentation: https://developer.android.com/reference/android/app/Activity.html#onResume()
    */
   @Override
   protected void onResume() {
@@ -240,7 +242,6 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
               this, true, cameraCapturerCompat.getVideoCapturer(), LOCAL_VIDEO_TRACK_NAME);
       localVideoTrack.addRenderer(localVideoView);
 
-
       // If connected to a Room then share the local video track.
       if (localParticipant != null) {
         localParticipant.publishTrack(localVideoTrack);
@@ -257,8 +258,8 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
   /**
    * Handles pausing of activity in the application.
-   * <p>
-   * Documentation: https://developer.android.com/reference/android/app/Activity.html#onPause()
+   *
+   * <p>Documentation: https://developer.android.com/reference/android/app/Activity.html#onPause()
    */
   @Override
   protected void onPause() {
@@ -284,8 +285,8 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
   /**
    * Perform any final cleanup before an activity is destroyed.
-   * <p>
-   * Documentation: https://developer.android.com/reference/android/app/Activity.html#onDestroy()
+   *
+   * <p>Documentation: https://developer.android.com/reference/android/app/Activity.html#onDestroy()
    */
   @Override
   protected void onDestroy() {
@@ -294,7 +295,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
      * ensure any memory allocated to the Room resource is freed.
      */
     if (room != null && room.getState() != RoomState.DISCONNECTED) {
-      channel.setVideoCallStatus(false);
+
       room.disconnect();
       disconnectedFromOnDestroy = true;
     }
@@ -328,33 +329,30 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
         && resultMic == PackageManager.PERMISSION_GRANTED;
   }
 
-  /**
-   * Requests permissions for camera and microphone in voice call.
-   */
+  /** Requests permissions for camera and microphone in voice call. */
   private void requestPermissionForCameraAndMicrophone() {
     if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)
         || ActivityCompat.shouldShowRequestPermissionRationale(
-        this, Manifest.permission.RECORD_AUDIO)) {
+            this, Manifest.permission.RECORD_AUDIO)) {
       Toast.makeText(this, R.string.permissions_needed, Toast.LENGTH_LONG).show();
     } else {
       ActivityCompat.requestPermissions(
           this,
-          new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO},
+          new String[] {Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO},
           CAMERA_MIC_PERMISSION_REQUEST_CODE);
     }
   }
 
-  /**
-   * Sets up microphone and camera within Video call.
-   */
+  /** Sets up microphone and camera within Video call. */
   private void createAudioAndVideoTracks() {
     // Share your microphone
     localAudioTrack = LocalAudioTrack.create(this, true, LOCAL_AUDIO_TRACK_NAME);
 
     // Share your camera
     cameraCapturerCompat = new CameraCapturerCompat(this, getAvailableCameraSource());
-    localVideoTrack = LocalVideoTrack.create(
-        this, true, cameraCapturerCompat.getVideoCapturer(), LOCAL_VIDEO_TRACK_NAME);
+    localVideoTrack =
+        LocalVideoTrack.create(
+            this, true, cameraCapturerCompat.getVideoCapturer(), LOCAL_VIDEO_TRACK_NAME);
     primaryVideoView.setMirror(true);
     localVideoTrack.addRenderer(primaryVideoView);
     localVideoView = primaryVideoView;
@@ -371,6 +369,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   }
 
   private void connectToRoom(String roomName) {
+    inChannel = true;
     configureAudio(true);
     ConnectOptions.Builder connectOptionsBuilder =
         new ConnectOptions.Builder(accessToken).roomName(roomName);
@@ -386,7 +385,8 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     }
 
     // Set the preferred audio and video codec for media.
-    connectOptionsBuilder.preferAudioCodecs(Collections.singletonList(audioCodec))
+    connectOptionsBuilder
+        .preferAudioCodecs(Collections.singletonList(audioCodec))
         .preferVideoCodecs(Collections.singletonList(videoCodec))
         .encodingParameters(encodingParameters);
 
@@ -394,9 +394,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     setDisconnectAction();
   }
 
-  /**
-   * The initial state when there is no active room.
-   */
+  /** The initial state when there is no active room. */
   private void intializeUI() {
     connectActionFab.setImageDrawable(
         ContextCompat.getDrawable(this, R.drawable.ic_video_call_white_24dp));
@@ -410,9 +408,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     muteActionFab.setOnClickListener(muteClickListener());
   }
 
-  /**
-   * The actions performed during disconnect.
-   */
+  /** The actions performed during disconnect. */
   private void setDisconnectAction() {
     connectActionFab.setImageDrawable(
         ContextCompat.getDrawable(this, R.drawable.ic_call_end_white_24px));
@@ -421,32 +417,29 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     connectActionFab.setOnClickListener(disconnectClickListener());
   }
 
-  /**
-   * Creates an connect UI dialog
-   */
+  /** Creates an connect UI dialog */
   public void showConnectDialog() {
     TextView roomEditText = new TextView(this);
     roomEditText.setText(channelId);
     roomEditText.setVisibility(View.INVISIBLE);
 
-    connectDialog = Dialog.createConnectDialog(
-        roomEditText,
-        connectClickListener(roomEditText),
-        cancelConnectDialogClickListener(),
-        this);
+    connectDialog =
+        Dialog.createConnectDialog(
+            roomEditText,
+            connectClickListener(roomEditText),
+            cancelConnectDialogClickListener(),
+            this);
     connectDialog.show();
   }
 
-  /**
-   * Called when remote participant joins the room
-   */
+  /** Called when remote participant joins the room */
   private void addRemoteParticipant(RemoteParticipant remoteParticipant) {
     // This app only displays video for one additional participant per Room
     if (thumbnailVideoView.getVisibility() == View.VISIBLE) {
       Snackbar.make(
-          connectActionFab,
-          "Multiple participants are not currently support in this UI",
-          Snackbar.LENGTH_LONG)
+              connectActionFab,
+              "Multiple participants are not currently support in this UI",
+              Snackbar.LENGTH_LONG)
           .setAction("Action", null)
           .show();
       return;
@@ -468,18 +461,14 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     remoteParticipant.setListener(remoteParticipantListener());
   }
 
-  /**
-   * Set primary view as renderer for participant video track
-   */
+  /** Set primary view as renderer for participant video track */
   public void addRemoteParticipantVideo(VideoTrack videoTrack) {
     moveLocalVideoToThumbnailView();
     primaryVideoView.setMirror(false);
     videoTrack.addRenderer(primaryVideoView);
   }
 
-  /**
-   * Changes the local video thumbnail view for the camera.
-   */
+  /** Changes the local video thumbnail view for the camera. */
   private void moveLocalVideoToThumbnailView() {
     if (thumbnailVideoView.getVisibility() == View.GONE) {
       thumbnailVideoView.setVisibility(View.VISIBLE);
@@ -493,11 +482,10 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     }
   }
 
-  /**
-   * Called when remote participant leaves the room
-   */
+  /** Called when remote participant leaves the room */
   private void removeRemoteParticipant(RemoteParticipant remoteParticipant) {
     channel.setVideoCallStatus(false);
+    inChannel = false;
     room.disconnect();
     videoStatusTextView.setText("User Left.");
 
@@ -535,9 +523,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     }
   }
 
-  /**
-   * Room events listener
-   */
+  /** Room events listener */
   private Room.Listener roomListener() {
     return new Room.Listener() {
       @Override
@@ -665,6 +651,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
   private DialogInterface.OnClickListener cancelConnectDialogClickListener() {
     return (dialog, which) -> {
+      inChannel= false;
       intializeUI();
       connectDialog.dismiss();
     };
@@ -704,9 +691,8 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   }
 
   /**
-   * @return Enable/disable the local audio track. The results of this operation are
-   * signaled to other Participants in the same Room. When an audio track is
-   * disabled, the audio is muted.
+   * @return Enable/disable the local audio track. The results of this operation are signaled to
+   *     other Participants in the same Room. When an audio track is disabled, the audio is muted.
    */
   private View.OnClickListener muteClickListener() {
     return v -> {
@@ -719,9 +705,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     };
   }
 
-  /**
-   *
-   */
+  /** */
   private void retrieveAccessTokenfromServer() {
     Ion.with(this)
         .load(String.format("%s?identity=%s", ACCESS_TOKEN_SERVER, UUID.randomUUID().toString()))
@@ -733,9 +717,9 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
                 Log.d("TOKEN", token);
               } else {
                 Toast.makeText(
-                    VideoActivity.this,
-                    R.string.error_retrieving_access_token,
-                    Toast.LENGTH_LONG)
+                        VideoActivity.this,
+                        R.string.error_retrieving_access_token,
+                        Toast.LENGTH_LONG)
                     .show();
               }
             });
@@ -762,9 +746,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     }
   }
 
-  /**
-   * Requests audio focus on video.
-   */
+  /** Requests audio focus on video. */
   private void requestAudioFocus() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       AudioAttributes playbackAttributes =
@@ -776,8 +758,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
           new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
               .setAudioAttributes(playbackAttributes)
               .setAcceptsDelayedFocusGain(true)
-              .setOnAudioFocusChangeListener(i -> {
-              })
+              .setOnAudioFocusChangeListener(i -> {})
               .build();
       audioManager.requestAudioFocus(focusRequest);
     } else {
@@ -806,18 +787,21 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
   @Override
   public void dataChanged() {
+    if (room == null) {
+
+      Log.d("YOLO ", "HERE");
+      if (channel.getVideoCallStatus() && !inChannel)
+           finish();
+    }
   }
 
   /**
    * Called when the activity has detected the user's press of the back key.
-   * <p>
-   * Documentation: https://developer.android.com/reference/android/app/Activity#onBackPressed()
+   *
+   * <p>Documentation: https://developer.android.com/reference/android/app/Activity#onBackPressed()
    */
   @Override
   public void onBackPressed() {
-    if (channel != null) {
-      channel.setVideoCallStatus(false);
-    }
     finish();
   }
 
