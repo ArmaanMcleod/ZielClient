@@ -23,6 +23,11 @@ import com.quartz.zielclient.user.User;
 import com.quartz.zielclient.user.UserController;
 import com.quartz.zielclient.user.UserFactory;
 
+/**
+ * Navigates to edit profile and feedback activities.
+ *
+ * @author alexvosnakis
+ */
 public class SettingsHome extends AppCompatActivity implements View.OnClickListener, ValueEventListener {
 
   private static final String TAG = SettingsHome.class.getSimpleName();
