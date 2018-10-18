@@ -52,6 +52,7 @@ public class AssistedHomePageActivity extends AppCompatActivity {
       Intent intent = new Intent(AssistedHomePageActivity.this, SettingsHome.class);
       intent.putExtra("user", getIntent().getBundleExtra("user"));
       startActivity(intent);
+      finish();
     });
 
     // Create autocomplete bar
@@ -135,8 +136,7 @@ public class AssistedHomePageActivity extends AppCompatActivity {
   public void requestLocationPermission() {
     String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
     if (EasyPermissions.hasPermissions(this, perms)) {
-      Toast.makeText(this, "Location Permission already granted",
-          Toast.LENGTH_SHORT).show();
+      Log.i(activity, "Location Permission already granted");
       permissionGranted = true;
     } else {
       EasyPermissions.requestPermissions(this,
@@ -154,6 +154,6 @@ public class AssistedHomePageActivity extends AppCompatActivity {
    */
   @Override
   public void onBackPressed() {
-
+    // Intentionally empty
   }
 }

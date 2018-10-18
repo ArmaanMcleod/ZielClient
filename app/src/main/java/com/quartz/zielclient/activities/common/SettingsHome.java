@@ -87,6 +87,7 @@ public class SettingsHome extends AppCompatActivity implements View.OnClickListe
     if (item.getItemId() == android.R.id.home && !settingUp) {
       // Respond to the action bar's Up/Home button
       startActivity(goHomeIntent());
+      finish();
       return true;
     }
 

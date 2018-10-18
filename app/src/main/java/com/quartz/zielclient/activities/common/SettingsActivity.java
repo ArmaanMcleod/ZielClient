@@ -56,7 +56,11 @@ public class SettingsActivity extends AppCompatActivity
     requestWindowFeature(Window.FEATURE_ACTION_BAR);
     setContentView(R.layout.settings_activity);
 
-    Bundle userBundle = getIntent().getBundleExtra("user");
+    setupUser(getIntent());
+  }
+
+  private void setupUser(Intent intent) {
+    Bundle userBundle = intent.getBundleExtra("user");
     if (userBundle == null) {
       // if we don't receive a bundle, fetch the user from the DB
       updating = true;
@@ -72,6 +76,19 @@ public class SettingsActivity extends AppCompatActivity
       populateUi();
       activateBar();
     }
+  }
+
+  @Override
+  public void onBackPressed() {
+    if (updating || nullSetup) {
+      return;
+    }
+
+    Intent intent = new Intent(this, SettingsHome.class);
+    intent.putExtra("user", user.toBundle());
+    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    startActivity(intent);
+    super.onBackPressed();
   }
 
   /**
@@ -112,6 +129,11 @@ public class SettingsActivity extends AppCompatActivity
 
     Button confirmButton = findViewById(R.id.settingsConfirm);
     confirmButton.setOnClickListener(this);
+  }
+
+  @Override
+  protected void onNewIntent(Intent intent) {
+    setupUser(intent);
   }
 
   @Override

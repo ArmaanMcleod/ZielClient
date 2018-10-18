@@ -120,8 +120,9 @@ public class CarerHomepageActivity extends AppCompatActivity
     if (v.getId() == R.id.carerSettingsButton) {
       Intent intent = new Intent(this, SettingsHome.class);
       intent.putExtra("user", getIntent().getBundleExtra("user"));
-      startActivity(intent);
       requestsReference.removeEventListener(this);
+      startActivity(intent);
+      finish();
     }
   }
 
