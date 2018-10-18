@@ -639,19 +639,23 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     return v -> {
       if (room != null) {
         channel.setVideoCallStatus(false);
+        inChannel=false;
         room.disconnect();
       }
       intializeUI();
     };
   }
 
+  /**
+   * Called when connect button is clicked and shows confirmation dialog
+   * @return
+   */
   private View.OnClickListener connectActionClickListener() {
     return v -> showConnectDialog();
   }
 
   private DialogInterface.OnClickListener cancelConnectDialogClickListener() {
     return (dialog, which) -> {
-      inChannel= false;
       intializeUI();
       connectDialog.dismiss();
     };
@@ -670,6 +674,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
       }
     };
   }
+
 
   private View.OnClickListener localVideoClickListener() {
     return v -> {
