@@ -22,6 +22,8 @@ import com.quartz.zielclient.user.UserFactory;
 
 /**
  * Activity shows Splash Screen when authorising user into the app.
+ *
+ * @author Wei How Ng
  */
 public class SplashScreenActivity extends AppCompatActivity implements ValueEventListener {
 
