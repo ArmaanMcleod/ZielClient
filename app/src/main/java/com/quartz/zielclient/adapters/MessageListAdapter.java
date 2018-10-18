@@ -16,7 +16,7 @@ import com.dinuscxj.progressbar.CircleProgressBar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.MessagingAnalytics;
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.activities.common.TextChatActivity;
+import com.quartz.zielclient.activities.channel.TextChatActivity;
 import com.quartz.zielclient.messages.Message;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
