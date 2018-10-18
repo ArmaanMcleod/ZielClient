@@ -21,6 +21,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -97,22 +98,20 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
    * Creates an incoming call dialog.
    *
    * @param context                 The current context of the activity
-   * @param callInvite              The call invite.
    * @param answerCallClickListener The answer to call back.
    * @param cancelClickListener     Checks if the cancel button was clicked.
    * @return AlertDialog The dialog to be created.
    */
   public static AlertDialog createIncomingCallDialog(
       Context context,
-      CallInvite callInvite,
       DialogInterface.OnClickListener answerCallClickListener,
       DialogInterface.OnClickListener cancelClickListener) {
-    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-    alertDialogBuilder.setIcon(R.drawable.ic_call_black_24dp);
-    alertDialogBuilder.setTitle("Incoming Call");
-    alertDialogBuilder.setPositiveButton("Accept", answerCallClickListener);
-    alertDialogBuilder.setNegativeButton("Reject", cancelClickListener);
-    alertDialogBuilder.setMessage("Call will be established");
+    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
+        .setIcon(R.drawable.ic_call_black_24dp)
+        .setTitle("Incoming Call")
+        .setPositiveButton("Accept", answerCallClickListener)
+        .setNegativeButton("Reject", cancelClickListener)
+        .setMessage("Call will be established");
     return alertDialogBuilder.create();
   }
 
@@ -202,11 +201,12 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     }
     setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 
-    if (activeCall != null) {
+    if (activeCall != null ) {
       setCallUI();
     } else {
       resetUI();
     }
+
     // Displays a call dialog if the intent contains a call invite
     handleIncomingCallIntent(getIntent());
 
@@ -222,11 +222,17 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     }
 
     if (init == 1) {
-
+      identity = FirebaseAuth.getInstance().getUid();
+      toCall = getIntent().getStringExtra("CallId");
       onBackPressed();
     } else {
       identity = FirebaseAuth.getInstance().getUid();
       toCall = getIntent().getStringExtra("CallId");
+    }
+
+    ActionBar actionBar = getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
     }
   }
 
@@ -283,6 +289,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
       @Override
       public void onConnectFailure(Call call, CallException error) {
         setAudioFocus(false);
+        activeCall = null;
         Log.d(TAG, "Connect failure");
         String message =
             String.format("Call Error: %d, %s", error.getErrorCode(), error.getMessage());
@@ -319,6 +326,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
       @Override
       public void onDisconnected(Call call, CallException error) {
         setAudioFocus(false);
+        activeCall=null;
         Log.d(TAG, "Disconnected");
         if (error != null) {
           String message =
@@ -403,7 +411,6 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
           alertDialog =
               createIncomingCallDialog(
                   VoiceActivity.this,
-                  activeCallInvite,
                   answerCallClickListener(),
                   cancelCallClickListener());
           alertDialog.show();
@@ -675,9 +682,12 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
         audioManager.setSpeakerphoneOn(true);
         item.setIcon(R.drawable.ic_volume_up_white_24dp);
       }
+    } else if (i == android.R.id.home) {
+      onBackPressed();
+      return true;
     }
 
-    return true;
+    return super.onOptionsItemSelected(item);
   }
 
   /**
@@ -723,5 +733,10 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
         handleIncomingCallIntent(intent);
       }
     }
+  }
+
+  @Override
+  public void onBackPressed(){
+    finish();
   }
 }

@@ -118,7 +118,8 @@
             android:label="Select a carer" />
         <activity
             android:name=".activities.channel.VoiceActivity"
-            android:label="Voice Call" />
+            android:label="Voice Call"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".activities.onboarding.OnboardingActivity"
             android:label="Welcome!" />
