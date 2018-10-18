@@ -10,9 +10,11 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -22,6 +24,7 @@ import com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions;
 import com.google.firebase.ml.vision.cloud.landmark.FirebaseVisionCloudLandmarkDetector;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.common.SettingsHome;
 import com.wonderkiln.camerakit.CameraKitError;
 import com.wonderkiln.camerakit.CameraKitEvent;
 import com.wonderkiln.camerakit.CameraKitEventListener;
@@ -67,7 +70,6 @@ public class TakePhotosActivity extends AppCompatActivity {
   private static final int REQUEST_WRITE_PERMISSION = 1;
   private static final int PICK_IMAGE = 1;
   private final String activity = this.getClass().getSimpleName();
-
 
   private CameraView cameraView;
 
@@ -253,6 +255,11 @@ public class TakePhotosActivity extends AppCompatActivity {
       pickImageGallery();
     });
 
+    ActionBar actionBar = getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
     // Request initial permissions
     requestStoragePermission();
   }
@@ -285,7 +292,6 @@ public class TakePhotosActivity extends AppCompatActivity {
         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
         imageView.setImageBitmap(bitmap);
         runLandMarkRecognition(bitmap);
-
       } catch (IOException e) {
         Log.d(activity, e.toString());
       }
@@ -319,8 +325,6 @@ public class TakePhotosActivity extends AppCompatActivity {
   public void requestStoragePermission() {
     String[] perms = {WRITE_EXTERNAL_STORAGE};
     if (EasyPermissions.hasPermissions(this, perms)) {
-      Toast.makeText(this, "Storage Permission already granted",
-          Toast.LENGTH_SHORT).show();
       permissionGranted = true;
     } else {
       EasyPermissions.requestPermissions(this,
@@ -376,10 +380,8 @@ public class TakePhotosActivity extends AppCompatActivity {
    */
   private void writeImage(File imageFile, Bitmap image) {
     // Write file to directory
-    try {
-      OutputStream fileOut = new FileOutputStream(imageFile);
+    try (OutputStream fileOut = new FileOutputStream(imageFile)) {
       image.compress(JPEG, 100, fileOut);
-      fileOut.close();
     } catch (Exception e) {
       Log.d(activity, e.toString());
     }
@@ -433,5 +435,15 @@ public class TakePhotosActivity extends AppCompatActivity {
   protected void onPause() {
     cameraView.stop();
     super.onPause();
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      onBackPressed();
+      return true;
+    }
+
+    return super.onOptionsItemSelected(item);
   }
 }

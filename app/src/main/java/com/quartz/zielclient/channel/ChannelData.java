@@ -2,6 +2,7 @@ package com.quartz.zielclient.channel;
 
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
@@ -49,6 +50,23 @@ public class ChannelData implements ValueEventListener {
     this.channelKey = channelKey;
 
     channelReference.addValueEventListener(this);
+  }
+
+  /**
+   * Refreshes the channel data's map.
+   */
+  public void refresh() {
+    channelReference.addListenerForSingleValueEvent(new ValueEventListener() {
+      @Override
+      public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        ChannelData.this.onDataChange(dataSnapshot);
+      }
+
+      @Override
+      public void onCancelled(@NonNull DatabaseError databaseError) {
+        Log.e("ChannelData", "Database error", databaseError.toException());
+      }
+    });
   }
 
   /**

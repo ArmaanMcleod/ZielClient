@@ -10,11 +10,9 @@ import java.net.URL;
 
 import static org.junit.Assert.*;
 
-public class HTTPUrlTest {
+public class HTTPTest {
 
   private String[] testUrls;
-
-  private HTTP http;
 
   @Before
   public void setUp() {
@@ -29,14 +27,11 @@ public class HTTPUrlTest {
         "https://jsonplaceholder.typicode.com/todos",
         "https://jsonplaceholder.typicode.com/users"
     };
-
-    http = new HTTP();
   }
 
   @After
   public void tearDown() {
     testUrls = null;
-    http = null;
   }
 
   @Test
@@ -66,10 +61,9 @@ public class HTTPUrlTest {
     for (String url : testUrls) {
 
       try {
-        String result = http.downloadUrl(url);
+        String result = HTTP.downloadUrl(url);
         assertFalse(result.isEmpty());
         System.out.println(url + " PASSED");
-
       } catch (IOException e) {
         System.out.println(url + " FAILED: Error downloading URL");
         e.printStackTrace();
