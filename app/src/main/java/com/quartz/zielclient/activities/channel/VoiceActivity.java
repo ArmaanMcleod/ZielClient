@@ -13,7 +13,6 @@ import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -40,7 +39,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.koushikdutta.ion.Ion;
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.activities.common.SettingsHome;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
@@ -203,7 +201,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     }
     setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 
-    if (activeCall != null) {
+    if (activeCall != null ) {
       setCallUI();
     } else {
       resetUI();
@@ -224,7 +222,8 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     }
 
     if (init == 1) {
-
+      identity = FirebaseAuth.getInstance().getUid();
+      toCall = getIntent().getStringExtra("CallId");
       onBackPressed();
     } else {
       identity = FirebaseAuth.getInstance().getUid();
@@ -290,6 +289,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
       @Override
       public void onConnectFailure(Call call, CallException error) {
         setAudioFocus(false);
+        activeCall = null;
         Log.d(TAG, "Connect failure");
         String message =
             String.format("Call Error: %d, %s", error.getErrorCode(), error.getMessage());
@@ -326,6 +326,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
       @Override
       public void onDisconnected(Call call, CallException error) {
         setAudioFocus(false);
+        activeCall=null;
         Log.d(TAG, "Disconnected");
         if (error != null) {
           String message =
@@ -732,5 +733,10 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
         handleIncomingCallIntent(intent);
       }
     }
+  }
+
+  @Override
+  public void onBackPressed(){
+    finish();
   }
 }
