@@ -91,7 +91,7 @@ public class TextChatActivity extends AppCompatActivity
     mMessageRecycler = findViewById(R.id.message_recyclerview);
     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
     mMessageRecycler.setLayoutManager(mLayoutManager);
-    mMessageRecycler.setAdapter(new MessageListAdapter());
+    mMessageRecycler.setAdapter(MessageListAdapter.EMPTY);
 
     // Getting the current user's username
     currentUser = FirebaseAuth.getInstance().getUid();
@@ -175,6 +175,8 @@ public class TextChatActivity extends AppCompatActivity
     // Fetch the names of the users in the channel
     carerName = channel.getCarerName();
     assistedName = channel.getAssistedName();
+
+    // figure out whether or not this user is an assisted user
     isAssisted = UserController.retrieveUid()
         .map(uid -> channel.getAssisted().equals(uid))
         .orElse(false);
@@ -200,8 +202,7 @@ public class TextChatActivity extends AppCompatActivity
    */
   @Override
   public void onClick(View view) {
-    Message messageToSend = MessageFactory.makeTextMessage(
-        chatInput.getText().toString(), currentUser);
+    Message messageToSend = MessageFactory.makeTextMessage(chatInput.getText().toString(), currentUser);
     channel.sendMessage(messageToSend);
 
     // Erasing the previously typed message
@@ -272,21 +273,16 @@ public class TextChatActivity extends AppCompatActivity
     StorageReference imageFilePath = mImageStorage.child("messages/" + channelID
         + messageList.size() + ".jpg");
 
-    imageFilePath.putFile(uri).addOnSuccessListener(taskSnapshot -> {
-      taskSnapshot.getMetadata().getReference()
-          .getDownloadUrl().addOnSuccessListener(uri1 -> {
-
-        // Send the image message
-        Message messageToSend = MessageFactory.makeImageMessage(uri1.toString(), currentUser);
-        channel.sendMessage(messageToSend);
-
-      });
-
-      // Performing null checks
-
-    });
-
-
+    imageFilePath.putFile(uri).addOnSuccessListener(taskSnapshot ->
+        taskSnapshot.getMetadata()
+            .getReference()
+            .getDownloadUrl()
+            .addOnSuccessListener(uri1 -> {
+          // Send the image message
+          Message messageToSend = MessageFactory.makeImageMessage(uri1.toString(), currentUser);
+          channel.sendMessage(messageToSend);
+        })
+    );
   }
 
   /**

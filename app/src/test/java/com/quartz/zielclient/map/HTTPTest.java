@@ -10,7 +10,7 @@ import java.net.URL;
 
 import static org.junit.Assert.*;
 
-public class FetchUrlTest {
+public class HTTPTest {
 
   private String[] testUrls;
 
@@ -61,10 +61,9 @@ public class FetchUrlTest {
     for (String url : testUrls) {
 
       try {
-        String result = FetchUrl.downloadUrl(url);
+        String result = HTTP.downloadUrl(url);
         assertFalse(result.isEmpty());
         System.out.println(url + " PASSED");
-
       } catch (IOException e) {
         System.out.println(url + " FAILED: Error downloading URL");
         e.printStackTrace();

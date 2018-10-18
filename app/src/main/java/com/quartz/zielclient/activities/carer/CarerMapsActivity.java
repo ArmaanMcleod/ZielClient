@@ -89,8 +89,6 @@ public class CarerMapsActivity extends AppCompatActivity
 
   private String nearestRoadApi = "https://roads.googleapis.com/v1/nearestRoads?";
 
-  private HTTP http = new HTTP();
-
   private final String ACTIVITY = this.getClass().getSimpleName();
 
   private LatLng currentSnapLocation;
@@ -429,7 +427,7 @@ public class CarerMapsActivity extends AppCompatActivity
   private String getNearestRoadData(String url) {
     String data = "";
     try {
-      data = http.downloadUrl(url);
+      data = HTTP.downloadUrl(url);
     } catch (IOException e) {
       Log.d(ACTIVITY, e.toString());
     }
