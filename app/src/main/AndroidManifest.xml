@@ -109,7 +109,11 @@
         <activity
             android:name=".activities.channel.TakePhotosActivity"
             android:label="@string/title_activity_take_photos" />
-        <activity android:name=".activities.common.FeedbackActivity" />
+        <activity
+            android:name=".activities.common.FeedbackActivity"
+            android:parentActivityName=".activities.common.SettingsHome"
+            android:label="Feedback"
+            />
         <activity android:name=".activities.common.SettingsHome" />
     </application>
 

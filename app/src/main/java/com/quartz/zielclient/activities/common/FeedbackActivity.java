@@ -1,9 +1,12 @@
 package com.quartz.zielclient.activities.common;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
@@ -38,6 +41,11 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
 
     simpleBar = findViewById(R.id.simpleBar);
     usefulBar = findViewById(R.id.usefulBar);
+
+    ActionBar actionBar = getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
+    }
   }
 
   /**
@@ -64,6 +72,21 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
       attemptSubmit();
     }
   }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      // Respond to the action bar's Up/Home button
+      Intent intent = new Intent(this, SettingsHome.class);
+      intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+      startActivity(intent);
+      finish();
+      return true;
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
 
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
