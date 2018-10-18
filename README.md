@@ -4,6 +4,8 @@ Team Quartz client-side Android project.
 
 Navigation software designed to facilitate a channel which allows assistance to be delivered to an individual.  
 
+![alt text](https://i.imgur.com/EajOPNo.png "Ziel Logo") 
+
 ## Getting Started
 
 * Run `git clone https://github.com/COMP30022-18/ZielClient.git` in your terminal.
