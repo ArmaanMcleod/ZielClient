@@ -345,6 +345,8 @@ public class CarerMapsActivity extends AppCompatActivity
    */
   @Override
   public void onMapClick(LatLng latLng) {
+
+
     channel.addMarker(latLng);
     placeMarker(latLng);
     mGoogleMap.setOnMapClickListener(null);

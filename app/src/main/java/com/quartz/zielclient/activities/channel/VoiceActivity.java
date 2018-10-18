@@ -223,7 +223,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     }
 
     if (init == 1) {
-      identity = FirebaseAuth.getInstance().getUid();
+
       onBackPressed();
     } else {
       identity = FirebaseAuth.getInstance().getUid();

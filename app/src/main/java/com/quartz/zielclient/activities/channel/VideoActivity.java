@@ -295,7 +295,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
      * ensure any memory allocated to the Room resource is freed.
      */
     if (room != null && room.getState() != RoomState.DISCONNECTED) {
-
+      channel.setVideoCallStatus(false);
       room.disconnect();
       disconnectedFromOnDestroy = true;
     }
