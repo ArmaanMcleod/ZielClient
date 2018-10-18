@@ -13,6 +13,7 @@ import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -21,6 +22,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -38,6 +40,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.koushikdutta.ion.Ion;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.common.SettingsHome;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
@@ -97,22 +100,20 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
    * Creates an incoming call dialog.
    *
    * @param context                 The current context of the activity
-   * @param callInvite              The call invite.
    * @param answerCallClickListener The answer to call back.
    * @param cancelClickListener     Checks if the cancel button was clicked.
    * @return AlertDialog The dialog to be created.
    */
   public static AlertDialog createIncomingCallDialog(
       Context context,
-      CallInvite callInvite,
       DialogInterface.OnClickListener answerCallClickListener,
       DialogInterface.OnClickListener cancelClickListener) {
-    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-    alertDialogBuilder.setIcon(R.drawable.ic_call_black_24dp);
-    alertDialogBuilder.setTitle("Incoming Call");
-    alertDialogBuilder.setPositiveButton("Accept", answerCallClickListener);
-    alertDialogBuilder.setNegativeButton("Reject", cancelClickListener);
-    alertDialogBuilder.setMessage("Call will be established");
+    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
+        .setIcon(R.drawable.ic_call_black_24dp)
+        .setTitle("Incoming Call")
+        .setPositiveButton("Accept", answerCallClickListener)
+        .setNegativeButton("Reject", cancelClickListener)
+        .setMessage("Call will be established");
     return alertDialogBuilder.create();
   }
 
@@ -207,6 +208,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     } else {
       resetUI();
     }
+
     // Displays a call dialog if the intent contains a call invite
     handleIncomingCallIntent(getIntent());
 
@@ -227,6 +229,11 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
     } else {
       identity = FirebaseAuth.getInstance().getUid();
       toCall = getIntent().getStringExtra("CallId");
+    }
+
+    ActionBar actionBar = getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
     }
   }
 
@@ -403,7 +410,6 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
           alertDialog =
               createIncomingCallDialog(
                   VoiceActivity.this,
-                  activeCallInvite,
                   answerCallClickListener(),
                   cancelCallClickListener());
           alertDialog.show();
@@ -675,9 +681,12 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
         audioManager.setSpeakerphoneOn(true);
         item.setIcon(R.drawable.ic_volume_up_white_24dp);
       }
+    } else if (i == android.R.id.home) {
+      onBackPressed();
+      return true;
     }
 
-    return true;
+    return super.onOptionsItemSelected(item);
   }
 
   /**
