@@ -84,11 +84,12 @@ public class CarerMapsActivity extends AppCompatActivity
   /**
    * setter useful in order to not register new messages if they have already been opened.
    *
-   * @param previousActivityWasTextChat
+   * @param previousActivityWasTextChat The indication if the previous activity was a text chat
    */
   public static void setPreviousActivityWasTextChat(boolean previousActivityWasTextChat) {
     CarerMapsActivity.previousActivityWasTextChat = previousActivityWasTextChat;
   }
+
 
   private final String ACTIVITY = this.getClass().getSimpleName();
 
@@ -159,6 +160,8 @@ public class CarerMapsActivity extends AppCompatActivity
   /**
    * Manipulates the map once available. Once map is ready add a temporary marker (once again The
    * University of Melbourne is used temporarily rather than the default NUll-Island)
+   *
+   * @param googleMap This is the current Google Map fragment
    */
   @Override
   public void onMapReady(GoogleMap googleMap) {
@@ -211,7 +214,7 @@ public class CarerMapsActivity extends AppCompatActivity
   }
 
   /**
-   * THis listens to changes in the channel Once a change occurs update the long/lat values
+   * This listens to changes in the channel Once a change occurs update the long/lat values
    */
   @Override
   public void dataChanged() {
@@ -304,7 +307,7 @@ public class CarerMapsActivity extends AppCompatActivity
   }
 
   /**
-   * Handle back presses from user.
+   * Handle back press from a user.
    */
   @Override
   public void onBackPressed() {
@@ -343,7 +346,7 @@ public class CarerMapsActivity extends AppCompatActivity
   }
 
   /**
-   * all markers from map and list.
+   * Deletes all markers from a list and map.
    */
   private void deleteMarkers() {
     markers.forEach(Marker::remove);
@@ -496,14 +499,14 @@ public class CarerMapsActivity extends AppCompatActivity
   }
 
   /**
-   * All messages have been read
+   * Make message icon invisible is all messages have been read
    */
   public void readMessages() {
     newMessageIcon.setVisibility(View.INVISIBLE);
   }
 
   /**
-   * new Messages have arrived
+   * Make messages icon invisible if all messages have been read
    */
   public void unReadMessages() {
     newMessageIcon.setVisibility(View.VISIBLE);

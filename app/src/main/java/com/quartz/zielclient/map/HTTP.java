@@ -11,9 +11,16 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+/**
+ * This class is responsible for handling HTTP requests.
+ *
+ * @author Armaan McLeod
+ * @version 1.0
+ * 18/10/2018
+ */
 public class HTTP {
 
-  private HTTP() {
+  public HTTP() {
     // Intentionally empty
   }
 

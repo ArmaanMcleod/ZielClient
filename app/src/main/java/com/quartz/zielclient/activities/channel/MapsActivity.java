@@ -1,6 +1,8 @@
 package com.quartz.zielclient.activities.channel;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -43,8 +45,11 @@ import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
 import com.quartz.zielclient.map.FetchUrl;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -72,6 +77,7 @@ public class MapsActivity extends AppCompatActivity
 
   private static final int DEFAULT_ZOOM = 15;
   private static final String API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
+  private static final String STREETVIEW_URL = "https://maps.googleapis.com/maps/api/streetview?";
 
   private static final long UPDATE_INTERVAL = 10000;  /* 10 secs */
   private static final long FASTEST_INTERVAL = 2000; /* 2 sec */
@@ -104,7 +110,6 @@ public class MapsActivity extends AppCompatActivity
   private AlertDialog alertDialog;
   private ChannelData channel;
   private static Boolean previousActivityWasTextChat = false;
-
 
   /**
    * Creates map along with its attributes.
@@ -283,6 +288,19 @@ public class MapsActivity extends AppCompatActivity
         marker -> {
           marker.showInfoWindow();
 
+          LatLng location = marker.getPosition();
+
+          // Create street view url
+          String parameters = "location=" + location.latitude + "," + location.longitude;
+          String key = "&key=" + getBaseContext().getString(R.string.google_api_key);
+          String streetViewSize = "&size=600x400";
+          String url = STREETVIEW_URL + parameters + streetViewSize + key;
+
+          // Setup image view
+          View view = View.inflate(this, R.layout.dialog_layout, null);
+          ImageView imageView = view.findViewById(R.id.dialog_imageview);
+          Picasso.get().load(url).into(imageView);
+
           // Prompt Street view
           new AlertDialog.Builder(this)
               .setIcon(R.drawable.street_view_logo)
@@ -298,6 +316,7 @@ public class MapsActivity extends AppCompatActivity
               .setNegativeButton("No", (dialog, which) -> {
 
               })
+              .setView(view)
               .show();
           return true;
         });
@@ -419,6 +438,7 @@ public class MapsActivity extends AppCompatActivity
         startActivity(intentToPhoto);
         break;
 
+      // Clear the map if we want to redraw route
       case R.id.toRedrawRouteButton:
         mGoogleMap.clear();
         currentDestination = null;
@@ -458,6 +478,10 @@ public class MapsActivity extends AppCompatActivity
   }
 
 
+  /**
+   * Make channel end with dialog showed to the user.
+   * @param v The current view.
+   */
   public void makeChannelEndedAlert(View v){
     alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle("Channel has finished");
@@ -597,6 +621,10 @@ public class MapsActivity extends AppCompatActivity
 
   }
 
+  /**
+   * Sets previous activity to text chat
+   * @param previousActivityWasTextChat This indicates if last activity was text chat.
+   */
   public static void setPreviousActivityWasTextChat(Boolean previousActivityWasTextChat) {
     MapsActivity.previousActivityWasTextChat = previousActivityWasTextChat;
   }
