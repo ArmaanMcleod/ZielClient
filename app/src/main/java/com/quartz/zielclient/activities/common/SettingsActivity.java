@@ -3,12 +3,13 @@ package com.quartz.zielclient.activities.common;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -31,7 +32,6 @@ import com.quartz.zielclient.user.UserFactory;
 
 import static android.view.View.OnClickListener;
 import static android.widget.CompoundButton.OnCheckedChangeListener;
-import static com.quartz.zielclient.activities.common.RatingsFragment.OnFragmentInteractionListener;
 
 /**
  * Activity to update account details.
@@ -39,13 +39,12 @@ import static com.quartz.zielclient.activities.common.RatingsFragment.OnFragment
  * @author alexvosnakis
  */
 public class SettingsActivity extends AppCompatActivity
-    implements ValueEventListener, OnClickListener, OnCheckedChangeListener, OnFragmentInteractionListener {
+    implements ValueEventListener, OnClickListener, OnCheckedChangeListener {
 
   private static final String TAG = SettingsActivity.class.getSimpleName();
 
   private boolean nullSetup = false;
   private boolean updating = false;
-  private boolean reviewUpdating = false;
 
   // Current user state
   private User user;
@@ -82,7 +81,7 @@ public class SettingsActivity extends AppCompatActivity
    * Send the user back to sign up if they aren't logged in.
    */
   private void sendHome() {
-    Toast.makeText(this, "Use signed out", Toast.LENGTH_LONG).show();
+    Toast.makeText(this, "User signed out", Toast.LENGTH_LONG).show();
     startActivity(new Intent(this, SignUpActivity.class));
     finish();
   }
@@ -119,13 +118,17 @@ public class SettingsActivity extends AppCompatActivity
   }
 
   @Override
-  public boolean onSupportNavigateUp() {
-    if (updating || reviewUpdating) {
-      return false;
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      if (updating || nullSetup) {
+        return false;
+      }
+
+      NavUtils.navigateUpFromSameTask(this);
+      return true;
     }
 
-    startActivity(goHomeIntent());
-    return true;
+    return super.onOptionsItemSelected(item);
   }
 
   /**
@@ -142,19 +145,6 @@ public class SettingsActivity extends AppCompatActivity
   }
 
   /**
-   * Go back to the appropriate home page.
-   */
-  private Intent goHomeIntent() {
-    Class<? extends AppCompatActivity> homePage = user.isAssisted()
-        ? AssistedHomePageActivity.class
-        : CarerHomepageActivity.class;
-    Intent intent = new Intent(this, homePage);
-    intent.putExtra("user", user.toBundle());
-    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-    return intent;
-  }
-
-  /**
    * @return A dialog that confirms that the user wants to change their account details.
    */
   private Dialog buildConfirmationPrompt() {
@@ -167,11 +157,6 @@ public class SettingsActivity extends AppCompatActivity
         }))
         .setNegativeButton(android.R.string.no, (dialog, which) -> dialog.dismiss())
         .create();
-  }
-
-  @Override
-  public void onFragmentInteraction(Uri uri) {
-    reviewUpdating = !reviewUpdating;
   }
 
   @Override
@@ -220,15 +205,5 @@ public class SettingsActivity extends AppCompatActivity
   public void onCancelled(@NonNull DatabaseError databaseError) {
     Log.e(TAG, "Database error", databaseError.toException());
     Toast.makeText(this, "Error updating account", Toast.LENGTH_LONG).show();
-  }
-
-  @Override
-  public Intent getSupportParentActivityIntent() {
-    return goHomeIntent();
-  }
-
-  @Override
-  public Intent getParentActivityIntent() {
-    return goHomeIntent();
   }
 }

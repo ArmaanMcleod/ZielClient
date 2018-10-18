@@ -41,7 +41,7 @@
         <activity
             android:name=".activities.common.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".activities.assisted.AssistedHomePageActivity"/>
+            android:parentActivityName=".activities.common.SettingsHome"/>
         <activity
             android:name=".activities.common.SplashScreenActivity"
             android:exported="true"
@@ -109,6 +109,8 @@
         <activity
             android:name=".activities.channel.TakePhotosActivity"
             android:label="@string/title_activity_take_photos" />
+        <activity android:name=".activities.common.FeedbackActivity" />
+        <activity android:name=".activities.common.SettingsHome" />
     </application>
 
 </manifest>
