@@ -97,7 +97,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         // If image is the one received by the user
         view = LayoutInflater.from(viewGroup.getContext()).inflate
             (R.layout.message_received_photo, viewGroup, false);
-        return  new ReceivedMessageHolder(view);
+        return  new ReceivedImageHolder(view);
 
       // TODO Make this not null or use an exception
       default:
