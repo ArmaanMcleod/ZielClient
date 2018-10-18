@@ -279,8 +279,6 @@ public class TakePhotosActivity extends AppCompatActivity {
     super.onActivityResult(requestCode, resultCode, data);
 
     if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
-      Toast.makeText(this, "Picked Image!", Toast.LENGTH_LONG).show();
-
       Uri selectedImage = data.getData();
 
       try {
@@ -364,9 +362,7 @@ public class TakePhotosActivity extends AppCompatActivity {
       // Add file to gallery
       addImageToGallery(getContentResolver(), "jpg", imageFile);
 
-      Toast.makeText(this,
-          "Photo added to " + currentPhotoPath,
-          Toast.LENGTH_LONG).show();
+      Toast.makeText(this, "Photo taken. You can also select photo from gallery", Toast.LENGTH_LONG).show();
     } else {
       Log.d(activity, "Directory could not be created");
     }

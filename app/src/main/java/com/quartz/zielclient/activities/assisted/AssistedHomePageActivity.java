@@ -18,7 +18,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.activities.common.SettingsActivity;
+import com.quartz.zielclient.activities.common.SettingsHome;
 
 import java.util.Objects;
 
@@ -49,7 +49,7 @@ public class AssistedHomePageActivity extends AppCompatActivity {
 
     ImageButton settingsPageButton = findViewById(R.id.settingsPageButton);
     settingsPageButton.setOnClickListener(v -> {
-      Intent intent = new Intent(AssistedHomePageActivity.this, SettingsActivity.class);
+      Intent intent = new Intent(AssistedHomePageActivity.this, SettingsHome.class);
       intent.putExtra("user", getIntent().getBundleExtra("user"));
       startActivity(intent);
       finish();
@@ -136,8 +136,7 @@ public class AssistedHomePageActivity extends AppCompatActivity {
   public void requestLocationPermission() {
     String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
     if (EasyPermissions.hasPermissions(this, perms)) {
-      Toast.makeText(this, "Location Permission already granted",
-          Toast.LENGTH_SHORT).show();
+      Log.i(activity, "Location Permission already granted");
       permissionGranted = true;
     } else {
       EasyPermissions.requestPermissions(this,
@@ -155,6 +154,6 @@ public class AssistedHomePageActivity extends AppCompatActivity {
    */
   @Override
   public void onBackPressed() {
-
+    // Intentionally empty
   }
 }
