@@ -438,6 +438,7 @@ public class MapsActivity extends AppCompatActivity
         startActivity(intentToPhoto);
         break;
 
+      // Clear the map if we want to redraw route
       case R.id.toRedrawRouteButton:
         mGoogleMap.clear();
         currentDestination = null;
@@ -477,6 +478,10 @@ public class MapsActivity extends AppCompatActivity
   }
 
 
+  /**
+   * Make channel end with dialog showed to the user.
+   * @param v The current view.
+   */
   public void makeChannelEndedAlert(View v){
     alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle("Channel has finished");

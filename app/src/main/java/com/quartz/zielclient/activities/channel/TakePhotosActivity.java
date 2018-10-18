@@ -437,6 +437,15 @@ public class TakePhotosActivity extends AppCompatActivity {
     super.onPause();
   }
 
+  /**
+   * This hook is called whenever an item in your options menu is selected.
+   * <p>
+   * Documentation: https://developer.android.com/reference/android/app/Activity#
+   * onOptionsItemSelected(android.view.MenuItem)
+   *
+   * @param item The menu item selected
+   * @return boolean If the option was selected.
+   */
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == android.R.id.home) {
