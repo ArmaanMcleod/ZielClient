@@ -124,7 +124,10 @@ public class SettingsActivity extends AppCompatActivity
         return false;
       }
 
-      NavUtils.navigateUpFromSameTask(this);
+      Intent intent = new Intent(this, SettingsHome.class);
+      intent.putExtra("user", user.toBundle());
+      intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+      startActivity(intent);
       return true;
     }
 

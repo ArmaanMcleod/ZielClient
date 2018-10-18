@@ -89,6 +89,12 @@ public class SettingsHome extends AppCompatActivity implements View.OnClickListe
   }
 
   @Override
+  public void onBackPressed() {
+    startActivity(goHomeIntent());
+    finish();
+  }
+
+  @Override
   public void onClick(View v) {
     if (v.getId() == R.id.editProfile) {
       Intent intent = new Intent(this, SettingsActivity.class);

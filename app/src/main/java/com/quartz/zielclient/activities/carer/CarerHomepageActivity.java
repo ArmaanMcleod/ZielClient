@@ -19,6 +19,7 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.common.SettingsActivity;
+import com.quartz.zielclient.activities.common.SettingsHome;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
 import com.quartz.zielclient.adapters.RequestListAdapter;
 import com.quartz.zielclient.models.ChannelRequest;
@@ -116,11 +117,12 @@ public class CarerHomepageActivity extends AppCompatActivity
 
   @Override
   public void onClick(View v) {
-    Intent intent = new Intent(this, SettingsActivity.class);
-    intent.putExtra("user", getIntent().getBundleExtra("user"));
-    startActivity(intent);
-    requestsReference.removeEventListener(this);
-    finish();
+    if (v.getId() == R.id.carerSettingsButton) {
+      Intent intent = new Intent(this, SettingsHome.class);
+      intent.putExtra("user", getIntent().getBundleExtra("user"));
+      startActivity(intent);
+      requestsReference.removeEventListener(this);
+    }
   }
 
   @Override
