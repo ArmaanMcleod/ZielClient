@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.assisted.AssistedHomePageActivity;
 import com.quartz.zielclient.activities.carer.CarerHomepageActivity;
 import com.quartz.zielclient.activities.onboarding.OnboardingActivity;
@@ -24,6 +26,7 @@ import com.quartz.zielclient.user.UserFactory;
 public class SplashScreenActivity extends AppCompatActivity implements ValueEventListener {
 
   private static final String TAG = SplashScreenActivity.class.getSimpleName();
+  private ImageView logo;
 
   /**
    * Creates splash screen along with its attributes.
@@ -35,6 +38,7 @@ public class SplashScreenActivity extends AppCompatActivity implements ValueEven
    */
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    setTheme(R.style.SplashTheme);
     super.onCreate(savedInstanceState);
     try {
       UserController.fetchThisUser(this);
