@@ -10,9 +10,11 @@ import java.net.URL;
 
 import static org.junit.Assert.*;
 
-public class FetchUrlTest {
+public class HTTPUrlTest {
 
   private String[] testUrls;
+
+  private HTTP http;
 
   @Before
   public void setUp() {
@@ -27,11 +29,14 @@ public class FetchUrlTest {
         "https://jsonplaceholder.typicode.com/todos",
         "https://jsonplaceholder.typicode.com/users"
     };
+
+    http = new HTTP();
   }
 
   @After
   public void tearDown() {
     testUrls = null;
+    http = null;
   }
 
   @Test
@@ -61,7 +66,7 @@ public class FetchUrlTest {
     for (String url : testUrls) {
 
       try {
-        String result = FetchUrl.downloadUrl(url);
+        String result = http.downloadUrl(url);
         assertFalse(result.isEmpty());
         System.out.println(url + " PASSED");
 
