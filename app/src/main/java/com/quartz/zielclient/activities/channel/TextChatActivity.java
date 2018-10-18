@@ -11,12 +11,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,6 +48,8 @@ import java.util.Map;
 
 /**
  * Chat activity allows users to communicate with each other through messaging.
+ *
+ * @author wei how ng
  */
 public class TextChatActivity extends AppCompatActivity
     implements View.OnClickListener, ValueEventListener, ChannelListener {
@@ -137,6 +141,10 @@ public class TextChatActivity extends AppCompatActivity
       startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
     });
 
+    ActionBar actionBar = getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
+    }
   }
 
   /**
@@ -222,9 +230,7 @@ public class TextChatActivity extends AppCompatActivity
   }
 
   /**
-   * Check if the permission for media to be sent is already requested
-   *
-   * @return
+   * @return Check if the permission for media to be sent is already requested
    */
   private boolean checkPermissionForMedia() {
     int storage = ContextCompat.checkSelfPermission(this,
@@ -319,6 +325,16 @@ public class TextChatActivity extends AppCompatActivity
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      onBackPressed();
+      return true;
+    }
+
+    return super.onOptionsItemSelected(item);
   }
 
   @Override

@@ -6,6 +6,8 @@ import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
 
+import java.io.IOException;
+
 /**
  * This class is responsible for fetching the path JSON data from the API endpoint.
  *
@@ -41,8 +43,8 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
     try {
       data = HTTP.downloadUrl(url[0]);
       Log.d(ACTIVITY, data);
-    } catch (Exception e) {
-      Log.d(ACTIVITY, e.toString());
+    } catch (IOException e) {
+      Log.e(ACTIVITY, "Error downloading from: " + url[0], e);
     }
 
     return data;
@@ -64,5 +66,4 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
     ParserTask parserTask = new ParserTask(googleMap);
     parserTask.execute(result);
   }
-
 }
