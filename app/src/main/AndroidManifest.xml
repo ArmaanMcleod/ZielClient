@@ -90,7 +90,7 @@
 
         <activity
             android:name=".activities.channel.TextChatActivity"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/text_chat" />
 
         <uses-library
             android:name="org.apache.http.legacy"

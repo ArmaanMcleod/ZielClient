@@ -86,6 +86,7 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
     @Override
     public void onClick(View v) {
       Intent intent = new Intent(context, CarerMapsActivity.class);
+      intent.putExtra("isAssisted",false);
       intent.putExtra(context.getResources().getString(R.string.channel_key), channelId);
       context.startActivity(intent);
     }
