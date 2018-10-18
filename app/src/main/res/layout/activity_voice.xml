@@ -99,7 +99,7 @@
         app:layout_anchor="@+id/chronometer"
         android:layout_gravity="top|center"
         android:visibility="visible"
-        app:srcCompat="@drawable/callinggrey"
+        app:srcCompat="@drawable/ic_calling_grey_250"
         app:layout_anchorGravity="top|center_horizontal"/>
 </android.support.design.widget.CoordinatorLayout>
 

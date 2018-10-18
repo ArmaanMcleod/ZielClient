@@ -15,12 +15,14 @@
         android:id="@+id/dropMarker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:background="@android:color/transparent"
         android:drawableLeft="@drawable/ic_dropmarkerpurple"
         android:text="  Drop marker"
         android:textAllCaps="false"
+        app:layout_constraintBottom_toTopOf="@+id/clearMarker"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,12 +30,13 @@
         android:id="@+id/clearMarker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="355dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="14dp"
         android:background="@android:color/transparent"
         android:drawableLeft="@drawable/ic_remove_markerpurple"
         android:text="  Clear Markers"
         android:textAllCaps="false"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dropMarker" />
 
@@ -42,21 +45,21 @@
         android:id="@+id/map"
         class="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="0dp"
-        android:layout_height="497dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/linearLayout2"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:fitsSystemWindows="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/map">
+        app:layout_constraintTop_toBottomOf="@+id/clearMarker">
 
         <Button
             android:id="@+id/toTextChat"

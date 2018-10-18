@@ -8,8 +8,8 @@
     <string name="firstNameEntry">First name</string>
     <string name="lastNameEntry">Last name</string>
     <string name="chooseRole">Please select the profile that fits you.</string>
-    <string name="assisted_desc">I am looking for assistance.</string>
-    <string name="carer_desc">I am looking to help.</string>
+    <string name="assisted_desc">I am looking for assistance</string>
+    <string name="carer_desc">I am looking to be a carer</string>
     <string name="userId">userId</string>
     <string name="no_splash_screen_loaded">No Splash Screen Loaded</string>
     <string name="title_activity_home_page">Home</string>
