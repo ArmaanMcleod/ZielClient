@@ -19,7 +19,7 @@ public final class MessageFactory {
   /**
    * Create text message when generating the text message
    *
-   * @param text The message's text.
+   * @param text     The message's text.
    * @param userName The userName of the sender of this message.
    * @return The newly generated text message.
    */
@@ -31,8 +31,8 @@ public final class MessageFactory {
   /**
    * Create text message object for fetching the text messages from Firebase.
    *
-   * @param text The message's text.
-   * @param userName The userName of the sender of this message.
+   * @param text      The message's text.
+   * @param userName  The userName of the sender of this message.
    * @param timestamp The recorded timestamp of the stored message.
    * @return The newly generated text message.
    */
@@ -42,7 +42,8 @@ public final class MessageFactory {
 
   /**
    * Create image message when generating the image message
-   * @param url The URL of the image file
+   *
+   * @param url      The URL of the image file
    * @param userName The userName of the sender of this message
    * @return The newly generated image message
    */
@@ -53,8 +54,9 @@ public final class MessageFactory {
 
   /**
    * Create image message when generating the image message
-   * @param url The URL of the image file
-   * @param userName The userName of the sender of this message
+   *
+   * @param url       The URL of the image file
+   * @param userName  The userName of the sender of this message
    * @param timestamp The recorded timestamp of the stored message
    * @return The newly generated image message
    */
@@ -69,7 +71,7 @@ public final class MessageFactory {
     // Box it to avoid null pointer exceptions
     Long messageTime = (Long) messageData.get("messageTime");
     //Check Message type
-    String type =  (String) messageData.get("type");
+    String type = (String) messageData.get("type");
 
     switch (type) {
       case "TEXT":
@@ -79,6 +81,5 @@ public final class MessageFactory {
       default:
         return makeTextMessage(messageText, messageSender, messageTime);
     }
-
   }
 }

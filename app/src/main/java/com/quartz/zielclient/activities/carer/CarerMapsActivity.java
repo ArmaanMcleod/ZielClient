@@ -37,10 +37,14 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import static com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import static android.view.View.OnClickListener;
 
 /**
  * This activity Reads coordinate and route information from a channel and displays a Map
@@ -49,18 +53,17 @@ import java.util.concurrent.Future;
  * @author Bilal Shehata
  */
 public class CarerMapsActivity extends AppCompatActivity
-    implements OnMapReadyCallback,
-        ChannelListener,
-        View.OnClickListener,
-        GoogleMap.OnMapClickListener {
+    implements OnMapReadyCallback, ChannelListener, OnClickListener, OnMapClickListener {
 
   private static boolean previousActivityWasTextChat;
   // These constants are displayed until map syncronizes (only momentarily)
   // This prevents the default usage of  0,0
-  private final double MELBOURNEUNILAT = -37.7964;
-  private final double MELBOURNEUNILONG = 144.9612;
+  private static final double MELBOURNEUNILAT = -37.7964;
+  private static final double MELBOURNEUNILONG = 144.9612;
+
   // initialize assisted location marker
   private final MarkerOptions assistedMarkerOptions = new MarkerOptions();
+
   private AlertDialog alertDialog;
   private AlertDialog endChannelAlertDialog;
   private String channelId;
@@ -87,13 +90,7 @@ public class CarerMapsActivity extends AppCompatActivity
     CarerMapsActivity.previousActivityWasTextChat = previousActivityWasTextChat;
   }
 
-  private String nearestRoadApi = "https://roads.googleapis.com/v1/nearestRoads?";
-
-  private HTTP http = new HTTP();
-
   private final String ACTIVITY = this.getClass().getSimpleName();
-
-  private LatLng currentSnapLocation;
 
   /**
    * Creates map along with its attributes.
@@ -120,6 +117,7 @@ public class CarerMapsActivity extends AppCompatActivity
     Button toVideoChat = findViewById(R.id.toVideoActivity);
     newMessageIcon = findViewById(R.id.newMessageIcon);
     readMessages();
+
     // Setup listeners
     dropMarkers.setOnClickListener(this);
     clearMarkers.setOnClickListener(this);
@@ -133,9 +131,11 @@ public class CarerMapsActivity extends AppCompatActivity
     if (channelId != null) {
       channel = ChannelController.retrieveChannel(channelId, this);
     }
+
     Intent intentVoice = new Intent(CarerMapsActivity.this, VoiceActivity.class);
     intentVoice.putExtra("initiate", 1);
     startActivity(intentVoice);
+
     // Obtain the SupportMapFragment and get notified when the map is ready to be used.
     SupportMapFragment mapFragment =
         (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -186,13 +186,16 @@ public class CarerMapsActivity extends AppCompatActivity
                     intent.putExtra("destination", marker.getPosition());
                     startActivity(intent);
                   })
-              .setNegativeButton("No", (dialog, which) -> {})
+              .setNegativeButton("No", (dialog, which) -> {
+              })
               .show();
           return true;
         });
   }
 
-  /** Update the Coordinates based on the latest Assisted's location */
+  /**
+   * Update the Coordinates based on the latest Assisted's location
+   */
   public void updateMapCoords() {
     LatLng assistedLocation = new LatLng(latitude[0], longitude[0]);
     // Safety check
@@ -207,7 +210,9 @@ public class CarerMapsActivity extends AppCompatActivity
     }
   }
 
-  /** THis listens to changes in the channel Once a change occurs update the long/lat values */
+  /**
+   * THis listens to changes in the channel Once a change occurs update the long/lat values
+   */
   @Override
   public void dataChanged() {
     // Update location
@@ -216,34 +221,36 @@ public class CarerMapsActivity extends AppCompatActivity
       longitude[0] = channel.getAssistedLocation().longitude;
       updateMapCoords();
       channel.setCarerStatus(true);
+
       // if the assisted has entered a route then generate that same route
       if ((channel.getDirectionsURL() != null)
           && !channel.getDirectionsURL().equals("none")
           && !channel.isChannelEnded()) {
         // if the route is already the current route then don't update
-        if (!channel.getDirectionsURL().equals(currentDestinationURL)) {
+        if (!channel.getDirectionsURL().equals(currentDestinationURL) && mGoogleMap != null) {
           // update the route
-          if (mGoogleMap != null) {
-            mGoogleMap.clear();
-            deleteMarkers();
-            updateMapCoords();
+          mGoogleMap.clear();
+          deleteMarkers();
+          updateMapCoords();
 
-            Log.d("DIRECTIONS", channel.getDirectionsURL());
-            FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
-            fetchUrl.execute(channel.getDirectionsURL() + key);
-            currentDestinationURL = channel.getDirectionsURL();
-          }
+          Log.d("DIRECTIONS", channel.getDirectionsURL());
+          FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
+          fetchUrl.execute(channel.getDirectionsURL() + key);
+          currentDestinationURL = channel.getDirectionsURL();
         }
       }
+
       if (seenMessages < channel.getMessages().size()) {
         unReadMessages();
       }
+
       if (channel.isChannelEnded()) {
         Log.d("ENDED", "CHANNEL ENDED");
         if (!this.isFinishing()) {
           makeChannelEndedAlert();
         }
       }
+
       if (channel.getVideoCallStatus()) {
         alertDialog.show();
       } else {
@@ -273,13 +280,11 @@ public class CarerMapsActivity extends AppCompatActivity
       case R.id.toVoiceChat:
         Intent intentVoice = new Intent(CarerMapsActivity.this, VoiceActivity.class);
         if (channel != null && channel.getAssisted() != null) {
-
           intentVoice.putExtra(getResources().getString(R.string.channel_key), channelId);
           intentVoice.putExtra("initiate", 0);
           intentVoice.putExtra("CallId", channel.getAssisted());
           startActivity(intentVoice);
         }
-
         break;
       case R.id.toVideoActivity:
         Intent intentToVideo = new Intent(CarerMapsActivity.this, VideoActivity.class);
@@ -298,7 +303,9 @@ public class CarerMapsActivity extends AppCompatActivity
     }
   }
 
-  /** Handle back presses from user. */
+  /**
+   * Handle back presses from user.
+   */
   @Override
   public void onBackPressed() {
     VoiceActivity.endCall();
@@ -335,7 +342,9 @@ public class CarerMapsActivity extends AppCompatActivity
     return alertDialog;
   }
 
-  /** all markers from map and list. */
+  /**
+   * all markers from map and list.
+   */
   private void deleteMarkers() {
     markers.forEach(Marker::remove);
     markers.clear();
@@ -347,63 +356,53 @@ public class CarerMapsActivity extends AppCompatActivity
    *
    * @param location The location of marker.
    */
-  private void placeMarker(LatLng location) throws ExecutionException, InterruptedException {
-
+  private void placeMarker(LatLng location) {
     // Get snapped location for road
-    LatLng nearestLocation = getSnappedLocation(location);
+    Optional<LatLng> maybeLocation = getSnappedLocation(location);
+    LatLng markerLocation = maybeLocation.orElse(location);
 
-    // Replace location with nearest road
-    if (nearestLocation != null) {
-      location = nearestLocation;
-    }
-    MarkerOptions markerOptions =
-        new MarkerOptions()
-            .position(location)
-            .icon(BitmapDescriptorFactory.defaultMarker((float) 255));
+    MarkerOptions markerOptions = new MarkerOptions()
+        .position(markerLocation)
+        .icon(BitmapDescriptorFactory.defaultMarker((float) 255));
     Marker newMarker = mGoogleMap.addMarker(markerOptions);
     markers.add(newMarker);
   }
 
   /**
    * Gets snapped road location of road.
+   *
    * @param location The current location
    * @return LatLng The snapped location
-   * @throws ExecutionException This is the execution exception
-   * @throws InterruptedException This is the interrupter exception
    */
-  private LatLng getSnappedLocation(LatLng location) throws ExecutionException, InterruptedException {
+  private Optional<LatLng> getSnappedLocation(LatLng location) {
     String url = getNearstRoadUrl(location);
 
     // creates a pool of threads for the Future to draw from
     ExecutorService pool = Executors.newFixedThreadPool(2);
 
     // Execute threads
-    Future<LatLng> value = pool.submit(() -> {
+    Future<Optional<LatLng>> value = pool.submit(() -> {
       String data = getNearestRoadData(url);
 
       // Parse nearest road
-      LatLng nearestRoad = parseNearestRoad(data);
-      if (nearestRoad != null) {
-        return nearestRoad;
-      }
-      return null;
+      return parseNearestRoad(data);
     });
 
-    // Get nearest location from thread.
-    LatLng nearestLocation = value.get();
-    if (nearestLocation != null) {
-      return nearestLocation;
+    try {
+      return value.get();
+    } catch (ExecutionException | InterruptedException e) {
+      Log.e(ACTIVITY, "Error fetching road data", e);
+      return Optional.empty();
     }
-
-    return null;
   }
 
   /**
    * Gets nearest road from JSON string
+   *
    * @param data the JSON data
    * @return LatLng The nearest road.
    */
-  private LatLng parseNearestRoad(String data) {
+  private Optional<LatLng> parseNearestRoad(String data) {
     try {
 
       // Get the first nearest road from the JSON
@@ -412,24 +411,27 @@ public class CarerMapsActivity extends AppCompatActivity
       JSONObject firstRoad = snappedPoints.getJSONObject(0);
       JSONObject location = firstRoad.getJSONObject("location");
 
-      return new LatLng(location.getDouble("latitude"), location.getDouble("longitude"));
+      return Optional.of(
+          new LatLng(location.getDouble("latitude"), location.getDouble("longitude"))
+      );
 
     } catch (JSONException e) {
       e.printStackTrace();
     }
 
-    return null;
+    return Optional.empty();
   }
 
   /**
    * Gets nearest road JSON data in String format.
+   *
    * @param url The String API url.
    * @return String the JSON data,
    */
   private String getNearestRoadData(String url) {
     String data = "";
     try {
-      data = http.downloadUrl(url);
+      data = HTTP.downloadUrl(url);
     } catch (IOException e) {
       Log.d(ACTIVITY, e.toString());
     }
@@ -439,11 +441,13 @@ public class CarerMapsActivity extends AppCompatActivity
 
   /**
    * Create Nearest road URL from a location
+   *
    * @param location The location of the marker.
    * @return String The API url to submit.
    */
   private String getNearstRoadUrl(LatLng location) {
     String coordinates = "points=" + location.latitude + "," + location.longitude;
+    String nearestRoadApi = "https://roads.googleapis.com/v1/nearestRoads?";
     return nearestRoadApi + coordinates + key;
   }
 
@@ -454,19 +458,14 @@ public class CarerMapsActivity extends AppCompatActivity
    */
   @Override
   public void onMapClick(LatLng latLng) {
-
     channel.addMarker(latLng);
-    try {
-      placeMarker(latLng);
-    } catch (ExecutionException e) {
-      Log.d(ACTIVITY, e.toString());
-    } catch (InterruptedException e) {
-      Log.d(ACTIVITY, e.toString());
-    }
+    placeMarker(latLng);
     mGoogleMap.setOnMapClickListener(null);
   }
 
-  /** Alerts user when the channel is ended. */
+  /**
+   * Alerts user when the channel is ended.
+   */
   public void makeChannelEndedAlert() {
     Log.d("CREATING DIALOG", "DIALOG BUILD");
     endChannelAlertDialog = new AlertDialog.Builder(CarerMapsActivity.this).create();
@@ -490,17 +489,22 @@ public class CarerMapsActivity extends AppCompatActivity
           startActivity(intent);
           finish();
         });
+
     if (!isFinishing()) {
       endChannelAlertDialog.show();
-      }
+    }
   }
 
-  /** All messages have been read */
+  /**
+   * All messages have been read
+   */
   public void readMessages() {
     newMessageIcon.setVisibility(View.INVISIBLE);
   }
 
-  /** new Messages have arrived */
+  /**
+   * new Messages have arrived
+   */
   public void unReadMessages() {
     newMessageIcon.setVisibility(View.VISIBLE);
   }

@@ -104,12 +104,14 @@ public class SoundPoolManager {
    * Release the video stream and tear down all variables.
    */
   public static void release() {
-    SoundPool pool = instance.soundPool;
-    if (pool != null) {
-      pool.unload(instance.ringingSoundId);
-      pool.unload(instance.disconnectSoundId);
-      pool.release();
-      instance.soundPool = null;
+    if (instance != null) {
+      SoundPool pool = instance.soundPool;
+      if (pool != null) {
+        pool.unload(instance.ringingSoundId);
+        pool.unload(instance.disconnectSoundId);
+        pool.release();
+        instance.soundPool = null;
+      }
     }
 
     instance = null;

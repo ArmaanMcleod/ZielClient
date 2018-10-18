@@ -73,7 +73,9 @@ public class CarerSelectListAdapter
     return listItems.size();
   }
 
-  /** TextViewHolder class made for this CarerSelectListAdapter */
+  /**
+   * TextViewHolder class made for this CarerSelectListAdapter
+   */
   class TextViewHolder extends RecyclerView.ViewHolder
       implements View.OnClickListener, ValueEventListener {
 
@@ -93,15 +95,26 @@ public class CarerSelectListAdapter
       textViewId = itemView.findViewById(R.id.DisplayID);
 
       Button connectButton = itemView.findViewById(R.id.createChannelButton);
-      connectButton.setOnClickListener(this );
+      connectButton.setOnClickListener(this);
     }
 
     // when user is selected make a channel request to them
     @Override
     public void onClick(View v) {
-      channelData =
-          ChannelController.createChannel(
-              () -> {}, textViewId.getText().toString(), FirebaseAuth.getInstance().getUid());
+      try {
+        UserController.fetchThisUser(this);
+      } catch (AuthorisationException e) {
+        e.printStackTrace();
+      }
+    }
+
+    @Override
+    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+      String carerNameStr = carerName.getText().toString();
+      assisted = UserFactory.getUser(dataSnapshot);
+      channelData = ChannelController.createChannel(
+          () -> {
+          }, textViewId.getText().toString(), FirebaseAuth.getInstance().getUid(), assisted.fullName(), carerNameStr);
 
       // start intent to open maps
       intentToMaps = new Intent(activity, MapsActivity.class);
@@ -113,23 +126,15 @@ public class CarerSelectListAdapter
       if (bundle != null) {
         LatLng destination = bundle.getParcelable("destination");
         intentToMaps.putExtra("destination", destination);
-      } // get the user
-      try {
-        UserController.fetchThisUser(this);
-      } catch (AuthorisationException e) {
-        e.printStackTrace();
       }
-    }
 
-    @Override
-    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-      assisted = UserFactory.getUser(dataSnapshot);
       carerId = textViewId.getText().toString();
       ChannelRequestController.createRequest(assisted, carerId, channelData.getChannelKey(), "");
       activity.startActivity(intentToMaps);
     }
 
     @Override
-    public void onCancelled(@NonNull DatabaseError databaseError) {}
+    public void onCancelled(@NonNull DatabaseError databaseError) {
+    }
   }
 }

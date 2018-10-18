@@ -31,13 +31,18 @@ public final class ChannelController {
    * @return A new channel.
    */
   public static ChannelData createChannel(
-      ChannelListener listener, String carerId, String assistedId) {
+      ChannelListener listener, String carerId, String assistedId, String assistedName, String carerName) {
     final String channelKey = UUID.randomUUID().toString();
     ChannelData channelData =
         new ChannelData(channelsReference.child(channelKey), listener, channelKey);
     Location initialLocation = new Location("");
     initialLocation.setLongitude(0);
     initialLocation.setLongitude(0);
+
+    // Put the string representations of the two users in the channel
+    channelData.setAssistedName(assistedName);
+    channelData.setCarerName(carerName);
+
     channelData.startChannel();
     channelData.setVideoCallStatus(false);
     channelData.setAssistedLocation(initialLocation);
@@ -46,10 +51,6 @@ public final class ChannelController {
     channelData.setAssistedStatus(true);
     channelData.setCarerStatus(false);
     channelData.setDirectionsURL("none");
-
-    // Put the string representations of the two users in the channel
-    channelData.setAssistedName("Assisted");
-    channelData.setCarerName("Carer");
 
     Log.i("ChannelController", String.format("Creating new channel %s", channelKey));
     return channelData;

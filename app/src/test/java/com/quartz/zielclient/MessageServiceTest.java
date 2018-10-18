@@ -24,7 +24,7 @@ public class MessageServiceTest {
     Map<String, Object> test1Message = new HashMap<>();
     test1Message.put("userName", "wei");
     test1Message.put("messageValue", "this code sucks");
-    test1Message.put("messageType", "TEXT");
+    test1Message.put("type", "TEXT");
     test1Message.put("messageTime", 12345L);
     test1.put("testMessage", test1Message);
     testMessageData = test1;
@@ -35,6 +35,7 @@ public class MessageServiceTest {
     test2Message.put("userName", "Tom");
     test2Message.put("messageValue", "TEXT");
     test2Message.put("messageTime", 124444L);
+    test2Message.put("type", "TEXT");
     test2Message.put("Text", "I agree");
     test2.put("testMessage2", test2Message);
     testMessageData2 = test2;
@@ -52,7 +53,6 @@ public class MessageServiceTest {
   
   /**
    * Test 2 which tests the wrong message string for the Message Services
-   * TODO Make this test show up
    */
   @Test
   public void deserialise_test2() {

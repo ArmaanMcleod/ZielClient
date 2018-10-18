@@ -13,7 +13,11 @@ import java.net.URL;
 
 public class HTTP {
 
-  private final String ACTIVITY = this.getClass().getSimpleName();
+  private HTTP() {
+    // Intentionally empty
+  }
+
+  private static final String ACTIVITY = HTTP.class.getSimpleName();
 
   /**
    * This is responsible for downloading the JSON data from an API endpoint with HTTP requests.
@@ -22,7 +26,7 @@ public class HTTP {
    * @return String This is the JSON data in String format.
    * @throws IOException This is the IO exception that triggers when reading the file fails.
    */
-  public String downloadUrl(@NonNull String strUrl) throws IOException {
+  public static String downloadUrl(@NonNull String strUrl) throws IOException {
     String data = "";
     HttpURLConnection urlConnection;
 

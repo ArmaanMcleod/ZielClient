@@ -16,7 +16,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.quartz.zielclient.R;
@@ -30,7 +29,7 @@ import static com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChan
  */
 public class ConfirmationCodeActivity extends AppCompatActivity implements View.OnClickListener, OnCompleteListener<AuthResult> {
 
-  private static final String TAG = "ConfirmationCodeActivity";
+  private static final String TAG = ConfirmationCodeActivity.class.getSimpleName();
 
   private AuthorisationController authController;
 
@@ -54,7 +53,7 @@ public class ConfirmationCodeActivity extends AppCompatActivity implements View.
     @Override
     public void onVerificationFailed(FirebaseException e) {
       Toast feedback = Toast.makeText(outer, "An error occurred.", Toast.LENGTH_SHORT);
-      Log.d("code exception", "an error occurred:", e);
+      Log.e("Code exception", "An error occurred:", e);
       feedback.show();
     }
 
@@ -112,7 +111,6 @@ public class ConfirmationCodeActivity extends AppCompatActivity implements View.
   public void onClick(View view) {
     switch (view.getId()) {
       case R.id.confirmCodeButton:
-
         verifyPhoneNumberWithCode();
         break;
       case R.id.resendButton:
@@ -128,13 +126,6 @@ public class ConfirmationCodeActivity extends AppCompatActivity implements View.
     if (task.isSuccessful()) {
       // Sign in success, update UI with the signed-in user's information
       Log.d(TAG, "signInWithCredential:success");
-      if (task.getResult() != null) {
-        FirebaseUser user = task.getResult().getUser();
-
-        Toast toast =
-            Toast.makeText(this, "user signed in: " + user.getPhoneNumber(), Toast.LENGTH_SHORT);
-        toast.show();
-      }
       Intent intent = new Intent(this, AccountCreationActivity.class);
       startActivity(intent);
       finish();
@@ -148,11 +139,11 @@ public class ConfirmationCodeActivity extends AppCompatActivity implements View.
   }
 
   /**
-   * Verifies credientials of phone number with code.
+   * Verifies credentials of phone number with code.
    */
   private void verifyPhoneNumberWithCode() {
     String code = verificationField.getText().toString();
-    if (code.length() >1) {
+    if (code.length() > 1) {
       PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
       authController.signInWithPhoneAuthCredential(credential, this);
     }
