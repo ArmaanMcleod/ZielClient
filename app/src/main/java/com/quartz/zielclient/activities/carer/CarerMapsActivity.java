@@ -81,19 +81,15 @@ public class CarerMapsActivity extends AppCompatActivity
   /**
    * setter useful in order to not register new messages if they have already been opened.
    *
-   * @param previousActivityWasTextChat
+   * @param previousActivityWasTextChat The indication if the previous activity was a text chat
    */
   public static void setPreviousActivityWasTextChat(boolean previousActivityWasTextChat) {
     CarerMapsActivity.previousActivityWasTextChat = previousActivityWasTextChat;
   }
 
-  private String nearestRoadApi = "https://roads.googleapis.com/v1/nearestRoads?";
-
   private HTTP http = new HTTP();
 
   private final String ACTIVITY = this.getClass().getSimpleName();
-
-  private LatLng currentSnapLocation;
 
   /**
    * Creates map along with its attributes.
@@ -444,6 +440,7 @@ public class CarerMapsActivity extends AppCompatActivity
    */
   private String getNearstRoadUrl(LatLng location) {
     String coordinates = "points=" + location.latitude + "," + location.longitude;
+    String nearestRoadApi = "https://roads.googleapis.com/v1/nearestRoads?";
     return nearestRoadApi + coordinates + key;
   }
 
