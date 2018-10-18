@@ -4,29 +4,22 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.dinuscxj.progressbar.CircleProgressBar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.messaging.MessagingAnalytics;
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.activities.channel.TextChatActivity;
 import com.quartz.zielclient.messages.Message;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.OkHttpClient;
 
@@ -46,17 +39,21 @@ public class MessageListAdapter extends RecyclerView.Adapter {
   private static final int VIEW_TYPE_VIDEO_SENT = 21;
   private static final int VIEW_TYPE_VIDEO_RECEIVED = 20;
 
-  private Context mContext;
   private List<Message> messageList;
   private Boolean isAssisted;
-  private Map<String, Uri> FileUriMap = new HashMap<>();
   private String carerName;
   private String assistedName;
 
+  public MessageListAdapter() {
+    this.messageList = new ArrayList<>();
+    this.isAssisted = false;
+    this.carerName = " ";
+    this.assistedName = " ";
+  }
+
   // Constructor
-  public MessageListAdapter(Context context, List<Message> messageList, Boolean isAssisted,
+  public MessageListAdapter(List<Message> messageList, boolean isAssisted,
                             String carerName, String assistedName) {
-    mContext = context;
     this.messageList = messageList;
     this.isAssisted = isAssisted;
     this.carerName = carerName;

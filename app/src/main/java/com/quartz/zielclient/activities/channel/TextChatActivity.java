@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -22,9 +21,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.carer.CarerMapsActivity;
 import com.quartz.zielclient.adapters.MessageListAdapter;
@@ -42,13 +37,10 @@ import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
 import com.quartz.zielclient.messages.Message;
 import com.quartz.zielclient.messages.MessageFactory;
-import com.quartz.zielclient.user.User;
-import com.quartz.zielclient.user.UserFactory;
+import com.quartz.zielclient.user.UserController;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -68,14 +60,11 @@ public class TextChatActivity extends AppCompatActivity
 
   // Recycler Views and Adapter for the text chat
   private RecyclerView mMessageRecycler;
-  private RecyclerView.LayoutManager mLayoutManager;
-  private RecyclerView.Adapter mMessageListAdapter;
   private List<Message> messageList;
 
   // Graphical interfaces
   private Button sendMessage;
   private EditText chatInput;
-  private Button mediaButton;
 
   private static final int INTENT_REQUEST_CHOOSE_MEDIA = 301;
   private static final int GALLERY_PICK = 1;
@@ -86,7 +75,7 @@ public class TextChatActivity extends AppCompatActivity
     setContentView(R.layout.activity_text_chat_message_list);
 
     // Checking whether currentUser is either assisted or carer
-    isAssisted = getIntent().getBooleanExtra("isAssisted",false);
+    isAssisted = getIntent().getBooleanExtra("isAssisted", false);
 
 
     // Fetching channel using handler
@@ -97,18 +86,12 @@ public class TextChatActivity extends AppCompatActivity
     mRootRef = FirebaseDatabase.getInstance().getReference();
     mImageStorage = FirebaseStorage.getInstance().getReference();
 
-    // Fetch the names of the users in the channel
-    //carerName = channel.getCarerName();
-    //assistedName = channel.getAssistedName();
-    carerName = "Carer";
-    assistedName = " ";
 
     // Chat using RecyclerView
     mMessageRecycler = findViewById(R.id.message_recyclerview);
-    mLayoutManager = new LinearLayoutManager(this);
+    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
     mMessageRecycler.setLayoutManager(mLayoutManager);
-    mMessageRecycler.setAdapter(new MessageListAdapter(this, new ArrayList<>(),
-        false, "Carer", "Assisted"));
+    mMessageRecycler.setAdapter(new MessageListAdapter());
 
     // Getting the current user's username
     currentUser = FirebaseAuth.getInstance().getUid();
@@ -116,7 +99,7 @@ public class TextChatActivity extends AppCompatActivity
     // Initialise the graphical elements
     chatInput = findViewById(R.id.enter_chat_box);
     sendMessage = findViewById(R.id.button_chatbox_send);
-    mediaButton = findViewById(R.id.button_media_send);
+    Button mediaButton = findViewById(R.id.button_media_send);
     sendMessage.setOnClickListener(this);
 
     /**
@@ -143,27 +126,24 @@ public class TextChatActivity extends AppCompatActivity
         }
       }
     });
-    
+
     // Set a listener on the media button to call requestMedia
-    mediaButton.setOnClickListener(new View.OnClickListener() {
+    mediaButton.setOnClickListener(view -> {
+      // Request for permissions
+      requestMedia();
 
-      @Override
-      public void onClick(View view){
-        // Request for permissions
-        requestMedia();
+      Intent galleryIntent = new Intent();
+      galleryIntent.setType("image/* video/*");
+      galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
 
-        Intent galleryIntent = new Intent();
-        galleryIntent.setType("image/* video/*");
-        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-
-        startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
-      }
+      startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
     });
 
   }
 
   /**
    * Called to have the fragment instantiate its user interface view.
+   *
    * @param parent
    * @param name
    * @param context
@@ -184,7 +164,7 @@ public class TextChatActivity extends AppCompatActivity
     Collections.sort(messagesInChat);
     messageList = messagesInChat;
     // Creating a new Adapter to render the messages
-    mMessageListAdapter = new MessageListAdapter(this, messageList,
+    RecyclerView.Adapter mMessageListAdapter = new MessageListAdapter(messageList,
         isAssisted, carerName, assistedName);
     mMessageRecycler.setAdapter(mMessageListAdapter);
   }
@@ -194,6 +174,13 @@ public class TextChatActivity extends AppCompatActivity
    */
   @Override
   public void dataChanged() {
+    // Fetch the names of the users in the channel
+    carerName = channel.getCarerName();
+    assistedName = channel.getAssistedName();
+    isAssisted = UserController.retrieveUid()
+        .map(uid -> channel.getAssisted().equals(uid))
+        .orElse(false);
+
     // Make sure the database of messages for the channel is not empty
     if (channel.getVideoCallStatus()) {
       onBackPressed();
@@ -220,9 +207,7 @@ public class TextChatActivity extends AppCompatActivity
     channel.sendMessage(messageToSend);
 
     // Erasing the previously typed message
-    if (chatInput != null) {
-      chatInput.setText("");
-    }
+    chatInput.setText("");
   }
 
   /**
@@ -230,17 +215,18 @@ public class TextChatActivity extends AppCompatActivity
    */
   public void requestMedia() {
     // If permission is not requested, request them.
-    if(!checkPermissionForMedia()) {
-
+    if (!checkPermissionForMedia()) {
+      // lmao
     } else {
       ActivityCompat.requestPermissions(this,
-          new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+          new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
           INTENT_REQUEST_CHOOSE_MEDIA);
     }
   }
 
   /**
    * Check if the permission for media to be sent is already requested
+   *
    * @return
    */
   private boolean checkPermissionForMedia() {
@@ -251,15 +237,16 @@ public class TextChatActivity extends AppCompatActivity
 
   /**
    * Getting Image URIs
+   *
    * @param requestCode Request Code of the image request
-   * @param resultCode Result Code of the image
-   * @param data The intent being passed in
+   * @param resultCode  Result Code of the image
+   * @param data        The intent being passed in
    */
   @Override
   protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
 
-    if(requestCode == GALLERY_PICK && resultCode ==Activity.RESULT_OK) {
+    if (requestCode == GALLERY_PICK && resultCode == Activity.RESULT_OK) {
       Uri imageURL = data.getData();
 
       sendMediaMessageWithThumbnail(imageURL);
@@ -289,21 +276,18 @@ public class TextChatActivity extends AppCompatActivity
     StorageReference imageFilePath = mImageStorage.child("messages/" + channelID
         + messageList.size() + ".jpg");
 
-    imageFilePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-      @Override
-      public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-        taskSnapshot.getMetadata().getReference()
-            .getDownloadUrl().addOnSuccessListener(uri1 -> {
+    imageFilePath.putFile(uri).addOnSuccessListener(taskSnapshot -> {
+      taskSnapshot.getMetadata().getReference()
+          .getDownloadUrl().addOnSuccessListener(uri1 -> {
 
-                // Send the image message
-                Message messageToSend = MessageFactory.makeImageMessage(uri1.toString(), currentUser);
-                channel.sendMessage(messageToSend);
+        // Send the image message
+        Message messageToSend = MessageFactory.makeImageMessage(uri1.toString(), currentUser);
+        channel.sendMessage(messageToSend);
 
-            });
+      });
 
-        // Performing null checks
+      // Performing null checks
 
-      }
     });
 
 
@@ -311,16 +295,17 @@ public class TextChatActivity extends AppCompatActivity
 
   /**
    * Getter to indicate if the current user is Carer or Assisted
+   *
    * @return Boolean value if the user is assisted or not
    */
-  public Boolean getAssisted() {
+  public boolean getAssisted() {
     return isAssisted;
   }
 
   /**
    * This method will be triggered in the event that this listener either failed at the server,
    * or is removed as a result of the security and Firebase rules.
-   *
+   * <p>
    * Documentation:  https://www.firebase.com/docs/java-api/javadoc/com/firebase/client/
    * ValueEventListener.html
    *
@@ -345,11 +330,10 @@ public class TextChatActivity extends AppCompatActivity
   }
 
   @Override
-  public void onBackPressed(){
+  public void onBackPressed() {
     // User could have come from either of these activities.
-  MapsActivity.setPreviousActivityWasTextChat(true);
-  CarerMapsActivity.setPreviousActivityWasTextChat(true);
-  finish();
-
+    MapsActivity.setPreviousActivityWasTextChat(true);
+    CarerMapsActivity.setPreviousActivityWasTextChat(true);
+    finish();
   }
 }
