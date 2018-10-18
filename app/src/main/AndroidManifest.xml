@@ -22,6 +22,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ziel"
@@ -37,11 +38,12 @@
 
         <activity
             android:name=".activities.channel.VideoActivity"
-            android:configChanges="orientation|screenSize" />
+            android:configChanges="orientation|screenSize"
+            android:label="Video Call" />
         <activity
             android:name=".activities.common.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".activities.common.SettingsHome"/>
+            android:parentActivityName=".activities.common.SettingsHome" />
         <activity
             android:name=".activities.common.SplashScreenActivity"
             android:exported="true"
@@ -52,10 +54,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.signup.SignUpActivity" />
-        <activity android:name=".activities.signup.VerifyPhoneNumberActivity" />
-        <activity android:name=".activities.signup.ConfirmationCodeActivity" />
-        <activity android:name=".activities.signup.AccountCreationActivity" />
+        <activity
+            android:name=".activities.signup.SignUpActivity"
+            android:label="Welcome!" />
+        <activity
+            android:name=".activities.signup.VerifyPhoneNumberActivity"
+            android:label="Phone Verification" />
+        <activity
+            android:name=".activities.signup.ConfirmationCodeActivity"
+            android:label="SMS Code" />
+        <activity
+            android:name=".activities.signup.AccountCreationActivity"
+            android:label="Account Creation" />
         <activity
             android:name=".activities.assisted.AssistedHomePageActivity"
             android:label="@string/title_activity_home_page" />
@@ -81,8 +91,8 @@
 
         <activity
             android:name=".activities.channel.MapsActivity"
-            android:launchMode="singleTop"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps"
+            android:launchMode="singleTop" />
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -100,23 +110,31 @@
             android:name=".activities.carer.CarerMapsActivity"
             android:label="@string/title_activity_carer_maps" />
         <activity android:name=".activities.channel.StreetViewActivity" />
-        <activity android:name=".activities.assisted.AddCarerActivity" />
+        <activity
+            android:name=".activities.assisted.AddCarerActivity"
+            android:label="Add a contact" />
         <activity
             android:name=".activities.assisted.AssistedSelectCarerActivity"
-            android:label="Select a carer"
-            />
-        <activity android:name=".activities.channel.VoiceActivity" />
-        <activity android:name=".activities.onboarding.OnboardingActivity" />
-        <activity android:name=".activities.onboarding.SecondOnboardingActivity" />
-        <activity android:name=".activities.onboarding.FinalOnboardingActivity" />
+            android:label="Select a carer" />
+        <activity
+            android:name=".activities.channel.VoiceActivity"
+            android:label="Voice Call" />
+        <activity
+            android:name=".activities.onboarding.OnboardingActivity"
+            android:label="Welcome!" />
+        <activity
+            android:name=".activities.onboarding.SecondOnboardingActivity"
+            android:label="Map" />
+        <activity
+            android:name=".activities.onboarding.FinalOnboardingActivity"
+            android:label="Contact" />
         <activity
             android:name=".activities.channel.TakePhotosActivity"
             android:label="@string/title_activity_take_photos" />
         <activity
             android:name=".activities.common.FeedbackActivity"
-            android:parentActivityName=".activities.common.SettingsHome"
             android:label="Feedback"
-            />
+            android:parentActivityName=".activities.common.SettingsHome" />
         <activity android:name=".activities.common.SettingsHome" />
     </application>
 

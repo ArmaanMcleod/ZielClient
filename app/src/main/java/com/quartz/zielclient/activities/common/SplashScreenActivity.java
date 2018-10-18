@@ -58,6 +58,11 @@ public class SplashScreenActivity extends AppCompatActivity implements ValueEven
    */
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+    // Check if user hasn't completed signup
+    if (!dataSnapshot.exists()) {
+      goToSignin();
+    }
+
     User user = UserFactory.getUser(dataSnapshot);
     redirect(user);
   }

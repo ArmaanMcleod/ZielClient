@@ -68,7 +68,6 @@ public class TakePhotosActivity extends AppCompatActivity {
   private static final int PICK_IMAGE = 1;
   private final String activity = this.getClass().getSimpleName();
 
-
   private CameraView cameraView;
 
   private boolean canTakePicture;
@@ -285,7 +284,6 @@ public class TakePhotosActivity extends AppCompatActivity {
         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
         imageView.setImageBitmap(bitmap);
         runLandMarkRecognition(bitmap);
-
       } catch (IOException e) {
         Log.d(activity, e.toString());
       }
@@ -319,8 +317,6 @@ public class TakePhotosActivity extends AppCompatActivity {
   public void requestStoragePermission() {
     String[] perms = {WRITE_EXTERNAL_STORAGE};
     if (EasyPermissions.hasPermissions(this, perms)) {
-      Toast.makeText(this, "Storage Permission already granted",
-          Toast.LENGTH_SHORT).show();
       permissionGranted = true;
     } else {
       EasyPermissions.requestPermissions(this,
@@ -376,10 +372,8 @@ public class TakePhotosActivity extends AppCompatActivity {
    */
   private void writeImage(File imageFile, Bitmap image) {
     // Write file to directory
-    try {
-      OutputStream fileOut = new FileOutputStream(imageFile);
+    try (OutputStream fileOut = new FileOutputStream(imageFile)) {
       image.compress(JPEG, 100, fileOut);
-      fileOut.close();
     } catch (Exception e) {
       Log.d(activity, e.toString());
     }
