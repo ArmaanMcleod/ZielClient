@@ -44,17 +44,18 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * This activity Reads coordinate and route information from a channel and displays a Map accordingly
- * THis allows a carer to have upto date locative information from the assisted
+ * This activity Reads coordinate and route information from a channel and displays a Map
+ * accordingly THis allows a carer to have upto date locative information from the assisted
  *
  * @author Bilal Shehata
  */
 public class CarerMapsActivity extends AppCompatActivity
     implements OnMapReadyCallback,
-    ChannelListener,
-    View.OnClickListener,
-    GoogleMap.OnMapClickListener {
+        ChannelListener,
+        View.OnClickListener,
+        GoogleMap.OnMapClickListener {
 
+  private static boolean previousActivityWasTextChat;
   // These constants are displayed until map syncronizes (only momentarily)
   // This prevents the default usage of  0,0
   private final double MELBOURNEUNILAT = -37.7964;
@@ -75,12 +76,17 @@ public class CarerMapsActivity extends AppCompatActivity
   private String key;
   private List<Marker> markers;
   private Marker assistedMarker;
-
   // debug channel to be replaced with the current channel that was handled by a previous activity.
   private ChannelData channel;
 
-
-  private static boolean previousActivityWasTextChat;
+  /**
+   * setter useful in order to not register new messages if they have already been opened.
+   *
+   * @param previousActivityWasTextChat
+   */
+  public static void setPreviousActivityWasTextChat(boolean previousActivityWasTextChat) {
+    CarerMapsActivity.previousActivityWasTextChat = previousActivityWasTextChat;
+  }
 
   private String nearestRoadApi = "https://roads.googleapis.com/v1/nearestRoads?";
 
@@ -113,7 +119,7 @@ public class CarerMapsActivity extends AppCompatActivity
     Button dropMarkers = findViewById(R.id.dropMarker);
     Button clearMarkers = findViewById(R.id.clearMarker);
     Button toVideoChat = findViewById(R.id.toVideoActivity);
-    newMessageIcon =  findViewById(R.id.newMessageIcon);
+    newMessageIcon = findViewById(R.id.newMessageIcon);
     readMessages();
     // Setup listeners
     dropMarkers.setOnClickListener(this);
@@ -138,18 +144,18 @@ public class CarerMapsActivity extends AppCompatActivity
       mapFragment.getMapAsync(this);
     }
   }
+
   @Override
-  public void onStart(){
+  public void onStart() {
     if (previousActivityWasTextChat) {
       readMessages();
       if (channel != null) {
         seenMessages = channel.getMessages().size();
-        }
+      }
       previousActivityWasTextChat = false;
     }
     super.onStart();
   }
-
 
   /**
    * Manipulates the map once available. Once map is ready add a temporary marker (once again The
@@ -181,16 +187,13 @@ public class CarerMapsActivity extends AppCompatActivity
                     intent.putExtra("destination", marker.getPosition());
                     startActivity(intent);
                   })
-              .setNegativeButton("No", (dialog, which) -> {
-              })
+              .setNegativeButton("No", (dialog, which) -> {})
               .show();
           return true;
         });
   }
 
-  /**
-   * Update the Coordinates based on the latest Assisted's location
-   */
+  /** Update the Coordinates based on the latest Assisted's location */
   public void updateMapCoords() {
     LatLng assistedLocation = new LatLng(latitude[0], longitude[0]);
     // Safety check
@@ -199,15 +202,13 @@ public class CarerMapsActivity extends AppCompatActivity
     if (assistedMarker != null) {
       assistedMarker.remove();
       assistedMarkerOptions.position(assistedLocation);
-      assistedMarker =  mGoogleMap.addMarker(assistedMarkerOptions);
+      assistedMarker = mGoogleMap.addMarker(assistedMarkerOptions);
       mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(assistedLocation));
       mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(assistedLocation, 15));
     }
   }
 
-  /**
-   * THis listens to changes in the channel Once a change occurs update the long/lat values
-   */
+  /** THis listens to changes in the channel Once a change occurs update the long/lat values */
   @Override
   public void dataChanged() {
     // Update location
@@ -232,16 +233,14 @@ public class CarerMapsActivity extends AppCompatActivity
             FetchUrl fetchUrl = new FetchUrl(mGoogleMap);
             fetchUrl.execute(channel.getDirectionsURL() + key);
             currentDestinationURL = channel.getDirectionsURL();
-
           }
         }
       }
-      if(seenMessages < channel.getMessages().size()){
+      if (seenMessages < channel.getMessages().size()) {
         unReadMessages();
-
       }
       if (channel.isChannelEnded()) {
-        Log.d("ENDED","CHANNEL ENDED");
+        Log.d("ENDED", "CHANNEL ENDED");
         if (!this.isFinishing()) {
           makeChannelEndedAlert();
         }
@@ -256,8 +255,8 @@ public class CarerMapsActivity extends AppCompatActivity
 
   /**
    * Listens for click events for the buttons.
-   * <p>
-   * Documentation: https://developer.android.com/reference/android/view/
+   *
+   * <p>Documentation: https://developer.android.com/reference/android/view/
    * View.OnClickListener#onClick(android.view.View)
    *
    * @param view The view that was clicked.
@@ -274,13 +273,12 @@ public class CarerMapsActivity extends AppCompatActivity
         break;
       case R.id.toVoiceChat:
         Intent intentVoice = new Intent(CarerMapsActivity.this, VoiceActivity.class);
-        if (channel != null && channel.getAssisted()!=null) {
+        if (channel != null && channel.getAssisted() != null) {
 
-            intentVoice.putExtra(getResources().getString(R.string.channel_key), channelId);
-            intentVoice.putExtra("initiate", 0);
-            intentVoice.putExtra("CallId", channel.getAssisted());
-             startActivity(intentVoice);
-
+          intentVoice.putExtra(getResources().getString(R.string.channel_key), channelId);
+          intentVoice.putExtra("initiate", 0);
+          intentVoice.putExtra("CallId", channel.getAssisted());
+          startActivity(intentVoice);
         }
 
         break;
@@ -301,16 +299,13 @@ public class CarerMapsActivity extends AppCompatActivity
     }
   }
 
-  /**
-   * Handle back presses from user.
-   */
+  /** Handle back presses from user. */
   @Override
   public void onBackPressed() {
     VoiceActivity.endCall();
     alertDialog.dismiss();
     channel = null;
     finish();
-
   }
 
   /**
@@ -322,8 +317,13 @@ public class CarerMapsActivity extends AppCompatActivity
     alertDialog = new AlertDialog.Builder(CarerMapsActivity.this).create();
     alertDialog.setTitle("Video Share?");
     alertDialog.setMessage("Carer wants to share video with you  please also join the channel");
-    alertDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
-            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
+    if (alertDialog.getWindow() != null) {
+      alertDialog
+          .getWindow()
+          .setFlags(
+              WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+              WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
+    }
     alertDialog.setButton(
         AlertDialog.BUTTON_NEUTRAL,
         "OK",
@@ -336,9 +336,7 @@ public class CarerMapsActivity extends AppCompatActivity
     return alertDialog;
   }
 
-  /**
-   * all markers from map and list.
-   */
+  /** all markers from map and list. */
   private void deleteMarkers() {
     markers.forEach(Marker::remove);
     markers.clear();
@@ -360,7 +358,9 @@ public class CarerMapsActivity extends AppCompatActivity
       location = nearestLocation;
     }
     MarkerOptions markerOptions =
-        new MarkerOptions().position(location).icon(BitmapDescriptorFactory.defaultMarker((float) 255));
+        new MarkerOptions()
+            .position(location)
+            .icon(BitmapDescriptorFactory.defaultMarker((float) 255));
     Marker newMarker = mGoogleMap.addMarker(markerOptions);
     markers.add(newMarker);
   }
@@ -455,6 +455,7 @@ public class CarerMapsActivity extends AppCompatActivity
    */
   @Override
   public void onMapClick(LatLng latLng) {
+
     channel.addMarker(latLng);
     try {
       placeMarker(latLng);
@@ -466,15 +467,16 @@ public class CarerMapsActivity extends AppCompatActivity
     mGoogleMap.setOnMapClickListener(null);
   }
 
-  /**
-   * Alerts user when the channel is ended.
-   */
+  /** Alerts user when the channel is ended. */
   public void makeChannelEndedAlert() {
-    Log.d("CREATING DIALOG","DIALOG BUILD");
+    Log.d("CREATING DIALOG", "DIALOG BUILD");
     endChannelAlertDialog = new AlertDialog.Builder(CarerMapsActivity.this).create();
     endChannelAlertDialog.setTitle("Channel has finished");
     endChannelAlertDialog.setMessage("This channel has been ended. Will now return to home page");
-    endChannelAlertDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+    endChannelAlertDialog
+        .getWindow()
+        .setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
             WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
     endChannelAlertDialog.setButton(
         AlertDialog.BUTTON_NEUTRAL,
@@ -493,27 +495,13 @@ public class CarerMapsActivity extends AppCompatActivity
     endChannelAlertDialog.show();
   }
 
-
-  /**
-   * All messages have been read
-   */
-  public void readMessages(){
+  /** All messages have been read */
+  public void readMessages() {
     newMessageIcon.setVisibility(View.INVISIBLE);
   }
 
-  /**
-   * new Messages have arrived
-   */
-  public  void unReadMessages(){
+  /** new Messages have arrived */
+  public void unReadMessages() {
     newMessageIcon.setVisibility(View.VISIBLE);
   }
-
-  /**
-   * setter useful in order to not register new messages if they have already been opened.
-   * @param previousActivityWasTextChat
-   */
-  public static void setPreviousActivityWasTextChat(boolean previousActivityWasTextChat) {
-    CarerMapsActivity.previousActivityWasTextChat = previousActivityWasTextChat;
-  }
-
 }

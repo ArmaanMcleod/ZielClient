@@ -26,16 +26,15 @@
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
-        android:layout_height="85dp"
-        android:layout_marginBottom="425dp"
+        android:layout_height="97dp"
         android:background="#ffffff"
         android:paddingLeft="16dp"
         android:paddingRight="10dp"
+        android:paddingTop="10dp"
         android:text="If an assisted requires your help their requests will be displayed below (Note: The assisted will need to add you as their carer first)"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/title"
-        app:layout_constraintTop_toBottomOf="@+id/carerSettingsButton" />
+        app:layout_constraintBottom_toBottomOf="@+id/title"
+        app:layout_constraintStart_toStartOf="@+id/title" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view"
@@ -52,13 +51,15 @@
         android:id="@+id/carerSettingsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="7dp"
         android:layout_marginBottom="10dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="20dp"
+        android:paddingTop="5dp"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toTopOf="@+id/textView4"
         app:layout_constraintEnd_toEndOf="@+id/title"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/ic_settings_40" />
 
 </android.support.constraint.ConstraintLayout>

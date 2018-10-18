@@ -295,7 +295,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
      * ensure any memory allocated to the Room resource is freed.
      */
     if (room != null && room.getState() != RoomState.DISCONNECTED) {
-
+      channel.setVideoCallStatus(false);
       room.disconnect();
       disconnectedFromOnDestroy = true;
     }
@@ -506,10 +506,17 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     moveLocalVideoToPrimaryView();
   }
 
+  /**
+   * remove the other users videotrack when they leave the channel 
+   * @param videoTrack
+   */
   public void removeParticipantVideo(VideoTrack videoTrack) {
     videoTrack.removeRenderer(primaryVideoView);
   }
 
+  /**
+   * when their is no one on the call display own video
+   */
   private void moveLocalVideoToPrimaryView() {
     if (thumbnailVideoView.getVisibility() == View.VISIBLE) {
       thumbnailVideoView.setVisibility(View.GONE);
@@ -523,9 +530,14 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     }
   }
 
-  /** Room events listener */
+  /**
+   * Listen to the various actions that can be performed on the room
+   * most importantly to detect when another user joins or leaves the room
+   * @return
+   */
   private Room.Listener roomListener() {
     return new Room.Listener() {
+
       @Override
       public void onConnected(Room room) {
         localParticipant = room.getLocalParticipant();
@@ -631,32 +643,49 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     return new VideoRemoteParticipant(this);
   }
 
+  /**
+   * Displays the state of the room at the top of the activity
+   * @param roomEditText
+   * @return
+   */
   private DialogInterface.OnClickListener connectClickListener(final TextView roomEditText) {
     return (dialog, which) -> connectToRoom(roomEditText.getText().toString());
   }
 
+  /**
+   * Button that allows user to disconnect from channel
+   * @return
+   */
   private View.OnClickListener disconnectClickListener() {
     return v -> {
       if (room != null) {
         channel.setVideoCallStatus(false);
+        inChannel=false;
         room.disconnect();
       }
       intializeUI();
     };
   }
 
+  /**
+   * Called when connect button is clicked and shows confirmation dialog
+   * @return
+   */
   private View.OnClickListener connectActionClickListener() {
     return v -> showConnectDialog();
   }
 
   private DialogInterface.OnClickListener cancelConnectDialogClickListener() {
     return (dialog, which) -> {
-      inChannel= false;
       intializeUI();
       connectDialog.dismiss();
     };
   }
 
+  /**
+   * This allows the user to switch between forward and back facing camera
+   * @return
+   */
   private View.OnClickListener switchCameraClickListener() {
     return v -> {
       if (cameraCapturerCompat != null) {
@@ -671,6 +700,10 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     };
   }
 
+  /**
+   *  This allows the user to hide their camera from view
+   * @return
+   */
   private View.OnClickListener localVideoClickListener() {
     return v -> {
       // Enable/disable the local video track
