@@ -68,7 +68,6 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
       "http://35.189.54.26:3000/accessToken";
   private static final int MIC_PERMISSION_REQUEST_CODE = 1;
   private static final int SNACKBAR_DURATION = 4000;
-  private int initialize;
   private boolean firstRegistration = false;
   private static String identity = "alice";
   private static Call activeCall;
