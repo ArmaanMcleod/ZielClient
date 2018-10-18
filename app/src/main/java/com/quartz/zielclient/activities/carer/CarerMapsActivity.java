@@ -160,6 +160,7 @@ public class CarerMapsActivity extends AppCompatActivity
   /**
    * Manipulates the map once available. Once map is ready add a temporary marker (once again The
    * University of Melbourne is used temporarily rather than the default NUll-Island)
+   *
    * @param googleMap This is the current Google Map fragment
    */
   @Override
@@ -214,7 +215,6 @@ public class CarerMapsActivity extends AppCompatActivity
 
   /**
    * This listens to changes in the channel Once a change occurs update the long/lat values
-   * THis listens to changes in the channel Once a change occurs update the long/lat values
    */
   @Override
   public void dataChanged() {
@@ -346,8 +346,7 @@ public class CarerMapsActivity extends AppCompatActivity
   }
 
   /**
-   * Deletes all markers from a list.
-   * all markers from map and list.
+   * Deletes all markers from a list and map.
    */
   private void deleteMarkers() {
     markers.forEach(Marker::remove);
@@ -501,7 +500,6 @@ public class CarerMapsActivity extends AppCompatActivity
 
   /**
    * Make message icon invisible is all messages have been read
-   * All messages have been read
    */
   public void readMessages() {
     newMessageIcon.setVisibility(View.INVISIBLE);
@@ -509,7 +507,6 @@ public class CarerMapsActivity extends AppCompatActivity
 
   /**
    * Make messages icon invisible if all messages have been read
-   * new Messages have arrived
    */
   public void unReadMessages() {
     newMessageIcon.setVisibility(View.VISIBLE);
