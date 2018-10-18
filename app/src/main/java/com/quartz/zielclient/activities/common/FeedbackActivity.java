@@ -87,7 +87,6 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
     return super.onOptionsItemSelected(item);
   }
 
-
   @Override
   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
     Log.i(TAG, "Successfully submitted review.");

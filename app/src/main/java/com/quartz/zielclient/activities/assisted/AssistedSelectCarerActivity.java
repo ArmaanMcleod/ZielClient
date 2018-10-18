@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.common.SettingsHome;
 import com.quartz.zielclient.adapters.CarerSelectListAdapter;
 import com.quartz.zielclient.models.CarerSelectionItem;
 
@@ -124,5 +126,19 @@ public class AssistedSelectCarerActivity extends AppCompatActivity implements Va
       Log.d(activity, e.toString());
       return null;
     }
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      // Respond to the action bar's Up/Home button
+      Intent intent = new Intent(this, AssistedHomePageActivity.class);
+      intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+      startActivity(intent);
+      finish();
+      return true;
+    }
+
+    return super.onOptionsItemSelected(item);
   }
 }
