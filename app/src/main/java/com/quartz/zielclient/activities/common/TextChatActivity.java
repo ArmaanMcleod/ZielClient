@@ -160,11 +160,6 @@ public class TextChatActivity extends AppCompatActivity
       }
     });
 
-    // Greet User
-    String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-    Snackbar.make(mMessageRecycler, "Welcome to the Text Chat "
-        + userName + "!", Snackbar.LENGTH_SHORT).show();
-
   }
 
   /**
@@ -297,14 +292,17 @@ public class TextChatActivity extends AppCompatActivity
     imageFilePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
       @Override
       public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-        String downloadURL = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
+        taskSnapshot.getMetadata().getReference()
+            .getDownloadUrl().addOnSuccessListener(uri1 -> {
+
+                // Send the image message
+                Message messageToSend = MessageFactory.makeImageMessage(uri1.toString(), currentUser);
+                channel.sendMessage(messageToSend);
+
+            });
 
         // Performing null checks
-        if(downloadURL != null) {
-          // Send the image message
-          Message messageToSend = MessageFactory.makeImageMessage(downloadURL, currentUser);
-          channel.sendMessage(messageToSend);
-        }
+
       }
     });
 

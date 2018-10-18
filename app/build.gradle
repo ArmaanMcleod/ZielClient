@@ -84,6 +84,8 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.61'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.24.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

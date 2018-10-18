@@ -11,12 +11,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.dinuscxj.progressbar.CircleProgressBar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.MessagingAnalytics;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.common.TextChatActivity;
 import com.quartz.zielclient.messages.Message;
+import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -25,6 +27,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.OkHttpClient;
 
 
 /**
@@ -160,8 +164,6 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     // TODO Fix this mess with switch once carer and assisted names are out(?)
     // If message is type of text
     if (message.getType().equals(Message.MessageType.TEXT)) {
-      System.out.println(message.getType().toString());
-      System.out.println("CCCCCCCCCCCCCCCCCCCCCC");
       // Checking current message's sender's ID against current user's ID
       if (message.getUserName().equals(FirebaseAuth.getInstance().getUid())) {
         // If current user is the sender of message
@@ -171,7 +173,6 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         return VIEW_TYPE_MESSAGE_RECEIVED;
       }
     } else if (message.getType().equals(Message.MessageType.IMAGE)) {
-      System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBB");
       // Checking current message's sender's ID against current user's ID
       if (message.getUserName().equals(FirebaseAuth.getInstance().getUid())) {
         // If current user is the sender of image message
@@ -191,7 +192,6 @@ public class MessageListAdapter extends RecyclerView.Adapter {
       }
     } else {
       // TODO Handle errors
-      System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAA");
       return VIEW_TYPE_MESSAGE_SENT;
     }
   }
@@ -293,10 +293,10 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     TextView timeStamp;
     ImageView fileThumbnailImage;
     CircleProgressBar circleProgressBar;
-
+    View view = itemView;
     public SentImageHolder(View itemView) {
       super(itemView);
-
+      this.view = itemView;
       timeStamp = (TextView) itemView.findViewById(R.id.text_group_chat_time);
       fileThumbnailImage = (ImageView) itemView.findViewById(R.id.image_group_chat_file_thumbnail);
       circleProgressBar = (CircleProgressBar) itemView.findViewById(R.id.circle_progress);
@@ -324,8 +324,17 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
       // Checking the Message URI and binding it
       if (message.getMessageValue() != null) {
-        Uri uri = Uri.parse(message.getMessageValue());
-        Picasso.get().load(uri).into(fileThumbnailImage);
+
+
+        Picasso.Builder picassoBuilder = new Picasso.Builder(this.fileThumbnailImage.getContext());
+        picassoBuilder.downloader(new OkHttp3Downloader(new OkHttpClient()));
+        Picasso picasso = picassoBuilder.build();
+
+        String link = "https://i.imgur.com/WRotz4k.jpg";
+        picasso.get().setIndicatorsEnabled(true);
+        picasso.get().load(message.getMessageValue()).placeholder(R.drawable.background).into(this.fileThumbnailImage);
+
+
         String timeString = new SimpleDateFormat("h:mm a").format(message.getMessageTime());
         timeStamp.setText(timeString);
       }
@@ -386,8 +395,18 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
       // Checking the Message URI and binding it
       if (message.getMessageValue() != null) {
-        Picasso.get().load(message.getMessageValue()).into(fileThumbnailImage);
+
+        Picasso.Builder picassoBuilder = new Picasso.Builder(this.fileThumbnailImage.getContext());
+        picassoBuilder.downloader(new OkHttp3Downloader(new OkHttpClient()));
+        Picasso picasso = picassoBuilder.build();
+
+        String link = "https://i.imgur.com/WRotz4k.jpg";
+        picasso.get().setIndicatorsEnabled(true);
+        picasso.get().load(message.getMessageValue()).placeholder(R.drawable.background).into(this.fileThumbnailImage);
+
       }
+
+      //Glide.with(fileThumbnailImage).load(link).into(fileThumbnailImage);
 
 //      if (listener != null) {
 //        itemView.setOnClickListener(new View.OnClickListener() {
