@@ -802,15 +802,6 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   }
 
   /**
-   * Gets the video status of the text view.
-   *
-   * @return TextView The view of the video status.
-   */
-  public TextView getVideoStatusTextView() {
-    return videoStatusTextView;
-  }
-
-  /**
    * Creates a floating action button.
    *
    * @return FloatingActionButton The button to be shown.

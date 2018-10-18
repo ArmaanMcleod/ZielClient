@@ -676,6 +676,7 @@ public class VoiceActivity extends AppCompatActivity implements ChannelListener 
         item.setIcon(R.drawable.ic_volume_up_white_24dp);
       }
     }
+
     return true;
   }
 
