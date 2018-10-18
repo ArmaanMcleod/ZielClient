@@ -115,37 +115,6 @@ public class ChannelData implements ValueEventListener {
     // todo
   }
 
-  public String getChannelKey() {
-    return channelKey;
-  }
-
-  public List<LatLng> getCarerMarkerList() {
-    Object carerMarkers = channelValues.get("carerMarkerList");
-    return CoordinateService.deserialiseCarerMarkers(carerMarkers);
-  }
-
-  public void addMarker(LatLng coordinate) {
-    String coordinateId = UUID.randomUUID().toString();
-    // set x coordinate for marker
-    channelReference
-        .child("carerMarkerList")
-        .child(coordinateId)
-        .child("xCoord")
-        .setValue(String.valueOf(coordinate.latitude));
-    // set y coordinate for marker
-    channelReference
-        .child("carerMarkerList")
-        .child(coordinateId)
-        .child("yCoord")
-        .setValue(String.valueOf(coordinate.longitude));
-  }
-
-  public void clearMarkers() {
-    channelReference
-        .child("carerMarkerList")
-        .setValue(null);
-  }
-
   public String getDirectionsURL() {
     return channelValues.get("directionsURL").toString();
   }
@@ -203,6 +172,23 @@ public class ChannelData implements ValueEventListener {
     channelReference.child("carerStatus").setValue(carerStatus);
   }
 
+  public boolean getVideoCallStatus() {
+    return channelValues.get("videoCallStatus").equals(true);
+  }
+
+  public void setVideoCallStatus(Boolean active) {
+    channelReference.child("videoCallStatus").setValue(active);
+  }
+
+  public String getChannelKey() {
+    return channelKey;
+  }
+
+  public List<LatLng> getCarerMarkerList() {
+    Object carerMarkers = channelValues.get("carerMarkerList");
+    return CoordinateService.deserialiseCarerMarkers(carerMarkers);
+  }
+
   public void endChannel() {
     channelReference.child("channelEnded").setValue(true);
   }
@@ -215,11 +201,25 @@ public class ChannelData implements ValueEventListener {
     return channelValues.get("channelEnded").equals(true);
   }
 
-  public boolean getVideoCallStatus() {
-    return channelValues.get("videoCallStatus").equals(true);
+  public void addMarker(LatLng coordinate) {
+    String coordinateId = UUID.randomUUID().toString();
+    // set x coordinate for marker
+    channelReference
+        .child("carerMarkerList")
+        .child(coordinateId)
+        .child("xCoord")
+        .setValue(String.valueOf(coordinate.latitude));
+    // set y coordinate for marker
+    channelReference
+        .child("carerMarkerList")
+        .child(coordinateId)
+        .child("yCoord")
+        .setValue(String.valueOf(coordinate.longitude));
   }
 
-  public void setVideoCallStatus(Boolean active) {
-    channelReference.child("videoCallStatus").setValue(active);
+  public void clearMarkers() {
+    channelReference
+        .child("carerMarkerList")
+        .setValue(null);
   }
 }
