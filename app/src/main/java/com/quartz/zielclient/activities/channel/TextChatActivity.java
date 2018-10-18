@@ -126,12 +126,10 @@ public class TextChatActivity extends AppCompatActivity
         }
       }
     });
-
     // Set a listener on the media button to call requestMedia
     mediaButton.setOnClickListener(view -> {
       // Request for permissions
       requestMedia();
-
       Intent galleryIntent = new Intent();
       galleryIntent.setType("image/* video/*");
       galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
@@ -215,9 +213,7 @@ public class TextChatActivity extends AppCompatActivity
    */
   public void requestMedia() {
     // If permission is not requested, request them.
-    if (!checkPermissionForMedia()) {
-      // lmao
-    } else {
+    if (checkPermissionForMedia()) {
       ActivityCompat.requestPermissions(this,
           new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
           INTENT_REQUEST_CHOOSE_MEDIA);
