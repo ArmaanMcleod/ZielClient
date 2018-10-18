@@ -101,7 +101,7 @@ public class TextChatActivity extends AppCompatActivity
     //carerName = channel.getCarerName();
     //assistedName = channel.getAssistedName();
     carerName = "Carer";
-    assistedName = "Assisted";
+    assistedName = " ";
 
     // Chat using RecyclerView
     mMessageRecycler = findViewById(R.id.message_recyclerview);
