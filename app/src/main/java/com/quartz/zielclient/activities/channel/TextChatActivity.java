@@ -100,8 +100,8 @@ public class TextChatActivity extends AppCompatActivity
     // Fetch the names of the users in the channel
     //carerName = channel.getCarerName();
     //assistedName = channel.getAssistedName();
-    carerName = "Thanos";
-    assistedName = "Despacito";
+    carerName = "Carer";
+    assistedName = "Assisted";
 
     // Chat using RecyclerView
     mMessageRecycler = findViewById(R.id.message_recyclerview);
