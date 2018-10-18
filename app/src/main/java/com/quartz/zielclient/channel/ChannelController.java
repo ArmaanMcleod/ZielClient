@@ -47,6 +47,10 @@ public final class ChannelController {
     channelData.setCarerStatus(false);
     channelData.setDirectionsURL("none");
 
+    // Put the string representations of the two users in the channel
+    channelData.setAssistedName("Assisted");
+    channelData.setCarerName("Carer");
+
     Log.i("ChannelController", String.format("Creating new channel %s", channelKey));
     return channelData;
   }

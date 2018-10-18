@@ -1,9 +1,17 @@
 package com.quartz.zielclient.activities.channel;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,10 +22,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.quartz.zielclient.R;
 import com.quartz.zielclient.activities.carer.CarerMapsActivity;
 import com.quartz.zielclient.adapters.MessageListAdapter;
@@ -26,9 +42,13 @@ import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
 import com.quartz.zielclient.messages.Message;
 import com.quartz.zielclient.messages.MessageFactory;
+import com.quartz.zielclient.user.User;
+import com.quartz.zielclient.user.UserFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +60,11 @@ public class TextChatActivity extends AppCompatActivity
 
   private ChannelData channel;
   private String currentUser;
+  private Boolean isAssisted;
+  private String carerName;
+  private String assistedName;
+  private DatabaseReference mRootRef;
+  private StorageReference mImageStorage;
 
   // Recycler Views and Adapter for the text chat
   private RecyclerView mMessageRecycler;
@@ -52,30 +77,38 @@ public class TextChatActivity extends AppCompatActivity
   private EditText chatInput;
   private Button mediaButton;
 
+  private static final int INTENT_REQUEST_CHOOSE_MEDIA = 301;
+  private static final int GALLERY_PICK = 1;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_text_chat_message_list);
+
+    // Checking whether currentUser is either assisted or carer
+    isAssisted = getIntent().getBooleanExtra("isAssisted",false);
+
 
     // Fetching channel using handler
     String channelKey = getIntent().getStringExtra(getApplicationContext()
         .getString(R.string.channel_key));
 
     channel = ChannelController.retrieveChannel(channelKey, this);
+    mRootRef = FirebaseDatabase.getInstance().getReference();
+    mImageStorage = FirebaseStorage.getInstance().getReference();
 
-    // Fetch the pre-existing messages from the database first
-    // Convert Map of messages to List of messages
-    /*
-    Map<String, Message> messagesMap = channel.getMessages();
-    List<Message> messages = new ArrayList<Message>(messagesMap.values());
-    prepareData(messages);
-    */
+    // Fetch the names of the users in the channel
+    //carerName = channel.getCarerName();
+    //assistedName = channel.getAssistedName();
+    carerName = "Carer";
+    assistedName = " ";
 
     // Chat using RecyclerView
     mMessageRecycler = findViewById(R.id.message_recyclerview);
     mLayoutManager = new LinearLayoutManager(this);
     mMessageRecycler.setLayoutManager(mLayoutManager);
-    mMessageRecycler.setAdapter(new MessageListAdapter(this, new ArrayList<>()));
+    mMessageRecycler.setAdapter(new MessageListAdapter(this, new ArrayList<>(),
+        false, "Carer", "Assisted"));
 
     // Getting the current user's username
     currentUser = FirebaseAuth.getInstance().getUid();
@@ -83,7 +116,7 @@ public class TextChatActivity extends AppCompatActivity
     // Initialise the graphical elements
     chatInput = findViewById(R.id.enter_chat_box);
     sendMessage = findViewById(R.id.button_chatbox_send);
-    // TODO initialise media button
+    mediaButton = findViewById(R.id.button_media_send);
     sendMessage.setOnClickListener(this);
 
     /**
@@ -111,18 +144,21 @@ public class TextChatActivity extends AppCompatActivity
       }
     });
     
-    /*
+    // Set a listener on the media button to call requestMedia
     mediaButton.setOnClickListener(new View.OnClickListener() {
+
       @Override
-      public void onClick(View v) {
+      public void onClick(View view){
+        // Request for permissions
         requestMedia();
+
+        Intent galleryIntent = new Intent();
+        galleryIntent.setType("image/* video/*");
+        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+
+        startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
       }
     });
-    */
-
-    // Greet User
-    Snackbar.make(mMessageRecycler, "Welcome to the Text Chat "
-        + currentUser + "!", Snackbar.LENGTH_SHORT).show();
 
   }
 
@@ -148,7 +184,8 @@ public class TextChatActivity extends AppCompatActivity
     Collections.sort(messagesInChat);
     messageList = messagesInChat;
     // Creating a new Adapter to render the messages
-    mMessageListAdapter = new MessageListAdapter(this, messageList);
+    mMessageListAdapter = new MessageListAdapter(this, messageList,
+        isAssisted, carerName, assistedName);
     mMessageRecycler.setAdapter(mMessageListAdapter);
   }
 
@@ -182,14 +219,102 @@ public class TextChatActivity extends AppCompatActivity
         chatInput.getText().toString(), currentUser);
     channel.sendMessage(messageToSend);
 
-    mMessageRecycler.setAdapter(mMessageListAdapter);
+    // Erasing the previously typed message
+    if (chatInput != null) {
+      chatInput.setText("");
+    }
   }
 
   /**
    * Request media from the device and request for permission if it has already not done so.
    */
   public void requestMedia() {
+    // If permission is not requested, request them.
+    if(!checkPermissionForMedia()) {
 
+    } else {
+      ActivityCompat.requestPermissions(this,
+          new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+          INTENT_REQUEST_CHOOSE_MEDIA);
+    }
+  }
+
+  /**
+   * Check if the permission for media to be sent is already requested
+   * @return
+   */
+  private boolean checkPermissionForMedia() {
+    int storage = ContextCompat.checkSelfPermission(this,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    return storage == PackageManager.PERMISSION_GRANTED;
+  }
+
+  /**
+   * Getting Image URIs
+   * @param requestCode Request Code of the image request
+   * @param resultCode Result Code of the image
+   * @param data The intent being passed in
+   */
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    if(requestCode == GALLERY_PICK && resultCode ==Activity.RESULT_OK) {
+      Uri imageURL = data.getData();
+
+      sendMediaMessageWithThumbnail(imageURL);
+    }
+  }
+
+  /**
+   * Send the message with specified thex`
+   */
+  private void sendMediaMessageWithThumbnail(Uri uri) {
+
+    // Declaring the directories to store the files of the users
+    final String currentUserReference = "messages/" + currentUser + "/" + isAssisted.toString();
+    Boolean otherUser = !isAssisted;
+    final String otherUserReference = "messages/" + currentUser + "/" + (otherUser.toString());
+
+    String channelID = channel.getChannelKey();
+
+    // Database reference to store the image path
+    DatabaseReference userMessagePush = mRootRef.child("messages")
+        .child(currentUser).child(isAssisted.toString());
+    //String pushID = userMessagePush.getKey();
+
+    //String directory = (isAssisted) ? isAssisted.toString(): otherUser.toString();
+
+    // Adding the reference in which the image files are going to be pushed into Firebase
+    StorageReference imageFilePath = mImageStorage.child("messages/" + channelID
+        + messageList.size() + ".jpg");
+
+    imageFilePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+      @Override
+      public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+        taskSnapshot.getMetadata().getReference()
+            .getDownloadUrl().addOnSuccessListener(uri1 -> {
+
+                // Send the image message
+                Message messageToSend = MessageFactory.makeImageMessage(uri1.toString(), currentUser);
+                channel.sendMessage(messageToSend);
+
+            });
+
+        // Performing null checks
+
+      }
+    });
+
+
+  }
+
+  /**
+   * Getter to indicate if the current user is Carer or Assisted
+   * @return Boolean value if the user is assisted or not
+   */
+  public Boolean getAssisted() {
+    return isAssisted;
   }
 
   /**

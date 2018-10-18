@@ -147,6 +147,23 @@ public class ChannelData implements ValueEventListener {
     this.channelReference.child("carer").setValue(carer);
   }
 
+  public String getCarerName() {
+    return channelValues.get("carerName").toString();
+  }
+
+  public void setCarerName(String carerName) {
+    this.channelReference.child("carerName").setValue(carerName);
+  }
+
+  public String getAssistedName() {
+    return channelValues.get("assistedName").toString();
+  }
+
+  public void setAssistedName(String assistedName) {
+    this.channelReference.child("assistedName").setValue(assistedName);
+  }
+
+
   public boolean getCarerStatus() {
     return channelValues.get("carerStatus").equals(true);
   }

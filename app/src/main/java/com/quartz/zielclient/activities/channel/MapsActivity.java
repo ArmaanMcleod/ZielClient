@@ -88,8 +88,10 @@ public class MapsActivity extends AppCompatActivity
   private Button toTextChatButton;
   private Button toVoiceChatButton;
   private Button endChannelButton;
+  private Button toRedrawRouteButton;
   private ImageView newMessageIcon;
   private LatLng source;
+  private boolean isAssisted;
 
   private List<Marker> sourceDestinationMarkers = new ArrayList<>();
   private List<Marker> dropMarkers = new ArrayList<>();
@@ -125,11 +127,16 @@ public class MapsActivity extends AppCompatActivity
 
     Intent intentVoice = new Intent(MapsActivity.this, VoiceActivity.class);
     intentVoice.putExtra("initiate", 1);
+
+    isAssisted = getIntent().getBooleanExtra("isAssisted",false);
     startActivity(intentVoice);
     alertDialog = makeVideoAlert();
 
     // Create buttons and listeners below
     endChannelButton = findViewById(R.id.endChannelButton);
+
+    toRedrawRouteButton = findViewById(R.id.toRedrawRouteButton);
+    toRedrawRouteButton.setOnClickListener(this);
 
     waitingMessage = findViewById(R.id.waitForCarerMessage);
     toVideoChatButton = findViewById(R.id.toVideoChatButton);
@@ -385,6 +392,7 @@ public class MapsActivity extends AppCompatActivity
       case R.id.toTextChat:
         Intent intentToTextChat = new Intent(MapsActivity.this, TextChatActivity.class);
         intentToTextChat.putExtra(getResources().getString(R.string.channel_key), channelId);
+        intentToTextChat.putExtra("isAssisted",isAssisted);
         readMessages();
         startActivity(intentToTextChat);
         break;
@@ -410,6 +418,11 @@ public class MapsActivity extends AppCompatActivity
         Intent intentToPhoto = new Intent(MapsActivity.this, TakePhotosActivity.class);
         startActivity(intentToPhoto);
         break;
+
+      case R.id.toRedrawRouteButton:
+        mGoogleMap.clear();
+        currentDestination = null;
+        break;
       default:
         break;
     }
@@ -432,8 +445,6 @@ public class MapsActivity extends AppCompatActivity
     alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle("Video Share?");
     alertDialog.setMessage("Carer wants to share video with you  please also join the channel");
-    alertDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
-            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
     alertDialog.setButton(
         AlertDialog.BUTTON_NEUTRAL,
         "OK",
@@ -447,7 +458,7 @@ public class MapsActivity extends AppCompatActivity
   }
 
 
-  public void makeChannelEndedAlert(View v) {
+  public void makeChannelEndedAlert(View v){
     alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle("Channel has finished");
     alertDialog.setMessage("This channel has been ended. Will now return to home page");
@@ -556,7 +567,6 @@ public class MapsActivity extends AppCompatActivity
           sourceDestinationMarkers.add(destinationMarker);
 
           Log.d("DESTINATION CHANGE", destination.toString());
-
           if (!destination.equals(currentDestination)) {
             currentDestination = destination;
             drawRoute();

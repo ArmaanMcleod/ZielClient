@@ -21,8 +21,8 @@ import com.quartz.zielclient.activities.channel.MapsActivity;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelRequestController;
-import com.quartz.zielclient.user.AuthorisationException;
 import com.quartz.zielclient.models.CarerSelectionItem;
+import com.quartz.zielclient.user.AuthorisationException;
 import com.quartz.zielclient.user.User;
 import com.quartz.zielclient.user.UserController;
 import com.quartz.zielclient.user.UserFactory;
@@ -105,6 +105,7 @@ public class CarerSelectListAdapter
 
       // start intent to open maps
       intentToMaps = new Intent(activity, MapsActivity.class);
+      intentToMaps.putExtra("isAsssisted", true);
       intentToMaps.putExtra(activity.getString(R.string.channel_key), channelData.getChannelKey());
       Bundle bundle = activity.getIntent().getExtras();
 
