@@ -597,6 +597,10 @@ public class MapsActivity extends AppCompatActivity
 
   }
 
+  /**
+   * Sets previous activity to text chat
+   * @param previousActivityWasTextChat This indicates if last activity was text chat.
+   */
   public static void setPreviousActivityWasTextChat(Boolean previousActivityWasTextChat) {
     MapsActivity.previousActivityWasTextChat = previousActivityWasTextChat;
   }
