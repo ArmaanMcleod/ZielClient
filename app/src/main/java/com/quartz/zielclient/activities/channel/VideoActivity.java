@@ -208,8 +208,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   public void onRequestPermissionsResult(
       int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (requestCode == CAMERA_MIC_PERMISSION_REQUEST_CODE) {
-      boolean cameraAndMicPermissionGranted =
-          Arrays.stream(grantResults)
+      boolean cameraAndMicPermissionGranted = Arrays.stream(grantResults)
               .allMatch(grantResult -> grantResult == PackageManager.PERMISSION_GRANTED);
 
       if (cameraAndMicPermissionGranted) {
@@ -423,8 +422,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     roomEditText.setText(channelId);
     roomEditText.setVisibility(View.INVISIBLE);
 
-    connectDialog =
-        Dialog.createConnectDialog(
+    connectDialog = Dialog.createConnectDialog(
             roomEditText,
             connectClickListener(roomEditText),
             cancelConnectDialogClickListener(),
@@ -445,6 +443,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
       return;
     }
     remoteParticipantIdentity = remoteParticipant.getIdentity();
+    // todo delete
     videoStatusTextView.setText("User joined");
 
     // Add remote participant renderer
@@ -487,6 +486,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     channel.setVideoCallStatus(false);
     inChannel = false;
     room.disconnect();
+    // todo delete
     videoStatusTextView.setText("User Left.");
 
     if (!remoteParticipant.getIdentity().equals(remoteParticipantIdentity)) {
@@ -541,8 +541,9 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
       @Override
       public void onConnected(Room room) {
         localParticipant = room.getLocalParticipant();
-        videoStatusTextView.setText("Connected to  Channel video Chat");
-        setTitle(room.getName());
+        videoStatusTextView.setText("Connected to Channel video Chat");
+        // todo delete this line
+//        setTitle(room.getName());
         channel.setVideoCallStatus(true);
         if (!room.getRemoteParticipants().isEmpty()) {
           addRemoteParticipant(room.getRemoteParticipants().get(0));
