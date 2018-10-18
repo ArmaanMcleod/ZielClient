@@ -27,9 +27,12 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
 
   private final GoogleMap googleMap;
 
+  private HTTP http;
+
   public FetchUrl(GoogleMap googleMap) {
     super();
     this.googleMap = googleMap;
+    http = new HTTP();
   }
 
   /**
@@ -47,7 +50,7 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
 
     // Attempt to download the URL
     try {
-      data = downloadUrl(url[0]);
+      data = http.downloadUrl(url[0]);
       Log.d(ACTIVITY, data);
     } catch (Exception e) {
       Log.d(ACTIVITY, e.toString());
@@ -73,45 +76,4 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
     parserTask.execute(result);
   }
 
-  /**
-   * This is responsible for downloading the JSON data from an API endpoint with HTTP requests.
-   *
-   * @param strUrl The url to download data from.
-   * @return String This is the JSON data in String format.
-   * @throws IOException This is the IO exception that triggers when reading the file fails.
-   */
-  static String downloadUrl(@NonNull String strUrl) throws IOException {
-    String data = "";
-    HttpURLConnection urlConnection;
-
-    // Open connection with endpoint
-    URL url = new URL(strUrl);
-    urlConnection = (HttpURLConnection) url.openConnection();
-    urlConnection.connect();
-
-    try (InputStream iStream = urlConnection.getInputStream()) {
-
-      // Setup input stream ready to buffer data
-      try (BufferedReader br = new BufferedReader(new InputStreamReader(iStream))) {
-        StringBuilder sb = new StringBuilder();
-
-        // Read data line by line and append to buffer
-        String line;
-        while ((line = br.readLine()) != null) {
-          sb.append(line);
-        }
-
-        data = sb.toString();
-        Log.d(ACTIVITY, data);
-      }
-
-    } catch (MalformedURLException e) {
-      Log.d(ACTIVITY, e.toString());
-
-    } finally {
-        urlConnection.disconnect();
-    }
-
-    return data;
-  }
 }
