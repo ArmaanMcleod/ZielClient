@@ -1,17 +1,14 @@
-package com.quartz.zielclient.activities.common;
+package com.quartz.zielclient.activities.channel;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -29,27 +26,21 @@ import android.widget.Toast;
 
 import com.koushikdutta.ion.Ion;
 import com.quartz.zielclient.R;
-import com.quartz.zielclient.activities.common.dialogue.Dialog;
-import com.quartz.zielclient.activities.common.util.CameraCapturerCompat;
-import com.quartz.zielclient.activities.common.util.SettingsActivity;
+import com.quartz.zielclient.activities.common.Dialog;
 import com.quartz.zielclient.channel.ChannelController;
 import com.quartz.zielclient.channel.ChannelData;
 import com.quartz.zielclient.channel.ChannelListener;
+import com.quartz.zielclient.voip.CameraCapturerCompat;
 import com.quartz.zielclient.voip.VideoRemoteParticipant;
 import com.twilio.video.AudioCodec;
 import com.twilio.video.CameraCapturer;
 import com.twilio.video.CameraCapturer.CameraSource;
 import com.twilio.video.ConnectOptions;
 import com.twilio.video.EncodingParameters;
-import com.twilio.video.G722Codec;
-import com.twilio.video.H264Codec;
-import com.twilio.video.IsacCodec;
 import com.twilio.video.LocalAudioTrack;
 import com.twilio.video.LocalParticipant;
 import com.twilio.video.LocalVideoTrack;
 import com.twilio.video.OpusCodec;
-import com.twilio.video.PcmaCodec;
-import com.twilio.video.PcmuCodec;
 import com.twilio.video.RemoteParticipant;
 import com.twilio.video.RemoteVideoTrackPublication;
 import com.twilio.video.Room;
@@ -60,8 +51,8 @@ import com.twilio.video.VideoCodec;
 import com.twilio.video.VideoRenderer;
 import com.twilio.video.VideoTrack;
 import com.twilio.video.Vp8Codec;
-import com.twilio.video.Vp9Codec;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -88,11 +79,8 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
   private com.twilio.video.VideoView primaryVideoView;
   private com.twilio.video.VideoView thumbnailVideoView;
-  private SharedPreferences preferences;
 
-  /*
-   * Android application UI elements
-   */
+  // Android application UI elements
   private TextView videoStatusTextView;
   private CameraCapturerCompat cameraCapturerCompat;
   private LocalAudioTrack localAudioTrack;
@@ -110,7 +98,6 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   private boolean previousMicrophoneMute;
   private VideoRenderer localVideoView;
   private boolean disconnectedFromOnDestroy;
-  private ChannelData channelData;
 
   private String channelId;
   private ChannelData channel;
@@ -137,30 +124,20 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     localVideoActionFab = findViewById(R.id.local_video_action_fab);
     muteActionFab = findViewById(R.id.mute_action_fab);
     channelId = getIntent().getStringExtra(getResources().getString(R.string.channel_key));
+
     if (channelId != null) {
       channel = ChannelController.retrieveChannel(channelId, this);
     }
 
-    /*
-     * Get shared preferences to read settings
-     */
-    preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-    /*
-     * Enable changing the volume using the up/down keys during a conversation
-     */
+    // Enable changing the volume using the up/down keys during a conversation
     setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 
-    /*
-     * Needed for setting/abandoning audio focus during call
-     */
+    // Needed for setting/abandoning audio focus during call
     audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
     if (audioManager != null) {
       audioManager.setSpeakerphoneOn(true);
     }
-    /*
-     * Check camera and microphone permissions. Needed in Android M.
-     */
+    // Check camera and microphone permissions. Needed in Android M.
     if (!checkPermissionForCameraAndMicrophone()) {
       requestPermissionForCameraAndMicrophone();
     } else {
@@ -168,9 +145,6 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
       setAccessToken();
     }
 
-    /*
-     * Set the initial state of the UI
-     */
     intializeUI();
     showConnectDialog();
   }
@@ -203,10 +177,6 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.menu_settings:
-        startActivity(
-            new Intent(this, com.quartz.zielclient.activities.common.util.SettingsActivity.class));
-        return true;
       case R.id.speaker_menu_item:
         if (audioManager.isSpeakerphoneOn()) {
           audioManager.setSpeakerphoneOn(false);
@@ -237,11 +207,8 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   public void onRequestPermissionsResult(
       int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (requestCode == CAMERA_MIC_PERMISSION_REQUEST_CODE) {
-      boolean cameraAndMicPermissionGranted = true;
-
-      for (int grantResult : grantResults) {
-        cameraAndMicPermissionGranted &= grantResult == PackageManager.PERMISSION_GRANTED;
-      }
+      boolean cameraAndMicPermissionGranted = Arrays.stream(grantResults)
+          .allMatch(grantResult -> grantResult == PackageManager.PERMISSION_GRANTED);
 
       if (cameraAndMicPermissionGranted) {
         createAudioAndVideoTracks();
@@ -261,51 +228,31 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   protected void onResume() {
     super.onResume();
 
-    /*
-     * Update preferred audio and video codec in case changed in settings
-     */
-    audioCodec =
-        getAudioCodecPreference(
-            com.quartz.zielclient.activities.common.util.SettingsActivity.PREF_AUDIO_CODEC,
-            com.quartz.zielclient.activities.common.util.SettingsActivity.PREF_AUDIO_CODEC_DEFAULT);
-    videoCodec =
-        getVideoCodecPreference(
-            com.quartz.zielclient.activities.common.util.SettingsActivity.PREF_VIDEO_CODEC,
-            com.quartz.zielclient.activities.common.util.SettingsActivity.PREF_VIDEO_CODEC_DEFAULT);
+    // Update preferred audio and video codec in case changed in settings
+    audioCodec = new OpusCodec();
+    videoCodec = new Vp8Codec();
+    final EncodingParameters params = new EncodingParameters(0, 0);
 
-    /*
-     * Get latest encoding parameters
-     */
-    final EncodingParameters newEncodingParameters = getEncodingParameters();
-
-    /*
-     * If the local video track was released when the app was put in the background, recreate.
-     */
+    // If the local video track was released when the app was put in the background, recreate.
     if (localVideoTrack == null && checkPermissionForCameraAndMicrophone()) {
       localVideoTrack =
           LocalVideoTrack.create(
               this, true, cameraCapturerCompat.getVideoCapturer(), LOCAL_VIDEO_TRACK_NAME);
       localVideoTrack.addRenderer(localVideoView);
 
-      /*
-       * If connected to a Room then share the local video track.
-       */
+
+      // If connected to a Room then share the local video track.
       if (localParticipant != null) {
         localParticipant.publishTrack(localVideoTrack);
 
-        /*
-         * Update encoding parameters if they have changed.
-         */
-        if (!newEncodingParameters.equals(encodingParameters)) {
-          localParticipant.setEncodingParameters(newEncodingParameters);
+        // Update encoding parameters if they have changed.
+        if (!params.equals(encodingParameters)) {
+          localParticipant.setEncodingParameters(params);
         }
       }
     }
 
-    /*
-     * Update encoding parameters
-     */
-    encodingParameters = newEncodingParameters;
+    encodingParameters = params;
   }
 
   /**
@@ -360,6 +307,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
       localAudioTrack.release();
       localAudioTrack = null;
     }
+
     if (localVideoTrack != null) {
       localVideoTrack.release();
       localVideoTrack = null;
@@ -405,22 +353,20 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
     // Share your camera
     cameraCapturerCompat = new CameraCapturerCompat(this, getAvailableCameraSource());
-    localVideoTrack =
-        LocalVideoTrack.create(
-            this, true, cameraCapturerCompat.getVideoCapturer(), LOCAL_VIDEO_TRACK_NAME);
+    localVideoTrack = LocalVideoTrack.create(
+        this, true, cameraCapturerCompat.getVideoCapturer(), LOCAL_VIDEO_TRACK_NAME);
     primaryVideoView.setMirror(true);
     localVideoTrack.addRenderer(primaryVideoView);
     localVideoView = primaryVideoView;
   }
 
   private CameraSource getAvailableCameraSource() {
-    return (CameraCapturer.isSourceAvailable(CameraSource.FRONT_CAMERA))
-        ? (CameraSource.FRONT_CAMERA)
-        : (CameraSource.BACK_CAMERA);
+    return CameraCapturer.isSourceAvailable(CameraSource.FRONT_CAMERA)
+        ? CameraSource.FRONT_CAMERA
+        : CameraSource.BACK_CAMERA;
   }
 
   private void setAccessToken() {
-
     retrieveAccessTokenfromServer();
   }
 
@@ -429,36 +375,26 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     ConnectOptions.Builder connectOptionsBuilder =
         new ConnectOptions.Builder(accessToken).roomName(roomName);
 
-    /*
-     * Add local audio track to connect options to share with participants.
-     */
+    // Add local audio track to connect options to share with participants.
     if (localAudioTrack != null) {
       connectOptionsBuilder.audioTracks(Collections.singletonList(localAudioTrack));
     }
 
-    /*
-     * Add local video track to connect options to share with participants.
-     */
+    // Add local video track to connect options to share with participants.
     if (localVideoTrack != null) {
       connectOptionsBuilder.videoTracks(Collections.singletonList(localVideoTrack));
     }
 
-    /*
-     * Set the preferred audio and video codec for media.
-     */
-    connectOptionsBuilder.preferAudioCodecs(Collections.singletonList(audioCodec));
-    connectOptionsBuilder.preferVideoCodecs(Collections.singletonList(videoCodec));
-
-    /*
-     * Set the sender side encoding parameters.
-     */
-    connectOptionsBuilder.encodingParameters(encodingParameters);
+    // Set the preferred audio and video codec for media.
+    connectOptionsBuilder.preferAudioCodecs(Collections.singletonList(audioCodec))
+        .preferVideoCodecs(Collections.singletonList(videoCodec))
+        .encodingParameters(encodingParameters);
 
     room = Video.connect(this, connectOptionsBuilder.build(), roomListener());
     setDisconnectAction();
   }
 
-  /*
+  /**
    * The initial state when there is no active room.
    */
   private void intializeUI() {
@@ -474,75 +410,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     muteActionFab.setOnClickListener(muteClickListener());
   }
 
-  /*
-   * Get the preferred audio codec from shared preferences
-   */
-  private AudioCodec getAudioCodecPreference(String key, String defaultValue) {
-    final String audioCodecName = preferences.getString(key, defaultValue);
-
-    switch (audioCodecName) {
-      case IsacCodec.NAME:
-        return new IsacCodec();
-      case OpusCodec.NAME:
-        return new OpusCodec();
-      case PcmaCodec.NAME:
-        return new PcmaCodec();
-      case PcmuCodec.NAME:
-        return new PcmuCodec();
-      case G722Codec.NAME:
-        return new G722Codec();
-      default:
-        return new OpusCodec();
-    }
-  }
-
-  /*
-   * Get the preferred video codec from shared preferences
-   */
-  private VideoCodec getVideoCodecPreference(String key, String defaultValue) {
-    final String videoCodecName = preferences.getString(key, defaultValue);
-
-    switch (videoCodecName) {
-      case Vp8Codec.NAME:
-        boolean simulcast =
-            preferences.getBoolean(
-                com.quartz.zielclient.activities.common.util.SettingsActivity.PREF_VP8_SIMULCAST,
-                com.quartz.zielclient.activities.common.util.SettingsActivity
-                    .PREF_VP8_SIMULCAST_DEFAULT);
-        return new Vp8Codec(simulcast);
-      case H264Codec.NAME:
-        return new H264Codec();
-      case Vp9Codec.NAME:
-        return new Vp9Codec();
-      default:
-        return new Vp8Codec();
-    }
-  }
-
   /**
-   * Extract encoding parameters from bit rates.
-   *
-   * @return EncodingParameters The encoding parameters for the video calling.
-   */
-  private EncodingParameters getEncodingParameters() {
-    final int maxAudioBitrate =
-        Integer.parseInt(
-            preferences.getString(
-                com.quartz.zielclient.activities.common.util.SettingsActivity
-                    .PREF_SENDER_MAX_AUDIO_BITRATE,
-                com.quartz.zielclient.activities.common.util.SettingsActivity
-                    .PREF_SENDER_MAX_AUDIO_BITRATE_DEFAULT));
-    final int maxVideoBitrate =
-        Integer.parseInt(
-            preferences.getString(
-                com.quartz.zielclient.activities.common.util.SettingsActivity
-                    .PREF_SENDER_MAX_VIDEO_BITRATE,
-                SettingsActivity.PREF_SENDER_MAX_VIDEO_BITRATE_DEFAULT));
-
-    return new EncodingParameters(maxAudioBitrate, maxVideoBitrate);
-  }
-
-  /*
    * The actions performed during disconnect.
    */
   private void setDisconnectAction() {
@@ -553,31 +421,27 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     connectActionFab.setOnClickListener(disconnectClickListener());
   }
 
-  /*
+  /**
    * Creates an connect UI dialog
    */
   public void showConnectDialog() {
-
     TextView roomEditText = new TextView(this);
     roomEditText.setText(channelId);
     roomEditText.setVisibility(View.INVISIBLE);
 
-    connectDialog =
-        Dialog.createConnectDialog(
-            roomEditText,
-            connectClickListener(roomEditText),
-            cancelConnectDialogClickListener(),
-            this);
+    connectDialog = Dialog.createConnectDialog(
+        roomEditText,
+        connectClickListener(roomEditText),
+        cancelConnectDialogClickListener(),
+        this);
     connectDialog.show();
   }
 
-  /*
+  /**
    * Called when remote participant joins the room
    */
   private void addRemoteParticipant(RemoteParticipant remoteParticipant) {
-    /*
-     * This app only displays video for one additional participant per Room
-     */
+    // This app only displays video for one additional participant per Room
     if (thumbnailVideoView.getVisibility() == View.VISIBLE) {
       Snackbar.make(
           connectActionFab,
@@ -590,28 +454,21 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     remoteParticipantIdentity = remoteParticipant.getIdentity();
     videoStatusTextView.setText("User joined");
 
-    /*
-     * Add remote participant renderer
-     */
-    if (remoteParticipant.getRemoteVideoTracks().size() > 0) {
+    // Add remote participant renderer
+    if (!remoteParticipant.getRemoteVideoTracks().isEmpty()) {
       RemoteVideoTrackPublication remoteVideoTrackPublication =
           remoteParticipant.getRemoteVideoTracks().get(0);
 
-      /*
-       * Only render video tracks that are subscribed to
-       */
+      // Only render video tracks that are subscribed to
       if (remoteVideoTrackPublication.isTrackSubscribed()) {
         addRemoteParticipantVideo(remoteVideoTrackPublication.getRemoteVideoTrack());
       }
     }
 
-    /*
-     * Start listening for participant events
-     */
     remoteParticipant.setListener(remoteParticipantListener());
   }
 
-  /*
+  /**
    * Set primary view as renderer for participant video track
    */
   public void addRemoteParticipantVideo(VideoTrack videoTrack) {
@@ -636,7 +493,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     }
   }
 
-  /*
+  /**
    * Called when remote participant leaves the room
    */
   private void removeRemoteParticipant(RemoteParticipant remoteParticipant) {
@@ -648,16 +505,12 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
       return;
     }
 
-    /*
-     * Remove remote participant renderer
-     */
+    // Remove remote participant renderer
     if (!remoteParticipant.getRemoteVideoTracks().isEmpty()) {
       RemoteVideoTrackPublication remoteVideoTrackPublication =
           remoteParticipant.getRemoteVideoTracks().get(0);
 
-      /*
-       * Remove video only if subscribed to participant track
-       */
+      // Remove video only if subscribed to participant track
       if (remoteVideoTrackPublication.isTrackSubscribed()) {
         removeParticipantVideo(remoteVideoTrackPublication.getRemoteVideoTrack());
       }
@@ -682,7 +535,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     }
   }
 
-  /*
+  /**
    * Room events listener
    */
   private Room.Listener roomListener() {
@@ -693,15 +546,14 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
         videoStatusTextView.setText("Connected to  Channel video Chat");
         setTitle(room.getName());
         channel.setVideoCallStatus(true);
-
-        for (RemoteParticipant remoteParticipant : room.getRemoteParticipants()) {
-          addRemoteParticipant(remoteParticipant);
-          break;
+        if (!room.getRemoteParticipants().isEmpty()) {
+          addRemoteParticipant(room.getRemoteParticipants().get(0));
         }
       }
 
       /**
        * Called when a room has succeeded.
+       *
        * @param room The room to connect to.
        * @param e The twillio exception triggered.
        */
@@ -714,6 +566,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
       /**
        * Called when room is disconnected.
+       *
        * @param room The room to connect to.
        * @param e The twillio exception triggered.
        */
@@ -733,7 +586,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
       /**
        * Called when a room has been disconnected from.
        *
-       * Documentation: https://media.twiliocdn.com/sdk/android/video/releases/1.0.0-beta6/docs/
+       * <p>Documentation: https://media.twiliocdn.com/sdk/android/video/releases/1.0.0-beta6/docs/
        * com/twilio/video/Room.Listener.html#
        * onParticipantConnected-com.twilio.video.Room-com.twilio.video.Participant-
        *
@@ -748,7 +601,8 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
       /**
        * Called when a participant has disconnected from a room.
        *
-       * Documentation: Called when a participant has disconnected from a room.
+       * <p>Documentation: Called when a participant has disconnected from a room.
+       *
        * @param room The room to disconnect from.
        * @param remoteParticipant The remote participant to connect with.
        */
@@ -760,30 +614,23 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
       /**
        * Called when the media being shared to a Room is being recorded.
        *
-       * Documentation: https://media.twiliocdn.com/sdk/android/video/releases/1.0.0-beta17/
+       * <p>Documentation: https://media.twiliocdn.com/sdk/android/video/releases/1.0.0-beta17/
        * docs/com/twilio/video/Room.Listener.html#onRecordingStarted-com.twilio.video.Room-
        *
        * @param room The room to connect to.
        */
       @Override
       public void onRecordingStarted(Room room) {
-        /*
-         * Indicates when media shared to a Room is being recorded. Note that
-         * recording is only available in our Group Rooms developer preview.
-         */
         Log.d(TAG, "onRecordingStarted");
       }
 
       /**
        * Called when the media being shared to a Room is no longer being recorded.
+       *
        * @param room The room to connect to.
        */
       @Override
       public void onRecordingStopped(Room room) {
-        /*
-         * Indicates when media shared to a Room is no longer being recorded. Note that
-         * recording is only available in our Group Rooms developer preview.
-         */
         Log.d(TAG, "onRecordingStopped");
       }
     };
@@ -791,6 +638,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
   /**
    * Sets up the remote listener for the participant.
+   *
    * @return RemoteParticipant.Listener The listener to be used.
    */
   private RemoteParticipant.Listener remoteParticipantListener() {
@@ -798,19 +646,11 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
   }
 
   private DialogInterface.OnClickListener connectClickListener(final TextView roomEditText) {
-    return (dialog, which) -> {
-      /*
-       * Connect to room
-       */
-      connectToRoom(roomEditText.getText().toString());
-    };
+    return (dialog, which) -> connectToRoom(roomEditText.getText().toString());
   }
 
   private View.OnClickListener disconnectClickListener() {
     return v -> {
-      /*
-       * Disconnect from room
-       */
       if (room != null) {
         channel.setVideoCallStatus(false);
         room.disconnect();
@@ -846,9 +686,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
   private View.OnClickListener localVideoClickListener() {
     return v -> {
-      /*
-       * Enable/disable the local video track
-       */
+      // Enable/disable the local video track
       if (localVideoTrack != null) {
         boolean enable = !localVideoTrack.isEnabled();
         localVideoTrack.enable(enable);
@@ -865,13 +703,13 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
     };
   }
 
+  /**
+   * @return Enable/disable the local audio track. The results of this operation are
+   * signaled to other Participants in the same Room. When an audio track is
+   * disabled, the audio is muted.
+   */
   private View.OnClickListener muteClickListener() {
     return v -> {
-      /*
-       * Enable/disable the local audio track. The results of this operation are
-       * signaled to other Participants in the same Room. When an audio track is
-       * disabled, the audio is muted.
-       */
       if (localAudioTrack != null) {
         boolean enable = !localAudioTrack.isEnabled();
         localAudioTrack.enable(enable);
@@ -905,6 +743,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
   /**
    * Configures audio when enabled.
+   *
    * @param enable Detects whether the audio is enabled.
    */
   private void configureAudio(boolean enable) {
@@ -913,9 +752,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
       // Request audio focus before making any device switch
       requestAudioFocus();
       audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
-      /*
-       * Always disable microphone mute during a WebRTC call.
-       */
+      // Always disable microphone mute during a WebRTC call.
       previousMicrophoneMute = audioManager.isMicrophoneMute();
       audioManager.setMicrophoneMute(false);
     } else {
@@ -951,6 +788,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
   /**
    * Gets the video status of the text view.
+   *
    * @return TextView The view of the video status.
    */
   public TextView getVideoStatusTextView() {
@@ -959,6 +797,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
   /**
    * Creates a floating action button.
+   *
    * @return FloatingActionButton The button to be shown.
    */
   public FloatingActionButton getConnectActionFab() {
@@ -971,7 +810,7 @@ public class VideoActivity extends AppCompatActivity implements ChannelListener 
 
   /**
    * Called when the activity has detected the user's press of the back key.
-   *
+   * <p>
    * Documentation: https://developer.android.com/reference/android/app/Activity#onBackPressed()
    */
   @Override

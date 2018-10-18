@@ -20,26 +20,25 @@ import java.util.UUID;
 
 /**
  * This Object abstracts away the communication with the database Channels It requires a
- * Chanlelistener to be able to pass updates to the user.
+ * ChannelListener to be able to pass updates to the user.
  *
  * @author Bilal Shehata
  */
 public class ChannelData implements ValueEventListener {
 
   // contains current channel values in database
-  private Map<String, Object> channelValues;
+  private Map<String, Object> channelValues = new HashMap<>();
 
   private DatabaseReference channelReference;
 
   // the object that wants to listen to this channel
   private ChannelListener channelListener;
   private String channelKey;
-  private static final String USER_DATABASE_PATH = "users";
 
   /**
    * @param channelReference Location in database where channel exists.
    * @param channelListener  The object that wants to listen to the channel.
-   * @param channelKey UUID of this channel.
+   * @param channelKey       UUID of this channel.
    */
   public ChannelData(
       DatabaseReference channelReference,
@@ -95,10 +94,6 @@ public class ChannelData implements ValueEventListener {
     }
 
     return new HashMap<>();
-  }
-
-  public void setMessages(Map<String, String> messages) {
-    channelReference.child("messages").setValue(messages);
   }
 
   /**
@@ -199,6 +194,7 @@ public class ChannelData implements ValueEventListener {
     this.channelReference.child("assistedName").setValue(assistedName);
   }
 
+
   public boolean getCarerStatus() {
     return channelValues.get("carerStatus").equals(true);
   }
@@ -206,16 +202,17 @@ public class ChannelData implements ValueEventListener {
   public void setCarerStatus(boolean carerStatus) {
     channelReference.child("carerStatus").setValue(carerStatus);
   }
-  public void endChannel(){
+
+  public void endChannel() {
     channelReference.child("channelEnded").setValue(true);
   }
-  public void startChannel(){
+
+  public void startChannel() {
     channelReference.child("channelEnded").setValue(false);
   }
 
-  public boolean isChannelEnded(){
+  public boolean isChannelEnded() {
     return channelValues.get("channelEnded").equals(true);
-
   }
 
   public boolean getVideoCallStatus() {
@@ -224,9 +221,5 @@ public class ChannelData implements ValueEventListener {
 
   public void setVideoCallStatus(Boolean active) {
     channelReference.child("videoCallStatus").setValue(active);
-  }
-
-  public DatabaseReference getChannelReference() {
-    return channelReference;
   }
 }

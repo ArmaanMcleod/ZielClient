@@ -6,8 +6,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -16,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.quartz.zielclient.R;
+import com.quartz.zielclient.activities.common.SettingsActivity;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
 import com.quartz.zielclient.adapters.RequestListAdapter;
 import com.quartz.zielclient.models.ChannelRequest;
@@ -31,15 +34,14 @@ import java.util.Optional;
  *
  * @author Wei How Ng
  */
-public class CarerHomepageActivity extends AppCompatActivity implements ValueEventListener {
+public class CarerHomepageActivity extends AppCompatActivity
+    implements ValueEventListener, View.OnClickListener {
 
   private RecyclerView mRecyclerView;
-  private Boolean initialisedList;
   private NotificationHandler notificationHandler;
+  private DatabaseReference requestsReference;
 
-  public CarerHomepageActivity() {
-    initialisedList = false;
-  }
+  private boolean initialisedList = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +62,14 @@ public class CarerHomepageActivity extends AppCompatActivity implements ValueEve
       finish();
       return;
     }
-    notificationHandler = new NotificationHandler(this);
+
+    ImageButton settingsButton = findViewById(R.id.carerSettingsButton);
+    settingsButton.setOnClickListener(this);
+
+    notificationHandler = new NotificationHandler(CarerHomepageActivity.this);
     notificationHandler.createNotificationChannel();
     // Getting requestsReference from FireBase
-    DatabaseReference requestsReference = FirebaseDatabase.getInstance().getReference("channelRequests/" + userID);
+    requestsReference = FirebaseDatabase.getInstance().getReference("channelRequests/" + userID);
     requestsReference.addValueEventListener(this);
 
     // Initialising RecyclerView
@@ -100,7 +106,8 @@ public class CarerHomepageActivity extends AppCompatActivity implements ValueEve
     // Getting the channel data and calling the rendering method on it
     // Nasty generic types needed unfortunately
     GenericTypeIndicator<List<ChannelRequest>> t =
-        new GenericTypeIndicator<List<ChannelRequest>>() {};
+        new GenericTypeIndicator<List<ChannelRequest>>() {
+        };
     List<ChannelRequest> channelRequestsData = dataSnapshot.getValue(t);
     if (channelRequestsData != null) {
       initData(channelRequestsData);
@@ -108,11 +115,21 @@ public class CarerHomepageActivity extends AppCompatActivity implements ValueEve
   }
 
   @Override
-  public void onCancelled(@NonNull DatabaseError databaseError) {}
+  public void onClick(View v) {
+    Intent intent = new Intent(this, SettingsActivity.class);
+    intent.putExtra("user", getIntent().getBundleExtra("user"));
+    startActivity(intent);
+    requestsReference.removeEventListener(this);
+    finish();
+  }
+
+  @Override
+  public void onCancelled(@NonNull DatabaseError databaseError) {
+  }
 
   // prevent going back on home page
   @Override
-  public void onBackPressed(){
+  public void onBackPressed() {
 
   }
 }

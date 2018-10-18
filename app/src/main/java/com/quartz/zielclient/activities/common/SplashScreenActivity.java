@@ -13,7 +13,7 @@ import com.quartz.zielclient.activities.assisted.AssistedHomePageActivity;
 import com.quartz.zielclient.activities.carer.CarerHomepageActivity;
 import com.quartz.zielclient.activities.onboarding.OnboardingActivity;
 import com.quartz.zielclient.activities.signup.SignUpActivity;
-import com.quartz.zielclient.exceptions.AuthorisationException;
+import com.quartz.zielclient.user.AuthorisationException;
 import com.quartz.zielclient.user.User;
 import com.quartz.zielclient.user.UserController;
 import com.quartz.zielclient.user.UserFactory;
@@ -75,11 +75,12 @@ public class SplashScreenActivity extends AppCompatActivity implements ValueEven
   }
 
   private void redirect(User user) {
-    if (user.isAssisted()) {
-      startActivity(new Intent(this, AssistedHomePageActivity.class));
-    } else {
-      startActivity(new Intent(this, CarerHomepageActivity.class));
-    }
+    Class<? extends AppCompatActivity> homePage = user.isAssisted()
+        ? AssistedHomePageActivity.class
+        : CarerHomepageActivity.class;
+    Intent intent = new Intent(this, homePage);
+    intent.putExtra("user", user.toBundle());
+    startActivity(intent);
     finish();
   }
 }

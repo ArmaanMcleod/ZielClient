@@ -22,7 +22,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ziel"
@@ -37,16 +36,12 @@
         <service android:name=".fcm.VoiceFirebaseInstanceIDService" />
 
         <activity
-            android:name=".activities.common.VideoActivity"
+            android:name=".activities.channel.VideoActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name=".activities.common.util.SettingsActivity"
+            android:name=".activities.common.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".activities.common.VideoActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.quartz.zielclient.activities.common.VideoActivity" />
-        </activity>
+            android:parentActivityName=".activities.assisted.AssistedHomePageActivity"/>
         <activity
             android:name=".activities.common.SplashScreenActivity"
             android:exported="true"
@@ -67,7 +62,7 @@
         <activity
             android:name=".activities.carer.CarerHomepageActivity"
             android:label="@string/title_activity_carer_homepage"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTop" />
         <!--
            The API key for Google Maps-based APIs is defined as a string resource.
            (See the file "res/values/google_maps_api.xml").
@@ -85,7 +80,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".activities.common.MapsActivity"
+            android:name=".activities.channel.MapsActivity"
             android:launchMode="singleTop"
             android:label="@string/title_activity_maps" />
 
@@ -94,7 +89,7 @@
             android:required="false" />
 
         <activity
-            android:name=".activities.common.TextChatActivity"
+            android:name=".activities.channel.TextChatActivity"
             android:label="@string/text_chat" />
 
         <uses-library
@@ -104,15 +99,15 @@
         <activity
             android:name=".activities.carer.CarerMapsActivity"
             android:label="@string/title_activity_carer_maps" />
-        <activity android:name=".activities.common.StreetViewActivity" />
+        <activity android:name=".activities.channel.StreetViewActivity" />
         <activity android:name=".activities.assisted.AddCarerActivity" />
         <activity android:name=".activities.assisted.AssistedSelectCarerActivity" />
-        <activity android:name=".activities.common.VoiceActivity" />
+        <activity android:name=".activities.channel.VoiceActivity" />
         <activity android:name=".activities.onboarding.OnboardingActivity" />
         <activity android:name=".activities.onboarding.SecondOnboardingActivity" />
         <activity android:name=".activities.onboarding.FinalOnboardingActivity" />
         <activity
-            android:name=".activities.common.TakePhotosActivity"
+            android:name=".activities.channel.TakePhotosActivity"
             android:label="@string/title_activity_take_photos" />
     </application>
 

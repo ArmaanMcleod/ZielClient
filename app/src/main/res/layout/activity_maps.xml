@@ -8,7 +8,7 @@
     android:weightSum="1"
     android:windowTranslucentNavigation="true"
     android:windowTranslucentStatus="true"
-    tools:context=".activities.common.MapsActivity">
+    tools:context=".activities.channel.MapsActivity">
 
     <Button
         android:id="@+id/endChannelButton"
@@ -38,6 +38,19 @@
         android:layout_marginLeft="10dp"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="85dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/endChannelButton" />
+
+    <Button
+        android:id="@+id/toRedrawRouteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="80dp"
+        android:background="@android:color/transparent"
+        android:drawableLeft="@drawable/ic_landmark"
+        android:text="  Redraw Route "
+        android:textAllCaps="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/endChannelButton" />
 
@@ -147,11 +160,18 @@
             android:id="@+id/newMessage"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginEnd="12dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="44dp"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/red_round_button"
+            android:elevation="2dp"
+            app:layout_constraintBottom_toBottomOf="@+id/toVoiceChat"
             app:layout_constraintEnd_toStartOf="@+id/waitForCarerMessage"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/toTextChat"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/exclamation_icon" />
 
 

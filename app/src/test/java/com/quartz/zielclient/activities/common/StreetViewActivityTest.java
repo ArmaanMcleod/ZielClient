@@ -1,5 +1,7 @@
 package com.quartz.zielclient.activities.common;
 
+import com.quartz.zielclient.activities.channel.StreetViewActivity;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
