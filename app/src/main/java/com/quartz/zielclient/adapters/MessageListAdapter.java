@@ -112,16 +112,6 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     Uri tempFileUri = null;
     int viewType = viewHolder.getItemViewType();
 
-//    if (viewHolder.getItemViewType() == VIEW_TYPE_MESSAGE_SENT) {
-//
-//      // Bind sent message
-//      ((SentMessageHolder) viewHolder).bind(message);
-//    } else if (viewHolder.getItemViewType() == VIEW_TYPE_MESSAGE_RECEIVED) {
-//
-//      // Bind received message
-//      ((ReceivedMessageHolder) viewHolder).bind(message);
-//    }
-
     switch (viewType) {
       case VIEW_TYPE_MESSAGE_SENT:
         ((SentMessageHolder) viewHolder).bind(message);
@@ -318,8 +308,8 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
       } else {
         // If the message sends without problems
-        circleProgressBar.setVisibility(View.VISIBLE);
-
+        // TODO Handle Loading
+        circleProgressBar.setVisibility(View.GONE);
       }
 
       // Checking the Message URI and binding it
@@ -338,7 +328,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         String timeString = new SimpleDateFormat("h:mm a").format(message.getMessageTime());
         timeStamp.setText(timeString);
       }
-
+        // TODO Implement Listner
 //      // Set listener
 //      if (listener != null) {
 //        itemView.setOnClickListener(new View.OnClickListener() {
@@ -406,8 +396,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
       }
 
-      //Glide.with(fileThumbnailImage).load(link).into(fileThumbnailImage);
-
+        // TODO Add Listener for opening image
 //      if (listener != null) {
 //        itemView.setOnClickListener(new View.OnClickListener() {
 //          @Override
@@ -420,6 +409,9 @@ public class MessageListAdapter extends RecyclerView.Adapter {
   }
 }
   /**
+   * TODO Implement Videos (Stretch)
+   * Left the Video Implementation in
+   *
    * A ViewHolder for file messages that are videos.
    * Displays only the video thumbnail.
    */
