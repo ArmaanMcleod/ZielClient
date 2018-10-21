@@ -89,6 +89,12 @@ The code style we obey is the [Google Java Style Guide](https://google.github.io
 The complete list of coding practices is available [here](https://docs.google.com/document/d/1RXHFtnGiAb5NsvctyE-T2N9ISuCY1cBWbTEWLzMq3gI).
 
 
+## Resources 
+All icons and images used in this project were from these following sites 
+* https://materialdesignicons.com/icon/xml
+* https://icons8.com/icon/new-icons/all
+
+These resources are liscensed under SIL Open Font License 1.1. for more information please visit https://opensource.org/licenses/OFL-1.1.
 
 ## Built With
 
