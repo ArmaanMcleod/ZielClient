@@ -91,8 +91,8 @@ The complete list of coding practices is available [here](https://docs.google.co
 
 ## Resources 
 All icons and images used in this project were from these following sites 
-* https://materialdesignicons.com/icon/xml
-* https://icons8.com/icon/new-icons/all
+* [materialdesignicons](https://materialdesignicons.com/icon/xml)
+* [icon8](https://icons8.com/icon/new-icons/all)
 
 These resources are liscensed under SIL Open Font License 1.1. for more information please visit https://opensource.org/licenses/OFL-1.1.
 
